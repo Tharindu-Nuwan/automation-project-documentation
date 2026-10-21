@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/menupage.html">
+<title>MenuPage · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-menupage-menupage-ts">pages/MenuPage/MenuPage.ts</a>
+<a href="#pages-menupage-menupagelocators-ts">pages/MenuPage/MenuPageLocators.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="menupage">MenuPage</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-menupage-menupage-ts">pages/MenuPage/MenuPage.ts</h2>
+<p><a data-source="pages/MenuPage/MenuPage.ts" href="../../sources/pages/MenuPage/MenuPage.ts.html#L1">pages/MenuPage/MenuPage.ts:1</a></p>
+<ul>
+<li><code>{ Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>{ MenuPageLocators }</code> &#x2190; <a data-source="pages/MenuPage/MenuPageLocators.ts" href="../../sources/pages/MenuPage/MenuPageLocators.ts.html#L1">pages/MenuPage/MenuPageLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/MenuPage/MenuPage.ts" href="../../sources/pages/MenuPage/MenuPage.ts.html#L9">pages/MenuPage/MenuPage.ts:9</a></p>
+<h3 id="gotocreateqrcode">goToCreateQrCode</h3>
+<p><code>goToCreateQrCode()</code></p>
+<p><a data-source="pages/MenuPage/MenuPage.ts" href="../../sources/pages/MenuPage/MenuPage.ts.html#L13">pages/MenuPage/MenuPage.ts:13</a></p>
+<ul>
+<li><code>this.locator.createQrCode.click()</code> &#x2014; line 14</li>
+</ul>
+<h3 id="gotomyaccount">goToMyAccount</h3>
+<p><code>goToMyAccount()</code></p>
+<p><a data-source="pages/MenuPage/MenuPage.ts" href="../../sources/pages/MenuPage/MenuPage.ts.html#L16">pages/MenuPage/MenuPage.ts:16</a></p>
+<ul>
+<li><code>this.locator.myAccount.click()</code> &#x2014; line 17</li>
+</ul>
+<h3 id="opensidebar">openSidebar</h3>
+<p><code>openSidebar()</code></p>
+<p><a data-source="pages/MenuPage/MenuPage.ts" href="../../sources/pages/MenuPage/MenuPage.ts.html#L26">pages/MenuPage/MenuPage.ts:26</a></p>
+<p>Opens the hamburger sidebar (tablet/desktop create flow). The header renders before its click handler is attached, so a click that lands during hydration only focuses the button and never opens the drawer &#x2014; re-click until the drawer links are actually rendered.</p>
+<ul>
+<li><code>this.locator.tabletBurgerMenuHomePage.waitFor({ state: &apos;visible&apos;, })</code> &#x2014; line 27</li>
+<li><code>this.expect(async () =&gt; { if (!(await this.locator.myAccount.isVisible())) { await this.locator.tabletBurgerMenuHomePage.click() } await this.expect(this.locator.myAccount).toBeVisible({ timeout: 5_000, }) }).toPass({ timeout: 45_000, intervals: [1_000, 2_000, 3_000] })</code> &#x2014; line 30</li>
+<li><code>this.locator.myAccount.isVisible()</code> &#x2014; line 31</li>
+<li><code>this.locator.tabletBurgerMenuHomePage.click()</code> &#x2014; line 32</li>
+<li><code>this.expect(this.locator.myAccount).toBeVisible({ timeout: 5_000, })</code> &#x2014; line 34</li>
+</ul>
+<h3 id="opensidebarandgotomyaccount">openSidebarAndGoToMyAccount</h3>
+<p><code>openSidebarAndGoToMyAccount()</code></p>
+<p><a data-source="pages/MenuPage/MenuPage.ts" href="../../sources/pages/MenuPage/MenuPage.ts.html#L43">pages/MenuPage/MenuPage.ts:43</a></p>
+<p>Opens the hamburger sidebar (tablet/desktop create flow) and navigates to My Account.</p>
+<ul>
+<li><code>this.openSidebar()</code> &#x2014; line 44</li>
+<li><code>this.goToMyAccount()</code> &#x2014; line 45</li>
+</ul>
+<h3 id="gotoanalyticspage">goToAnalyticsPage</h3>
+<p><code>goToAnalyticsPage()</code></p>
+<p><a data-source="pages/MenuPage/MenuPage.ts" href="../../sources/pages/MenuPage/MenuPage.ts.html#L48">pages/MenuPage/MenuPage.ts:48</a></p>
+<ul>
+<li><code>this.locator.analytics.click()</code> &#x2014; line 49</li>
+<li><code>this.page.waitForTimeout(1200)</code> &#x2014; line 50</li>
+</ul>
+<h2 id="pages-menupage-menupagelocators-ts">pages/MenuPage/MenuPageLocators.ts</h2>
+<p><a data-source="pages/MenuPage/MenuPageLocators.ts" href="../../sources/pages/MenuPage/MenuPageLocators.ts.html#L1">pages/MenuPage/MenuPageLocators.ts:1</a></p>
+<ul>
+<li><code>{ Page, Locator }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseLocators }</code> &#x2190; <a data-source="pages/BaseLocators.ts" href="../../sources/pages/BaseLocators.ts.html#L1">pages/BaseLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/MenuPage/MenuPageLocators.ts" href="../../sources/pages/MenuPage/MenuPageLocators.ts.html#L15">pages/MenuPage/MenuPageLocators.ts:15</a></p>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.sidebarArea</code> &#x2190; <code>page.getByRole(&apos;dialog&apos;, { name: &apos;Sidebar Drawer&apos; })</code> &#x2014; <a data-source="pages/MenuPage/MenuPageLocators.ts" href="../../sources/pages/MenuPage/MenuPageLocators.ts.html#L17">pages/MenuPage/MenuPageLocators.ts:17</a></li>
+<li><code>this.sidebarAreaStep123</code> &#x2190; <code>page.locator(&apos;div.app-sidebar&apos;)</code> &#x2014; <a data-source="pages/MenuPage/MenuPageLocators.ts" href="../../sources/pages/MenuPage/MenuPageLocators.ts.html#L18">pages/MenuPage/MenuPageLocators.ts:18</a></li>
+<li><code>this.closeSidebarBackgroundArea</code> &#x2190; <code>page.locator( &apos;.data-\\[state\\=open\\]\\:animate-in&apos; )</code> &#x2014; <a data-source="pages/MenuPage/MenuPageLocators.ts" href="../../sources/pages/MenuPage/MenuPageLocators.ts.html#L19">pages/MenuPage/MenuPageLocators.ts:19</a></li>
+<li><code>this.createQrCode</code> &#x2190; <code>page.getByTestId(&apos;sidebar-create-qr-link&apos;)</code> &#x2014; <a data-source="pages/MenuPage/MenuPageLocators.ts" href="../../sources/pages/MenuPage/MenuPageLocators.ts.html#L22">pages/MenuPage/MenuPageLocators.ts:22</a></li>
+<li><code>this.analytics</code> &#x2190; <code>page.getByTestId(&apos;sidebar-analytics-link&apos;)</code> &#x2014; <a data-source="pages/MenuPage/MenuPageLocators.ts" href="../../sources/pages/MenuPage/MenuPageLocators.ts.html#L23">pages/MenuPage/MenuPageLocators.ts:23</a></li>
+<li><code>this.myQrCodes</code> &#x2190; <code>page.getByTestId(&apos;sidebar-my-qr-codes-link&apos;)</code> &#x2014; <a data-source="pages/MenuPage/MenuPageLocators.ts" href="../../sources/pages/MenuPage/MenuPageLocators.ts.html#L24">pages/MenuPage/MenuPageLocators.ts:24</a></li>
+<li><code>this.myAccount</code> &#x2190; <code>page.getByTestId(&apos;sidebar-my-account-link&apos;)</code> &#x2014; <a data-source="pages/MenuPage/MenuPageLocators.ts" href="../../sources/pages/MenuPage/MenuPageLocators.ts.html#L25">pages/MenuPage/MenuPageLocators.ts:25</a></li>
+<li><code>this.billing</code> &#x2190; <code>page.getByTestId(&apos;sidebar-billing-link&apos;)</code> &#x2014; <a data-source="pages/MenuPage/MenuPageLocators.ts" href="../../sources/pages/MenuPage/MenuPageLocators.ts.html#L26">pages/MenuPage/MenuPageLocators.ts:26</a></li>
+<li><code>this.billingTabInMyAccount</code> &#x2190; <code>page.getByRole(&apos;tab&apos;, { name: &apos;Subscription&apos;, })</code> &#x2014; <a data-source="pages/MenuPage/MenuPageLocators.ts" href="../../sources/pages/MenuPage/MenuPageLocators.ts.html#L27">pages/MenuPage/MenuPageLocators.ts:27</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

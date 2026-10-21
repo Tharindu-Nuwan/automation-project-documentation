@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/paymentspage.html">
+<title>PaymentsPage · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-paymentspage-paymentpage-ts">pages/PaymentsPage/PaymentPage.ts</a>
+<a href="#pages-paymentspage-paymentpagelocators-ts">pages/PaymentsPage/PaymentPageLocators.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="paymentspage">PaymentsPage</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-paymentspage-paymentpage-ts">pages/PaymentsPage/PaymentPage.ts</h2>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1">pages/PaymentsPage/PaymentPage.ts:1</a></p>
+<ul>
+<li><code>{ expect, Locator }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>type { Product }</code> &#x2190; <a data-source="base/Product.ts" href="../../sources/base/Product.ts.html#L1">base/Product.ts:1</a></li>
+<li><code>{ PaymentPageLocators }</code> &#x2190; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L1">pages/PaymentsPage/PaymentPageLocators.ts:1</a></li>
+<li><code>{ stripeVisaValidCard, paymentData, }</code> &#x2190; <a data-source="tests/data/payments_test_data.ts" href="../../sources/tests/data/payments_test_data.ts.html#L1">tests/data/payments_test_data.ts:1</a></li>
+<li><code>{ icelandDpfPaymentData }</code> &#x2190; <a data-source="tests/data/iceland-dpf-payment.data.ts" href="../../sources/tests/data/iceland-dpf-payment.data.ts.html#L1">tests/data/iceland-dpf-payment.data.ts:1</a></li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page, product: Product = &apos;oqg&apos;)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L17">pages/PaymentsPage/PaymentPage.ts:17</a></p>
+<h3 id="typeintostripefield">typeIntoStripeField</h3>
+<p><code>typeIntoStripeField(field: Locator, value: string)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L34">pages/PaymentsPage/PaymentPage.ts:34</a></p>
+<p>Types into a Stripe Payment Element field via focused keyboard input. fill()/pressSequentially frequently no-op on #payment-numberInput on oqg.dev.</p>
+<p>force:true &#x2014; BillingAddressForm&apos;s country label (aria-hidden) can sit over card fields and report &quot;subtree intercepts pointer events&quot;.</p>
+<p>Card number only &#x2014; expiry/CVC must use pressSequentially on the field locator (see makePayment). force + page.keyboard.type can land in the previously focused field, leaving expiry/CVC empty with red borders.</p>
+<ul>
+<li><code>field.click({ force: true })</code> &#x2014; line 38</li>
+<li><code>this.page.keyboard.press(&apos;ControlOrMeta+A&apos;)</code> &#x2014; line 39</li>
+<li><code>this.page.keyboard.press(&apos;Backspace&apos;)</code> &#x2014; line 40</li>
+<li><code>this.page.keyboard.type(value, { delay: 25 })</code> &#x2014; line 41</li>
+</ul>
+<h3 id="isonpaymentthankyou">isOnPaymentThankYou</h3>
+<p><code>isOnPaymentThankYou()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L52">pages/PaymentsPage/PaymentPage.ts:52</a></p>
+<p>True when DPF /pay has already reached a post-payment success UI.</p>
+<p>Success surfaces vary on oqg.dev:</p>
+<ul>
+<li><code>div.thank-you</code> / <code>div.pay-thank-wrap</code> (congrats CTA)</li>
+<li><code>#DownloadModal</code> (&quot;Last Step: Download Your QR Code&quot;) after redirect to My QR Codes</li>
+<li>URL still carrying <code>payment_intent=</code> / <code>pay-thank-you</code> mid-redirect</li>
+</ul>
+<ul>
+<li><code>this.page.url()</code> &#x2014; line 53</li>
+<li><code>this.page .locator( &apos;div.thank-you, div.pay-thank-wrap, #DownloadModal, a.thank-btn&apos; ) .or(this.page.getByRole(&apos;heading&apos;, { name: /Congratulations/i })) .or(this.page.getByRole(&apos;link&apos;, { name: /Go to Dashboard/i })) .first() .isVisible() .catch([callback: see source])</code> &#x2014; line 56</li>
+<li><code>this.page .locator( &apos;div.thank-you, div.pay-thank-wrap, #DownloadModal, a.thank-btn&apos; ) .or(this.page.getByRole(&apos;heading&apos;, { name: /Congratulations/i })) .or(this.page.getByRole(&apos;link&apos;, { name: /Go to Dashboard/i })) .first() .isVisible()</code> &#x2014; line 56</li>
+<li><code>this.page .locator( &apos;div.thank-you, div.pay-thank-wrap, #DownloadModal, a.thank-btn&apos; ) .or(this.page.getByRole(&apos;heading&apos;, { name: /Congratulations/i })) .or(this.page.getByRole(&apos;link&apos;, { name: /Go to Dashboard/i })) .first()</code> &#x2014; line 56</li>
+<li><code>this.page .locator( &apos;div.thank-you, div.pay-thank-wrap, #DownloadModal, a.thank-btn&apos; ) .or(this.page.getByRole(&apos;heading&apos;, { name: /Congratulations/i })) .or(this.page.getByRole(&apos;link&apos;, { name: /Go to Dashboard/i }))</code> &#x2014; line 56</li>
+<li><code>this.page .locator( &apos;div.thank-you, div.pay-thank-wrap, #DownloadModal, a.thank-btn&apos; ) .or(this.page.getByRole(&apos;heading&apos;, { name: /Congratulations/i }))</code> &#x2014; line 56</li>
+<li><code>this.page .locator(&apos;div.thank-you, div.pay-thank-wrap, #DownloadModal, a.thank-btn&apos;)</code> &#x2014; line 56</li>
+<li><code>this.page.getByRole(&apos;heading&apos;, { name: /Congratulations/i })</code> &#x2014; line 60</li>
+<li><code>this.page.getByRole(&apos;link&apos;, { name: /Go to Dashboard/i })</code> &#x2014; line 61</li>
+</ul>
+<h3 id="isbillinginfostepvisible">isBillingInfoStepVisible</h3>
+<p><code>isBillingInfoStepVisible()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L67">pages/PaymentsPage/PaymentPage.ts:67</a></p>
+<ul>
+<li><code>this.locator.continueToPaymentButton .isVisible() .catch([callback: see source])</code> &#x2014; line 69</li>
+<li><code>this.locator.continueToPaymentButton .isVisible()</code> &#x2014; line 69</li>
+<li><code>this.locator.billingInfoContinueButton .isVisible() .catch([callback: see source])</code> &#x2014; line 72</li>
+<li><code>this.locator.billingInfoContinueButton .isVisible()</code> &#x2014; line 72</li>
+<li><code>this.locator.pageBillingFullNameInput .isVisible() .catch([callback: see source])</code> &#x2014; line 75</li>
+<li><code>this.locator.pageBillingFullNameInput .isVisible()</code> &#x2014; line 75</li>
+<li><code>this.locator.iframeBilling.isVisible().catch([callback: see source])</code> &#x2014; line 78</li>
+<li><code>this.locator.iframeBilling.isVisible()</code> &#x2014; line 78</li>
+</ul>
+<h3 id="waitforpaymentiframe">waitForPaymentIframe</h3>
+<p><code>waitForPaymentIframe(timeout = 30_000)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L89">pages/PaymentsPage/PaymentPage.ts:89</a></p>
+<p>Waits until Stripe&apos;s Payment Element iframe is interactable.</p>
+<p>On <code>/pay</code> the iframe stays 0&#xd7;0 / hidden until billing info is submitted. Waiting on <code>.filter({ visible: true })</code> then reports &quot;element(s) not found&quot; instead of a billing-step timeout &#x2014; finish that step first.</p>
+<ul>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 90</li>
+<li><code>this.locator.iframePayment.isVisible().catch([callback: see source])</code> &#x2014; line 93</li>
+<li><code>this.locator.iframePayment.isVisible()</code> &#x2014; line 93</li>
+<li><code>this.isBillingInfoStepVisible()</code> &#x2014; line 96</li>
+<li><code>this.fillBillingDetailsPaymentFrame()</code> &#x2014; line 97</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 98</li>
+<li><code>this.locator.iframePayment.isVisible().catch([callback: see source])</code> &#x2014; line 102</li>
+<li><code>this.locator.iframePayment.isVisible()</code> &#x2014; line 102</li>
+<li><code>this.locator.paymentElement .locator(&apos;iframe&apos;) .first()</code> &#x2014; line 108</li>
+<li><code>this.locator.paymentElement .locator(&apos;iframe&apos;)</code> &#x2014; line 108</li>
+<li><code>this.expect(mountedIframe).toBeAttached({ timeout })</code> &#x2014; line 112</li>
+<li><code>this.expect(this.locator.iframePayment).toBeVisible({ timeout, })</code> &#x2014; line 113</li>
+<li><code>this.page.url()</code> &#x2014; line 120</li>
+</ul>
+<h3 id="makepayment">makePayment</h3>
+<p><code>makePayment(cardNumber: string = stripeVisaValidCard.cardNumber, expDate: string = stripeVisaValidCard.expDate, cvc: string = stripeVisaValidCard.cvc)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L127">pages/PaymentsPage/PaymentPage.ts:127</a></p>
+<ul>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 139</li>
+<li><code>this.waitForPaymentIframe(timeout)</code> &#x2014; line 143</li>
+<li><code>cardTab.click()</code> &#x2014; line 149</li>
+<li><code>this.selectCardPaymentMethodIfPresent()</code> &#x2014; line 152</li>
+<li><code>this.locator.paymentCountryDropdown .isVisible() .catch([callback: see source])</code> &#x2014; line 157</li>
+<li><code>this.locator.paymentCountryDropdown .isVisible()</code> &#x2014; line 157</li>
+<li><code>this.selectCountryAndZipInPaymentFrame()</code> &#x2014; line 161</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 164</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 170</li>
+<li><code>this.expect(card).toBeVisible({ timeout })</code> &#x2014; line 173</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 179</li>
+<li><code>this.typeIntoStripeField(card, digits)</code> &#x2014; line 186</li>
+<li><code>this.page.waitForTimeout(400)</code> &#x2014; line 191</li>
+<li><code>this.locator.framePayment .getByPlaceholder(/MM\s*\/\s*(YY|AA|JJ|MM)/i) .or(this.locator.expiryDateInput) .first()</code> &#x2014; line 199</li>
+<li><code>this.locator.framePayment .getByPlaceholder(/MM\s*\/\s*(YY|AA|JJ|MM)/i) .or(this.locator.expiryDateInput)</code> &#x2014; line 199</li>
+<li><code>this.locator.framePayment .getByPlaceholder(/MM\s*\/\s*(YY|AA|JJ|MM)/i)</code> &#x2014; line 199</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 204</li>
+<li><code>this.expect(expiry).toBeVisible({ timeout })</code> &#x2014; line 207</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 210</li>
+<li><code>expiry.click({ force: true })</code> &#x2014; line 217</li>
+<li><code>expiry.pressSequentially(expiryDigits, { delay: 30 })</code> &#x2014; line 220</li>
+<li><code>this.page.waitForTimeout(400)</code> &#x2014; line 225</li>
+<li><code>this.locator.framePayment .getByPlaceholder(/CVC|CVV|CVC\/CVV/i) .or(this.locator.cvcCodeInput) .first()</code> &#x2014; line 228</li>
+<li><code>this.locator.framePayment .getByPlaceholder(/CVC|CVV|CVC\/CVV/i) .or(this.locator.cvcCodeInput)</code> &#x2014; line 228</li>
+<li><code>this.locator.framePayment .getByPlaceholder(/CVC|CVV|CVC\/CVV/i)</code> &#x2014; line 228</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 233</li>
+<li><code>this.expect(cvcInput).toBeVisible({ timeout })</code> &#x2014; line 236</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 239</li>
+<li><code>cvcInput.click({ force: true })</code> &#x2014; line 246</li>
+<li><code>cvcInput.pressSequentially(cvc, { delay: 30 })</code> &#x2014; line 249</li>
+<li><code>this.page.waitForTimeout(400)</code> &#x2014; line 254</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 257</li>
+<li><code>this.locator.paymentZipInput.isVisible().catch([callback: see source])</code> &#x2014; line 261</li>
+<li><code>this.locator.paymentZipInput.isVisible()</code> &#x2014; line 261</li>
+<li><code>this.locator.paymentZipInput.click({ force: true })</code> &#x2014; line 262</li>
+<li><code>this.locator.paymentZipInput.fill(paymentData.zip)</code> &#x2014; line 263</li>
+<li><code>this.acceptSubscriptionTermsIfPresent()</code> &#x2014; line 266</li>
+</ul>
+<h3 id="acceptsubscriptiontermsifpresent">acceptSubscriptionTermsIfPresent</h3>
+<p><code>acceptSubscriptionTermsIfPresent()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L273">pages/PaymentsPage/PaymentPage.ts:273</a></p>
+<p>Checks &quot;I agree to the terms and conditions, and the subscription terms&quot; when that control is on the checkout page. Older /pay layouts omit it.</p>
+<ul>
+<li><code>terms.check({ force: true })</code> &#x2014; line 278</li>
+</ul>
+<h3 id="acceptcheckoutconsentifpresent">acceptCheckoutConsentIfPresent</h3>
+<p><code>acceptCheckoutConsentIfPresent()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L285">pages/PaymentsPage/PaymentPage.ts:285</a></p>
+<p>Checks the checkout &quot;I agree to the terms&#x2026;&quot; checkbox when present. Submit Payment stays disabled until this is checked on newer /pay UI.</p>
+<ul>
+<li><code>consent.check()</code> &#x2014; line 290</li>
+<li><code>this.expect(consent).toBeChecked()</code> &#x2014; line 291</li>
+</ul>
+<h3 id="expectpaymentdeclined">expectPaymentDeclined</h3>
+<p><code>expectPaymentDeclined(timeout = 30_000)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L295">pages/PaymentsPage/PaymentPage.ts:295</a></p>
+<p>Decline copy is on the Stripe iframe alert or <code>#payment-message</code>; those locators cannot use <code>.or()</code>.</p>
+<ul>
+<li><code>this.locator.paymentDeclinedErrorMessage.filter({ hasText: /declin|fail|unable/i, })</code> &#x2014; line 296</li>
+<li><code>this.locator.framePayment.getByRole(&apos;alert&apos;, { name: /declined/i, })</code> &#x2014; line 299</li>
+<li><code>this.locator.framePayment.getByText(/your card was declined/i)</code> &#x2014; line 302</li>
+<li><code>expect .poll( async () =&gt; { if (await pageMessage.isVisible().catch(() =&gt; false)) { return true } if (await iframeAlert.isVisible().catch(() =&gt; false)) { return true } if (await iframeCopy.isVisible().catch(() =&gt; false)) { return true } return iframeFieldError.isVisible().catch(() =&gt; false) }, { timeout, message: &apos;Expected a declined-card error on the checkout page&apos;, } ) .toBe(true)</code> &#x2014; line 307</li>
+</ul>
+<h3 id="clicksubmitpaymentifcardonfile">clickSubmitPaymentIfCardOnFile</h3>
+<p><code>clickSubmitPaymentIfCardOnFile()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L334">pages/PaymentsPage/PaymentPage.ts:334</a></p>
+<p>Saved-card checkout (no Stripe iframe). Wait for a remounting iframe before treating <code>#payment-element</code> as card-on-file.</p>
+<ul>
+<li><code>this.locator.paymentElement.or(this.locator.iframePayment)</code> &#x2014; line 340</li>
+<li><code>this.locator.iframePayment .waitFor({ state: &apos;visible&apos;, timeout: 10_000 }) .then(() =&gt; true) .catch([callback: see source])</code> &#x2014; line 346</li>
+<li><code>this.locator.iframePayment .waitFor({ state: &apos;visible&apos;, timeout: 10_000 }) .then([callback: see source])</code> &#x2014; line 346</li>
+<li><code>this.locator.iframePayment .waitFor({ state: &apos;visible&apos;, timeout: 10_000 })</code> &#x2014; line 346</li>
+<li><code>this.acceptCheckoutConsentIfPresent()</code> &#x2014; line 354</li>
+<li><code>this.acceptSubscriptionTermsIfPresent()</code> &#x2014; line 355</li>
+<li><code>submit.click()</code> &#x2014; line 359</li>
+</ul>
+<h3 id="selectcardpaymentmethodifpresent">selectCardPaymentMethodIfPresent</h3>
+<p><code>selectCardPaymentMethodIfPresent()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L364">pages/PaymentsPage/PaymentPage.ts:364</a></p>
+<p>USD Payment Element often defaults to Cash App Pay; select the Card tab first.</p>
+<ul>
+<li><code>this.locator.cardNumber.isVisible().catch([callback: see source])</code> &#x2014; line 365</li>
+<li><code>this.locator.cardNumber.isVisible()</code> &#x2014; line 365</li>
+<li><code>tab.click()</code> &#x2014; line 372</li>
+<li><code>this.expect(this.locator.cardNumber).toBeVisible({ timeout: 10_000, })</code> &#x2014; line 373</li>
+</ul>
+<h3 id="clickonsubmitpaymentbutton">clickOnSubmitPaymentButton</h3>
+<p><code>clickOnSubmitPaymentButton()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L386">pages/PaymentsPage/PaymentPage.ts:386</a></p>
+<p>Refills the default Visa test card and submits payment.</p>
+<p>Race (seen on DPF /pay &#x2192; thank-you / DownloadModal): payment can succeed and navigate while Playwright is still refilling fields or waiting for Submit. Submit also disables as soon as Stripe accepts the click &#x2014; force-click and treat an already-visible success UI as done.</p>
+<ul>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 387</li>
+<li><code>this.makePayment()</code> &#x2014; line 392</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 393</li>
+<li><code>this.page.waitForTimeout(300)</code> &#x2014; line 397</li>
+<li><code>this.acceptCheckoutConsentIfPresent()</code> &#x2014; line 398</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 400</li>
+<li><code>expect .poll( async () =&gt; { if (await this.isOnPaymentThankYou()) { return true } return submit.isEnabled().catch(() =&gt; false) }, { timeout: 15_000 } ) .toBe(true)</code> &#x2014; line 407</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 410</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 419</li>
+<li><code>submit.click({ force: true })</code> &#x2014; line 425</li>
+<li><code>expect .poll(async () =&gt; this.isOnPaymentThankYou(), { timeout: 60_000, }) .toBe(true)</code> &#x2014; line 427</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 428</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 433</li>
+<li><code>expect .poll(async () =&gt; this.isOnPaymentThankYou(), { timeout: 30_000, }) .toBe(true)</code> &#x2014; line 444</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 445</li>
+<li><code>this.isOnPaymentThankYou()</code> &#x2014; line 451</li>
+</ul>
+<h3 id="selectcountryandzipinpaymentframe">selectCountryAndZipInPaymentFrame</h3>
+<p><code>selectCountryAndZipInPaymentFrame()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L460">pages/PaymentsPage/PaymentPage.ts:460</a></p>
+<ul>
+<li><code>this.locator.paymentCountryDropdown.selectOption({ value: paymentData.country, })</code> &#x2014; line 461</li>
+<li><code>this.locator.paymentZipInput.fill(paymentData.zip)</code> &#x2014; line 464</li>
+</ul>
+<h3 id="continueaccountinformationifpresent">continueAccountInformationIfPresent</h3>
+<p><code>continueAccountInformationIfPresent(guestEmail?: string)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L468">pages/PaymentsPage/PaymentPage.ts:468</a></p>
+<p>Archived P&amp;P Account Information: fill guest email if empty, then Next.</p>
+<ul>
+<li><code>email.fill(guestEmail)</code> &#x2014; line 482</li>
+<li><code>this.expect(email).not.toHaveValue(&apos;&apos;)</code> &#x2014; line 491</li>
+<li><code>next.click()</code> &#x2014; line 494</li>
+<li><code>this.locator.iframePayment.isVisible().catch([callback: see source])</code> &#x2014; line 495</li>
+<li><code>this.locator.iframePayment.isVisible()</code> &#x2014; line 495</li>
+<li><code>this.expect(this.locator.iframePayment).toBeVisible({ timeout: 30_000, })</code> &#x2014; line 498</li>
+</ul>
+<h3 id="fillbillingdetailspaymentframe">fillBillingDetailsPaymentFrame</h3>
+<p><code>fillBillingDetailsPaymentFrame()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L503">pages/PaymentsPage/PaymentPage.ts:503</a></p>
+<ul>
+<li><code>this.fillPageBillingInformation()</code> &#x2014; line 537</li>
+<li><code>this.fillPageBillingInformation()</code> &#x2014; line 545</li>
+<li><code>this.expect(addressFrame).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 550</li>
+<li><code>this.expect(this.locator.billingFullNameInput).toBeVisible({ timeout: 10_000, })</code> &#x2014; line 551</li>
+<li><code>this.locator.billingFullNameInput.fill(paymentData.fullName)</code> &#x2014; line 554</li>
+<li><code>this.locator.billingCountryInput.selectOption({ value: paymentData.country, })</code> &#x2014; line 555</li>
+<li><code>this.locator.billingAddressLine1Input.fill(paymentData.address)</code> &#x2014; line 558</li>
+<li><code>this.locator.billingCityInput .waitFor({ state: &apos;visible&apos;, timeout: 10_000 }) .then(() =&gt; true) .catch([callback: see source])</code> &#x2014; line 560</li>
+<li><code>this.locator.billingCityInput .waitFor({ state: &apos;visible&apos;, timeout: 10_000 }) .then([callback: see source])</code> &#x2014; line 560</li>
+<li><code>this.locator.billingCityInput .waitFor({ state: &apos;visible&apos;, timeout: 10_000 })</code> &#x2014; line 560</li>
+<li><code>this.locator.billingCityInput.fill(paymentData.city)</code> &#x2014; line 565</li>
+<li><code>this.locator.billingStateInput.isVisible().catch([callback: see source])</code> &#x2014; line 568</li>
+<li><code>this.locator.billingStateInput.isVisible()</code> &#x2014; line 568</li>
+<li><code>this.locator.billingStateInput .selectOption({ value: paymentData.state }) .catch([callback: see source])</code> &#x2014; line 570</li>
+<li><code>this.locator.billingStateInput .selectOption({ value: paymentData.state })</code> &#x2014; line 570</li>
+<li><code>this.locator.billingPostalCodeInput .isVisible() .catch([callback: see source])</code> &#x2014; line 575</li>
+<li><code>this.locator.billingPostalCodeInput .isVisible()</code> &#x2014; line 575</li>
+<li><code>this.locator.billingPostalCodeInput.fill(paymentData.zip)</code> &#x2014; line 579</li>
+<li><code>this.locator.exitFromPaymentFrame.click()</code> &#x2014; line 581</li>
+<li><code>infoContinue.click()</code> &#x2014; line 583</li>
+<li><code>this.expect(infoContinue).toBeHidden({ timeout: 15_000 })</code> &#x2014; line 585</li>
+</ul>
+<h3 id="fillpagebillinginformation">fillPageBillingInformation</h3>
+<p><code>fillPageBillingInformation()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L592">pages/PaymentsPage/PaymentPage.ts:592</a></p>
+<p>Page-level <code>/pay</code> billing fields (no Stripe Address Element iframe). Stripe&apos;s card element mounts only after &quot;Continue to payment&quot;.</p>
+<ul>
+<li><code>this.locator.pageBillingFullNameInput.fill(paymentData.fullName)</code> &#x2014; line 593</li>
+<li><code>this.setPageBillingCountry(&apos;United States&apos;, paymentData.country)</code> &#x2014; line 594</li>
+<li><code>this.locator.pageBillingAddressLine1Input.fill(paymentData.address)</code> &#x2014; line 595</li>
+<li><code>this.locator.pageBillingCityInput .isVisible() .catch([callback: see source])</code> &#x2014; line 599</li>
+<li><code>this.locator.pageBillingCityInput .isVisible()</code> &#x2014; line 599</li>
+<li><code>this.locator.pageBillingCityInput.fill(paymentData.city)</code> &#x2014; line 603</li>
+<li><code>this.locator.pageBillingPostalCodeInput .isVisible() .catch([callback: see source])</code> &#x2014; line 606</li>
+<li><code>this.locator.pageBillingPostalCodeInput .isVisible()</code> &#x2014; line 606</li>
+<li><code>this.locator.pageBillingPostalCodeInput.fill(paymentData.zip)</code> &#x2014; line 610</li>
+<li><code>this.locator.continueToPaymentButton.click()</code> &#x2014; line 612</li>
+<li><code>this.expect(this.locator.iframePayment).toBeVisible({ timeout: 30_000, })</code> &#x2014; line 613</li>
+</ul>
+<h3 id="setpagebillingcountry">setPageBillingCountry</h3>
+<p><code>setPageBillingCountry(countryName: string, countryCode: string)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L621">pages/PaymentsPage/PaymentPage.ts:621</a></p>
+<p>Sets country on page-level <code>/pay</code> billing (native <code>&lt;select&gt;</code> or combobox).</p>
+<ul>
+<li><code>this.expect(country).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 626</li>
+<li><code>country .selectOption({ value: countryCode })</code> &#x2014; line 629</li>
+<li><code>country.selectOption({ label: countryName })</code> &#x2014; line 631</li>
+<li><code>country.click()</code> &#x2014; line 634</li>
+<li><code>this.page.getByRole(&apos;option&apos;, { name: new RegExp(&#x2032;^&#x24;{countryName}&#x24;&#x2032;, &apos;i&apos;), })</code> &#x2014; line 635</li>
+<li><code>option.first().click()</code> &#x2014; line 644</li>
+<li><code>country.fill(countryName)</code> &#x2014; line 647</li>
+<li><code>this.page .getByRole(&apos;option&apos;, { name: new RegExp(countryName, &apos;i&apos;) }) .first() .click()</code> &#x2014; line 648</li>
+<li><code>this.page .getByRole(&apos;option&apos;, { name: new RegExp(countryName, &apos;i&apos;) }) .first()</code> &#x2014; line 648</li>
+<li><code>this.page .getByRole(&apos;option&apos;, { name: new RegExp(countryName, &apos;i&apos;) })</code> &#x2014; line 648</li>
+</ul>
+<h3 id="selectmonthlyplan">selectMonthlyPlan</h3>
+<p><code>selectMonthlyPlan()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L654">pages/PaymentsPage/PaymentPage.ts:654</a></p>
+<ul>
+<li><code>this.selectPlanByValue(&apos;Monthly&apos;)</code> &#x2014; line 655</li>
+</ul>
+<h3 id="selectannualplan">selectAnnualPlan</h3>
+<p><code>selectAnnualPlan()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L658">pages/PaymentsPage/PaymentPage.ts:658</a></p>
+<ul>
+<li><code>this.selectPlanByValue(&apos;Annually&apos;)</code> &#x2014; line 659</li>
+</ul>
+<h3 id="selectquarterlyplan">selectQuarterlyPlan</h3>
+<p><code>selectQuarterlyPlan()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L662">pages/PaymentsPage/PaymentPage.ts:662</a></p>
+<ul>
+<li><code>this.selectPlanByValue(&apos;Quarterly&apos;)</code> &#x2014; line 663</li>
+</ul>
+<h3 id="selectplanifpickerpresent">selectPlanIfPickerPresent</h3>
+<p><code>selectPlanIfPickerPresent(plan: &apos;Monthly&apos; | &apos;Annually&apos; | &apos;Quarterly&apos;)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L671">pages/PaymentsPage/PaymentPage.ts:671</a></p>
+<p>After Plans &amp; Pricing &quot;Buy Now&quot;, QCI often lands on <code>/pay</code> with the plan already chosen (Stripe iframe only). OQG may still show the <code>/plan</code> picker. Select a plan only when that picker is actually on screen.</p>
+<ul>
+<li><code>this.page.locator(&#x2032;input.custom-radio-btn[name=&apos;plan&apos;][value=&apos;&#x24;{plan}&apos;]&#x2032;)</code> &#x2014; line 674</li>
+<li><code>this.page.locator(&apos;.new-plan-plan-cards-wrap&apos;)</code> &#x2014; line 677</li>
+<li><code>this.locator.continueToPaymentButton .or(this.locator.billingInfoContinueButton) .or(this.locator.pageBillingFullNameInput) .or(this.locator.iframeBilling)</code> &#x2014; line 679</li>
+<li><code>this.locator.continueToPaymentButton .or(this.locator.billingInfoContinueButton) .or(this.locator.pageBillingFullNameInput)</code> &#x2014; line 679</li>
+<li><code>this.locator.continueToPaymentButton .or(this.locator.billingInfoContinueButton)</code> &#x2014; line 679</li>
+<li><code>this.page.url()</code> &#x2014; line 693</li>
+<li><code>this.selectPlanByValue(plan)</code> &#x2014; line 700</li>
+<li><code>this.expect(stripe).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 720</li>
+</ul>
+<h3 id="openicelandplansandprices">openIcelandPlansAndPrices</h3>
+<p><code>openIcelandPlansAndPrices()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L730">pages/PaymentsPage/PaymentPage.ts:730</a></p>
+<p>Opens public Plans &amp; Pricing. A logged-in DPF user is often sent to <code>/qr-codes</code> instead of the marketing page; that is the product bounce, not a failed load. Do not continue to <code>/plan</code> &#x2014; DPF sessions are sent back to <code>/plan-dpf</code>, which has no Monthly/Annual/Quarterly CTAs. Archived checkout is <code>/pay/{1|2|3}</code> (selected next).</p>
+<ul>
+<li><code>new URL( icelandDpfPaymentData.plansAndPricesPath.replace(/^\//, &apos;&apos;), this.page.url() ).toString()</code> &#x2014; line 731</li>
+<li><code>this.page.url()</code> &#x2014; line 733</li>
+<li><code>this.openPage(target, { waitUntil: &apos;commit&apos; })</code> &#x2014; line 737</li>
+<li><code>this.page.waitForURL([callback: see source], { timeout: 30_000, waitUntil: &apos;commit&apos; })</code> &#x2014; line 746</li>
+</ul>
+<h3 id="selecticelandarchivedplan">selectIcelandArchivedPlan</h3>
+<p><code>selectIcelandArchivedPlan(plan: &apos;Monthly&apos; | &apos;Annually&apos; | &apos;Quarterly&apos;)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L762">pages/PaymentsPage/PaymentPage.ts:762</a></p>
+<p>Selects Monthly / Annually / Quarterly for archived (classic) P&amp;P. Do not treat an already-open DPF Stripe form (<code>/plan-dpf</code>, <code>/plan</code>) as success &#x2014; that page shows the 14-day trial (kr 0 / kr7,050), not 2,850. Destination is <code>/pay/{1|2|3}</code> for this plan only.</p>
+<ul>
+<li><code>this.isOnIcelandPayPath(payPath)</code> &#x2014; line 766</li>
+<li><code>this.page .locator(&#x2032;a[href*=&quot;&#x24;{payPath}&quot;]&#x2032;) .filter({ hasText: /Buy Now/i }) .first()</code> &#x2014; line 770</li>
+<li><code>this.page .locator(&#x2032;a[href*=&quot;&#x24;{payPath}&quot;]&#x2032;) .filter({ hasText: /Buy Now/i })</code> &#x2014; line 770</li>
+<li><code>this.page .locator(&#x2032;a[href*=&quot;&#x24;{payPath}&quot;]&#x2032;)</code> &#x2014; line 770</li>
+<li><code>payBuyNow.click()</code> &#x2014; line 775</li>
+<li><code>this.page.waitForURL([callback: see source], { timeout: 8_000, waitUntil: &apos;commit&apos; })</code> &#x2014; line 777</li>
+<li><code>this.isOnIcelandPayPath(payPath, url.pathname)</code> &#x2014; line 778</li>
+<li><code>this.openIcelandPayWizard(plan)</code> &#x2014; line 787</li>
+</ul>
+<h3 id="isonicelandpaypath">isOnIcelandPayPath</h3>
+<p><code>isOnIcelandPayPath(payPath: string, pathname?: string)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L790">pages/PaymentsPage/PaymentPage.ts:790</a></p>
+<ul>
+<li><code>this.page.url()</code> &#x2014; line 791</li>
+</ul>
+<h3 id="openicelandpaywizard">openIcelandPayWizard</h3>
+<p><code>openIcelandPayWizard(plan: &apos;Monthly&apos; | &apos;Annually&apos; | &apos;Quarterly&apos;)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L798">pages/PaymentsPage/PaymentPage.ts:798</a></p>
+<ul>
+<li><code>new URL( payPath.replace(/^\//, &apos;&apos;), this.page.url() ).toString()</code> &#x2014; line 802</li>
+<li><code>this.page.url()</code> &#x2014; line 804</li>
+<li><code>this.openPage(payUrl, { waitUntil: &apos;commit&apos; })</code> &#x2014; line 809</li>
+<li><code>this.isOnIcelandPayPath(payPath)</code> &#x2014; line 819</li>
+<li><code>this.page.waitForURL([callback: see source], { timeout: 30_000, waitUntil: &apos;commit&apos; })</code> &#x2014; line 824</li>
+<li><code>this.isOnIcelandPayPath(payPath, url.pathname)</code> &#x2014; line 825</li>
+</ul>
+<h3 id="isicelandcheckoutpath">isIcelandCheckoutPath</h3>
+<p><code>isIcelandCheckoutPath(pathname: string)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L831">pages/PaymentsPage/PaymentPage.ts:831</a></p>
+<p><code>/en/plan</code> or <code>/en/pay/2</code> &#x2014; must not match <code>/plans-and-prices</code>.</p>
+<h3 id="isicelandpaywizardpath">isIcelandPayWizardPath</h3>
+<p><code>isIcelandPayWizardPath(pathname: string)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L836">pages/PaymentsPage/PaymentPage.ts:836</a></p>
+<h3 id="isicelandplansandpricespath">isIcelandPlansAndPricesPath</h3>
+<p><code>isIcelandPlansAndPricesPath(pathname: string)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L840">pages/PaymentsPage/PaymentPage.ts:840</a></p>
+<h3 id="isicelandqrcodespath">isIcelandQrCodesPath</h3>
+<p><code>isIcelandQrCodesPath(pathname: string)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L844">pages/PaymentsPage/PaymentPage.ts:844</a></p>
+<h3 id="fillicelandpayaddresselement">fillIcelandPayAddressElement</h3>
+<p><code>fillIcelandPayAddressElement()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L852">pages/PaymentsPage/PaymentPage.ts:852</a></p>
+<p>Fills the Stripe Address Element on /pay Information step. Uses iframe title &#x2014; #address-element&gt;div&gt;iframe is often absent on QCI.</p>
+<ul>
+<li><code>this.page .locator(&apos;iframe[title=&quot;Secure address input frame&quot;]&apos;) .contentFrame()</code> &#x2014; line 853</li>
+<li><code>this.page .locator(&apos;iframe[title=&quot;Secure address input frame&quot;]&apos;)</code> &#x2014; line 853</li>
+<li><code>this.expect(name).toBeVisible({ timeout: 20_000 })</code> &#x2014; line 857</li>
+<li><code>name.fill(paymentData.fullName)</code> &#x2014; line 858</li>
+<li><code>country.selectOption({ value: icelandDpfPaymentData.stripeCountry, })</code> &#x2014; line 861</li>
+<li><code>this.expect(line1).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 866</li>
+<li><code>line1.fill(paymentData.address)</code> &#x2014; line 867</li>
+<li><code>this.expect(city).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 870</li>
+<li><code>city.fill(paymentData.city)</code> &#x2014; line 871</li>
+<li><code>this.expect(zip).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 874</li>
+<li><code>zip.fill(icelandDpfPaymentData.zip)</code> &#x2014; line 875</li>
+</ul>
+<h3 id="completeicelandpayinformationstep">completeIcelandPayInformationStep</h3>
+<p><code>completeIcelandPayInformationStep()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L882">pages/PaymentsPage/PaymentPage.ts:882</a></p>
+<p>Completes /pay step 2 (Information) so step 3 (Payment) can mount the Stripe card fields. No-op if Continue to payment is already gone.</p>
+<ul>
+<li><code>this.fillIcelandPayAddressElement()</code> &#x2014; line 887</li>
+<li><code>this.expect(continueBtn).toBeEnabled({ timeout: 15_000 })</code> &#x2014; line 888</li>
+<li><code>continueBtn.click()</code> &#x2014; line 889</li>
+<li><code>this.expect(continueBtn).toBeHidden({ timeout: 30_000 })</code> &#x2014; line 890</li>
+</ul>
+<h3 id="expandicelandstripecardmethod">expandIcelandStripeCardMethod</h3>
+<p><code>expandIcelandStripeCardMethod()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L897">pages/PaymentsPage/PaymentPage.ts:897</a></p>
+<p>Payment Element accordion/tabs can hide the card number until &quot;Card&quot; is selected. Clicks that control in the page or inside Stripe iframes.</p>
+<ul>
+<li><code>this.page .getByRole(&apos;button&apos;, { name: /^(card|credit card|debit card)&#x24;/i }) .or(this.page.getByRole(&apos;tab&apos;, { name: /^card&#x24;/i })) .first()</code> &#x2014; line 898</li>
+<li><code>this.page .getByRole(&apos;button&apos;, { name: /^(card|credit card|debit card)&#x24;/i }) .or(this.page.getByRole(&apos;tab&apos;, { name: /^card&#x24;/i }))</code> &#x2014; line 898</li>
+<li><code>this.page .getByRole(&apos;button&apos;, { name: /^(card|credit card|debit card)&#x24;/i })</code> &#x2014; line 898</li>
+<li><code>this.page.getByRole(&apos;tab&apos;, { name: /^card&#x24;/i })</code> &#x2014; line 900</li>
+<li><code>hostCard.click()</code> &#x2014; line 903</li>
+<li><code>this.icelandStripeIframes().count()</code> &#x2014; line 907</li>
+<li><code>this.icelandStripeIframes()</code> &#x2014; line 907</li>
+<li><code>this.icelandStripeIframes().nth(i).contentFrame()</code> &#x2014; line 909</li>
+<li><code>this.icelandStripeIframes().nth(i)</code> &#x2014; line 909</li>
+<li><code>this.icelandStripeIframes()</code> &#x2014; line 909</li>
+<li><code>tab.click()</code> &#x2014; line 916</li>
+</ul>
+<h3 id="waitforicelandpaystepform">waitForIcelandPayStepForm</h3>
+<p><code>waitForIcelandPayStepForm()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L927">pages/PaymentsPage/PaymentPage.ts:927</a></p>
+<p>Archived P&amp;P only: <code>/pay/{1|2|3}</code> Information then Payment card fields. A leftover DPF Payment Element (<code>/plan-dpf</code> / <code>/plan</code>, kr7,050 trial) is not this form &#x2014; wait for the pay wizard URL first.</p>
+<ul>
+<li><code>this.page.url()</code> &#x2014; line 930</li>
+<li><code>this.page.waitForURL([callback: see source], { timeout: 30_000, waitUntil: &apos;commit&apos; })</code> &#x2014; line 933</li>
+<li><code>this.completeIcelandPayInformationStep()</code> &#x2014; line 939</li>
+<li><code>this.page .locator(&apos;#payment-element, #card-element&apos;) .first()</code> &#x2014; line 941</li>
+<li><code>this.page .locator(&apos;#payment-element, #card-element&apos;)</code> &#x2014; line 941</li>
+<li><code>this.expect .poll( async () =&gt; { await this.expandIcelandStripeCardMethod() const n = await this.icelandStripeIframes().count() for (let i = 0; i &lt; n; i++) { if ( await this.icelandCardInIframe(i) .isVisible() .catch(() =&gt; false) ) { return true } } return false }, { timeout: 60_000, message: &apos;Stripe card number never appeared after Continue to payment (OQG3-2439)&apos;, } ) .toBe(true)</code> &#x2014; line 947</li>
+<li><code>this.expect .poll([callback: see source], { timeout: 60_000, message: &apos;Stripe card number never appeared after Continue to payment (OQG3-2439)&apos;, })</code> &#x2014; line 947</li>
+<li><code>this.expandIcelandStripeCardMethod()</code> &#x2014; line 950</li>
+<li><code>this.icelandStripeIframes().count()</code> &#x2014; line 951</li>
+<li><code>this.icelandStripeIframes()</code> &#x2014; line 951</li>
+<li><code>this.icelandCardInIframe(i) .isVisible() .catch([callback: see source])</code> &#x2014; line 954</li>
+<li><code>this.icelandCardInIframe(i) .isVisible()</code> &#x2014; line 954</li>
+<li><code>this.icelandCardInIframe(i)</code> &#x2014; line 954</li>
+</ul>
+<h3 id="selecticelandchangeplan">selectIcelandChangePlan</h3>
+<p><code>selectIcelandChangePlan(plan: &apos;Monthly&apos; | &apos;Annually&apos; | &apos;Quarterly&apos;)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L979">pages/PaymentsPage/PaymentPage.ts:979</a></p>
+<p>Selects Monthly / Annually / Quarterly on the Iceland change-plan page. Two layouts on oqg.dev:</p>
+<ul>
+<li>Cards with visible &quot;Buy Now&quot; links to /pay/{1|2|3}</li>
+<li>Radio cards + saved Visa + &quot;Submit Payment&quot; (no Buy Now)</li>
+</ul>
+<p>Hidden <code>input.url-picker[data-plan-name]</code> is never waited on.</p>
+<ul>
+<li><code>this.expect( this.page.getByRole(&apos;heading&apos;, { name: &apos;Change your plan&apos; }) ).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 982</li>
+<li><code>this.page.getByRole(&apos;heading&apos;, { name: &apos;Change your plan&apos; })</code> &#x2014; line 983</li>
+<li><code>this.page .locator(&#x2032;a[href*=&quot;&#x24;{payPath}&quot;]&#x2032;) .filter({ hasText: /Buy Now/i }) .first()</code> &#x2014; line 987</li>
+<li><code>this.page .locator(&#x2032;a[href*=&quot;&#x24;{payPath}&quot;]&#x2032;) .filter({ hasText: /Buy Now/i })</code> &#x2014; line 987</li>
+<li><code>this.page .locator(&#x2032;a[href*=&quot;&#x24;{payPath}&quot;]&#x2032;)</code> &#x2014; line 987</li>
+<li><code>this.page.getByRole(&apos;heading&apos;, { name: plan, exact: true, })</code> &#x2014; line 991</li>
+<li><code>this.page.locator(&#x2032;div.plan-card-wrap.&#x24;{plan.toLowerCase()}-wrap&#x2032;)</code> &#x2014; line 995</li>
+<li><code>plan.toLowerCase()</code> &#x2014; line 996</li>
+<li><code>this.page.locator(&#x2032;input.custom-radio-btn[name=&apos;plan&apos;][value=&apos;&#x24;{plan}&apos;]&#x2032;)</code> &#x2014; line 998</li>
+<li><code>buyNow.click()</code> &#x2014; line 1003</li>
+<li><code>this.page.waitForURL(new RegExp(&#x2032;&#x24;{payPath.replace(&apos;/&apos;, &apos;\\/&apos;)}(\\?|&#x24;)&#x2032;), { waitUntil: &apos;commit&apos; })</code> &#x2014; line 1004</li>
+<li><code>this.expect(heading.or(wrap).first()).toBeVisible({ timeout: 15_000, })</code> &#x2014; line 1011</li>
+<li><code>wrap.click({ force: true })</code> &#x2014; line 1015</li>
+<li><code>heading.click()</code> &#x2014; line 1017</li>
+<li><code>radio.check({ force: true })</code> &#x2014; line 1023</li>
+</ul>
+<h3 id="selectplanbyvalue">selectPlanByValue</h3>
+<p><code>selectPlanByValue(plan: &apos;Monthly&apos; | &apos;Annually&apos; | &apos;Quarterly&apos;)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1045">pages/PaymentsPage/PaymentPage.ts:1045</a></p>
+<p>Selects a plan on the /plan subscribe page (or Plans &amp; Pricing / Change plan).</p>
+<p>New /plan UI: plan cards render inside <code>.new-plan-plan-cards-wrap</code>, each a <code>div.plan-card-wrap.{monthly|annually|quarterly}-wrap</code> wrapping a <code>input.custom-radio-btn[name=plan][value=&#x2026;]</code>. The cards start blurred (<code>blur-cards</code>) with the native radio <code>disabled</code>, and only become selectable once Stripe&apos;s payment element mounts into <code>#payment-element</code>. If the payment element never loads &#x2014; e.g. the backend returns an invalid Stripe <code>clientSecret</code> (<code>IntegrationError: Invalid value for elements()</code>) &#x2014; the cards stay blurred and no plan can be selected. We detect that and fail loudly so the failure names the real cause instead of a cryptic radio timeout.</p>
+<p>Billing / pricing still uses a visible <code>&lt;a data-plan-name&gt;</code> Buy Now plus a hidden <code>input.url-picker[data-plan-name]</code> radio. That hidden radio must not be used for a <code>visible</code> wait &#x2014; <code>.or().first()</code> matches it and hangs. Older/staging layouts also keep <code>input.custom-radio-btn</code> (often opacity:0).</p>
+<ul>
+<li><code>this.page.locator(&#x2032;input.custom-radio-btn[name=&apos;plan&apos;][value=&apos;&#x24;{plan}&apos;]&#x2032;)</code> &#x2014; line 1048</li>
+<li><code>this.page.locator(&#x2032;a[data-plan-name=&apos;&#x24;{plan}&apos;]&#x2032;)</code> &#x2014; line 1051</li>
+<li><code>this.page .locator( &#x2032;a[data-plan-name=&apos;&#x24;{plan}&apos;], input[data-plan-name=&apos;&#x24;{plan}&apos;]&#x2032; ) .filter({ visible: true })</code> &#x2014; line 1052</li>
+<li><code>this.page .locator(&#x2032;a[data-plan-name=&apos;&#x24;{plan}&apos;], input[data-plan-name=&apos;&#x24;{plan}&apos;]&#x2032;)</code> &#x2014; line 1052</li>
+<li><code>this.page.locator(&apos;.new-plan-plan-cards-wrap&apos;)</code> &#x2014; line 1057</li>
+<li><code>this.page.locator(&#x2032;div.plan-card-wrap.&#x24;{plan.toLowerCase()}-wrap&#x2032;)</code> &#x2014; line 1058</li>
+<li><code>plan.toLowerCase()</code> &#x2014; line 1059</li>
+<li><code>this.expect(cardsWrap).not.toHaveClass(/blur-cards/, { timeout: 30000, })</code> &#x2014; line 1071</li>
+<li><code>this.expect(radio) .toBeEnabled({ timeout: 15000 }) .catch([callback: see source])</code> &#x2014; line 1086</li>
+<li><code>this.expect(radio) .toBeEnabled({ timeout: 15000 })</code> &#x2014; line 1086</li>
+<li><code>planCard.click({ force: true })</code> &#x2014; line 1091</li>
+<li><code>radio.check({ force: true })</code> &#x2014; line 1093</li>
+<li><code>this.expect(radio).toBeChecked({ timeout: 10000 })</code> &#x2014; line 1096</li>
+<li><code>this.expect(target).toBeEnabled({ timeout: 20000 })</code> &#x2014; line 1103</li>
+<li><code>target.check({ force: true })</code> &#x2014; line 1104</li>
+<li><code>this.expect(target).toBeChecked({ timeout: 10000 })</code> &#x2014; line 1105</li>
+<li><code>this.expect(visiblePlanControl.first()).toBeVisible({ timeout: 15000, })</code> &#x2014; line 1111</li>
+<li><code>visiblePlanControl.first().click({ force: true })</code> &#x2014; line 1114</li>
+</ul>
+<h3 id="openbillinghistory">openBillingHistory</h3>
+<p><code>openBillingHistory()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1117">pages/PaymentsPage/PaymentPage.ts:1117</a></p>
+<ul>
+<li><code>this.locator.billingHistoryButton.click()</code> &#x2014; line 1118</li>
+<li><code>this.expect( this.page.locator(&apos;#pane-billing-history, #taxInfo&apos;).first() ).toBeVisible({ timeout: 30_000, })</code> &#x2014; line 1119</li>
+<li><code>this.page.locator(&apos;#pane-billing-history, #taxInfo&apos;).first()</code> &#x2014; line 1120</li>
+<li><code>this.page.locator(&apos;#pane-billing-history, #taxInfo&apos;)</code> &#x2014; line 1120</li>
+</ul>
+<h3 id="countbillinghistoryinvoices">countBillingHistoryInvoices</h3>
+<p><code>countBillingHistoryInvoices()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1127">pages/PaymentsPage/PaymentPage.ts:1127</a></p>
+<p>Opens Billing History and returns how many invoice/payment rows are listed.</p>
+<ul>
+<li><code>this.openBillingHistory()</code> &#x2014; line 1128</li>
+<li><code>this.locator.billingHistoryInvoiceRows .first() .waitFor({ state: &apos;attached&apos;, timeout: 30_000 }) .catch([callback: see source])</code> &#x2014; line 1130</li>
+<li><code>this.locator.billingHistoryInvoiceRows .first() .waitFor({ state: &apos;attached&apos;, timeout: 30_000 })</code> &#x2014; line 1130</li>
+<li><code>this.locator.billingHistoryInvoiceRows .first()</code> &#x2014; line 1130</li>
+<li><code>this.locator.billingHistoryInvoiceRows.count()</code> &#x2014; line 1134</li>
+</ul>
+<h3 id="clickoncancelsubscriptionbutton">clickOnCancelSubscriptionButton</h3>
+<p><code>clickOnCancelSubscriptionButton()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1137">pages/PaymentsPage/PaymentPage.ts:1137</a></p>
+<ul>
+<li><code>expect(this.locator.cancelSubscriptionButton).toBeEnabled({ timeout: 30000, })</code> &#x2014; line 1138</li>
+<li><code>this.locator.cancelSubscriptionButton.click()</code> &#x2014; line 1141</li>
+<li><code>this.locator.cancelSubscriptionConfirmationButton.click()</code> &#x2014; line 1142</li>
+</ul>
+<h3 id="makesubscriptionpayment">makeSubscriptionPayment</h3>
+<p><code>makeSubscriptionPayment()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1144">pages/PaymentsPage/PaymentPage.ts:1144</a></p>
+<ul>
+<li><code>this.fillBillingDetailsPaymentFrame()</code> &#x2014; line 1146</li>
+<li><code>this.makePayment()</code> &#x2014; line 1147</li>
+</ul>
+<h3 id="waitforpaymentspinnertodisappear">waitForPaymentSpinnerToDisappear</h3>
+<p><code>waitForPaymentSpinnerToDisappear()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1149">pages/PaymentsPage/PaymentPage.ts:1149</a></p>
+<ul>
+<li><code>expect(this.locator.spinnerPayment).toBeVisible()</code> &#x2014; line 1150</li>
+<li><code>expect(this.locator.spinnerPayment).not.toBeVisible({ timeout: 15000, })</code> &#x2014; line 1151</li>
+</ul>
+<h3 id="cancelsubscription">cancelSubscription</h3>
+<p><code>cancelSubscription()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1156">pages/PaymentsPage/PaymentPage.ts:1156</a></p>
+<ul>
+<li><code>this.clickOnCancelSubscriptionButton()</code> &#x2014; line 1157</li>
+<li><code>this.locator.cancellationReason.click()</code> &#x2014; line 1158</li>
+<li><code>this.locator.feedbackSubmitButton.click()</code> &#x2014; line 1159</li>
+<li><code>this.locator.promo1CancelButton.click()</code> &#x2014; line 1160</li>
+<li><code>this.locator.lastPromoCancelBtn.click()</code> &#x2014; line 1161</li>
+<li><code>this.expect(this.locator.successAlert).toBeVisible()</code> &#x2014; line 1162</li>
+</ul>
+<h3 id="cancellationsubscriptionwith70promo">cancellationSubscriptionWith70Promo</h3>
+<p><code>cancellationSubscriptionWith70Promo()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1164">pages/PaymentsPage/PaymentPage.ts:1164</a></p>
+<ul>
+<li><code>this.clickOnCancelSubscriptionButton()</code> &#x2014; line 1165</li>
+<li><code>this.locator.cancellationReason.click()</code> &#x2014; line 1166</li>
+<li><code>this.locator.feedbackSubmitButton.click()</code> &#x2014; line 1167</li>
+<li><code>this.locator.promo1ConfirmButton.click()</code> &#x2014; line 1168</li>
+<li><code>this.locator.thankYouPromoCloseButton.click()</code> &#x2014; line 1169</li>
+</ul>
+<h3 id="cancellationsubscriptionwith90promo">cancellationSubscriptionWith90Promo</h3>
+<p><code>cancellationSubscriptionWith90Promo()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1171">pages/PaymentsPage/PaymentPage.ts:1171</a></p>
+<ul>
+<li><code>this.clickOnCancelSubscriptionButton()</code> &#x2014; line 1172</li>
+<li><code>this.locator.cancellationReason.click()</code> &#x2014; line 1173</li>
+<li><code>this.locator.feedbackSubmitButton.click()</code> &#x2014; line 1174</li>
+<li><code>this.locator.promo1CancelButton.click()</code> &#x2014; line 1175</li>
+<li><code>this.page.waitForTimeout(1_000)</code> &#x2014; line 1176</li>
+<li><code>this.locator.lastPromoConfirmButton.click()</code> &#x2014; line 1177</li>
+<li><code>this.locator.thankYouPromoCloseButton.click()</code> &#x2014; line 1178</li>
+</ul>
+<h3 id="opencancelpromo90offer">openCancelPromo90Offer</h3>
+<p><code>openCancelPromo90Offer()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1185">pages/PaymentsPage/PaymentPage.ts:1185</a></p>
+<p>Cancel &#x2192; confirm &#x2192; feedback reason &#x2192; 70% offer &#x2192; &quot;No thanks&quot; until the 90% retention screen is visible. Does not accept or finalize cancellation.</p>
+<ul>
+<li><code>this.clickOnCancelSubscriptionButton()</code> &#x2014; line 1186</li>
+<li><code>this.locator.cancellationReason.click()</code> &#x2014; line 1187</li>
+<li><code>this.locator.feedbackSubmitButton.click()</code> &#x2014; line 1188</li>
+<li><code>this.locator.promo1CancelButton.click()</code> &#x2014; line 1189</li>
+<li><code>this.expect(this.locator.promo90OfferText).toBeVisible({ timeout: 25_000, })</code> &#x2014; line 1190</li>
+</ul>
+<h3 id="readcancelpromo90price">readCancelPromo90Price</h3>
+<p><code>readCancelPromo90Price()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1196">pages/PaymentsPage/PaymentPage.ts:1196</a></p>
+<p>Monthly rate shown on the 90% cancel-retention modal.</p>
+<ul>
+<li><code>this.expect(this.locator.discountPrice90promo).toBeVisible({ timeout: 15_000, })</code> &#x2014; line 1197</li>
+<li><code>this.locator.discountPrice90promo.textContent()</code> &#x2014; line 1200</li>
+</ul>
+<h3 id="expectactivesubscription">expectActiveSubscription</h3>
+<p><code>expectActiveSubscription(plan: &apos;Monthly&apos; | &apos;Quarterly&apos; | &apos;Annually&apos;)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1203">pages/PaymentsPage/PaymentPage.ts:1203</a></p>
+<ul>
+<li><code>this.expect(this.locator.planActiveLabel).toBeVisible()</code> &#x2014; line 1206</li>
+<li><code>this.expect(planLocatorMap[plan]).toBeVisible()</code> &#x2014; line 1212</li>
+</ul>
+<h3 id="expectsubscriptioncancelledbutactive">expectSubscriptionCancelledButActive</h3>
+<p><code>expectSubscriptionCancelledButActive()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1215">pages/PaymentsPage/PaymentPage.ts:1215</a></p>
+<ul>
+<li><code>this.expect(this.locator.planActiveLabel).toBeVisible()</code> &#x2014; line 1216</li>
+<li><code>this.expect(this.locator.subscriptionExpiredMessage).toBeVisible()</code> &#x2014; line 1217</li>
+</ul>
+<h3 id="expectsubscriptionfullycancelled">expectSubscriptionFullyCancelled</h3>
+<p><code>expectSubscriptionFullyCancelled()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1220">pages/PaymentsPage/PaymentPage.ts:1220</a></p>
+<ul>
+<li><code>this.expect(this.locator.planExpiredLabel).toBeVisible()</code> &#x2014; line 1221</li>
+<li><code>this.expect(this.locator.subscriptionExpiredBanner).toBeVisible()</code> &#x2014; line 1222</li>
+<li><code>this.expect(this.locator.subscriptionExpiredMessage).toBeVisible()</code> &#x2014; line 1223</li>
+</ul>
+<h3 id="navigatetosubscriptionswithfallback">navigateToSubscriptionsWithFallback</h3>
+<p><code>navigateToSubscriptionsWithFallback()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1226">pages/PaymentsPage/PaymentPage.ts:1226</a></p>
+<ul>
+<li><code>this.page.goto(&apos;/account#subscriptions&apos;)</code> &#x2014; line 1227</li>
+<li><code>this.page.url().includes(&apos;account&apos;)</code> &#x2014; line 1228</li>
+<li><code>this.page.url()</code> &#x2014; line 1228</li>
+<li><code>this.locator.dashboardHeaderLogo.first().click()</code> &#x2014; line 1229</li>
+<li><code>this.locator.dashboardHeaderLogo.first()</code> &#x2014; line 1229</li>
+<li><code>this.page.waitForTimeout(1_000)</code> &#x2014; line 1230</li>
+<li><code>this.locator.sidebarAccountButton.click()</code> &#x2014; line 1231</li>
+<li><code>this.locator.subscriptionsTabButton.click()</code> &#x2014; line 1232</li>
+</ul>
+<h3 id="expectcancelsubscriptionbuttonenabled">expectCancelSubscriptionButtonEnabled</h3>
+<p><code>expectCancelSubscriptionButtonEnabled()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1236">pages/PaymentsPage/PaymentPage.ts:1236</a></p>
+<ul>
+<li><code>this.expect(this.locator.cancelSubscriptionButton).toBeEnabled({ timeout: 30000, })</code> &#x2014; line 1237</li>
+</ul>
+<h3 id="expectreactivatepopupvisible">expectReactivatePopupVisible</h3>
+<p><code>expectReactivatePopupVisible()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1242">pages/PaymentsPage/PaymentPage.ts:1242</a></p>
+<ul>
+<li><code>this.expect(this.locator.subscriptionUpgradePopup).toBeVisible()</code> &#x2014; line 1243</li>
+</ul>
+<h3 id="expectchangeplanoptionsvisible">expectChangePlanOptionsVisible</h3>
+<p><code>expectChangePlanOptionsVisible()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1246">pages/PaymentsPage/PaymentPage.ts:1246</a></p>
+<ul>
+<li><code>this.expect( this.locator.buyMonthlyPlanButton.first() ).toBeAttached()</code> &#x2014; line 1249</li>
+<li><code>this.locator.buyMonthlyPlanButton.first()</code> &#x2014; line 1250</li>
+<li><code>this.expect( this.locator.buyAnnualPlanButton.first() ).toBeAttached()</code> &#x2014; line 1252</li>
+<li><code>this.locator.buyAnnualPlanButton.first()</code> &#x2014; line 1253</li>
+<li><code>this.expect( this.locator.buyQuarterlyPlanButton.first() ).toBeAttached()</code> &#x2014; line 1255</li>
+<li><code>this.locator.buyQuarterlyPlanButton.first()</code> &#x2014; line 1256</li>
+</ul>
+<h3 id="expecteditsubscriptionpopupvisible">expectEditSubscriptionPopupVisible</h3>
+<p><code>expectEditSubscriptionPopupVisible()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1261">pages/PaymentsPage/PaymentPage.ts:1261</a></p>
+<p>Verifies the Edit Scheduled Subscription popup is open</p>
+<ul>
+<li><code>this.expect(this.locator.changePlanSubmitButton).toBeVisible()</code> &#x2014; line 1262</li>
+</ul>
+<h3 id="expectpaymentmethodupdatedcard">expectPaymentMethodUpdatedCard</h3>
+<p><code>expectPaymentMethodUpdatedCard(lastFourDigits: string)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1266">pages/PaymentsPage/PaymentPage.ts:1266</a></p>
+<p>Verifies the payment method card displays the expected last 4 digits</p>
+<ul>
+<li><code>this.expect(this.locator.paymentMethodCardNumber).toContainText(lastFourDigits)</code> &#x2014; line 1269</li>
+</ul>
+<h3 id="expectcancelsubscriptiondialogvisible">expectCancelSubscriptionDialogVisible</h3>
+<p><code>expectCancelSubscriptionDialogVisible()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1274">pages/PaymentsPage/PaymentPage.ts:1274</a></p>
+<ul>
+<li><code>this.expect( this.locator.cancelSubscriptionConfirmationButton ).toBeVisible()</code> &#x2014; line 1275</li>
+<li><code>this.expect( this.locator.cancelSubscriptionGoBackButton ).toBeVisible()</code> &#x2014; line 1278</li>
+</ul>
+<h3 id="expectsubscriptioncancelleduistate">expectSubscriptionCancelledUIState</h3>
+<p><code>expectSubscriptionCancelledUIState()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1283">pages/PaymentsPage/PaymentPage.ts:1283</a></p>
+<ul>
+<li><code>this.expect(this.locator.resubscribeButton).toBeVisible()</code> &#x2014; line 1284</li>
+<li><code>this.expect( this.locator.subscriptionCancelledMessage ).toContainText(&quot;You&apos;ve canceled your subscription. Please subscribe again to reactivate your QR codes and gain access to unlimited scans.&quot;)</code> &#x2014; line 1285</li>
+</ul>
+<h3 id="readplancardprices">readPlanCardPrices</h3>
+<p><code>readPlanCardPrices()</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1296">pages/PaymentsPage/PaymentPage.ts:1296</a></p>
+<p>Reads Monthly / Annually / Quarterly card prices on <code>/plan</code>. Prefers <code>data-monthly-price</code> on the radio; falls back to <code>h3.main-price</code>.</p>
+<ul>
+<li><code>this.page.locator(&apos;.new-plan-plan-cards-wrap&apos;)</code> &#x2014; line 1301</li>
+<li><code>this.expect(cardsWrap).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 1302</li>
+<li><code>this.expect(cardsWrap).not.toHaveClass(/blur-cards/, { timeout: 30_000, })</code> &#x2014; line 1303</li>
+<li><code>this.planCardRadio(plan)</code> &#x2014; line 1310</li>
+<li><code>this.planCardMainPrice(plan)</code> &#x2014; line 1316</li>
+<li><code>this.expect(heading).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 1317</li>
+</ul>
+<h3 id="selectplanandreadtotal">selectPlanAndReadTotal</h3>
+<p><code>selectPlanAndReadTotal(plan: &apos;Monthly&apos; | &apos;Annually&apos; | &apos;Quarterly&apos;)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1332">pages/PaymentsPage/PaymentPage.ts:1332</a></p>
+<p>Selects a <code>/plan</code> card, waits for the summary Total to finish updating (AJAX <code>change_plan</code> + blur clear), then returns the Total text.</p>
+<ul>
+<li><code>this.expect(total).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 1336</li>
+<li><code>this.page .waitForResponse( (response) =&gt; { if ( response.request().method() !== &apos;POST&apos; || !response.url().includes(&apos;/api/ajax&apos;) ) { return false } const body = response.request().postData() ?? &apos;&apos; return body.includes(&apos;change_plan&apos;) }, { timeout: 30_000 } ) .catch([callback: see source])</code> &#x2014; line 1339</li>
+<li><code>this.page .waitForResponse([callback: see source], { timeout: 30_000 })</code> &#x2014; line 1339</li>
+<li><code>this.selectPlanByValue(plan)</code> &#x2014; line 1355</li>
+<li><code>this.page.locator(&apos;.new-plan-plan-cards-wrap&apos;)</code> &#x2014; line 1358</li>
+<li><code>this.expect(cardsWrap).not.toHaveClass(/blur-cards/, { timeout: 30_000, })</code> &#x2014; line 1359</li>
+<li><code>this.expect(total).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 1362</li>
+<li><code>expect .poll( async () =&gt; { const text = ((await total.textContent()) ?? &apos;&apos;).trim() if (!text) return false if (text !== before) return true return this.planCardRadio(plan).isChecked() }, { timeout: 30_000 } ) .toBe(true)</code> &#x2014; line 1364</li>
+<li><code>this.planCardRadio(plan).isChecked()</code> &#x2014; line 1370</li>
+<li><code>this.planCardRadio(plan)</code> &#x2014; line 1370</li>
+</ul>
+<h3 id="plancardmainprice">planCardMainPrice</h3>
+<p><code>planCardMainPrice(plan: &apos;Monthly&apos; | &apos;Annually&apos; | &apos;Quarterly&apos;)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1379">pages/PaymentsPage/PaymentPage.ts:1379</a></p>
+<ul>
+<li><code>this.page.locator(&#x2032;div.plan-card-wrap.&#x24;{plan.toLowerCase()}-wrap h3.main-price&#x2032;)</code> &#x2014; line 1382</li>
+<li><code>plan.toLowerCase()</code> &#x2014; line 1383</li>
+</ul>
+<h3 id="plancardradio">planCardRadio</h3>
+<p><code>planCardRadio(plan: &apos;Monthly&apos; | &apos;Annually&apos; | &apos;Quarterly&apos;)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPage.ts" href="../../sources/pages/PaymentsPage/PaymentPage.ts.html#L1387">pages/PaymentsPage/PaymentPage.ts:1387</a></p>
+<ul>
+<li><code>this.page.locator(&#x2032;input.custom-radio-btn[name=&apos;plan&apos;][value=&apos;&#x24;{plan}&apos;]&#x2032;)</code> &#x2014; line 1390</li>
+</ul>
+<h2 id="pages-paymentspage-paymentpagelocators-ts">pages/PaymentsPage/PaymentPageLocators.ts</h2>
+<p><a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L1">pages/PaymentsPage/PaymentPageLocators.ts:1</a></p>
+<ul>
+<li><code>{ Page, Locator, FrameLocator }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseLocators }</code> &#x2190; <a data-source="pages/BaseLocators.ts" href="../../sources/pages/BaseLocators.ts.html#L1">pages/BaseLocators.ts:1</a></li>
+<li><code>{ getDomain, type Domain }</code> &#x2190; <a data-source="utils/domainEnv.ts" href="../../sources/utils/domainEnv.ts.html#L1">utils/domainEnv.ts:1</a></li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L133">pages/PaymentsPage/PaymentPageLocators.ts:133</a></p>
+<ul>
+<li><code>this.iframePayment.contentFrame()</code> &#x2014; line 145</li>
+<li><code>this.framePayment .getByRole(&apos;tab&apos;, { name: /^Card&#x24;/i }) .or(this.framePayment.getByRole(&apos;button&apos;, { name: /^Card&#x24;/i })) .first()</code> &#x2014; line 148</li>
+<li><code>this.framePayment .getByRole(&apos;tab&apos;, { name: /^Card&#x24;/i }) .or(this.framePayment.getByRole(&apos;button&apos;, { name: /^Card&#x24;/i }))</code> &#x2014; line 148</li>
+<li><code>this.framePayment .getByRole(&apos;tab&apos;, { name: /^Card&#x24;/i })</code> &#x2014; line 148</li>
+<li><code>this.framePayment.getByRole(&apos;button&apos;, { name: /^Card&#x24;/i })</code> &#x2014; line 150</li>
+<li><code>this.framePayment .locator( &apos;input#payment-numberInput, input[name=&quot;number&quot;], input[autocomplete=&quot;cc-number&quot;]&apos; ) .first()</code> &#x2014; line 152</li>
+<li><code>this.framePayment .locator(&apos;input#payment-numberInput, input[name=&quot;number&quot;], input[autocomplete=&quot;cc-number&quot;]&apos;)</code> &#x2014; line 152</li>
+<li><code>this.framePayment.locator(&quot;//p[@id=&apos;Field-numberError&apos;]&quot;)</code> &#x2014; line 157</li>
+<li><code>this.framePayment.locator(&quot;//p[@id=&apos;Field--expiryError&apos;]&quot;)</code> &#x2014; line 160</li>
+<li><code>this.framePayment.locator(&quot;//p[@id=&apos;Field-cvcError&apos;]&quot;)</code> &#x2014; line 163</li>
+<li><code>this.framePayment.locator(&quot;//div[@data-field=&apos;number&apos;]/label&quot;)</code> &#x2014; line 166</li>
+<li><code>this.framePayment .locator( &apos;input#payment-expiryInput, input[name=&quot;expiry&quot;], input[autocomplete=&quot;cc-exp&quot;]&apos; ) .first()</code> &#x2014; line 169</li>
+<li><code>this.framePayment .locator(&apos;input#payment-expiryInput, input[name=&quot;expiry&quot;], input[autocomplete=&quot;cc-exp&quot;]&apos;)</code> &#x2014; line 169</li>
+<li><code>this.framePayment .locator( &apos;input#payment-cvcInput, input[name=&quot;cvc&quot;], input[autocomplete=&quot;cc-csc&quot;]&apos; ) .first()</code> &#x2014; line 174</li>
+<li><code>this.framePayment .locator(&apos;input#payment-cvcInput, input[name=&quot;cvc&quot;], input[autocomplete=&quot;cc-csc&quot;]&apos;)</code> &#x2014; line 174</li>
+<li><code>this.framePayment .locator(&apos;#payment-countryInput, select[name=&quot;country&quot;]&apos;) .first()</code> &#x2014; line 179</li>
+<li><code>this.framePayment .locator(&apos;#payment-countryInput, select[name=&quot;country&quot;]&apos;)</code> &#x2014; line 179</li>
+<li><code>this.framePayment .locator(&apos;#payment-postalCodeInput, input[name=&quot;postalCode&quot;]&apos;) .first()</code> &#x2014; line 182</li>
+<li><code>this.framePayment .locator(&apos;#payment-postalCodeInput, input[name=&quot;postalCode&quot;]&apos;)</code> &#x2014; line 182</li>
+<li><code>this.iframeBilling.contentFrame()</code> &#x2014; line 236</li>
+<li><code>this.framePayment.locator(&apos;p#payment-postalCodeError&apos;)</code> &#x2014; line 237</li>
+<li><code>this.framePayment.locator(&apos;p#payment-numberError&apos;)</code> &#x2014; line 240</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-nameInput&apos;) .or(this.frameBilling.getByRole(&apos;textbox&apos;, { name: /Full name/i })) .first()</code> &#x2014; line 243</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-nameInput&apos;) .or(this.frameBilling.getByRole(&apos;textbox&apos;, { name: /Full name/i }))</code> &#x2014; line 243</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-nameInput&apos;)</code> &#x2014; line 243</li>
+<li><code>this.frameBilling.getByRole(&apos;textbox&apos;, { name: /Full name/i })</code> &#x2014; line 245</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-countryInput&apos;) .or( this.frameBilling.getByRole(&apos;combobox&apos;, { name: /Country or region/i, }) ) .first()</code> &#x2014; line 247</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-countryInput&apos;) .or(this.frameBilling.getByRole(&apos;combobox&apos;, { name: /Country or region/i, }))</code> &#x2014; line 247</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-countryInput&apos;)</code> &#x2014; line 247</li>
+<li><code>this.frameBilling.getByRole(&apos;combobox&apos;, { name: /Country or region/i, })</code> &#x2014; line 250</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-addressLine1Input&apos;) .or( this.frameBilling.getByRole(&apos;textbox&apos;, { name: /Address line 1/i, }) ) .first()</code> &#x2014; line 255</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-addressLine1Input&apos;) .or(this.frameBilling.getByRole(&apos;textbox&apos;, { name: /Address line 1/i, }))</code> &#x2014; line 255</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-addressLine1Input&apos;)</code> &#x2014; line 255</li>
+<li><code>this.frameBilling.getByRole(&apos;textbox&apos;, { name: /Address line 1/i, })</code> &#x2014; line 258</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-localityInput&apos;) .or(this.frameBilling.getByRole(&apos;textbox&apos;, { name: /^City/i })) .first()</code> &#x2014; line 263</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-localityInput&apos;) .or(this.frameBilling.getByRole(&apos;textbox&apos;, { name: /^City/i }))</code> &#x2014; line 263</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-localityInput&apos;)</code> &#x2014; line 263</li>
+<li><code>this.frameBilling.getByRole(&apos;textbox&apos;, { name: /^City/i })</code> &#x2014; line 265</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-administrativeAreaInput&apos;) .or(this.frameBilling.getByLabel(/State/i)) .first()</code> &#x2014; line 267</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-administrativeAreaInput&apos;) .or(this.frameBilling.getByLabel(/State/i))</code> &#x2014; line 267</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-administrativeAreaInput&apos;)</code> &#x2014; line 267</li>
+<li><code>this.frameBilling.getByLabel(/State/i)</code> &#x2014; line 269</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-postalCodeInput&apos;) .or( this.frameBilling.getByRole(&apos;textbox&apos;, { name: /Postal code|ZIP/i, }) ) .first()</code> &#x2014; line 271</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-postalCodeInput&apos;) .or(this.frameBilling.getByRole(&apos;textbox&apos;, { name: /Postal code|ZIP/i, }))</code> &#x2014; line 271</li>
+<li><code>this.frameBilling .locator(&apos;#billingAddress-postalCodeInput&apos;)</code> &#x2014; line 271</li>
+<li><code>this.frameBilling.getByRole(&apos;textbox&apos;, { name: /Postal code|ZIP/i, })</code> &#x2014; line 274</li>
+</ul>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.paymentElement</code> &#x2190; <code>page.locator(&apos;#payment-element&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L138">pages/PaymentsPage/PaymentPageLocators.ts:138</a></li>
+<li><code>this.iframePayment</code> &#x2190; <code>page .locator( &apos;#payment-element iframe[title=&quot;Secure payment input frame&quot;], #payment-element iframe&apos; ) .filter({ visible: true }) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L139">pages/PaymentsPage/PaymentPageLocators.ts:139</a></li>
+<li><code>this.framePayment</code> &#x2190; <code>this.iframePayment.contentFrame()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L145">pages/PaymentsPage/PaymentPageLocators.ts:145</a></li>
+<li><code>this.cardPaymentMethodTab</code> &#x2190; <code>this.framePayment .getByRole(&apos;tab&apos;, { name: /^Card&#x24;/i }) .or(this.framePayment.getByRole(&apos;button&apos;, { name: /^Card&#x24;/i })) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L148">pages/PaymentsPage/PaymentPageLocators.ts:148</a></li>
+<li><code>this.cardNumber</code> &#x2190; <code>this.framePayment .locator( &apos;input#payment-numberInput, input[name=&quot;number&quot;], input[autocomplete=&quot;cc-number&quot;]&apos; ) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L152">pages/PaymentsPage/PaymentPageLocators.ts:152</a></li>
+<li><code>this.cardNumberErrorLabel</code> &#x2190; <code>this.framePayment.locator( &quot;//p[@id=&apos;Field-numberError&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L157">pages/PaymentsPage/PaymentPageLocators.ts:157</a></li>
+<li><code>this.expDateErrorLabel</code> &#x2190; <code>this.framePayment.locator( &quot;//p[@id=&apos;Field--expiryError&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L160">pages/PaymentsPage/PaymentPageLocators.ts:160</a></li>
+<li><code>this.cvcCodeErrorLabel</code> &#x2190; <code>this.framePayment.locator( &quot;//p[@id=&apos;Field-cvcError&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L163">pages/PaymentsPage/PaymentPageLocators.ts:163</a></li>
+<li><code>this.cardNumberLabel</code> &#x2190; <code>this.framePayment.locator( &quot;//div[@data-field=&apos;number&apos;]/label&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L166">pages/PaymentsPage/PaymentPageLocators.ts:166</a></li>
+<li><code>this.expiryDateInput</code> &#x2190; <code>this.framePayment .locator( &apos;input#payment-expiryInput, input[name=&quot;expiry&quot;], input[autocomplete=&quot;cc-exp&quot;]&apos; ) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L169">pages/PaymentsPage/PaymentPageLocators.ts:169</a></li>
+<li><code>this.cvcCodeInput</code> &#x2190; <code>this.framePayment .locator( &apos;input#payment-cvcInput, input[name=&quot;cvc&quot;], input[autocomplete=&quot;cc-csc&quot;]&apos; ) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L174">pages/PaymentsPage/PaymentPageLocators.ts:174</a></li>
+<li><code>this.paymentCountryDropdown</code> &#x2190; <code>this.framePayment .locator(&apos;#payment-countryInput, select[name=&quot;country&quot;]&apos;) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L179">pages/PaymentsPage/PaymentPageLocators.ts:179</a></li>
+<li><code>this.paymentZipInput</code> &#x2190; <code>this.framePayment .locator(&apos;#payment-postalCodeInput, input[name=&quot;postalCode&quot;]&apos;) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L182">pages/PaymentsPage/PaymentPageLocators.ts:182</a></li>
+<li><code>this.exitFromPaymentFrame</code> &#x2190; <code>page.locator(&apos;body&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L185">pages/PaymentsPage/PaymentPageLocators.ts:185</a></li>
+<li><code>this.submitPaymentButton</code> &#x2190; <code>page .getByRole(&apos;button&apos;, { name: &apos;Submit Payment&apos; }) .or(page.locator(&apos;#submit&apos;)) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L186">pages/PaymentsPage/PaymentPageLocators.ts:186</a></li>
+<li><code>this.submitPaymentButtonMobile</code> &#x2190; <code>page.locator( &quot;//button[@id=&apos;mobileSubmitBtn&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L190">pages/PaymentsPage/PaymentPageLocators.ts:190</a></li>
+<li><code>this.subscriptionTermsCheckbox</code> &#x2190; <code>page .locator(&apos;#checkout-consent&apos;) .or( page.getByRole(&apos;checkbox&apos;, { name: /I agree to the terms and conditions/i, }) ) .or( page .locator(&apos;label&apos;) .filter({ hasText: /I agree to the terms and conditions/i, }) .locator(&apos;input[type=&quot;checkbox&quot;]&apos;) ) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L193">pages/PaymentsPage/PaymentPageLocators.ts:193</a></li>
+<li><code>this.checkoutConsentCheckbox</code> &#x2190; <code>page.locator(&apos;#checkout-consent&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L209">pages/PaymentsPage/PaymentPageLocators.ts:209</a></li>
+<li><code>this.accountInformationHeading</code> &#x2190; <code>page .getByRole(&apos;heading&apos;, { name: /Account Information/i }) .or(page.getByText(/Account Information/i)) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L210">pages/PaymentsPage/PaymentPageLocators.ts:210</a></li>
+<li><code>this.archivedAccountEmailInput</code> &#x2190; <code>page .getByRole(&apos;textbox&apos;, { name: /enter your email/i }) .or(page.getByPlaceholder(/enter your email/i)) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L214">pages/PaymentsPage/PaymentPageLocators.ts:214</a></li>
+<li><code>this.accountInformationNextButton</code> &#x2190; <code>page .getByRole(&apos;button&apos;, { name: /^Next&#x24;/i }) .or(page.getByRole(&apos;link&apos;, { name: /^Next&#x24;/i })) .or( page.locator( &quot;form#register-dpf-form button[type=&apos;submit&apos;], form#register-dpf-form button.-btn-submit&quot; ) ) .filter({ visible: true }) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L218">pages/PaymentsPage/PaymentPageLocators.ts:218</a></li>
+<li><code>this.spinnerPayment</code> &#x2190; <code>page.locator(&apos;#spinner&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L228">pages/PaymentsPage/PaymentPageLocators.ts:228</a></li>
+<li><code>this.iframeBilling</code> &#x2190; <code>page .locator( &apos;#address-element iframe[title=&quot;Secure address input frame&quot;], #address-element iframe, div#address-element&gt;div&gt;iframe&apos; ) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L231">pages/PaymentsPage/PaymentPageLocators.ts:231</a></li>
+<li><code>this.frameBilling</code> &#x2190; <code>this.iframeBilling.contentFrame()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L236">pages/PaymentsPage/PaymentPageLocators.ts:236</a></li>
+<li><code>this.postalCodeErrorMessage</code> &#x2190; <code>this.framePayment.locator( &apos;p#payment-postalCodeError&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L237">pages/PaymentsPage/PaymentPageLocators.ts:237</a></li>
+<li><code>this.cardDeclinedErrorMessage</code> &#x2190; <code>this.framePayment.locator( &apos;p#payment-numberError&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L240">pages/PaymentsPage/PaymentPageLocators.ts:240</a></li>
+<li><code>this.billingFullNameInput</code> &#x2190; <code>this.frameBilling .locator(&apos;#billingAddress-nameInput&apos;) .or(this.frameBilling.getByRole(&apos;textbox&apos;, { name: /Full name/i })) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L243">pages/PaymentsPage/PaymentPageLocators.ts:243</a></li>
+<li><code>this.billingCountryInput</code> &#x2190; <code>this.frameBilling .locator(&apos;#billingAddress-countryInput&apos;) .or( this.frameBilling.getByRole(&apos;combobox&apos;, { name: /Country or region/i, }) ) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L247">pages/PaymentsPage/PaymentPageLocators.ts:247</a></li>
+<li><code>this.billingAddressLine1Input</code> &#x2190; <code>this.frameBilling .locator(&apos;#billingAddress-addressLine1Input&apos;) .or( this.frameBilling.getByRole(&apos;textbox&apos;, { name: /Address line 1/i, }) ) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L255">pages/PaymentsPage/PaymentPageLocators.ts:255</a></li>
+<li><code>this.billingCityInput</code> &#x2190; <code>this.frameBilling .locator(&apos;#billingAddress-localityInput&apos;) .or(this.frameBilling.getByRole(&apos;textbox&apos;, { name: /^City/i })) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L263">pages/PaymentsPage/PaymentPageLocators.ts:263</a></li>
+<li><code>this.billingStateInput</code> &#x2190; <code>this.frameBilling .locator(&apos;#billingAddress-administrativeAreaInput&apos;) .or(this.frameBilling.getByLabel(/State/i)) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L267">pages/PaymentsPage/PaymentPageLocators.ts:267</a></li>
+<li><code>this.billingPostalCodeInput</code> &#x2190; <code>this.frameBilling .locator(&apos;#billingAddress-postalCodeInput&apos;) .or( this.frameBilling.getByRole(&apos;textbox&apos;, { name: /Postal code|ZIP/i, }) ) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L271">pages/PaymentsPage/PaymentPageLocators.ts:271</a></li>
+<li><code>this.billingInfoContinueButton</code> &#x2190; <code>page.locator( &quot;//button[@id=&apos;infoSubmit&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L279">pages/PaymentsPage/PaymentPageLocators.ts:279</a></li>
+<li><code>this.monthlyPlanCheckbox</code> &#x2190; <code>page.locator( &quot;input.custom-radio-btn[name=&apos;plan&apos;][value=&apos;Monthly&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L282">pages/PaymentsPage/PaymentPageLocators.ts:282</a></li>
+<li><code>this.buyMonthlyPlanButton</code> &#x2190; <code>page.locator( &quot;a[data-plan-name=&apos;Monthly&apos;], input.custom-radio-btn[name=&apos;plan&apos;][value=&apos;Monthly&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L285">pages/PaymentsPage/PaymentPageLocators.ts:285</a></li>
+<li><code>this.annualPlanCheckbox</code> &#x2190; <code>page.locator( &quot;input.custom-radio-btn[name=&apos;plan&apos;][value=&apos;Annually&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L288">pages/PaymentsPage/PaymentPageLocators.ts:288</a></li>
+<li><code>this.buyAnnualPlanButton</code> &#x2190; <code>page.locator( &quot;a[data-plan-name=&apos;Annually&apos;], input.custom-radio-btn[name=&apos;plan&apos;][value=&apos;Annually&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L291">pages/PaymentsPage/PaymentPageLocators.ts:291</a></li>
+<li><code>this.quarterlyPlanCheckbox</code> &#x2190; <code>page.locator( &quot;input.custom-radio-btn[name=&apos;plan&apos;][value=&apos;Quarterly&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L294">pages/PaymentsPage/PaymentPageLocators.ts:294</a></li>
+<li><code>this.buyQuarterlyPlanButton</code> &#x2190; <code>page.locator( &quot;a[data-plan-name=&apos;Quarterly&apos;], input.custom-radio-btn[name=&apos;plan&apos;][value=&apos;Quarterly&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L297">pages/PaymentsPage/PaymentPageLocators.ts:297</a></li>
+<li><code>this.thankYouForYourPurchaseButton</code> &#x2190; <code>page .locator(&apos;a.thank-btn, div.pay-thank-wrap a, a.btn.thank-btn&apos;) .or(page.getByRole(&apos;link&apos;, { name: /Go to Dashboard/i })) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L300">pages/PaymentsPage/PaymentPageLocators.ts:300</a></li>
+<li><code>this.subscriptionExpiredMessage</code> &#x2190; <code>page.locator(&apos;p.exp-error&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L304">pages/PaymentsPage/PaymentPageLocators.ts:304</a></li>
+<li><code>this.subscriptionExpiredBanner</code> &#x2190; <code>page.locator( &apos;div.subscription-status-banner-wrp&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L305">pages/PaymentsPage/PaymentPageLocators.ts:305</a></li>
+<li><code>this.subscriptionUpgradePopup</code> &#x2190; <code>page.locator( &apos;div#upgradePopup div.modal-content&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L308">pages/PaymentsPage/PaymentPageLocators.ts:308</a></li>
+<li><code>this.subscriptionUpgradePopupUpgradeButton</code> &#x2190; <code>page.locator( &apos;div#upgradePopup div.modal-content a&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L311">pages/PaymentsPage/PaymentPageLocators.ts:311</a></li>
+<li><code>this.subscriptionUpgradeButton</code> &#x2190; <code>page.locator(&apos;div.body-footer a&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L314">pages/PaymentsPage/PaymentPageLocators.ts:314</a></li>
+<li><code>this.subscriptionExpiredLabel</code> &#x2190; <code>page.locator(&apos;div.expired&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L315">pages/PaymentsPage/PaymentPageLocators.ts:315</a></li>
+<li><code>this.billingHistoryButton</code> &#x2190; <code>page.locator( &apos;button#billing-history-tab, button#taxInfo-tab[data-target=&quot;#taxInfo&quot;]&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L319">pages/PaymentsPage/PaymentPageLocators.ts:319</a></li>
+<li><code>this.billingHistoryInvoiceRows</code> &#x2190; <code>page.locator( &apos;#pane-billing-history .payment-history-table-wrp .row.content-wrp, #taxInfo .payment-history-table-wrp .row.content-wrp&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L322">pages/PaymentsPage/PaymentPageLocators.ts:322</a></li>
+<li><code>this.cancelSubscriptionButton</code> &#x2190; <code>page.locator(&apos;button.cancel-sub&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L325">pages/PaymentsPage/PaymentPageLocators.ts:325</a></li>
+<li><code>this.cancelSubscriptionConfirmationButton</code> &#x2190; <code>page.locator( &apos;a.subscription-cancel-btn&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L326">pages/PaymentsPage/PaymentPageLocators.ts:326</a></li>
+<li><code>this.cancellationReason</code> &#x2190; <code>page.locator(&quot;(//input[@id=&apos;feedback1&apos;])[2]&quot;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L329">pages/PaymentsPage/PaymentPageLocators.ts:329</a></li>
+<li><code>this.feedbackSubmitButton</code> &#x2190; <code>page.locator(&apos;button.feedback-submit-btn&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L330">pages/PaymentsPage/PaymentPageLocators.ts:330</a></li>
+<li><code>this.promo1CancelButton</code> &#x2190; <code>page.locator(&apos;span#promo1_cancel_btn&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L331">pages/PaymentsPage/PaymentPageLocators.ts:331</a></li>
+<li><code>this.promo1ConfirmButton</code> &#x2190; <code>page.locator(&apos;button.promo1-offer-btn&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L332">pages/PaymentsPage/PaymentPageLocators.ts:332</a></li>
+<li><code>this.lastPromoConfirmButton</code> &#x2190; <code>page.locator(&apos;button.promo3-btn-offer&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L333">pages/PaymentsPage/PaymentPageLocators.ts:333</a></li>
+<li><code>this.thankYouPromoCloseButton</code> &#x2190; <code>page.locator(&apos;button.offer-accept&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L334">pages/PaymentsPage/PaymentPageLocators.ts:334</a></li>
+<li><code>this.resubscribeButton</code> &#x2190; <code>page.locator(&apos;button.resubscribe-btn&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L335">pages/PaymentsPage/PaymentPageLocators.ts:335</a></li>
+<li><code>this.cancelSubscriptionGoBackButton</code> &#x2190; <code>page.locator( &apos;div#cancelSubscriptionModal div.justify-content-center button.outline-btn&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L336">pages/PaymentsPage/PaymentPageLocators.ts:336</a></li>
+<li><code>this.subscriptionCancelledMessage</code> &#x2190; <code>page.locator( &apos;div.subscription-status-banner-wrp p&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L339">pages/PaymentsPage/PaymentPageLocators.ts:339</a></li>
+<li><code>this.subscriptionSuspendedMessage</code> &#x2190; <code>page.locator( &apos;div.subscription-status-banner-wrp p&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L342">pages/PaymentsPage/PaymentPageLocators.ts:342</a></li>
+<li><code>this.suspendedSubscriptionUpdateCardButton</code> &#x2190; <code>page.locator( &apos;div.subscription-status-banner-wrp .button-wrp a&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L345">pages/PaymentsPage/PaymentPageLocators.ts:345</a></li>
+<li><code>this.updateSubscriptionButton</code> &#x2190; <code>page .locator( &apos;button#updateSubscription, button#submit:has-text(&quot;Submit Payment&quot;), button:has-text(&quot;Submit Payment&quot;), button:has-text(&quot;Update Subscription&quot;)&apos; ) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L348">pages/PaymentsPage/PaymentPageLocators.ts:348</a></li>
+<li><code>this.updateSubscriptionSubmitButton</code> &#x2190; <code>page .locator(&apos;button#submit, button:has-text(&quot;Submit Payment&quot;)&apos;) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L353">pages/PaymentsPage/PaymentPageLocators.ts:353</a></li>
+<li><code>this.updateSubscriptionLink</code> &#x2190; <code>page.locator(&apos;button.pay-method-update&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L356">pages/PaymentsPage/PaymentPageLocators.ts:356</a></li>
+<li><code>this.backToBillingButton</code> &#x2190; <code>page.locator( &quot;button[onClick=&apos;redirectToBilling()&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L357">pages/PaymentsPage/PaymentPageLocators.ts:357</a></li>
+<li><code>this.monthlyPlanLabel</code> &#x2190; <code>page.locator(&quot;span[data-qa-id=&apos;Monthly&apos;]&quot;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L360">pages/PaymentsPage/PaymentPageLocators.ts:360</a></li>
+<li><code>this.editPaymentCardIcon</code> &#x2190; <code>page.locator(&apos;div#edit-email&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L361">pages/PaymentsPage/PaymentPageLocators.ts:361</a></li>
+<li><code>this.planExpiredLabel</code> &#x2190; <code>page.locator(&apos;div.expired&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L362">pages/PaymentsPage/PaymentPageLocators.ts:362</a></li>
+<li><code>this.planActiveLabel</code> &#x2190; <code>page.locator(&apos;div.active-plan&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L363">pages/PaymentsPage/PaymentPageLocators.ts:363</a></li>
+<li><code>this.subscriptionsPane</code> &#x2190; <code>page.locator(&apos;#pane-subscriptions&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L364">pages/PaymentsPage/PaymentPageLocators.ts:364</a></li>
+<li><code>this.days14FullAccessPlanLabel</code> &#x2190; <code>page.getByTestId(&apos;14 Day Full Access&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L365">pages/PaymentsPage/PaymentPageLocators.ts:365</a></li>
+<li><code>this.days14LimitedAccessPlanLabel</code> &#x2190; <code>page.getByTestId( &apos;14 Day Limited Access&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L366">pages/PaymentsPage/PaymentPageLocators.ts:366</a></li>
+<li><code>this.updateButtonWithStoppedSubscription</code> &#x2190; <code>page.locator(&apos;div.button-wrp&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L369">pages/PaymentsPage/PaymentPageLocators.ts:369</a></li>
+<li><code>this.nextSubscriptionWith90DiscountLabel</code> &#x2190; <code>page.locator( &quot;span[data-qa-id*=&apos;90%&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L371">pages/PaymentsPage/PaymentPageLocators.ts:371</a></li>
+<li><code>this.nextSubscriptionWith70DiscountLabel</code> &#x2190; <code>page.locator( &quot;span[data-qa-id*=&apos;70%&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L374">pages/PaymentsPage/PaymentPageLocators.ts:374</a></li>
+<li><code>this.changePlanButton</code> &#x2190; <code>page.locator(&apos;button#changePlan&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L377">pages/PaymentsPage/PaymentPageLocators.ts:377</a></li>
+<li><code>this.paymentMethodCardNumber</code> &#x2190; <code>page.locator(&apos;span.card-type&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L378">pages/PaymentsPage/PaymentPageLocators.ts:378</a></li>
+<li><code>this.nextSubscriptionAnnuallyPlanLabel</code> &#x2190; <code>page.locator( &quot;span[data-qa-id*=&apos;Annually&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L379">pages/PaymentsPage/PaymentPageLocators.ts:379</a></li>
+<li><code>this.nextSubscriptionMonthlyPlanLabel</code> &#x2190; <code>page.locator( &apos;div#pane-subscriptions div.validity div.col.content-description span&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L382">pages/PaymentsPage/PaymentPageLocators.ts:382</a></li>
+<li><code>this.nextSubscriptionQuarterlyPlanLabel</code> &#x2190; <code>page.locator( &quot;span[data-qa-id*=&apos;Quarterly&apos;]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L386">pages/PaymentsPage/PaymentPageLocators.ts:386</a></li>
+<li><code>this.nextSubscriptionChangeButton</code> &#x2190; <code>page.locator(&apos;button#editSubBtn&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L389">pages/PaymentsPage/PaymentPageLocators.ts:389</a></li>
+<li><code>this.nextSubscriptionAnnuallyPlanButton</code> &#x2190; <code>page.locator( &quot;(//input[@value=&apos;annual_sub&apos;])[1]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L390">pages/PaymentsPage/PaymentPageLocators.ts:390</a></li>
+<li><code>this.nextSubscriptionQuarterlyPlanButton</code> &#x2190; <code>page.locator( &quot;(//input[@value=&apos;annual_sub&apos;])[2]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L393">pages/PaymentsPage/PaymentPageLocators.ts:393</a></li>
+<li><code>this.nextSubscriptionMonthlyPlanButton</code> &#x2190; <code>page.locator( &quot;(//input[@value=&apos;annual_sub&apos;])[3]&quot; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L396">pages/PaymentsPage/PaymentPageLocators.ts:396</a></li>
+<li><code>this.changePlanSubmitButton</code> &#x2190; <code>page.locator(&apos;button#switch-plan-btn&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L399">pages/PaymentsPage/PaymentPageLocators.ts:399</a></li>
+<li><code>this.backToContactsButton</code> &#x2190; <code>page.locator(&apos;div.back-btn-wrap&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L400">pages/PaymentsPage/PaymentPageLocators.ts:400</a></li>
+<li><code>this.billingInfoForm</code> &#x2190; <code>page.locator(&apos;form#infoForm&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L401">pages/PaymentsPage/PaymentPageLocators.ts:401</a></li>
+<li><code>this.pageBillingFullNameInput</code> &#x2190; <code>page.getByLabel(&apos;Full name&apos;, { exact: false, })</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L402">pages/PaymentsPage/PaymentPageLocators.ts:402</a></li>
+<li><code>this.pageBillingCountryInput</code> &#x2190; <code>page.getByLabel(/Country or region/i)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L405">pages/PaymentsPage/PaymentPageLocators.ts:405</a></li>
+<li><code>this.pageBillingAddressLine1Input</code> &#x2190; <code>page.getByLabel(/Address line 1/i)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L406">pages/PaymentsPage/PaymentPageLocators.ts:406</a></li>
+<li><code>this.pageBillingCityInput</code> &#x2190; <code>page.getByLabel(/^City/i)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L407">pages/PaymentsPage/PaymentPageLocators.ts:407</a></li>
+<li><code>this.pageBillingPostalCodeInput</code> &#x2190; <code>page.getByLabel(/Postal code|ZIP/i)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L408">pages/PaymentsPage/PaymentPageLocators.ts:408</a></li>
+<li><code>this.continueToPaymentButton</code> &#x2190; <code>page.getByRole(&apos;button&apos;, { name: /Continue to payment/i, })</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L409">pages/PaymentsPage/PaymentPageLocators.ts:409</a></li>
+<li><code>this.paymentDeclinedErrorMessage</code> &#x2190; <code>page.locator( &apos;div.card-detail-form-wrap&gt;div#payment-message&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L412">pages/PaymentsPage/PaymentPageLocators.ts:412</a></li>
+<li><code>this.days14LimitedAccessPrice</code> &#x2190; <code>page .locator(DPF_LIMITED_PRICE[domain]) .last()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L416">pages/PaymentsPage/PaymentPageLocators.ts:416</a></li>
+<li><code>this.days14FullAccessPrice</code> &#x2190; <code>page.locator(DPF_FULL_PRICE[domain]).last()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L419">pages/PaymentsPage/PaymentPageLocators.ts:419</a></li>
+<li><code>this.discountPrice70promo</code> &#x2190; <code>page .locator(&apos;div.promo-plan-wrap&gt;div&gt;div&gt;p&gt;span&apos;) .first()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L420">pages/PaymentsPage/PaymentPageLocators.ts:420</a></li>
+<li><code>this.discountPrice90promo</code> &#x2190; <code>page .locator(&apos;div.promo-plan-wrap&gt;div&gt;div&gt;p&gt;span&apos;) .last()</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L423">pages/PaymentsPage/PaymentPageLocators.ts:423</a></li>
+<li><code>this.promo90OfferText</code> &#x2190; <code>page.locator(&apos;span.promo-3-offer-text&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L426">pages/PaymentsPage/PaymentPageLocators.ts:426</a></li>
+<li><code>this.subscriptionsTabButton</code> &#x2190; <code>page.locator(&apos;button#subscriptions-tab&apos;)</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L427">pages/PaymentsPage/PaymentPageLocators.ts:427</a></li>
+<li><code>this.offer70SubmitSpinner</code> &#x2190; <code>page.locator( &apos;button.promo1-offer-btn div.cancel-spinner&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L428">pages/PaymentsPage/PaymentPageLocators.ts:428</a></li>
+<li><code>this.checkoutSummaryTotal</code> &#x2190; <code>page.locator( &apos;.payment-detail-area .summery-plan-total-value-usd&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L431">pages/PaymentsPage/PaymentPageLocators.ts:431</a></li>
+<li><code>this.planCardMainPrices</code> &#x2190; <code>page.locator( &apos;.new-plan-plan-cards-wrap div.plan-card-wrap h3.main-price&apos; )</code> &#x2014; <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L434">pages/PaymentsPage/PaymentPageLocators.ts:434</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

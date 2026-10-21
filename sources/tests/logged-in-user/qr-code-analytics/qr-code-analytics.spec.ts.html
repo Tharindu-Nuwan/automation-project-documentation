@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>tests/logged-in-user/qr-code-analytics/qr-code-analytics.spec.ts · QA reference</title>
+<link rel="stylesheet" href="../../../../assets/styles.css">
+<script defer src="../../../../assets/search-index.js"></script><script defer src="../../../../assets/app.js"></script>
+</head><body data-root-prefix="../../../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../../../index.html">Start here</a>
+<a href="../../../../00-qa-quick-start.html">Your first check</a>
+<a href="../../../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../../../03-qr-creation.html">QR types and creation</a>
+<a href="../../../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../../../05-other-flows.html">Other product flows</a>
+<a href="../../../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../../../reference/index.html">Reference overview</a>
+<a href="../../../../reference/spec-index.html">Complete spec map</a>
+<a href="../../../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../../../reference/environment-index.html">Environment variables</a>
+<a href="../../../../reference/assets.html">Upload asset inventory</a>
+<a href="../../../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical detail · bundled source snapshot · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../../../glossary.html">glossary</a>.</p>
+
+<article id="doc-content" tabindex="-1"><h1>tests/logged-in-user/qr-code-analytics/qr-code-analytics.spec.ts</h1><p class="source-note">Bundled source snapshot. Credential-like literals are omitted. Line numbers correspond to the audited repository file; this page is for reading and is not executable test code.</p><pre class="source-code"><code><span class="source-line" id="L1"><a class="line-number" href="#L1" aria-label="Line 1">1</a> /* eslint-disable no-restricted-syntax -- legacy hardcoded waits (test debt); see CLAUDE.md &quot;Waiting &amp; timing&quot; */</span>
+<span class="source-line" id="L2"><a class="line-number" href="#L2" aria-label="Line 2">2</a> import { test } from &#39;../../../fixtures/baseFixture&#39;</span>
+<span class="source-line" id="L3"><a class="line-number" href="#L3" aria-label="Line 3">3</a> import { qase } from &#39;playwright-qase-reporter&#39;</span>
+<span class="source-line" id="L4"><a class="line-number" href="#L4" aria-label="Line 4">4</a> import { expect } from &#39;@playwright/test&#39;</span>
+<span class="source-line" id="L5"><a class="line-number" href="#L5" aria-label="Line 5">5</a> import fs from &#39;fs&#39;</span>
+<span class="source-line" id="L6"><a class="line-number" href="#L6" aria-label="Line 6">6</a> </span>
+<span class="source-line" id="L7"><a class="line-number" href="#L7" aria-label="Line 7">7</a> const email: string = &quot;&lt;literal omitted&gt;&quot;</span>
+<span class="source-line" id="L8"><a class="line-number" href="#L8" aria-label="Line 8">8</a> const password: string = &quot;&lt;literal omitted&gt;&quot;</span>
+<span class="source-line" id="L9"><a class="line-number" href="#L9" aria-label="Line 9">9</a> function uiFormat(date: Date): string {</span>
+<span class="source-line" id="L10"><a class="line-number" href="#L10" aria-label="Line 10">10</a>     return date.toLocaleDateString(&#39;en-US&#39;, {</span>
+<span class="source-line" id="L11"><a class="line-number" href="#L11" aria-label="Line 11">11</a>         month: &#39;short&#39;,</span>
+<span class="source-line" id="L12"><a class="line-number" href="#L12" aria-label="Line 12">12</a>         day: &#39;numeric&#39;,</span>
+<span class="source-line" id="L13"><a class="line-number" href="#L13" aria-label="Line 13">13</a>         year: &#39;numeric&#39;,</span>
+<span class="source-line" id="L14"><a class="line-number" href="#L14" aria-label="Line 14">14</a>     })</span>
+<span class="source-line" id="L15"><a class="line-number" href="#L15" aria-label="Line 15">15</a> }</span>
+<span class="source-line" id="L16"><a class="line-number" href="#L16" aria-label="Line 16">16</a> function uiRange(start: Date, end: Date): string {</span>
+<span class="source-line" id="L17"><a class="line-number" href="#L17" aria-label="Line 17">17</a>     return `${uiFormat(start)} - ${uiFormat(end)}`</span>
+<span class="source-line" id="L18"><a class="line-number" href="#L18" aria-label="Line 18">18</a> }</span>
+<span class="source-line" id="L19"><a class="line-number" href="#L19" aria-label="Line 19">19</a> type RangeButton =</span>
+<span class="source-line" id="L20"><a class="line-number" href="#L20" aria-label="Line 20">20</a>     &#39;todayBtn&#39; | &#39;yesterdayBtn&#39; | &#39;last7Btn&#39; | &#39;last30Btn&#39; | &#39;last90Btn&#39;</span>
+<span class="source-line" id="L21"><a class="line-number" href="#L21" aria-label="Line 21">21</a> </span>
+<span class="source-line" id="L22"><a class="line-number" href="#L22" aria-label="Line 22">22</a> const today = new Date()</span>
+<span class="source-line" id="L23"><a class="line-number" href="#L23" aria-label="Line 23">23</a> const yesterday = new Date(today.getTime() - 1 * 86400000)</span>
+<span class="source-line" id="L24"><a class="line-number" href="#L24" aria-label="Line 24">24</a> const last7Start = new Date(today.getTime() - 6 * 86400000)</span>
+<span class="source-line" id="L25"><a class="line-number" href="#L25" aria-label="Line 25">25</a> const last30Start = new Date(today.getTime() - 29 * 86400000)</span>
+<span class="source-line" id="L26"><a class="line-number" href="#L26" aria-label="Line 26">26</a> const last90Start = new Date(today.getTime() - 89 * 86400000)</span>
+<span class="source-line" id="L27"><a class="line-number" href="#L27" aria-label="Line 27">27</a> </span>
+<span class="source-line" id="L28"><a class="line-number" href="#L28" aria-label="Line 28">28</a> const expectedCityCountrySet: Record&lt;string, Set&lt;string&gt;&gt; = {</span>
+<span class="source-line" id="L29"><a class="line-number" href="#L29" aria-label="Line 29">29</a>     Algeria: new Set([&#39;Boumerdas&#39;]),</span>
+<span class="source-line" id="L30"><a class="line-number" href="#L30" aria-label="Line 30">30</a>     Argentina: new Set([&#39;Buenos Aires&#39;]),</span>
+<span class="source-line" id="L31"><a class="line-number" href="#L31" aria-label="Line 31">31</a>     Belarus: new Set([&#39;Minsk&#39;]),</span>
+<span class="source-line" id="L32"><a class="line-number" href="#L32" aria-label="Line 32">32</a>     Belgium: new Set([&#39;Brussels&#39;]),</span>
+<span class="source-line" id="L33"><a class="line-number" href="#L33" aria-label="Line 33">33</a>     Brazil: new Set([&#39;Sao Paulo&#39;]),</span>
+<span class="source-line" id="L34"><a class="line-number" href="#L34" aria-label="Line 34">34</a>     Chile: new Set([&#39;Providencia&#39;]),</span>
+<span class="source-line" id="L35"><a class="line-number" href="#L35" aria-label="Line 35">35</a>     Colombia: new Set([&#39;Bogotá&#39;]),</span>
+<span class="source-line" id="L36"><a class="line-number" href="#L36" aria-label="Line 36">36</a>     Croatia: new Set([&#39;Pula&#39;]),</span>
+<span class="source-line" id="L37"><a class="line-number" href="#L37" aria-label="Line 37">37</a>     Denmark: new Set([&#39;Copenhagen&#39;]),</span>
+<span class="source-line" id="L38"><a class="line-number" href="#L38" aria-label="Line 38">38</a>     Estonia: new Set([&#39;Tallinn&#39;]),</span>
+<span class="source-line" id="L39"><a class="line-number" href="#L39" aria-label="Line 39">39</a>     Finland: new Set([&#39;Helsinki&#39;]),</span>
+<span class="source-line" id="L40"><a class="line-number" href="#L40" aria-label="Line 40">40</a>     France: new Set([&#39;Paris&#39;]),</span>
+<span class="source-line" id="L41"><a class="line-number" href="#L41" aria-label="Line 41">41</a>     Germany: new Set([&#39;Limburg an der Lahn&#39;]),</span>
+<span class="source-line" id="L42"><a class="line-number" href="#L42" aria-label="Line 42">42</a>     Greece: new Set([&#39;Agía Varvára&#39;]),</span>
+<span class="source-line" id="L43"><a class="line-number" href="#L43" aria-label="Line 43">43</a>     &#39;Hong Kong&#39;: new Set([&#39;Chai Wan&#39;]),</span>
+<span class="source-line" id="L44"><a class="line-number" href="#L44" aria-label="Line 44">44</a>     Mexico: new Set([&#39;Iztapalapa&#39;, &#39;Fuentes del Valle&#39;]),</span>
+<span class="source-line" id="L45"><a class="line-number" href="#L45" aria-label="Line 45">45</a>     Montenegro: new Set([&#39;Podgorica&#39;]),</span>
+<span class="source-line" id="L46"><a class="line-number" href="#L46" aria-label="Line 46">46</a>     &#39;United States&#39;: new Set([&#39;Miami&#39;, &#39;New York City&#39;]),</span>
+<span class="source-line" id="L47"><a class="line-number" href="#L47" aria-label="Line 47">47</a>     &#39;The Netherlands&#39;: new Set([&#39;Haarlem&#39;]),</span>
+<span class="source-line" id="L48"><a class="line-number" href="#L48" aria-label="Line 48">48</a>     Spain: new Set([&#39;Barcelona&#39;]),</span>
+<span class="source-line" id="L49"><a class="line-number" href="#L49" aria-label="Line 49">49</a> }</span>
+<span class="source-line" id="L50"><a class="line-number" href="#L50" aria-label="Line 50">50</a> </span>
+<span class="source-line" id="L51"><a class="line-number" href="#L51" aria-label="Line 51">51</a> const expectedCountryCitySet: Record&lt;string, Set&lt;string&gt;&gt; = {</span>
+<span class="source-line" id="L52"><a class="line-number" href="#L52" aria-label="Line 52">52</a>     Boumerdas: new Set([&#39;Algeria&#39;]),</span>
+<span class="source-line" id="L53"><a class="line-number" href="#L53" aria-label="Line 53">53</a>     &#39;Buenos Aires&#39;: new Set([&#39;Argentina&#39;]),</span>
+<span class="source-line" id="L54"><a class="line-number" href="#L54" aria-label="Line 54">54</a>     Minsk: new Set([&#39;Belarus&#39;]),</span>
+<span class="source-line" id="L55"><a class="line-number" href="#L55" aria-label="Line 55">55</a>     Brussels: new Set([&#39;Belgium&#39;]),</span>
+<span class="source-line" id="L56"><a class="line-number" href="#L56" aria-label="Line 56">56</a>     &#39;Sao Paulo&#39;: new Set([&#39;Brazil&#39;]),</span>
+<span class="source-line" id="L57"><a class="line-number" href="#L57" aria-label="Line 57">57</a>     Providencia: new Set([&#39;Chile&#39;]),</span>
+<span class="source-line" id="L58"><a class="line-number" href="#L58" aria-label="Line 58">58</a>     Bogotá: new Set([&#39;Colombia&#39;]),</span>
+<span class="source-line" id="L59"><a class="line-number" href="#L59" aria-label="Line 59">59</a>     Pula: new Set([&#39;Croatia&#39;]),</span>
+<span class="source-line" id="L60"><a class="line-number" href="#L60" aria-label="Line 60">60</a>     Copenhagen: new Set([&#39;Denmark&#39;]),</span>
+<span class="source-line" id="L61"><a class="line-number" href="#L61" aria-label="Line 61">61</a>     Tallinn: new Set([&#39;Estonia&#39;]),</span>
+<span class="source-line" id="L62"><a class="line-number" href="#L62" aria-label="Line 62">62</a>     Helsinki: new Set([&#39;Finland&#39;]),</span>
+<span class="source-line" id="L63"><a class="line-number" href="#L63" aria-label="Line 63">63</a>     Paris: new Set([&#39;France&#39;]),</span>
+<span class="source-line" id="L64"><a class="line-number" href="#L64" aria-label="Line 64">64</a>     &#39;Limburg an der Lahn&#39;: new Set([&#39;Germany&#39;]),</span>
+<span class="source-line" id="L65"><a class="line-number" href="#L65" aria-label="Line 65">65</a>     &#39;Agía Varvára&#39;: new Set([&#39;Greece&#39;]),</span>
+<span class="source-line" id="L66"><a class="line-number" href="#L66" aria-label="Line 66">66</a>     &#39;Chai Wan&#39;: new Set([&#39;Hong Kong&#39;]),</span>
+<span class="source-line" id="L67"><a class="line-number" href="#L67" aria-label="Line 67">67</a>     Iztapalapa: new Set([&#39;Mexico&#39;]),</span>
+<span class="source-line" id="L68"><a class="line-number" href="#L68" aria-label="Line 68">68</a>     &#39;Fuentes del Valle&#39;: new Set([&#39;Mexico&#39;]),</span>
+<span class="source-line" id="L69"><a class="line-number" href="#L69" aria-label="Line 69">69</a>     Podgorica: new Set([&#39;Montenegro&#39;]),</span>
+<span class="source-line" id="L70"><a class="line-number" href="#L70" aria-label="Line 70">70</a>     Miami: new Set([&#39;United States&#39;]),</span>
+<span class="source-line" id="L71"><a class="line-number" href="#L71" aria-label="Line 71">71</a>     &#39;New York City&#39;: new Set([&#39;United States&#39;]),</span>
+<span class="source-line" id="L72"><a class="line-number" href="#L72" aria-label="Line 72">72</a> }</span>
+<span class="source-line" id="L73"><a class="line-number" href="#L73" aria-label="Line 73">73</a> </span>
+<span class="source-line" id="L74"><a class="line-number" href="#L74" aria-label="Line 74">74</a> test.describe(&#39;QR Code Analytics&#39;, () =&gt; {</span>
+<span class="source-line" id="L75"><a class="line-number" href="#L75" aria-label="Line 75">75</a>     test.beforeEach(async ({ pageManager, page }) =&gt; {</span>
+<span class="source-line" id="L76"><a class="line-number" href="#L76" aria-label="Line 76">76</a>         await page.goto(&#39;/login&#39;)</span>
+<span class="source-line" id="L77"><a class="line-number" href="#L77" aria-label="Line 77">77</a>         await pageManager.loginPage.logIn(email, password)</span>
+<span class="source-line" id="L78"><a class="line-number" href="#L78" aria-label="Line 78">78</a>         await pageManager.menuPage.goToAnalyticsPage()</span>
+<span class="source-line" id="L79"><a class="line-number" href="#L79" aria-label="Line 79">79</a>     })</span>
+<span class="source-line" id="L80"><a class="line-number" href="#L80" aria-label="Line 80">80</a> </span>
+<span class="source-line" id="L81"><a class="line-number" href="#L81" aria-label="Line 81">81</a>     test(&#39;Export CSV info&#39;, async ({ pageManager }, testInfo) =&gt; {</span>
+<span class="source-line" id="L82"><a class="line-number" href="#L82" aria-label="Line 82">82</a>         qase.id([4785, 4828])</span>
+<span class="source-line" id="L83"><a class="line-number" href="#L83" aria-label="Line 83">83</a>         qase.title(&#39;Export CSV info&#39;)</span>
+<span class="source-line" id="L84"><a class="line-number" href="#L84" aria-label="Line 84">84</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L85"><a class="line-number" href="#L85" aria-label="Line 85">85</a>         const tmpPath = testInfo.outputDir</span>
+<span class="source-line" id="L86"><a class="line-number" href="#L86" aria-label="Line 86">86</a>         await pageManager.qrAnalyticsPage.locator.analyticsExportBtn.click()</span>
+<span class="source-line" id="L87"><a class="line-number" href="#L87" aria-label="Line 87">87</a>         const filePath = await pageManager.qrAnalyticsPage.downloadFile(</span>
+<span class="source-line" id="L88"><a class="line-number" href="#L88" aria-label="Line 88">88</a>             pageManager.qrAnalyticsPage.locator.selectCsvForDownloadBtn,</span>
+<span class="source-line" id="L89"><a class="line-number" href="#L89" aria-label="Line 89">89</a>             tmpPath</span>
+<span class="source-line" id="L90"><a class="line-number" href="#L90" aria-label="Line 90">90</a>         )</span>
+<span class="source-line" id="L91"><a class="line-number" href="#L91" aria-label="Line 91">91</a>         expect(filePath.endsWith(&#39;.csv&#39;)).toBeTruthy()</span>
+<span class="source-line" id="L92"><a class="line-number" href="#L92" aria-label="Line 92">92</a>         expect(fs.statSync(filePath).size).toBeGreaterThan(0)</span>
+<span class="source-line" id="L93"><a class="line-number" href="#L93" aria-label="Line 93">93</a>     })</span>
+<span class="source-line" id="L94"><a class="line-number" href="#L94" aria-label="Line 94">94</a> </span>
+<span class="source-line" id="L95"><a class="line-number" href="#L95" aria-label="Line 95">95</a>     test(&#39;Export XLSX info&#39;, async ({ pageManager }, testInfo) =&gt; {</span>
+<span class="source-line" id="L96"><a class="line-number" href="#L96" aria-label="Line 96">96</a>         qase.id([4786, 4829])</span>
+<span class="source-line" id="L97"><a class="line-number" href="#L97" aria-label="Line 97">97</a>         qase.title(&#39;Export XLSX info&#39;)</span>
+<span class="source-line" id="L98"><a class="line-number" href="#L98" aria-label="Line 98">98</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L99"><a class="line-number" href="#L99" aria-label="Line 99">99</a>         const tmpPath = testInfo.outputDir</span>
+<span class="source-line" id="L100"><a class="line-number" href="#L100" aria-label="Line 100">100</a>         await pageManager.qrAnalyticsPage.locator.analyticsExportBtn.click()</span>
+<span class="source-line" id="L101"><a class="line-number" href="#L101" aria-label="Line 101">101</a>         const filePath = await pageManager.qrAnalyticsPage.downloadFile(</span>
+<span class="source-line" id="L102"><a class="line-number" href="#L102" aria-label="Line 102">102</a>             pageManager.qrAnalyticsPage.locator.selectXlsxForDownloadBtn,</span>
+<span class="source-line" id="L103"><a class="line-number" href="#L103" aria-label="Line 103">103</a>             tmpPath</span>
+<span class="source-line" id="L104"><a class="line-number" href="#L104" aria-label="Line 104">104</a>         )</span>
+<span class="source-line" id="L105"><a class="line-number" href="#L105" aria-label="Line 105">105</a>         expect(filePath.endsWith(&#39;.xlsx&#39;)).toBeTruthy()</span>
+<span class="source-line" id="L106"><a class="line-number" href="#L106" aria-label="Line 106">106</a>         expect(fs.statSync(filePath).size).toBeGreaterThan(0)</span>
+<span class="source-line" id="L107"><a class="line-number" href="#L107" aria-label="Line 107">107</a>     })</span>
+<span class="source-line" id="L108"><a class="line-number" href="#L108" aria-label="Line 108">108</a> </span>
+<span class="source-line" id="L109"><a class="line-number" href="#L109" aria-label="Line 109">109</a>     const ranges: { locator: RangeButton; expected: string }[] = [</span>
+<span class="source-line" id="L110"><a class="line-number" href="#L110" aria-label="Line 110">110</a>         {</span>
+<span class="source-line" id="L111"><a class="line-number" href="#L111" aria-label="Line 111">111</a>             locator: &#39;todayBtn&#39;,</span>
+<span class="source-line" id="L112"><a class="line-number" href="#L112" aria-label="Line 112">112</a>             expected: uiFormat(today),</span>
+<span class="source-line" id="L113"><a class="line-number" href="#L113" aria-label="Line 113">113</a>         },</span>
+<span class="source-line" id="L114"><a class="line-number" href="#L114" aria-label="Line 114">114</a>         {</span>
+<span class="source-line" id="L115"><a class="line-number" href="#L115" aria-label="Line 115">115</a>             locator: &#39;yesterdayBtn&#39;,</span>
+<span class="source-line" id="L116"><a class="line-number" href="#L116" aria-label="Line 116">116</a>             expected: uiFormat(yesterday),</span>
+<span class="source-line" id="L117"><a class="line-number" href="#L117" aria-label="Line 117">117</a>         },</span>
+<span class="source-line" id="L118"><a class="line-number" href="#L118" aria-label="Line 118">118</a>         {</span>
+<span class="source-line" id="L119"><a class="line-number" href="#L119" aria-label="Line 119">119</a>             locator: &#39;last7Btn&#39;,</span>
+<span class="source-line" id="L120"><a class="line-number" href="#L120" aria-label="Line 120">120</a>             expected: uiRange(last7Start, today),</span>
+<span class="source-line" id="L121"><a class="line-number" href="#L121" aria-label="Line 121">121</a>         },</span>
+<span class="source-line" id="L122"><a class="line-number" href="#L122" aria-label="Line 122">122</a>         {</span>
+<span class="source-line" id="L123"><a class="line-number" href="#L123" aria-label="Line 123">123</a>             locator: &#39;last30Btn&#39;,</span>
+<span class="source-line" id="L124"><a class="line-number" href="#L124" aria-label="Line 124">124</a>             expected: uiRange(last30Start, today),</span>
+<span class="source-line" id="L125"><a class="line-number" href="#L125" aria-label="Line 125">125</a>         },</span>
+<span class="source-line" id="L126"><a class="line-number" href="#L126" aria-label="Line 126">126</a>         {</span>
+<span class="source-line" id="L127"><a class="line-number" href="#L127" aria-label="Line 127">127</a>             locator: &#39;last90Btn&#39;,</span>
+<span class="source-line" id="L128"><a class="line-number" href="#L128" aria-label="Line 128">128</a>             expected: uiRange(last90Start, today),</span>
+<span class="source-line" id="L129"><a class="line-number" href="#L129" aria-label="Line 129">129</a>         },</span>
+<span class="source-line" id="L130"><a class="line-number" href="#L130" aria-label="Line 130">130</a>     ]</span>
+<span class="source-line" id="L131"><a class="line-number" href="#L131" aria-label="Line 131">131</a>     for (const { locator, expected } of ranges) {</span>
+<span class="source-line" id="L132"><a class="line-number" href="#L132" aria-label="Line 132">132</a>         test(`Pick ${locator}`, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L133"><a class="line-number" href="#L133" aria-label="Line 133">133</a>             qase.id(4787)</span>
+<span class="source-line" id="L134"><a class="line-number" href="#L134" aria-label="Line 134">134</a>             qase.title(`Pick ${locator}`)</span>
+<span class="source-line" id="L135"><a class="line-number" href="#L135" aria-label="Line 135">135</a>             qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L136"><a class="line-number" href="#L136" aria-label="Line 136">136</a>             qase.parameters({ locator })</span>
+<span class="source-line" id="L137"><a class="line-number" href="#L137" aria-label="Line 137">137</a>             await pageManager.qrAnalyticsPage.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L138"><a class="line-number" href="#L138" aria-label="Line 138">138</a>             await pageManager.qrAnalyticsPage.locator[locator].click()</span>
+<span class="source-line" id="L139"><a class="line-number" href="#L139" aria-label="Line 139">139</a>             const actual =</span>
+<span class="source-line" id="L140"><a class="line-number" href="#L140" aria-label="Line 140">140</a>                 await pageManager.qrAnalyticsPage.locator.selectedAnalyticsRangeBtn.innerText()</span>
+<span class="source-line" id="L141"><a class="line-number" href="#L141" aria-label="Line 141">141</a>             expect(actual).toContain(expected)</span>
+<span class="source-line" id="L142"><a class="line-number" href="#L142" aria-label="Line 142">142</a>         })</span>
+<span class="source-line" id="L143"><a class="line-number" href="#L143" aria-label="Line 143">143</a>     }</span>
+<span class="source-line" id="L144"><a class="line-number" href="#L144" aria-label="Line 144">144</a> </span>
+<span class="source-line" id="L145"><a class="line-number" href="#L145" aria-label="Line 145">145</a>     test(&#39;TC-4782 Default dropdowns values&#39;, async ({ page, pageManager }) =&gt; {</span>
+<span class="source-line" id="L146"><a class="line-number" href="#L146" aria-label="Line 146">146</a>         qase.id(4782)</span>
+<span class="source-line" id="L147"><a class="line-number" href="#L147" aria-label="Line 147">147</a>         qase.title(&#39;TC-4782 Default dropdowns values&#39;)</span>
+<span class="source-line" id="L148"><a class="line-number" href="#L148" aria-label="Line 148">148</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L149"><a class="line-number" href="#L149" aria-label="Line 149">149</a>         const today = new Date()</span>
+<span class="source-line" id="L150"><a class="line-number" href="#L150" aria-label="Line 150">150</a>         const format = (d: Date) =&gt; d.toISOString().split(&#39;T&#39;)[0]</span>
+<span class="source-line" id="L151"><a class="line-number" href="#L151" aria-label="Line 151">151</a>         const expectedPeriod = &#39;Last 7 days&#39;</span>
+<span class="source-line" id="L152"><a class="line-number" href="#L152" aria-label="Line 152">152</a>         const expectedRange = `${format(</span>
+<span class="source-line" id="L153"><a class="line-number" href="#L153" aria-label="Line 153">153</a>             new Date(today.getTime() - 6 * 86400000)</span>
+<span class="source-line" id="L154"><a class="line-number" href="#L154" aria-label="Line 154">154</a>         )} - ${format(today)}`</span>
+<span class="source-line" id="L155"><a class="line-number" href="#L155" aria-label="Line 155">155</a>         const expectedQr = &#39;All Selected&#39;</span>
+<span class="source-line" id="L156"><a class="line-number" href="#L156" aria-label="Line 156">156</a>         const expectedOs = &#39;All Selected&#39;</span>
+<span class="source-line" id="L157"><a class="line-number" href="#L157" aria-label="Line 157">157</a>         const expectedCountries = &#39;All Selected&#39;</span>
+<span class="source-line" id="L158"><a class="line-number" href="#L158" aria-label="Line 158">158</a>         const expectedCities = &#39;All Selected&#39;</span>
+<span class="source-line" id="L159"><a class="line-number" href="#L159" aria-label="Line 159">159</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L160"><a class="line-number" href="#L160" aria-label="Line 160">160</a>         await page.waitForTimeout(2000)</span>
+<span class="source-line" id="L161"><a class="line-number" href="#L161" aria-label="Line 161">161</a>         await expect(</span>
+<span class="source-line" id="L162"><a class="line-number" href="#L162" aria-label="Line 162">162</a>             analytics.locator.periodDropdownBtn,</span>
+<span class="source-line" id="L163"><a class="line-number" href="#L163" aria-label="Line 163">163</a>             `❌ Expected period to be &quot;${expectedPeriod}&quot;`</span>
+<span class="source-line" id="L164"><a class="line-number" href="#L164" aria-label="Line 164">164</a>         ).toHaveText(expectedPeriod)</span>
+<span class="source-line" id="L165"><a class="line-number" href="#L165" aria-label="Line 165">165</a>         await expect(</span>
+<span class="source-line" id="L166"><a class="line-number" href="#L166" aria-label="Line 166">166</a>             analytics.locator.daterangeDropdownBtn,</span>
+<span class="source-line" id="L167"><a class="line-number" href="#L167" aria-label="Line 167">167</a>             `❌ Expected date range to be &quot;${expectedRange}&quot;`</span>
+<span class="source-line" id="L168"><a class="line-number" href="#L168" aria-label="Line 168">168</a>         ).toHaveValue(expectedRange)</span>
+<span class="source-line" id="L169"><a class="line-number" href="#L169" aria-label="Line 169">169</a>         await expect(</span>
+<span class="source-line" id="L170"><a class="line-number" href="#L170" aria-label="Line 170">170</a>             analytics.locator.qrCodeAnalyticsDropdownBtn,</span>
+<span class="source-line" id="L171"><a class="line-number" href="#L171" aria-label="Line 171">171</a>             `❌ Expected QR filter to be &quot;${expectedQr}&quot;`</span>
+<span class="source-line" id="L172"><a class="line-number" href="#L172" aria-label="Line 172">172</a>         ).toContainText(expectedQr)</span>
+<span class="source-line" id="L173"><a class="line-number" href="#L173" aria-label="Line 173">173</a>         await expect(</span>
+<span class="source-line" id="L174"><a class="line-number" href="#L174" aria-label="Line 174">174</a>             analytics.locator.qrCodeAnalyticsOsDropdownBtn,</span>
+<span class="source-line" id="L175"><a class="line-number" href="#L175" aria-label="Line 175">175</a>             `❌ Expected OS filter to be &quot;${expectedOs}&quot;`</span>
+<span class="source-line" id="L176"><a class="line-number" href="#L176" aria-label="Line 176">176</a>         ).toContainText(expectedOs)</span>
+<span class="source-line" id="L177"><a class="line-number" href="#L177" aria-label="Line 177">177</a>         await expect(</span>
+<span class="source-line" id="L178"><a class="line-number" href="#L178" aria-label="Line 178">178</a>             analytics.locator.qrCodeAnalyticsCountriesDropdownBtn,</span>
+<span class="source-line" id="L179"><a class="line-number" href="#L179" aria-label="Line 179">179</a>             `❌ Expected Countries filter to be &quot;${expectedCountries}&quot;`</span>
+<span class="source-line" id="L180"><a class="line-number" href="#L180" aria-label="Line 180">180</a>         ).toContainText(expectedCountries)</span>
+<span class="source-line" id="L181"><a class="line-number" href="#L181" aria-label="Line 181">181</a>         await expect(</span>
+<span class="source-line" id="L182"><a class="line-number" href="#L182" aria-label="Line 182">182</a>             analytics.locator.qrCodeAnalyticsCitiesDropdownBtn,</span>
+<span class="source-line" id="L183"><a class="line-number" href="#L183" aria-label="Line 183">183</a>             `❌ Expected Cities filter to be &quot;${expectedCities}&quot;`</span>
+<span class="source-line" id="L184"><a class="line-number" href="#L184" aria-label="Line 184">184</a>         ).toContainText(expectedCities)</span>
+<span class="source-line" id="L185"><a class="line-number" href="#L185" aria-label="Line 185">185</a>     })</span>
+<span class="source-line" id="L186"><a class="line-number" href="#L186" aria-label="Line 186">186</a> </span>
+<span class="source-line" id="L187"><a class="line-number" href="#L187" aria-label="Line 187">187</a>     test(&#39;TC-4788 Select a valid date range&#39;, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L188"><a class="line-number" href="#L188" aria-label="Line 188">188</a>         qase.id(4788)</span>
+<span class="source-line" id="L189"><a class="line-number" href="#L189" aria-label="Line 189">189</a>         qase.title(&#39;TC-4788 Select a valid date range&#39;)</span>
+<span class="source-line" id="L190"><a class="line-number" href="#L190" aria-label="Line 190">190</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L191"><a class="line-number" href="#L191" aria-label="Line 191">191</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L192"><a class="line-number" href="#L192" aria-label="Line 192">192</a>         await analytics.locator.daterangeDropdownBtn.click()</span>
+<span class="source-line" id="L193"><a class="line-number" href="#L193" aria-label="Line 193">193</a>         const today = new Date()</span>
+<span class="source-line" id="L194"><a class="line-number" href="#L194" aria-label="Line 194">194</a>         const startDate = new Date(today.getTime() - 15 * 86400000)</span>
+<span class="source-line" id="L195"><a class="line-number" href="#L195" aria-label="Line 195">195</a>         const endDate = today</span>
+<span class="source-line" id="L196"><a class="line-number" href="#L196" aria-label="Line 196">196</a>         await analytics.verifyCustomDateRange(startDate, endDate)</span>
+<span class="source-line" id="L197"><a class="line-number" href="#L197" aria-label="Line 197">197</a>     })</span>
+<span class="source-line" id="L198"><a class="line-number" href="#L198" aria-label="Line 198">198</a> </span>
+<span class="source-line" id="L199"><a class="line-number" href="#L199" aria-label="Line 199">199</a>     test(&#39;TC-6180 Set the Custom period&#39;, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L200"><a class="line-number" href="#L200" aria-label="Line 200">200</a>         qase.id(6180)</span>
+<span class="source-line" id="L201"><a class="line-number" href="#L201" aria-label="Line 201">201</a>         qase.title(&#39;TC-6180 Set the Custom period&#39;)</span>
+<span class="source-line" id="L202"><a class="line-number" href="#L202" aria-label="Line 202">202</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L203"><a class="line-number" href="#L203" aria-label="Line 203">203</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L204"><a class="line-number" href="#L204" aria-label="Line 204">204</a>         await test.step(&#39;Open Period dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L205"><a class="line-number" href="#L205" aria-label="Line 205">205</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L206"><a class="line-number" href="#L206" aria-label="Line 206">206</a>         })</span>
+<span class="source-line" id="L207"><a class="line-number" href="#L207" aria-label="Line 207">207</a>         await test.step(&#39;Select Custom period&#39;, async () =&gt; {</span>
+<span class="source-line" id="L208"><a class="line-number" href="#L208" aria-label="Line 208">208</a>             await analytics.locator.customBtn.click()</span>
+<span class="source-line" id="L209"><a class="line-number" href="#L209" aria-label="Line 209">209</a>         })</span>
+<span class="source-line" id="L210"><a class="line-number" href="#L210" aria-label="Line 210">210</a>         const today = new Date()</span>
+<span class="source-line" id="L211"><a class="line-number" href="#L211" aria-label="Line 211">211</a>         const startDate = new Date(today.getTime() - 15 * 86400000)</span>
+<span class="source-line" id="L212"><a class="line-number" href="#L212" aria-label="Line 212">212</a>         const endDate = today</span>
+<span class="source-line" id="L213"><a class="line-number" href="#L213" aria-label="Line 213">213</a>         await test.step(&#39;Verify custom date range&#39;, async () =&gt; {</span>
+<span class="source-line" id="L214"><a class="line-number" href="#L214" aria-label="Line 214">214</a>             await analytics.verifyCustomDateRange(startDate, endDate)</span>
+<span class="source-line" id="L215"><a class="line-number" href="#L215" aria-label="Line 215">215</a>         })</span>
+<span class="source-line" id="L216"><a class="line-number" href="#L216" aria-label="Line 216">216</a>     })</span>
+<span class="source-line" id="L217"><a class="line-number" href="#L217" aria-label="Line 217">217</a> </span>
+<span class="source-line" id="L218"><a class="line-number" href="#L218" aria-label="Line 218">218</a>     test(&#39;TC-6181 Check the default value for the Custom period&#39;, async ({</span>
+<span class="source-line" id="L219"><a class="line-number" href="#L219" aria-label="Line 219">219</a>         pageManager,</span>
+<span class="source-line" id="L220"><a class="line-number" href="#L220" aria-label="Line 220">220</a>         page,</span>
+<span class="source-line" id="L221"><a class="line-number" href="#L221" aria-label="Line 221">221</a>     }) =&gt; {</span>
+<span class="source-line" id="L222"><a class="line-number" href="#L222" aria-label="Line 222">222</a>         qase.id(6181)</span>
+<span class="source-line" id="L223"><a class="line-number" href="#L223" aria-label="Line 223">223</a>         qase.title(&#39;TC-6181 Check the default value for the Custom period&#39;)</span>
+<span class="source-line" id="L224"><a class="line-number" href="#L224" aria-label="Line 224">224</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L225"><a class="line-number" href="#L225" aria-label="Line 225">225</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L226"><a class="line-number" href="#L226" aria-label="Line 226">226</a>         await test.step(&#39;Open Period dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L227"><a class="line-number" href="#L227" aria-label="Line 227">227</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L228"><a class="line-number" href="#L228" aria-label="Line 228">228</a>         })</span>
+<span class="source-line" id="L229"><a class="line-number" href="#L229" aria-label="Line 229">229</a>         await test.step(&#39;Select Last 90 days&#39;, async () =&gt; {</span>
+<span class="source-line" id="L230"><a class="line-number" href="#L230" aria-label="Line 230">230</a>             await analytics.locator.last90Btn.click()</span>
+<span class="source-line" id="L231"><a class="line-number" href="#L231" aria-label="Line 231">231</a>         })</span>
+<span class="source-line" id="L232"><a class="line-number" href="#L232" aria-label="Line 232">232</a>         await test.step(&#39;Re-open Period dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L233"><a class="line-number" href="#L233" aria-label="Line 233">233</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L234"><a class="line-number" href="#L234" aria-label="Line 234">234</a>         })</span>
+<span class="source-line" id="L235"><a class="line-number" href="#L235" aria-label="Line 235">235</a>         await test.step(&#39;Select Custom option&#39;, async () =&gt; {</span>
+<span class="source-line" id="L236"><a class="line-number" href="#L236" aria-label="Line 236">236</a>             await analytics.locator.customBtn.click()</span>
+<span class="source-line" id="L237"><a class="line-number" href="#L237" aria-label="Line 237">237</a>         })</span>
+<span class="source-line" id="L238"><a class="line-number" href="#L238" aria-label="Line 238">238</a>         await test.step(&#39;Click outside to close calendar&#39;, async () =&gt; {</span>
+<span class="source-line" id="L239"><a class="line-number" href="#L239" aria-label="Line 239">239</a>             await page.locator(&#39;div.card&#39;).click()</span>
+<span class="source-line" id="L240"><a class="line-number" href="#L240" aria-label="Line 240">240</a>         })</span>
+<span class="source-line" id="L241"><a class="line-number" href="#L241" aria-label="Line 241">241</a>         const today = new Date()</span>
+<span class="source-line" id="L242"><a class="line-number" href="#L242" aria-label="Line 242">242</a>         const startDate = new Date(today.getTime() - 6 * 86400000)</span>
+<span class="source-line" id="L243"><a class="line-number" href="#L243" aria-label="Line 243">243</a>         const endDate = today</span>
+<span class="source-line" id="L244"><a class="line-number" href="#L244" aria-label="Line 244">244</a>         await test.step(&#39;Verify selected date range&#39;, async () =&gt; {</span>
+<span class="source-line" id="L245"><a class="line-number" href="#L245" aria-label="Line 245">245</a>             await analytics.verifyCustomDateRange(startDate, endDate)</span>
+<span class="source-line" id="L246"><a class="line-number" href="#L246" aria-label="Line 246">246</a>         })</span>
+<span class="source-line" id="L247"><a class="line-number" href="#L247" aria-label="Line 247">247</a>     })</span>
+<span class="source-line" id="L248"><a class="line-number" href="#L248" aria-label="Line 248">248</a> </span>
+<span class="source-line" id="L249"><a class="line-number" href="#L249" aria-label="Line 249">249</a>     test(&#39;TC-4789 Select a single-day custom date range&#39;, async ({</span>
+<span class="source-line" id="L250"><a class="line-number" href="#L250" aria-label="Line 250">250</a>         pageManager,</span>
+<span class="source-line" id="L251"><a class="line-number" href="#L251" aria-label="Line 251">251</a>     }) =&gt; {</span>
+<span class="source-line" id="L252"><a class="line-number" href="#L252" aria-label="Line 252">252</a>         qase.id(4789)</span>
+<span class="source-line" id="L253"><a class="line-number" href="#L253" aria-label="Line 253">253</a>         qase.title(&#39;TC-4789 Select a single-day custom date range&#39;)</span>
+<span class="source-line" id="L254"><a class="line-number" href="#L254" aria-label="Line 254">254</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L255"><a class="line-number" href="#L255" aria-label="Line 255">255</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L256"><a class="line-number" href="#L256" aria-label="Line 256">256</a>         await test.step(&#39;Open date range dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L257"><a class="line-number" href="#L257" aria-label="Line 257">257</a>             await analytics.locator.daterangeDropdownBtn.click()</span>
+<span class="source-line" id="L258"><a class="line-number" href="#L258" aria-label="Line 258">258</a>         })</span>
+<span class="source-line" id="L259"><a class="line-number" href="#L259" aria-label="Line 259">259</a>         const today = new Date()</span>
+<span class="source-line" id="L260"><a class="line-number" href="#L260" aria-label="Line 260">260</a>         const startDate = new Date(today.getTime() - 15 * 86400000)</span>
+<span class="source-line" id="L261"><a class="line-number" href="#L261" aria-label="Line 261">261</a>         const endDate = new Date(today.getTime() - 15 * 86400000) // same day</span>
+<span class="source-line" id="L262"><a class="line-number" href="#L262" aria-label="Line 262">262</a>         await test.step(&#39;Verify custom single-day range selection&#39;, async () =&gt; {</span>
+<span class="source-line" id="L263"><a class="line-number" href="#L263" aria-label="Line 263">263</a>             await analytics.verifyCustomDateRange(startDate, endDate)</span>
+<span class="source-line" id="L264"><a class="line-number" href="#L264" aria-label="Line 264">264</a>         })</span>
+<span class="source-line" id="L265"><a class="line-number" href="#L265" aria-label="Line 265">265</a>     })</span>
+<span class="source-line" id="L266"><a class="line-number" href="#L266" aria-label="Line 266">266</a> </span>
+<span class="source-line" id="L267"><a class="line-number" href="#L267" aria-label="Line 267">267</a>     test(&#39;TC-4791 Cross-month date selection&#39;, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L268"><a class="line-number" href="#L268" aria-label="Line 268">268</a>         qase.id(4791)</span>
+<span class="source-line" id="L269"><a class="line-number" href="#L269" aria-label="Line 269">269</a>         qase.title(&#39;TC-4791 Cross-month date selection&#39;)</span>
+<span class="source-line" id="L270"><a class="line-number" href="#L270" aria-label="Line 270">270</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L271"><a class="line-number" href="#L271" aria-label="Line 271">271</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L272"><a class="line-number" href="#L272" aria-label="Line 272">272</a>         await test.step(&#39;Open date range dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L273"><a class="line-number" href="#L273" aria-label="Line 273">273</a>             await analytics.locator.daterangeDropdownBtn.click()</span>
+<span class="source-line" id="L274"><a class="line-number" href="#L274" aria-label="Line 274">274</a>         })</span>
+<span class="source-line" id="L275"><a class="line-number" href="#L275" aria-label="Line 275">275</a>         const today = new Date()</span>
+<span class="source-line" id="L276"><a class="line-number" href="#L276" aria-label="Line 276">276</a>         const startDate = new Date(today.getTime() - 45 * 86400000)</span>
+<span class="source-line" id="L277"><a class="line-number" href="#L277" aria-label="Line 277">277</a>         const endDate = new Date(today.getTime() - 10 * 86400000)</span>
+<span class="source-line" id="L278"><a class="line-number" href="#L278" aria-label="Line 278">278</a>         await test.step(&#39;Verify selected custom date range&#39;, async () =&gt; {</span>
+<span class="source-line" id="L279"><a class="line-number" href="#L279" aria-label="Line 279">279</a>             await analytics.verifyCustomDateRange(startDate, endDate)</span>
+<span class="source-line" id="L280"><a class="line-number" href="#L280" aria-label="Line 280">280</a>         })</span>
+<span class="source-line" id="L281"><a class="line-number" href="#L281" aria-label="Line 281">281</a>     })</span>
+<span class="source-line" id="L282"><a class="line-number" href="#L282" aria-label="Line 282">282</a> </span>
+<span class="source-line" id="L283"><a class="line-number" href="#L283" aria-label="Line 283">283</a>     test(&#39;TC-4792 Cross-year date selection&#39;, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L284"><a class="line-number" href="#L284" aria-label="Line 284">284</a>         qase.id(4792)</span>
+<span class="source-line" id="L285"><a class="line-number" href="#L285" aria-label="Line 285">285</a>         qase.title(&#39;TC-4792 Cross-year date selection&#39;)</span>
+<span class="source-line" id="L286"><a class="line-number" href="#L286" aria-label="Line 286">286</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L287"><a class="line-number" href="#L287" aria-label="Line 287">287</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L288"><a class="line-number" href="#L288" aria-label="Line 288">288</a>         await test.step(&#39;Open date range dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L289"><a class="line-number" href="#L289" aria-label="Line 289">289</a>             await analytics.locator.daterangeDropdownBtn.click()</span>
+<span class="source-line" id="L290"><a class="line-number" href="#L290" aria-label="Line 290">290</a>         })</span>
+<span class="source-line" id="L291"><a class="line-number" href="#L291" aria-label="Line 291">291</a>         const today = new Date()</span>
+<span class="source-line" id="L292"><a class="line-number" href="#L292" aria-label="Line 292">292</a>         const startDate = new Date(today.getTime() - 396 * 86400000)</span>
+<span class="source-line" id="L293"><a class="line-number" href="#L293" aria-label="Line 293">293</a>         const endDate = new Date(today.getTime() - 14 * 86400000)</span>
+<span class="source-line" id="L294"><a class="line-number" href="#L294" aria-label="Line 294">294</a>         await test.step(&#39;Verify selected custom date range&#39;, async () =&gt; {</span>
+<span class="source-line" id="L295"><a class="line-number" href="#L295" aria-label="Line 295">295</a>             await analytics.verifyCustomDateRange(startDate, endDate)</span>
+<span class="source-line" id="L296"><a class="line-number" href="#L296" aria-label="Line 296">296</a>         })</span>
+<span class="source-line" id="L297"><a class="line-number" href="#L297" aria-label="Line 297">297</a>     })</span>
+<span class="source-line" id="L298"><a class="line-number" href="#L298" aria-label="Line 298">298</a> </span>
+<span class="source-line" id="L299"><a class="line-number" href="#L299" aria-label="Line 299">299</a>     test(&#39;TC-4793 Leap year validation&#39;, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L300"><a class="line-number" href="#L300" aria-label="Line 300">300</a>         qase.id(4793)</span>
+<span class="source-line" id="L301"><a class="line-number" href="#L301" aria-label="Line 301">301</a>         qase.title(&#39;TC-4793 Leap year validation&#39;)</span>
+<span class="source-line" id="L302"><a class="line-number" href="#L302" aria-label="Line 302">302</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L303"><a class="line-number" href="#L303" aria-label="Line 303">303</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L304"><a class="line-number" href="#L304" aria-label="Line 304">304</a>         await test.step(&#39;Open date range dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L305"><a class="line-number" href="#L305" aria-label="Line 305">305</a>             await analytics.locator.daterangeDropdownBtn.click()</span>
+<span class="source-line" id="L306"><a class="line-number" href="#L306" aria-label="Line 306">306</a>         })</span>
+<span class="source-line" id="L307"><a class="line-number" href="#L307" aria-label="Line 307">307</a>         // JS Date: months start from 0, so February = 1</span>
+<span class="source-line" id="L308"><a class="line-number" href="#L308" aria-label="Line 308">308</a>         const startDate = new Date(2024, 1, 29)</span>
+<span class="source-line" id="L309"><a class="line-number" href="#L309" aria-label="Line 309">309</a>         const endDate = new Date(2024, 1, 29)</span>
+<span class="source-line" id="L310"><a class="line-number" href="#L310" aria-label="Line 310">310</a>         await test.step(&#39;Verify custom leap-day range selection&#39;, async () =&gt; {</span>
+<span class="source-line" id="L311"><a class="line-number" href="#L311" aria-label="Line 311">311</a>             await analytics.verifyCustomDateRange(startDate, endDate)</span>
+<span class="source-line" id="L312"><a class="line-number" href="#L312" aria-label="Line 312">312</a>         })</span>
+<span class="source-line" id="L313"><a class="line-number" href="#L313" aria-label="Line 313">313</a>     })</span>
+<span class="source-line" id="L314"><a class="line-number" href="#L314" aria-label="Line 314">314</a> </span>
+<span class="source-line" id="L315"><a class="line-number" href="#L315" aria-label="Line 315">315</a>     test(&#39;TC-4794 Large date range&#39;, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L316"><a class="line-number" href="#L316" aria-label="Line 316">316</a>         qase.id(4794)</span>
+<span class="source-line" id="L317"><a class="line-number" href="#L317" aria-label="Line 317">317</a>         qase.title(&#39;TC-4794 Large date range&#39;)</span>
+<span class="source-line" id="L318"><a class="line-number" href="#L318" aria-label="Line 318">318</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L319"><a class="line-number" href="#L319" aria-label="Line 319">319</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L320"><a class="line-number" href="#L320" aria-label="Line 320">320</a>         await test.step(&#39;Open date range dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L321"><a class="line-number" href="#L321" aria-label="Line 321">321</a>             await analytics.locator.daterangeDropdownBtn.click()</span>
+<span class="source-line" id="L322"><a class="line-number" href="#L322" aria-label="Line 322">322</a>         })</span>
+<span class="source-line" id="L323"><a class="line-number" href="#L323" aria-label="Line 323">323</a>         // JS Date: months start from 0, so November = 10</span>
+<span class="source-line" id="L324"><a class="line-number" href="#L324" aria-label="Line 324">324</a>         const startDate = new Date(2018, 10, 15)</span>
+<span class="source-line" id="L325"><a class="line-number" href="#L325" aria-label="Line 325">325</a>         const today = new Date()</span>
+<span class="source-line" id="L326"><a class="line-number" href="#L326" aria-label="Line 326">326</a>         const endDate = today</span>
+<span class="source-line" id="L327"><a class="line-number" href="#L327" aria-label="Line 327">327</a>         await test.step(&#39;Verify long custom date range selection&#39;, async () =&gt; {</span>
+<span class="source-line" id="L328"><a class="line-number" href="#L328" aria-label="Line 328">328</a>             await analytics.verifyCustomDateRange(startDate, endDate)</span>
+<span class="source-line" id="L329"><a class="line-number" href="#L329" aria-label="Line 329">329</a>         })</span>
+<span class="source-line" id="L330"><a class="line-number" href="#L330" aria-label="Line 330">330</a>     })</span>
+<span class="source-line" id="L331"><a class="line-number" href="#L331" aria-label="Line 331">331</a> </span>
+<span class="source-line" id="L332"><a class="line-number" href="#L332" aria-label="Line 332">332</a>     test(&#39;TC-4797 Deselect one checkbox when &quot;All&quot; is selected&#39;, async ({</span>
+<span class="source-line" id="L333"><a class="line-number" href="#L333" aria-label="Line 333">333</a>         pageManager,</span>
+<span class="source-line" id="L334"><a class="line-number" href="#L334" aria-label="Line 334">334</a>     }) =&gt; {</span>
+<span class="source-line" id="L335"><a class="line-number" href="#L335" aria-label="Line 335">335</a>         qase.id(4797)</span>
+<span class="source-line" id="L336"><a class="line-number" href="#L336" aria-label="Line 336">336</a>         qase.title(&#39;TC-4797 Deselect one checkbox when &quot;All&quot; is selected&#39;)</span>
+<span class="source-line" id="L337"><a class="line-number" href="#L337" aria-label="Line 337">337</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L338"><a class="line-number" href="#L338" aria-label="Line 338">338</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L339"><a class="line-number" href="#L339" aria-label="Line 339">339</a> </span>
+<span class="source-line" id="L340"><a class="line-number" href="#L340" aria-label="Line 340">340</a>         await test.step(&#39;Open QR code dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L341"><a class="line-number" href="#L341" aria-label="Line 341">341</a>             await analytics.locator.qrCodeAnalyticsDropdownBtn.click()</span>
+<span class="source-line" id="L342"><a class="line-number" href="#L342" aria-label="Line 342">342</a>         })</span>
+<span class="source-line" id="L343"><a class="line-number" href="#L343" aria-label="Line 343">343</a>         await test.step(&#39;Deselect checkbox #1&#39;, async () =&gt; {</span>
+<span class="source-line" id="L344"><a class="line-number" href="#L344" aria-label="Line 344">344</a>             const qrCheckboxes = analytics.locator.qrCodeCheckboxList</span>
+<span class="source-line" id="L345"><a class="line-number" href="#L345" aria-label="Line 345">345</a>             await qrCheckboxes.nth(1).click()</span>
+<span class="source-line" id="L346"><a class="line-number" href="#L346" aria-label="Line 346">346</a>         })</span>
+<span class="source-line" id="L347"><a class="line-number" href="#L347" aria-label="Line 347">347</a>         await test.step(&#39;Verify checkbox states&#39;, async () =&gt; {</span>
+<span class="source-line" id="L348"><a class="line-number" href="#L348" aria-label="Line 348">348</a>             const qrCheckboxes = analytics.locator.qrCodeCheckboxList</span>
+<span class="source-line" id="L349"><a class="line-number" href="#L349" aria-label="Line 349">349</a>             await analytics.verifyCheckboxesState(qrCheckboxes, [0, 1])</span>
+<span class="source-line" id="L350"><a class="line-number" href="#L350" aria-label="Line 350">350</a>         })</span>
+<span class="source-line" id="L351"><a class="line-number" href="#L351" aria-label="Line 351">351</a>     })</span>
+<span class="source-line" id="L352"><a class="line-number" href="#L352" aria-label="Line 352">352</a> </span>
+<span class="source-line" id="L353"><a class="line-number" href="#L353" aria-label="Line 353">353</a>     test(&#39;TC-4798 Select all checkboxes manually&#39;, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L354"><a class="line-number" href="#L354" aria-label="Line 354">354</a>         qase.id(4798)</span>
+<span class="source-line" id="L355"><a class="line-number" href="#L355" aria-label="Line 355">355</a>         qase.title(&#39;TC-4798 Select all checkboxes manually&#39;)</span>
+<span class="source-line" id="L356"><a class="line-number" href="#L356" aria-label="Line 356">356</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L357"><a class="line-number" href="#L357" aria-label="Line 357">357</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L358"><a class="line-number" href="#L358" aria-label="Line 358">358</a>         await test.step(&#39;Open QR code dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L359"><a class="line-number" href="#L359" aria-label="Line 359">359</a>             await analytics.locator.qrCodeAnalyticsDropdownBtn.click()</span>
+<span class="source-line" id="L360"><a class="line-number" href="#L360" aria-label="Line 360">360</a>         })</span>
+<span class="source-line" id="L361"><a class="line-number" href="#L361" aria-label="Line 361">361</a>         const qrCheckboxes = analytics.locator.qrCodeCheckboxList</span>
+<span class="source-line" id="L362"><a class="line-number" href="#L362" aria-label="Line 362">362</a>         await test.step(&#39;Deselect the first checkbox&#39;, async () =&gt; {</span>
+<span class="source-line" id="L363"><a class="line-number" href="#L363" aria-label="Line 363">363</a>             await qrCheckboxes.nth(0).click()</span>
+<span class="source-line" id="L364"><a class="line-number" href="#L364" aria-label="Line 364">364</a>         })</span>
+<span class="source-line" id="L365"><a class="line-number" href="#L365" aria-label="Line 365">365</a>         await test.step(&#39;Select all checkboxes&#39;, async () =&gt; {</span>
+<span class="source-line" id="L366"><a class="line-number" href="#L366" aria-label="Line 366">366</a>             const total = await qrCheckboxes.count()</span>
+<span class="source-line" id="L367"><a class="line-number" href="#L367" aria-label="Line 367">367</a>             for (let i = 1; i &lt; total; i++) {</span>
+<span class="source-line" id="L368"><a class="line-number" href="#L368" aria-label="Line 368">368</a>                 await qrCheckboxes.nth(i).click()</span>
+<span class="source-line" id="L369"><a class="line-number" href="#L369" aria-label="Line 369">369</a>             }</span>
+<span class="source-line" id="L370"><a class="line-number" href="#L370" aria-label="Line 370">370</a>         })</span>
+<span class="source-line" id="L371"><a class="line-number" href="#L371" aria-label="Line 371">371</a>         await test.step(&#39;Verify all checkboxes are selected&#39;, async () =&gt; {</span>
+<span class="source-line" id="L372"><a class="line-number" href="#L372" aria-label="Line 372">372</a>             await analytics.verifyCheckboxesState(qrCheckboxes, [])</span>
+<span class="source-line" id="L373"><a class="line-number" href="#L373" aria-label="Line 373">373</a>         })</span>
+<span class="source-line" id="L374"><a class="line-number" href="#L374" aria-label="Line 374">374</a>     })</span>
+<span class="source-line" id="L375"><a class="line-number" href="#L375" aria-label="Line 375">375</a> </span>
+<span class="source-line" id="L376"><a class="line-number" href="#L376" aria-label="Line 376">376</a>     test(&#39;TC-4799 Partial selection&#39;, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L377"><a class="line-number" href="#L377" aria-label="Line 377">377</a>         qase.id(4799)</span>
+<span class="source-line" id="L378"><a class="line-number" href="#L378" aria-label="Line 378">378</a>         qase.title(&#39;TC-4799 Partial selection&#39;)</span>
+<span class="source-line" id="L379"><a class="line-number" href="#L379" aria-label="Line 379">379</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L380"><a class="line-number" href="#L380" aria-label="Line 380">380</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L381"><a class="line-number" href="#L381" aria-label="Line 381">381</a>         await test.step(&#39;Open QR code dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L382"><a class="line-number" href="#L382" aria-label="Line 382">382</a>             await analytics.locator.qrCodeAnalyticsDropdownBtn.click()</span>
+<span class="source-line" id="L383"><a class="line-number" href="#L383" aria-label="Line 383">383</a>         })</span>
+<span class="source-line" id="L384"><a class="line-number" href="#L384" aria-label="Line 384">384</a>         const qrCheckboxes = analytics.locator.qrCodeCheckboxList</span>
+<span class="source-line" id="L385"><a class="line-number" href="#L385" aria-label="Line 385">385</a>         await test.step(&#39;Validate checkbox count&#39;, async () =&gt; {</span>
+<span class="source-line" id="L386"><a class="line-number" href="#L386" aria-label="Line 386">386</a>             const total = await qrCheckboxes.count()</span>
+<span class="source-line" id="L387"><a class="line-number" href="#L387" aria-label="Line 387">387</a>             expect(total, &#39;Not enough checkboxes for the test&#39;).toBeGreaterThan(</span>
+<span class="source-line" id="L388"><a class="line-number" href="#L388" aria-label="Line 388">388</a>                 2</span>
+<span class="source-line" id="L389"><a class="line-number" href="#L389" aria-label="Line 389">389</a>             )</span>
+<span class="source-line" id="L390"><a class="line-number" href="#L390" aria-label="Line 390">390</a>         })</span>
+<span class="source-line" id="L391"><a class="line-number" href="#L391" aria-label="Line 391">391</a>         await test.step(&#39;Unselect the first checkbox&#39;, async () =&gt; {</span>
+<span class="source-line" id="L392"><a class="line-number" href="#L392" aria-label="Line 392">392</a>             await qrCheckboxes.nth(0).click()</span>
+<span class="source-line" id="L393"><a class="line-number" href="#L393" aria-label="Line 393">393</a>         })</span>
+<span class="source-line" id="L394"><a class="line-number" href="#L394" aria-label="Line 394">394</a>         const selectedIndexes = [1, 2]</span>
+<span class="source-line" id="L395"><a class="line-number" href="#L395" aria-label="Line 395">395</a>         await test.step(&#39;Select checkboxes #1 and #2&#39;, async () =&gt; {</span>
+<span class="source-line" id="L396"><a class="line-number" href="#L396" aria-label="Line 396">396</a>             for (const i of selectedIndexes) {</span>
+<span class="source-line" id="L397"><a class="line-number" href="#L397" aria-label="Line 397">397</a>                 await qrCheckboxes.nth(i).click()</span>
+<span class="source-line" id="L398"><a class="line-number" href="#L398" aria-label="Line 398">398</a>             }</span>
+<span class="source-line" id="L399"><a class="line-number" href="#L399" aria-label="Line 399">399</a>         })</span>
+<span class="source-line" id="L400"><a class="line-number" href="#L400" aria-label="Line 400">400</a>         await test.step(&#39;Verify checkbox states&#39;, async () =&gt; {</span>
+<span class="source-line" id="L401"><a class="line-number" href="#L401" aria-label="Line 401">401</a>             const total = await qrCheckboxes.count()</span>
+<span class="source-line" id="L402"><a class="line-number" href="#L402" aria-label="Line 402">402</a>             for (let i = 0; i &lt; total; i++) {</span>
+<span class="source-line" id="L403"><a class="line-number" href="#L403" aria-label="Line 403">403</a>                 if (selectedIndexes.includes(i)) {</span>
+<span class="source-line" id="L404"><a class="line-number" href="#L404" aria-label="Line 404">404</a>                     await expect(qrCheckboxes.nth(i)).toBeChecked()</span>
+<span class="source-line" id="L405"><a class="line-number" href="#L405" aria-label="Line 405">405</a>                 } else {</span>
+<span class="source-line" id="L406"><a class="line-number" href="#L406" aria-label="Line 406">406</a>                     await expect(qrCheckboxes.nth(i)).not.toBeChecked()</span>
+<span class="source-line" id="L407"><a class="line-number" href="#L407" aria-label="Line 407">407</a>                 }</span>
+<span class="source-line" id="L408"><a class="line-number" href="#L408" aria-label="Line 408">408</a>             }</span>
+<span class="source-line" id="L409"><a class="line-number" href="#L409" aria-label="Line 409">409</a>         })</span>
+<span class="source-line" id="L410"><a class="line-number" href="#L410" aria-label="Line 410">410</a>     })</span>
+<span class="source-line" id="L411"><a class="line-number" href="#L411" aria-label="Line 411">411</a> </span>
+<span class="source-line" id="L412"><a class="line-number" href="#L412" aria-label="Line 412">412</a>     test(&#39;TC-4800 Deselect one checkbox when &quot;All&quot; is selected&#39;, async ({</span>
+<span class="source-line" id="L413"><a class="line-number" href="#L413" aria-label="Line 413">413</a>         page,</span>
+<span class="source-line" id="L414"><a class="line-number" href="#L414" aria-label="Line 414">414</a>         pageManager,</span>
+<span class="source-line" id="L415"><a class="line-number" href="#L415" aria-label="Line 415">415</a>     }) =&gt; {</span>
+<span class="source-line" id="L416"><a class="line-number" href="#L416" aria-label="Line 416">416</a>         test.skip(true, &#39;Temporarily disabled&#39;)</span>
+<span class="source-line" id="L417"><a class="line-number" href="#L417" aria-label="Line 417">417</a>         qase.id(4800)</span>
+<span class="source-line" id="L418"><a class="line-number" href="#L418" aria-label="Line 418">418</a>         qase.title(&#39;TC-4800 Deselect one checkbox when &quot;All&quot; is selected&#39;)</span>
+<span class="source-line" id="L419"><a class="line-number" href="#L419" aria-label="Line 419">419</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L420"><a class="line-number" href="#L420" aria-label="Line 420">420</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L421"><a class="line-number" href="#L421" aria-label="Line 421">421</a>         await test.step(&#39;Set period to Lifetime&#39;, async () =&gt; {</span>
+<span class="source-line" id="L422"><a class="line-number" href="#L422" aria-label="Line 422">422</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L423"><a class="line-number" href="#L423" aria-label="Line 423">423</a>             await analytics.locator.lifetimeBtn.click()</span>
+<span class="source-line" id="L424"><a class="line-number" href="#L424" aria-label="Line 424">424</a>         })</span>
+<span class="source-line" id="L425"><a class="line-number" href="#L425" aria-label="Line 425">425</a>         await test.step(&#39;Open OS dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L426"><a class="line-number" href="#L426" aria-label="Line 426">426</a>             await analytics.locator.qrCodeAnalyticsOsDropdownBtn.click()</span>
+<span class="source-line" id="L427"><a class="line-number" href="#L427" aria-label="Line 427">427</a>         })</span>
+<span class="source-line" id="L428"><a class="line-number" href="#L428" aria-label="Line 428">428</a>         const osCheckboxes = analytics.locator.osSystemCheckboxList</span>
+<span class="source-line" id="L429"><a class="line-number" href="#L429" aria-label="Line 429">429</a>         await test.step(&#39;Deselect checkbox #1&#39;, async () =&gt; {</span>
+<span class="source-line" id="L430"><a class="line-number" href="#L430" aria-label="Line 430">430</a>             await osCheckboxes.nth(1).click()</span>
+<span class="source-line" id="L431"><a class="line-number" href="#L431" aria-label="Line 431">431</a>         })</span>
+<span class="source-line" id="L432"><a class="line-number" href="#L432" aria-label="Line 432">432</a>         await test.step(&#39;Verify checkbox states&#39;, async () =&gt; {</span>
+<span class="source-line" id="L433"><a class="line-number" href="#L433" aria-label="Line 433">433</a>             await analytics.verifyCheckboxesState(osCheckboxes, [0, 1])</span>
+<span class="source-line" id="L434"><a class="line-number" href="#L434" aria-label="Line 434">434</a>         })</span>
+<span class="source-line" id="L435"><a class="line-number" href="#L435" aria-label="Line 435">435</a>         const selectedLabels: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L436"><a class="line-number" href="#L436" aria-label="Line 436">436</a>         await test.step(&#39;Collect selected OS labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L437"><a class="line-number" href="#L437" aria-label="Line 437">437</a>             const total = await osCheckboxes.count()</span>
+<span class="source-line" id="L438"><a class="line-number" href="#L438" aria-label="Line 438">438</a>             for (let i = 0; i &lt; total; i++) {</span>
+<span class="source-line" id="L439"><a class="line-number" href="#L439" aria-label="Line 439">439</a>                 const cb = osCheckboxes.nth(i)</span>
+<span class="source-line" id="L440"><a class="line-number" href="#L440" aria-label="Line 440">440</a>                 if (await cb.isChecked()) {</span>
+<span class="source-line" id="L441"><a class="line-number" href="#L441" aria-label="Line 441">441</a>                     const label = (await cb.locator(&#39;..&#39;).innerText()).trim()</span>
+<span class="source-line" id="L442"><a class="line-number" href="#L442" aria-label="Line 442">442</a>                     selectedLabels.add(label)</span>
+<span class="source-line" id="L443"><a class="line-number" href="#L443" aria-label="Line 443">443</a>                 }</span>
+<span class="source-line" id="L444"><a class="line-number" href="#L444" aria-label="Line 444">444</a>             }</span>
+<span class="source-line" id="L445"><a class="line-number" href="#L445" aria-label="Line 445">445</a>         })</span>
+<span class="source-line" id="L446"><a class="line-number" href="#L446" aria-label="Line 446">446</a>         const legendLabels: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L447"><a class="line-number" href="#L447" aria-label="Line 447">447</a>         await test.step(&#39;Collect legend labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L448"><a class="line-number" href="#L448" aria-label="Line 448">448</a>             await page.waitForTimeout(300)</span>
+<span class="source-line" id="L449"><a class="line-number" href="#L449" aria-label="Line 449">449</a>             const texts =</span>
+<span class="source-line" id="L450"><a class="line-number" href="#L450" aria-label="Line 450">450</a>                 await analytics.locator.osLegendTextList.allInnerTexts()</span>
+<span class="source-line" id="L451"><a class="line-number" href="#L451" aria-label="Line 451">451</a>             texts.forEach((t) =&gt; legendLabels.add(t.trim()))</span>
+<span class="source-line" id="L452"><a class="line-number" href="#L452" aria-label="Line 452">452</a>         })</span>
+<span class="source-line" id="L453"><a class="line-number" href="#L453" aria-label="Line 453">453</a>         await test.step(&#39;Verify selected OS exist in legend&#39;, async () =&gt; {</span>
+<span class="source-line" id="L454"><a class="line-number" href="#L454" aria-label="Line 454">454</a>             const missing = [...selectedLabels].filter(</span>
+<span class="source-line" id="L455"><a class="line-number" href="#L455" aria-label="Line 455">455</a>                 (x) =&gt; !legendLabels.has(x)</span>
+<span class="source-line" id="L456"><a class="line-number" href="#L456" aria-label="Line 456">456</a>             )</span>
+<span class="source-line" id="L457"><a class="line-number" href="#L457" aria-label="Line 457">457</a> </span>
+<span class="source-line" id="L458"><a class="line-number" href="#L458" aria-label="Line 458">458</a>             expect(</span>
+<span class="source-line" id="L459"><a class="line-number" href="#L459" aria-label="Line 459">459</a>                 missing.length,</span>
+<span class="source-line" id="L460"><a class="line-number" href="#L460" aria-label="Line 460">460</a>                 `OS values missing in legend: ${missing.join(&#39;, &#39;)}`</span>
+<span class="source-line" id="L461"><a class="line-number" href="#L461" aria-label="Line 461">461</a>             ).toBe(0)</span>
+<span class="source-line" id="L462"><a class="line-number" href="#L462" aria-label="Line 462">462</a>         })</span>
+<span class="source-line" id="L463"><a class="line-number" href="#L463" aria-label="Line 463">463</a>     })</span>
+<span class="source-line" id="L464"><a class="line-number" href="#L464" aria-label="Line 464">464</a> </span>
+<span class="source-line" id="L465"><a class="line-number" href="#L465" aria-label="Line 465">465</a>     test(&#39;TC-4801 Select all checkboxes manually&#39;, async ({</span>
+<span class="source-line" id="L466"><a class="line-number" href="#L466" aria-label="Line 466">466</a>         page,</span>
+<span class="source-line" id="L467"><a class="line-number" href="#L467" aria-label="Line 467">467</a>         pageManager,</span>
+<span class="source-line" id="L468"><a class="line-number" href="#L468" aria-label="Line 468">468</a>     }) =&gt; {</span>
+<span class="source-line" id="L469"><a class="line-number" href="#L469" aria-label="Line 469">469</a>         test.skip(true, &#39;Temporarily disabled&#39;)</span>
+<span class="source-line" id="L470"><a class="line-number" href="#L470" aria-label="Line 470">470</a>         qase.id(4801)</span>
+<span class="source-line" id="L471"><a class="line-number" href="#L471" aria-label="Line 471">471</a>         qase.title(&#39;TC-4801 Select all checkboxes manually&#39;)</span>
+<span class="source-line" id="L472"><a class="line-number" href="#L472" aria-label="Line 472">472</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L473"><a class="line-number" href="#L473" aria-label="Line 473">473</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L474"><a class="line-number" href="#L474" aria-label="Line 474">474</a>         await test.step(&#39;Set period to Lifetime&#39;, async () =&gt; {</span>
+<span class="source-line" id="L475"><a class="line-number" href="#L475" aria-label="Line 475">475</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L476"><a class="line-number" href="#L476" aria-label="Line 476">476</a>             await analytics.locator.lifetimeBtn.click()</span>
+<span class="source-line" id="L477"><a class="line-number" href="#L477" aria-label="Line 477">477</a>         })</span>
+<span class="source-line" id="L478"><a class="line-number" href="#L478" aria-label="Line 478">478</a>         await test.step(&#39;Open OS dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L479"><a class="line-number" href="#L479" aria-label="Line 479">479</a>             await analytics.locator.qrCodeAnalyticsOsDropdownBtn.click()</span>
+<span class="source-line" id="L480"><a class="line-number" href="#L480" aria-label="Line 480">480</a>         })</span>
+<span class="source-line" id="L481"><a class="line-number" href="#L481" aria-label="Line 481">481</a>         const osCheckboxes = analytics.locator.osSystemCheckboxList</span>
+<span class="source-line" id="L482"><a class="line-number" href="#L482" aria-label="Line 482">482</a>         let total: number</span>
+<span class="source-line" id="L483"><a class="line-number" href="#L483" aria-label="Line 483">483</a>         await test.step(&#39;Ensure there are enough OS checkboxes&#39;, async () =&gt; {</span>
+<span class="source-line" id="L484"><a class="line-number" href="#L484" aria-label="Line 484">484</a>             total = await osCheckboxes.count()</span>
+<span class="source-line" id="L485"><a class="line-number" href="#L485" aria-label="Line 485">485</a>             expect(total, &#39;Not enough OS checkboxes found&#39;).toBeGreaterThan(1)</span>
+<span class="source-line" id="L486"><a class="line-number" href="#L486" aria-label="Line 486">486</a>         })</span>
+<span class="source-line" id="L487"><a class="line-number" href="#L487" aria-label="Line 487">487</a>         await test.step(&#39;Select all OS checkboxes&#39;, async () =&gt; {</span>
+<span class="source-line" id="L488"><a class="line-number" href="#L488" aria-label="Line 488">488</a>             await osCheckboxes.nth(0).click()</span>
+<span class="source-line" id="L489"><a class="line-number" href="#L489" aria-label="Line 489">489</a>             for (let i = 1; i &lt; total; i++) {</span>
+<span class="source-line" id="L490"><a class="line-number" href="#L490" aria-label="Line 490">490</a>                 await osCheckboxes.nth(i).click()</span>
+<span class="source-line" id="L491"><a class="line-number" href="#L491" aria-label="Line 491">491</a>             }</span>
+<span class="source-line" id="L492"><a class="line-number" href="#L492" aria-label="Line 492">492</a>         })</span>
+<span class="source-line" id="L493"><a class="line-number" href="#L493" aria-label="Line 493">493</a>         await test.step(&#39;Verify all OS checkboxes are checked&#39;, async () =&gt; {</span>
+<span class="source-line" id="L494"><a class="line-number" href="#L494" aria-label="Line 494">494</a>             await analytics.verifyCheckboxesState(osCheckboxes, [])</span>
+<span class="source-line" id="L495"><a class="line-number" href="#L495" aria-label="Line 495">495</a>         })</span>
+<span class="source-line" id="L496"><a class="line-number" href="#L496" aria-label="Line 496">496</a>         const selectedLabels: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L497"><a class="line-number" href="#L497" aria-label="Line 497">497</a>         await test.step(&#39;Collect selected OS labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L498"><a class="line-number" href="#L498" aria-label="Line 498">498</a>             for (let i = 1; i &lt; total; i++) {</span>
+<span class="source-line" id="L499"><a class="line-number" href="#L499" aria-label="Line 499">499</a>                 const label = (</span>
+<span class="source-line" id="L500"><a class="line-number" href="#L500" aria-label="Line 500">500</a>                     await osCheckboxes.nth(i).locator(&#39;..&#39;).innerText()</span>
+<span class="source-line" id="L501"><a class="line-number" href="#L501" aria-label="Line 501">501</a>                 ).trim()</span>
+<span class="source-line" id="L502"><a class="line-number" href="#L502" aria-label="Line 502">502</a>                 selectedLabels.add(label)</span>
+<span class="source-line" id="L503"><a class="line-number" href="#L503" aria-label="Line 503">503</a>             }</span>
+<span class="source-line" id="L504"><a class="line-number" href="#L504" aria-label="Line 504">504</a>         })</span>
+<span class="source-line" id="L505"><a class="line-number" href="#L505" aria-label="Line 505">505</a>         const legendLabels: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L506"><a class="line-number" href="#L506" aria-label="Line 506">506</a>         await test.step(&#39;Collect OS legend labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L507"><a class="line-number" href="#L507" aria-label="Line 507">507</a>             await page.waitForTimeout(300)</span>
+<span class="source-line" id="L508"><a class="line-number" href="#L508" aria-label="Line 508">508</a>             const texts =</span>
+<span class="source-line" id="L509"><a class="line-number" href="#L509" aria-label="Line 509">509</a>                 await analytics.locator.osLegendTextList.allInnerTexts()</span>
+<span class="source-line" id="L510"><a class="line-number" href="#L510" aria-label="Line 510">510</a>             texts.forEach((t) =&gt; legendLabels.add(t.trim()))</span>
+<span class="source-line" id="L511"><a class="line-number" href="#L511" aria-label="Line 511">511</a>         })</span>
+<span class="source-line" id="L512"><a class="line-number" href="#L512" aria-label="Line 512">512</a>         await test.step(&#39;Verify all OS labels exist in legend&#39;, async () =&gt; {</span>
+<span class="source-line" id="L513"><a class="line-number" href="#L513" aria-label="Line 513">513</a>             const missing = [...selectedLabels].filter(</span>
+<span class="source-line" id="L514"><a class="line-number" href="#L514" aria-label="Line 514">514</a>                 (x) =&gt; !legendLabels.has(x)</span>
+<span class="source-line" id="L515"><a class="line-number" href="#L515" aria-label="Line 515">515</a>             )</span>
+<span class="source-line" id="L516"><a class="line-number" href="#L516" aria-label="Line 516">516</a>             expect(</span>
+<span class="source-line" id="L517"><a class="line-number" href="#L517" aria-label="Line 517">517</a>                 missing.length,</span>
+<span class="source-line" id="L518"><a class="line-number" href="#L518" aria-label="Line 518">518</a>                 `OS entries are missing in the legend: ${missing.join(&#39;, &#39;)}`</span>
+<span class="source-line" id="L519"><a class="line-number" href="#L519" aria-label="Line 519">519</a>             ).toBe(0)</span>
+<span class="source-line" id="L520"><a class="line-number" href="#L520" aria-label="Line 520">520</a>         })</span>
+<span class="source-line" id="L521"><a class="line-number" href="#L521" aria-label="Line 521">521</a>     })</span>
+<span class="source-line" id="L522"><a class="line-number" href="#L522" aria-label="Line 522">522</a> </span>
+<span class="source-line" id="L523"><a class="line-number" href="#L523" aria-label="Line 523">523</a>     test(&#39;TC-4802 Partial selection&#39;, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L524"><a class="line-number" href="#L524" aria-label="Line 524">524</a>         test.skip(true, &#39;Temporarily disabled&#39;)</span>
+<span class="source-line" id="L525"><a class="line-number" href="#L525" aria-label="Line 525">525</a>         qase.id(4802)</span>
+<span class="source-line" id="L526"><a class="line-number" href="#L526" aria-label="Line 526">526</a>         qase.title(&#39;TC-4802 Partial selection&#39;)</span>
+<span class="source-line" id="L527"><a class="line-number" href="#L527" aria-label="Line 527">527</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L528"><a class="line-number" href="#L528" aria-label="Line 528">528</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L529"><a class="line-number" href="#L529" aria-label="Line 529">529</a>         await test.step(&#39;Set period to Lifetime&#39;, async () =&gt; {</span>
+<span class="source-line" id="L530"><a class="line-number" href="#L530" aria-label="Line 530">530</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L531"><a class="line-number" href="#L531" aria-label="Line 531">531</a>             await analytics.locator.lifetimeBtn.click()</span>
+<span class="source-line" id="L532"><a class="line-number" href="#L532" aria-label="Line 532">532</a>         })</span>
+<span class="source-line" id="L533"><a class="line-number" href="#L533" aria-label="Line 533">533</a>         await test.step(&#39;Open OS dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L534"><a class="line-number" href="#L534" aria-label="Line 534">534</a>             await analytics.locator.qrCodeAnalyticsOsDropdownBtn.click()</span>
+<span class="source-line" id="L535"><a class="line-number" href="#L535" aria-label="Line 535">535</a>         })</span>
+<span class="source-line" id="L536"><a class="line-number" href="#L536" aria-label="Line 536">536</a>         const osCheckboxes = analytics.locator.osSystemCheckboxList</span>
+<span class="source-line" id="L537"><a class="line-number" href="#L537" aria-label="Line 537">537</a>         let total: number</span>
+<span class="source-line" id="L538"><a class="line-number" href="#L538" aria-label="Line 538">538</a>         await test.step(&#39;Ensure enough checkboxes exist&#39;, async () =&gt; {</span>
+<span class="source-line" id="L539"><a class="line-number" href="#L539" aria-label="Line 539">539</a>             total = await osCheckboxes.count()</span>
+<span class="source-line" id="L540"><a class="line-number" href="#L540" aria-label="Line 540">540</a>             expect(total, &#39;Not enough OS checkboxes found&#39;).toBeGreaterThan(1)</span>
+<span class="source-line" id="L541"><a class="line-number" href="#L541" aria-label="Line 541">541</a>         })</span>
+<span class="source-line" id="L542"><a class="line-number" href="#L542" aria-label="Line 542">542</a>         await test.step(&#39;Select checkbox #0 and #1&#39;, async () =&gt; {</span>
+<span class="source-line" id="L543"><a class="line-number" href="#L543" aria-label="Line 543">543</a>             await osCheckboxes.nth(0).click()</span>
+<span class="source-line" id="L544"><a class="line-number" href="#L544" aria-label="Line 544">544</a>             await osCheckboxes.nth(1).click()</span>
+<span class="source-line" id="L545"><a class="line-number" href="#L545" aria-label="Line 545">545</a>         })</span>
+<span class="source-line" id="L546"><a class="line-number" href="#L546" aria-label="Line 546">546</a>         await test.step(&#39;Verify checkbox #1 is checked&#39;, async () =&gt; {</span>
+<span class="source-line" id="L547"><a class="line-number" href="#L547" aria-label="Line 547">547</a>             await expect(osCheckboxes.nth(1)).toBeChecked()</span>
+<span class="source-line" id="L548"><a class="line-number" href="#L548" aria-label="Line 548">548</a>         })</span>
+<span class="source-line" id="L549"><a class="line-number" href="#L549" aria-label="Line 549">549</a>         await test.step(&#39;Verify checkbox #0 is NOT checked&#39;, async () =&gt; {</span>
+<span class="source-line" id="L550"><a class="line-number" href="#L550" aria-label="Line 550">550</a>             await expect(osCheckboxes.nth(0)).not.toBeChecked()</span>
+<span class="source-line" id="L551"><a class="line-number" href="#L551" aria-label="Line 551">551</a>         })</span>
+<span class="source-line" id="L552"><a class="line-number" href="#L552" aria-label="Line 552">552</a>         let selectedOsName: string</span>
+<span class="source-line" id="L553"><a class="line-number" href="#L553" aria-label="Line 553">553</a> </span>
+<span class="source-line" id="L554"><a class="line-number" href="#L554" aria-label="Line 554">554</a>         await test.step(&#39;Extract selected OS label&#39;, async () =&gt; {</span>
+<span class="source-line" id="L555"><a class="line-number" href="#L555" aria-label="Line 555">555</a>             selectedOsName = (</span>
+<span class="source-line" id="L556"><a class="line-number" href="#L556" aria-label="Line 556">556</a>                 await osCheckboxes.nth(1).locator(&#39;..&#39;).innerText()</span>
+<span class="source-line" id="L557"><a class="line-number" href="#L557" aria-label="Line 557">557</a>             ).trim()</span>
+<span class="source-line" id="L558"><a class="line-number" href="#L558" aria-label="Line 558">558</a>         })</span>
+<span class="source-line" id="L559"><a class="line-number" href="#L559" aria-label="Line 559">559</a>         const legendOsNames: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L560"><a class="line-number" href="#L560" aria-label="Line 560">560</a>         await test.step(&#39;Collect OS legend labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L561"><a class="line-number" href="#L561" aria-label="Line 561">561</a>             const texts =</span>
+<span class="source-line" id="L562"><a class="line-number" href="#L562" aria-label="Line 562">562</a>                 await analytics.locator.osLegendTextList.allInnerTexts()</span>
+<span class="source-line" id="L563"><a class="line-number" href="#L563" aria-label="Line 563">563</a>             texts.forEach((t) =&gt; legendOsNames.add(t.trim()))</span>
+<span class="source-line" id="L564"><a class="line-number" href="#L564" aria-label="Line 564">564</a>         })</span>
+<span class="source-line" id="L565"><a class="line-number" href="#L565" aria-label="Line 565">565</a>         await test.step(&#39;Validate selected OS appears in legend&#39;, async () =&gt; {</span>
+<span class="source-line" id="L566"><a class="line-number" href="#L566" aria-label="Line 566">566</a>             expect(</span>
+<span class="source-line" id="L567"><a class="line-number" href="#L567" aria-label="Line 567">567</a>                 legendOsNames.has(selectedOsName),</span>
+<span class="source-line" id="L568"><a class="line-number" href="#L568" aria-label="Line 568">568</a>                 `Expected &#39;${selectedOsName}&#39; to appear in legend, but found only: ${[</span>
+<span class="source-line" id="L569"><a class="line-number" href="#L569" aria-label="Line 569">569</a>                     ...legendOsNames,</span>
+<span class="source-line" id="L570"><a class="line-number" href="#L570" aria-label="Line 570">570</a>                 ].join(&#39;, &#39;)}`</span>
+<span class="source-line" id="L571"><a class="line-number" href="#L571" aria-label="Line 571">571</a>             ).toBe(true)</span>
+<span class="source-line" id="L572"><a class="line-number" href="#L572" aria-label="Line 572">572</a>         })</span>
+<span class="source-line" id="L573"><a class="line-number" href="#L573" aria-label="Line 573">573</a>     })</span>
+<span class="source-line" id="L574"><a class="line-number" href="#L574" aria-label="Line 574">574</a> </span>
+<span class="source-line" id="L575"><a class="line-number" href="#L575" aria-label="Line 575">575</a>     test(&#39;TC-4803 Deselect one checkbox when &quot;All&quot; is selected&#39;, async ({</span>
+<span class="source-line" id="L576"><a class="line-number" href="#L576" aria-label="Line 576">576</a>         pageManager,</span>
+<span class="source-line" id="L577"><a class="line-number" href="#L577" aria-label="Line 577">577</a>     }) =&gt; {</span>
+<span class="source-line" id="L578"><a class="line-number" href="#L578" aria-label="Line 578">578</a>         test.skip(true, &#39;Temporarily disabled&#39;)</span>
+<span class="source-line" id="L579"><a class="line-number" href="#L579" aria-label="Line 579">579</a>         qase.id(4803)</span>
+<span class="source-line" id="L580"><a class="line-number" href="#L580" aria-label="Line 580">580</a>         qase.title(&#39;TC-4803 Deselect one checkbox when &quot;All&quot; is selected&#39;)</span>
+<span class="source-line" id="L581"><a class="line-number" href="#L581" aria-label="Line 581">581</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L582"><a class="line-number" href="#L582" aria-label="Line 582">582</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L583"><a class="line-number" href="#L583" aria-label="Line 583">583</a>         await test.step(&#39;Set period to Lifetime&#39;, async () =&gt; {</span>
+<span class="source-line" id="L584"><a class="line-number" href="#L584" aria-label="Line 584">584</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L585"><a class="line-number" href="#L585" aria-label="Line 585">585</a>             await analytics.locator.lifetimeBtn.click()</span>
+<span class="source-line" id="L586"><a class="line-number" href="#L586" aria-label="Line 586">586</a>         })</span>
+<span class="source-line" id="L587"><a class="line-number" href="#L587" aria-label="Line 587">587</a>         await test.step(&#39;Open Countries dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L588"><a class="line-number" href="#L588" aria-label="Line 588">588</a>             await analytics.locator.qrCodeAnalyticsCountriesDropdownBtn.click()</span>
+<span class="source-line" id="L589"><a class="line-number" href="#L589" aria-label="Line 589">589</a>         })</span>
+<span class="source-line" id="L590"><a class="line-number" href="#L590" aria-label="Line 590">590</a>         const countryCheckboxes = analytics.locator.countryCheckboxList</span>
+<span class="source-line" id="L591"><a class="line-number" href="#L591" aria-label="Line 591">591</a>         let total: number</span>
+<span class="source-line" id="L592"><a class="line-number" href="#L592" aria-label="Line 592">592</a>         await test.step(&#39;Ensure there are enough country checkboxes&#39;, async () =&gt; {</span>
+<span class="source-line" id="L593"><a class="line-number" href="#L593" aria-label="Line 593">593</a>             total = await countryCheckboxes.count()</span>
+<span class="source-line" id="L594"><a class="line-number" href="#L594" aria-label="Line 594">594</a>             expect(</span>
+<span class="source-line" id="L595"><a class="line-number" href="#L595" aria-label="Line 595">595</a>                 total,</span>
+<span class="source-line" id="L596"><a class="line-number" href="#L596" aria-label="Line 596">596</a>                 &#39;Not enough Countries checkboxes found&#39;</span>
+<span class="source-line" id="L597"><a class="line-number" href="#L597" aria-label="Line 597">597</a>             ).toBeGreaterThan(1)</span>
+<span class="source-line" id="L598"><a class="line-number" href="#L598" aria-label="Line 598">598</a>         })</span>
+<span class="source-line" id="L599"><a class="line-number" href="#L599" aria-label="Line 599">599</a>         await test.step(&#39;Deselect country #1&#39;, async () =&gt; {</span>
+<span class="source-line" id="L600"><a class="line-number" href="#L600" aria-label="Line 600">600</a>             await countryCheckboxes.nth(1).click()</span>
+<span class="source-line" id="L601"><a class="line-number" href="#L601" aria-label="Line 601">601</a>         })</span>
+<span class="source-line" id="L602"><a class="line-number" href="#L602" aria-label="Line 602">602</a>         await test.step(&#39;Verify checkbox states&#39;, async () =&gt; {</span>
+<span class="source-line" id="L603"><a class="line-number" href="#L603" aria-label="Line 603">603</a>             await analytics.verifyCheckboxesState(countryCheckboxes, [0, 1])</span>
+<span class="source-line" id="L604"><a class="line-number" href="#L604" aria-label="Line 604">604</a>         })</span>
+<span class="source-line" id="L605"><a class="line-number" href="#L605" aria-label="Line 605">605</a>         const selectedCountries: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L606"><a class="line-number" href="#L606" aria-label="Line 606">606</a>         await test.step(&#39;Collect selected country labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L607"><a class="line-number" href="#L607" aria-label="Line 607">607</a>             for (let i = 0; i &lt; total; i++) {</span>
+<span class="source-line" id="L608"><a class="line-number" href="#L608" aria-label="Line 608">608</a>                 const cb = countryCheckboxes.nth(i)</span>
+<span class="source-line" id="L609"><a class="line-number" href="#L609" aria-label="Line 609">609</a>                 if (await cb.isChecked()) {</span>
+<span class="source-line" id="L610"><a class="line-number" href="#L610" aria-label="Line 610">610</a>                     const label = (await cb.locator(&#39;..&#39;).innerText()).trim()</span>
+<span class="source-line" id="L611"><a class="line-number" href="#L611" aria-label="Line 611">611</a>                     selectedCountries.add(label)</span>
+<span class="source-line" id="L612"><a class="line-number" href="#L612" aria-label="Line 612">612</a>                 }</span>
+<span class="source-line" id="L613"><a class="line-number" href="#L613" aria-label="Line 613">613</a>             }</span>
+<span class="source-line" id="L614"><a class="line-number" href="#L614" aria-label="Line 614">614</a>         })</span>
+<span class="source-line" id="L615"><a class="line-number" href="#L615" aria-label="Line 615">615</a>         const legendCountries: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L616"><a class="line-number" href="#L616" aria-label="Line 616">616</a>         await test.step(&#39;Collect legend country labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L617"><a class="line-number" href="#L617" aria-label="Line 617">617</a>             const texts =</span>
+<span class="source-line" id="L618"><a class="line-number" href="#L618" aria-label="Line 618">618</a>                 await analytics.locator.countryLegendTextList.allInnerTexts()</span>
+<span class="source-line" id="L619"><a class="line-number" href="#L619" aria-label="Line 619">619</a>             texts.forEach((t) =&gt; legendCountries.add(t.trim()))</span>
+<span class="source-line" id="L620"><a class="line-number" href="#L620" aria-label="Line 620">620</a>         })</span>
+<span class="source-line" id="L621"><a class="line-number" href="#L621" aria-label="Line 621">621</a>         await test.step(&#39;Verify selected countries appear in legend&#39;, async () =&gt; {</span>
+<span class="source-line" id="L622"><a class="line-number" href="#L622" aria-label="Line 622">622</a>             const missing = [...selectedCountries].filter(</span>
+<span class="source-line" id="L623"><a class="line-number" href="#L623" aria-label="Line 623">623</a>                 (x) =&gt; !legendCountries.has(x)</span>
+<span class="source-line" id="L624"><a class="line-number" href="#L624" aria-label="Line 624">624</a>             )</span>
+<span class="source-line" id="L625"><a class="line-number" href="#L625" aria-label="Line 625">625</a>             expect(</span>
+<span class="source-line" id="L626"><a class="line-number" href="#L626" aria-label="Line 626">626</a>                 missing.length,</span>
+<span class="source-line" id="L627"><a class="line-number" href="#L627" aria-label="Line 627">627</a>                 `Countries are missing in the legend: ${missing.join(&#39;, &#39;)}`</span>
+<span class="source-line" id="L628"><a class="line-number" href="#L628" aria-label="Line 628">628</a>             ).toBe(0)</span>
+<span class="source-line" id="L629"><a class="line-number" href="#L629" aria-label="Line 629">629</a>         })</span>
+<span class="source-line" id="L630"><a class="line-number" href="#L630" aria-label="Line 630">630</a>     })</span>
+<span class="source-line" id="L631"><a class="line-number" href="#L631" aria-label="Line 631">631</a> </span>
+<span class="source-line" id="L632"><a class="line-number" href="#L632" aria-label="Line 632">632</a>     test(&#39;TC-4804 QR code analytics – manually select all countries&#39;, async ({</span>
+<span class="source-line" id="L633"><a class="line-number" href="#L633" aria-label="Line 633">633</a>         page,</span>
+<span class="source-line" id="L634"><a class="line-number" href="#L634" aria-label="Line 634">634</a>         pageManager,</span>
+<span class="source-line" id="L635"><a class="line-number" href="#L635" aria-label="Line 635">635</a>     }) =&gt; {</span>
+<span class="source-line" id="L636"><a class="line-number" href="#L636" aria-label="Line 636">636</a>         test.skip(true, &#39;Temporarily disabled&#39;)</span>
+<span class="source-line" id="L637"><a class="line-number" href="#L637" aria-label="Line 637">637</a>         qase.id(4804)</span>
+<span class="source-line" id="L638"><a class="line-number" href="#L638" aria-label="Line 638">638</a>         qase.title(&#39;TC-4804 QR code analytics – manually select all countries&#39;)</span>
+<span class="source-line" id="L639"><a class="line-number" href="#L639" aria-label="Line 639">639</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L640"><a class="line-number" href="#L640" aria-label="Line 640">640</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L641"><a class="line-number" href="#L641" aria-label="Line 641">641</a>         await test.step(&#39;Set period to Lifetime&#39;, async () =&gt; {</span>
+<span class="source-line" id="L642"><a class="line-number" href="#L642" aria-label="Line 642">642</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L643"><a class="line-number" href="#L643" aria-label="Line 643">643</a>             await analytics.locator.lifetimeBtn.click()</span>
+<span class="source-line" id="L644"><a class="line-number" href="#L644" aria-label="Line 644">644</a>         })</span>
+<span class="source-line" id="L645"><a class="line-number" href="#L645" aria-label="Line 645">645</a>         await test.step(&#39;Open Countries dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L646"><a class="line-number" href="#L646" aria-label="Line 646">646</a>             await analytics.locator.qrCodeAnalyticsCountriesDropdownBtn.click()</span>
+<span class="source-line" id="L647"><a class="line-number" href="#L647" aria-label="Line 647">647</a>         })</span>
+<span class="source-line" id="L648"><a class="line-number" href="#L648" aria-label="Line 648">648</a>         const countryCheckboxes = analytics.locator.countryCheckboxList</span>
+<span class="source-line" id="L649"><a class="line-number" href="#L649" aria-label="Line 649">649</a>         let total: number</span>
+<span class="source-line" id="L650"><a class="line-number" href="#L650" aria-label="Line 650">650</a>         await test.step(&#39;Ensure there are enough country checkboxes&#39;, async () =&gt; {</span>
+<span class="source-line" id="L651"><a class="line-number" href="#L651" aria-label="Line 651">651</a>             total = await countryCheckboxes.count()</span>
+<span class="source-line" id="L652"><a class="line-number" href="#L652" aria-label="Line 652">652</a>             expect(</span>
+<span class="source-line" id="L653"><a class="line-number" href="#L653" aria-label="Line 653">653</a>                 total,</span>
+<span class="source-line" id="L654"><a class="line-number" href="#L654" aria-label="Line 654">654</a>                 &#39;Not enough Countries checkboxes found&#39;</span>
+<span class="source-line" id="L655"><a class="line-number" href="#L655" aria-label="Line 655">655</a>             ).toBeGreaterThan(1)</span>
+<span class="source-line" id="L656"><a class="line-number" href="#L656" aria-label="Line 656">656</a>         })</span>
+<span class="source-line" id="L657"><a class="line-number" href="#L657" aria-label="Line 657">657</a>         await test.step(&#39;Select all countries manually&#39;, async () =&gt; {</span>
+<span class="source-line" id="L658"><a class="line-number" href="#L658" aria-label="Line 658">658</a>             await countryCheckboxes.nth(0).click()</span>
+<span class="source-line" id="L659"><a class="line-number" href="#L659" aria-label="Line 659">659</a>             for (let i = 1; i &lt; total; i++) {</span>
+<span class="source-line" id="L660"><a class="line-number" href="#L660" aria-label="Line 660">660</a>                 await countryCheckboxes.nth(i).click()</span>
+<span class="source-line" id="L661"><a class="line-number" href="#L661" aria-label="Line 661">661</a>             }</span>
+<span class="source-line" id="L662"><a class="line-number" href="#L662" aria-label="Line 662">662</a>         })</span>
+<span class="source-line" id="L663"><a class="line-number" href="#L663" aria-label="Line 663">663</a>         await test.step(&#39;Verify all countries are selected&#39;, async () =&gt; {</span>
+<span class="source-line" id="L664"><a class="line-number" href="#L664" aria-label="Line 664">664</a>             await analytics.verifyCheckboxesState(countryCheckboxes, [])</span>
+<span class="source-line" id="L665"><a class="line-number" href="#L665" aria-label="Line 665">665</a>         })</span>
+<span class="source-line" id="L666"><a class="line-number" href="#L666" aria-label="Line 666">666</a>         const selectedCountries: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L667"><a class="line-number" href="#L667" aria-label="Line 667">667</a>         await test.step(&#39;Collect selected country names&#39;, async () =&gt; {</span>
+<span class="source-line" id="L668"><a class="line-number" href="#L668" aria-label="Line 668">668</a>             for (let i = 1; i &lt; total; i++) {</span>
+<span class="source-line" id="L669"><a class="line-number" href="#L669" aria-label="Line 669">669</a>                 const label = (</span>
+<span class="source-line" id="L670"><a class="line-number" href="#L670" aria-label="Line 670">670</a>                     await countryCheckboxes.nth(i).locator(&#39;..&#39;).innerText()</span>
+<span class="source-line" id="L671"><a class="line-number" href="#L671" aria-label="Line 671">671</a>                 ).trim()</span>
+<span class="source-line" id="L672"><a class="line-number" href="#L672" aria-label="Line 672">672</a>                 selectedCountries.add(label)</span>
+<span class="source-line" id="L673"><a class="line-number" href="#L673" aria-label="Line 673">673</a>             }</span>
+<span class="source-line" id="L674"><a class="line-number" href="#L674" aria-label="Line 674">674</a>         })</span>
+<span class="source-line" id="L675"><a class="line-number" href="#L675" aria-label="Line 675">675</a>         const legendCountries: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L676"><a class="line-number" href="#L676" aria-label="Line 676">676</a>         await test.step(&#39;Collect legend country names&#39;, async () =&gt; {</span>
+<span class="source-line" id="L677"><a class="line-number" href="#L677" aria-label="Line 677">677</a>             await page.waitForTimeout(300)</span>
+<span class="source-line" id="L678"><a class="line-number" href="#L678" aria-label="Line 678">678</a>             const texts =</span>
+<span class="source-line" id="L679"><a class="line-number" href="#L679" aria-label="Line 679">679</a>                 await analytics.locator.countryLegendTextList.allInnerTexts()</span>
+<span class="source-line" id="L680"><a class="line-number" href="#L680" aria-label="Line 680">680</a>             texts.forEach((t) =&gt; legendCountries.add(t.trim()))</span>
+<span class="source-line" id="L681"><a class="line-number" href="#L681" aria-label="Line 681">681</a>         })</span>
+<span class="source-line" id="L682"><a class="line-number" href="#L682" aria-label="Line 682">682</a>         await test.step(&#39;Verify all selected countries appear in legend&#39;, async () =&gt; {</span>
+<span class="source-line" id="L683"><a class="line-number" href="#L683" aria-label="Line 683">683</a>             const missing = [...selectedCountries].filter(</span>
+<span class="source-line" id="L684"><a class="line-number" href="#L684" aria-label="Line 684">684</a>                 (x) =&gt; !legendCountries.has(x)</span>
+<span class="source-line" id="L685"><a class="line-number" href="#L685" aria-label="Line 685">685</a>             )</span>
+<span class="source-line" id="L686"><a class="line-number" href="#L686" aria-label="Line 686">686</a>             expect(</span>
+<span class="source-line" id="L687"><a class="line-number" href="#L687" aria-label="Line 687">687</a>                 missing.length,</span>
+<span class="source-line" id="L688"><a class="line-number" href="#L688" aria-label="Line 688">688</a>                 `Countries are missing in the legend: ${missing.join(&#39;, &#39;)}`</span>
+<span class="source-line" id="L689"><a class="line-number" href="#L689" aria-label="Line 689">689</a>             ).toBe(0)</span>
+<span class="source-line" id="L690"><a class="line-number" href="#L690" aria-label="Line 690">690</a>         })</span>
+<span class="source-line" id="L691"><a class="line-number" href="#L691" aria-label="Line 691">691</a>     })</span>
+<span class="source-line" id="L692"><a class="line-number" href="#L692" aria-label="Line 692">692</a> </span>
+<span class="source-line" id="L693"><a class="line-number" href="#L693" aria-label="Line 693">693</a>     test(&#39;TC-4805 Partial selection&#39;, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L694"><a class="line-number" href="#L694" aria-label="Line 694">694</a>         test.skip(true, &#39;Temporarily disabled&#39;)</span>
+<span class="source-line" id="L695"><a class="line-number" href="#L695" aria-label="Line 695">695</a>         qase.id(4805)</span>
+<span class="source-line" id="L696"><a class="line-number" href="#L696" aria-label="Line 696">696</a>         qase.title(&#39;TC-4805 Partial selection&#39;)</span>
+<span class="source-line" id="L697"><a class="line-number" href="#L697" aria-label="Line 697">697</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L698"><a class="line-number" href="#L698" aria-label="Line 698">698</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L699"><a class="line-number" href="#L699" aria-label="Line 699">699</a>         await test.step(&#39;Set period to Lifetime&#39;, async () =&gt; {</span>
+<span class="source-line" id="L700"><a class="line-number" href="#L700" aria-label="Line 700">700</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L701"><a class="line-number" href="#L701" aria-label="Line 701">701</a>             await analytics.locator.lifetimeBtn.click()</span>
+<span class="source-line" id="L702"><a class="line-number" href="#L702" aria-label="Line 702">702</a>         })</span>
+<span class="source-line" id="L703"><a class="line-number" href="#L703" aria-label="Line 703">703</a>         await test.step(&#39;Open Countries dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L704"><a class="line-number" href="#L704" aria-label="Line 704">704</a>             await analytics.locator.qrCodeAnalyticsCountriesDropdownBtn.click()</span>
+<span class="source-line" id="L705"><a class="line-number" href="#L705" aria-label="Line 705">705</a>         })</span>
+<span class="source-line" id="L706"><a class="line-number" href="#L706" aria-label="Line 706">706</a>         const countryCheckboxes = analytics.locator.countryCheckboxList</span>
+<span class="source-line" id="L707"><a class="line-number" href="#L707" aria-label="Line 707">707</a>         let total: number</span>
+<span class="source-line" id="L708"><a class="line-number" href="#L708" aria-label="Line 708">708</a>         await test.step(&#39;Ensure enough country checkboxes exist&#39;, async () =&gt; {</span>
+<span class="source-line" id="L709"><a class="line-number" href="#L709" aria-label="Line 709">709</a>             total = await countryCheckboxes.count()</span>
+<span class="source-line" id="L710"><a class="line-number" href="#L710" aria-label="Line 710">710</a>             expect(</span>
+<span class="source-line" id="L711"><a class="line-number" href="#L711" aria-label="Line 711">711</a>                 total,</span>
+<span class="source-line" id="L712"><a class="line-number" href="#L712" aria-label="Line 712">712</a>                 &#39;Not enough Countries checkboxes found&#39;</span>
+<span class="source-line" id="L713"><a class="line-number" href="#L713" aria-label="Line 713">713</a>             ).toBeGreaterThan(1)</span>
+<span class="source-line" id="L714"><a class="line-number" href="#L714" aria-label="Line 714">714</a>         })</span>
+<span class="source-line" id="L715"><a class="line-number" href="#L715" aria-label="Line 715">715</a>         await test.step(&#39;Select country #0 and #1&#39;, async () =&gt; {</span>
+<span class="source-line" id="L716"><a class="line-number" href="#L716" aria-label="Line 716">716</a>             await countryCheckboxes.nth(0).click()</span>
+<span class="source-line" id="L717"><a class="line-number" href="#L717" aria-label="Line 717">717</a>             await countryCheckboxes.nth(1).click()</span>
+<span class="source-line" id="L718"><a class="line-number" href="#L718" aria-label="Line 718">718</a>         })</span>
+<span class="source-line" id="L719"><a class="line-number" href="#L719" aria-label="Line 719">719</a>         await test.step(&#39;Validate checkbox #1 is checked&#39;, async () =&gt; {</span>
+<span class="source-line" id="L720"><a class="line-number" href="#L720" aria-label="Line 720">720</a>             await expect(countryCheckboxes.nth(1)).toBeChecked()</span>
+<span class="source-line" id="L721"><a class="line-number" href="#L721" aria-label="Line 721">721</a>         })</span>
+<span class="source-line" id="L722"><a class="line-number" href="#L722" aria-label="Line 722">722</a>         await test.step(&#39;Validate checkbox #0 is NOT checked&#39;, async () =&gt; {</span>
+<span class="source-line" id="L723"><a class="line-number" href="#L723" aria-label="Line 723">723</a>             await expect(countryCheckboxes.nth(0)).not.toBeChecked()</span>
+<span class="source-line" id="L724"><a class="line-number" href="#L724" aria-label="Line 724">724</a>         })</span>
+<span class="source-line" id="L725"><a class="line-number" href="#L725" aria-label="Line 725">725</a>         let selectedCountry: string</span>
+<span class="source-line" id="L726"><a class="line-number" href="#L726" aria-label="Line 726">726</a>         await test.step(&#39;Get selected country label&#39;, async () =&gt; {</span>
+<span class="source-line" id="L727"><a class="line-number" href="#L727" aria-label="Line 727">727</a>             selectedCountry = (</span>
+<span class="source-line" id="L728"><a class="line-number" href="#L728" aria-label="Line 728">728</a>                 await countryCheckboxes.nth(1).locator(&#39;..&#39;).innerText()</span>
+<span class="source-line" id="L729"><a class="line-number" href="#L729" aria-label="Line 729">729</a>             ).trim()</span>
+<span class="source-line" id="L730"><a class="line-number" href="#L730" aria-label="Line 730">730</a>         })</span>
+<span class="source-line" id="L731"><a class="line-number" href="#L731" aria-label="Line 731">731</a>         const legendCountries: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L732"><a class="line-number" href="#L732" aria-label="Line 732">732</a>         await test.step(&#39;Collect country legend labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L733"><a class="line-number" href="#L733" aria-label="Line 733">733</a>             const texts =</span>
+<span class="source-line" id="L734"><a class="line-number" href="#L734" aria-label="Line 734">734</a>                 await analytics.locator.countryLegendTextList.allInnerTexts()</span>
+<span class="source-line" id="L735"><a class="line-number" href="#L735" aria-label="Line 735">735</a>             texts.forEach((t) =&gt; legendCountries.add(t.trim()))</span>
+<span class="source-line" id="L736"><a class="line-number" href="#L736" aria-label="Line 736">736</a>         })</span>
+<span class="source-line" id="L737"><a class="line-number" href="#L737" aria-label="Line 737">737</a>         await test.step(&#39;Verify selected country appears in legend&#39;, async () =&gt; {</span>
+<span class="source-line" id="L738"><a class="line-number" href="#L738" aria-label="Line 738">738</a>             const legendItem = analytics.locator.countryLegendTextList.filter({</span>
+<span class="source-line" id="L739"><a class="line-number" href="#L739" aria-label="Line 739">739</a>                 hasText: selectedCountry,</span>
+<span class="source-line" id="L740"><a class="line-number" href="#L740" aria-label="Line 740">740</a>             })</span>
+<span class="source-line" id="L741"><a class="line-number" href="#L741" aria-label="Line 741">741</a> </span>
+<span class="source-line" id="L742"><a class="line-number" href="#L742" aria-label="Line 742">742</a>             await expect(legendItem).toBeVisible({ timeout: 5000 })</span>
+<span class="source-line" id="L743"><a class="line-number" href="#L743" aria-label="Line 743">743</a>         })</span>
+<span class="source-line" id="L744"><a class="line-number" href="#L744" aria-label="Line 744">744</a>     })</span>
+<span class="source-line" id="L745"><a class="line-number" href="#L745" aria-label="Line 745">745</a> </span>
+<span class="source-line" id="L746"><a class="line-number" href="#L746" aria-label="Line 746">746</a>     test(&#39;TC-4806 Cities only of the selected country is shown in the Analytics&#39;, async ({</span>
+<span class="source-line" id="L747"><a class="line-number" href="#L747" aria-label="Line 747">747</a>         pageManager,</span>
+<span class="source-line" id="L748"><a class="line-number" href="#L748" aria-label="Line 748">748</a>     }) =&gt; {</span>
+<span class="source-line" id="L749"><a class="line-number" href="#L749" aria-label="Line 749">749</a>         test.skip(true, &#39;Temporarily disabled&#39;)</span>
+<span class="source-line" id="L750"><a class="line-number" href="#L750" aria-label="Line 750">750</a>         qase.id(4806)</span>
+<span class="source-line" id="L751"><a class="line-number" href="#L751" aria-label="Line 751">751</a>         qase.title(</span>
+<span class="source-line" id="L752"><a class="line-number" href="#L752" aria-label="Line 752">752</a>             &#39;TC-4806 Cities only of the selected country is shown in the Analytics&#39;</span>
+<span class="source-line" id="L753"><a class="line-number" href="#L753" aria-label="Line 753">753</a>         )</span>
+<span class="source-line" id="L754"><a class="line-number" href="#L754" aria-label="Line 754">754</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L755"><a class="line-number" href="#L755" aria-label="Line 755">755</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L756"><a class="line-number" href="#L756" aria-label="Line 756">756</a>         await test.step(&#39;Set period to Lifetime&#39;, async () =&gt; {</span>
+<span class="source-line" id="L757"><a class="line-number" href="#L757" aria-label="Line 757">757</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L758"><a class="line-number" href="#L758" aria-label="Line 758">758</a>             await analytics.locator.lifetimeBtn.click()</span>
+<span class="source-line" id="L759"><a class="line-number" href="#L759" aria-label="Line 759">759</a>         })</span>
+<span class="source-line" id="L760"><a class="line-number" href="#L760" aria-label="Line 760">760</a>         await test.step(&#39;Open Countries dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L761"><a class="line-number" href="#L761" aria-label="Line 761">761</a>             await analytics.locator.qrCodeAnalyticsCountriesDropdownBtn.click()</span>
+<span class="source-line" id="L762"><a class="line-number" href="#L762" aria-label="Line 762">762</a>         })</span>
+<span class="source-line" id="L763"><a class="line-number" href="#L763" aria-label="Line 763">763</a>         const countryCheckboxes = analytics.locator.countryCheckboxList</span>
+<span class="source-line" id="L764"><a class="line-number" href="#L764" aria-label="Line 764">764</a>         await countryCheckboxes.nth(0).click()</span>
+<span class="source-line" id="L765"><a class="line-number" href="#L765" aria-label="Line 765">765</a>         const total = await countryCheckboxes.count()</span>
+<span class="source-line" id="L766"><a class="line-number" href="#L766" aria-label="Line 766">766</a>         await test.step(&#39;Select expected countries&#39;, async () =&gt; {</span>
+<span class="source-line" id="L767"><a class="line-number" href="#L767" aria-label="Line 767">767</a>             for (let i = 0; i &lt; total; i++) {</span>
+<span class="source-line" id="L768"><a class="line-number" href="#L768" aria-label="Line 768">768</a>                 const label = (</span>
+<span class="source-line" id="L769"><a class="line-number" href="#L769" aria-label="Line 769">769</a>                     await countryCheckboxes.nth(i).locator(&#39;..&#39;).innerText()</span>
+<span class="source-line" id="L770"><a class="line-number" href="#L770" aria-label="Line 770">770</a>                 ).trim()</span>
+<span class="source-line" id="L771"><a class="line-number" href="#L771" aria-label="Line 771">771</a>                 if (expectedCityCountrySet[label]) {</span>
+<span class="source-line" id="L772"><a class="line-number" href="#L772" aria-label="Line 772">772</a>                     await countryCheckboxes.nth(i).click()</span>
+<span class="source-line" id="L773"><a class="line-number" href="#L773" aria-label="Line 773">773</a>                 }</span>
+<span class="source-line" id="L774"><a class="line-number" href="#L774" aria-label="Line 774">774</a>             }</span>
+<span class="source-line" id="L775"><a class="line-number" href="#L775" aria-label="Line 775">775</a>         })</span>
+<span class="source-line" id="L776"><a class="line-number" href="#L776" aria-label="Line 776">776</a>         const selectedCountries: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L777"><a class="line-number" href="#L777" aria-label="Line 777">777</a>         await test.step(&#39;Collect selected countries&#39;, async () =&gt; {</span>
+<span class="source-line" id="L778"><a class="line-number" href="#L778" aria-label="Line 778">778</a>             for (let i = 0; i &lt; total; i++) {</span>
+<span class="source-line" id="L779"><a class="line-number" href="#L779" aria-label="Line 779">779</a>                 const cb = countryCheckboxes.nth(i)</span>
+<span class="source-line" id="L780"><a class="line-number" href="#L780" aria-label="Line 780">780</a>                 if (await cb.isChecked()) {</span>
+<span class="source-line" id="L781"><a class="line-number" href="#L781" aria-label="Line 781">781</a>                     const label = (await cb.locator(&#39;..&#39;).innerText()).trim()</span>
+<span class="source-line" id="L782"><a class="line-number" href="#L782" aria-label="Line 782">782</a>                     selectedCountries.add(label)</span>
+<span class="source-line" id="L783"><a class="line-number" href="#L783" aria-label="Line 783">783</a>                 }</span>
+<span class="source-line" id="L784"><a class="line-number" href="#L784" aria-label="Line 784">784</a>             }</span>
+<span class="source-line" id="L785"><a class="line-number" href="#L785" aria-label="Line 785">785</a>         })</span>
+<span class="source-line" id="L786"><a class="line-number" href="#L786" aria-label="Line 786">786</a>         await test.step(&#39;Validate selected countries match expected&#39;, async () =&gt; {</span>
+<span class="source-line" id="L787"><a class="line-number" href="#L787" aria-label="Line 787">787</a>             const expected = new Set(Object.keys(expectedCityCountrySet))</span>
+<span class="source-line" id="L788"><a class="line-number" href="#L788" aria-label="Line 788">788</a>             expect(</span>
+<span class="source-line" id="L789"><a class="line-number" href="#L789" aria-label="Line 789">789</a>                 selectedCountries,</span>
+<span class="source-line" id="L790"><a class="line-number" href="#L790" aria-label="Line 790">790</a>                 `Incorrect countries are selected: ${[</span>
+<span class="source-line" id="L791"><a class="line-number" href="#L791" aria-label="Line 791">791</a>                     ...selectedCountries,</span>
+<span class="source-line" id="L792"><a class="line-number" href="#L792" aria-label="Line 792">792</a>                 ].join(&#39;, &#39;)}`</span>
+<span class="source-line" id="L793"><a class="line-number" href="#L793" aria-label="Line 793">793</a>             ).toEqual(expected)</span>
+<span class="source-line" id="L794"><a class="line-number" href="#L794" aria-label="Line 794">794</a>         })</span>
+<span class="source-line" id="L795"><a class="line-number" href="#L795" aria-label="Line 795">795</a>         const displayedCities: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L796"><a class="line-number" href="#L796" aria-label="Line 796">796</a>         await test.step(&#39;Collect displayed cities&#39;, async () =&gt; {</span>
+<span class="source-line" id="L797"><a class="line-number" href="#L797" aria-label="Line 797">797</a>             const texts =</span>
+<span class="source-line" id="L798"><a class="line-number" href="#L798" aria-label="Line 798">798</a>                 await analytics.locator.cityLegendTextList.allInnerTexts()</span>
+<span class="source-line" id="L799"><a class="line-number" href="#L799" aria-label="Line 799">799</a>             texts.forEach((t) =&gt; displayedCities.add(t.trim()))</span>
+<span class="source-line" id="L800"><a class="line-number" href="#L800" aria-label="Line 800">800</a>         })</span>
+<span class="source-line" id="L801"><a class="line-number" href="#L801" aria-label="Line 801">801</a>         const expectedCities: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L802"><a class="line-number" href="#L802" aria-label="Line 802">802</a>         Object.values(expectedCityCountrySet).forEach((citySet) =&gt; {</span>
+<span class="source-line" id="L803"><a class="line-number" href="#L803" aria-label="Line 803">803</a>             citySet.forEach((city) =&gt; expectedCities.add(city))</span>
+<span class="source-line" id="L804"><a class="line-number" href="#L804" aria-label="Line 804">804</a>         })</span>
+<span class="source-line" id="L805"><a class="line-number" href="#L805" aria-label="Line 805">805</a>         await test.step(&#39;Validate expected and displayed cities&#39;, async () =&gt; {</span>
+<span class="source-line" id="L806"><a class="line-number" href="#L806" aria-label="Line 806">806</a>             const extraCities = [...displayedCities].filter(</span>
+<span class="source-line" id="L807"><a class="line-number" href="#L807" aria-label="Line 807">807</a>                 (x) =&gt; !expectedCities.has(x)</span>
+<span class="source-line" id="L808"><a class="line-number" href="#L808" aria-label="Line 808">808</a>             )</span>
+<span class="source-line" id="L809"><a class="line-number" href="#L809" aria-label="Line 809">809</a>             const missingCities = [...expectedCities].filter(</span>
+<span class="source-line" id="L810"><a class="line-number" href="#L810" aria-label="Line 810">810</a>                 (x) =&gt; !displayedCities.has(x)</span>
+<span class="source-line" id="L811"><a class="line-number" href="#L811" aria-label="Line 811">811</a>             )</span>
+<span class="source-line" id="L812"><a class="line-number" href="#L812" aria-label="Line 812">812</a>             expect(</span>
+<span class="source-line" id="L813"><a class="line-number" href="#L813" aria-label="Line 813">813</a>                 missingCities.length,</span>
+<span class="source-line" id="L814"><a class="line-number" href="#L814" aria-label="Line 814">814</a>                 `Expected cities are not displayed: ${missingCities.join(&#39;, &#39;)}`</span>
+<span class="source-line" id="L815"><a class="line-number" href="#L815" aria-label="Line 815">815</a>             ).toBe(0)</span>
+<span class="source-line" id="L816"><a class="line-number" href="#L816" aria-label="Line 816">816</a>             expect(</span>
+<span class="source-line" id="L817"><a class="line-number" href="#L817" aria-label="Line 817">817</a>                 extraCities.length,</span>
+<span class="source-line" id="L818"><a class="line-number" href="#L818" aria-label="Line 818">818</a>                 `Unexpected cities are displayed: ${extraCities.join(&#39;, &#39;)}`</span>
+<span class="source-line" id="L819"><a class="line-number" href="#L819" aria-label="Line 819">819</a>             ).toBe(0)</span>
+<span class="source-line" id="L820"><a class="line-number" href="#L820" aria-label="Line 820">820</a>         })</span>
+<span class="source-line" id="L821"><a class="line-number" href="#L821" aria-label="Line 821">821</a>     })</span>
+<span class="source-line" id="L822"><a class="line-number" href="#L822" aria-label="Line 822">822</a> </span>
+<span class="source-line" id="L823"><a class="line-number" href="#L823" aria-label="Line 823">823</a>     test(&#39;TC-4807 Deselect one checkbox when &quot;All&quot; is selected&#39;, async ({</span>
+<span class="source-line" id="L824"><a class="line-number" href="#L824" aria-label="Line 824">824</a>         pageManager,</span>
+<span class="source-line" id="L825"><a class="line-number" href="#L825" aria-label="Line 825">825</a>     }) =&gt; {</span>
+<span class="source-line" id="L826"><a class="line-number" href="#L826" aria-label="Line 826">826</a>         test.skip(true, &#39;Temporarily disabled&#39;)</span>
+<span class="source-line" id="L827"><a class="line-number" href="#L827" aria-label="Line 827">827</a>         qase.id(4807)</span>
+<span class="source-line" id="L828"><a class="line-number" href="#L828" aria-label="Line 828">828</a>         qase.title(&#39;TC-4807 Deselect one checkbox when &quot;All&quot; is selected&#39;)</span>
+<span class="source-line" id="L829"><a class="line-number" href="#L829" aria-label="Line 829">829</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L830"><a class="line-number" href="#L830" aria-label="Line 830">830</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L831"><a class="line-number" href="#L831" aria-label="Line 831">831</a>         await test.step(&#39;Set period to Lifetime&#39;, async () =&gt; {</span>
+<span class="source-line" id="L832"><a class="line-number" href="#L832" aria-label="Line 832">832</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L833"><a class="line-number" href="#L833" aria-label="Line 833">833</a>             await analytics.locator.lifetimeBtn.click()</span>
+<span class="source-line" id="L834"><a class="line-number" href="#L834" aria-label="Line 834">834</a>         })</span>
+<span class="source-line" id="L835"><a class="line-number" href="#L835" aria-label="Line 835">835</a>         await test.step(&#39;Open Cities dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L836"><a class="line-number" href="#L836" aria-label="Line 836">836</a>             await analytics.locator.qrCodeAnalyticsCitiesDropdownBtn.click()</span>
+<span class="source-line" id="L837"><a class="line-number" href="#L837" aria-label="Line 837">837</a>         })</span>
+<span class="source-line" id="L838"><a class="line-number" href="#L838" aria-label="Line 838">838</a>         const cityCheckboxes = analytics.locator.cityCheckboxList</span>
+<span class="source-line" id="L839"><a class="line-number" href="#L839" aria-label="Line 839">839</a>         let total: number</span>
+<span class="source-line" id="L840"><a class="line-number" href="#L840" aria-label="Line 840">840</a>         await test.step(&#39;Ensure there are enough city checkboxes&#39;, async () =&gt; {</span>
+<span class="source-line" id="L841"><a class="line-number" href="#L841" aria-label="Line 841">841</a>             total = await cityCheckboxes.count()</span>
+<span class="source-line" id="L842"><a class="line-number" href="#L842" aria-label="Line 842">842</a>             expect(total, &#39;Not enough Cities checkboxes found&#39;).toBeGreaterThan(</span>
+<span class="source-line" id="L843"><a class="line-number" href="#L843" aria-label="Line 843">843</a>                 1</span>
+<span class="source-line" id="L844"><a class="line-number" href="#L844" aria-label="Line 844">844</a>             )</span>
+<span class="source-line" id="L845"><a class="line-number" href="#L845" aria-label="Line 845">845</a>         })</span>
+<span class="source-line" id="L846"><a class="line-number" href="#L846" aria-label="Line 846">846</a>         await test.step(&#39;Deselect city #1&#39;, async () =&gt; {</span>
+<span class="source-line" id="L847"><a class="line-number" href="#L847" aria-label="Line 847">847</a>             await cityCheckboxes.nth(1).click()</span>
+<span class="source-line" id="L848"><a class="line-number" href="#L848" aria-label="Line 848">848</a>         })</span>
+<span class="source-line" id="L849"><a class="line-number" href="#L849" aria-label="Line 849">849</a>         await test.step(&#39;Verify checkbox states&#39;, async () =&gt; {</span>
+<span class="source-line" id="L850"><a class="line-number" href="#L850" aria-label="Line 850">850</a>             await analytics.verifyCheckboxesState(cityCheckboxes, [0, 1])</span>
+<span class="source-line" id="L851"><a class="line-number" href="#L851" aria-label="Line 851">851</a>         })</span>
+<span class="source-line" id="L852"><a class="line-number" href="#L852" aria-label="Line 852">852</a>         const selectedCities: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L853"><a class="line-number" href="#L853" aria-label="Line 853">853</a>         await test.step(&#39;Collect selected city labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L854"><a class="line-number" href="#L854" aria-label="Line 854">854</a>             for (let i = 0; i &lt; total; i++) {</span>
+<span class="source-line" id="L855"><a class="line-number" href="#L855" aria-label="Line 855">855</a>                 const cb = cityCheckboxes.nth(i)</span>
+<span class="source-line" id="L856"><a class="line-number" href="#L856" aria-label="Line 856">856</a>                 if (await cb.isChecked()) {</span>
+<span class="source-line" id="L857"><a class="line-number" href="#L857" aria-label="Line 857">857</a>                     const label = (await cb.locator(&#39;..&#39;).innerText()).trim()</span>
+<span class="source-line" id="L858"><a class="line-number" href="#L858" aria-label="Line 858">858</a>                     selectedCities.add(label)</span>
+<span class="source-line" id="L859"><a class="line-number" href="#L859" aria-label="Line 859">859</a>                 }</span>
+<span class="source-line" id="L860"><a class="line-number" href="#L860" aria-label="Line 860">860</a>             }</span>
+<span class="source-line" id="L861"><a class="line-number" href="#L861" aria-label="Line 861">861</a>         })</span>
+<span class="source-line" id="L862"><a class="line-number" href="#L862" aria-label="Line 862">862</a>         const legendCities: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L863"><a class="line-number" href="#L863" aria-label="Line 863">863</a>         await test.step(&#39;Collect legend city labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L864"><a class="line-number" href="#L864" aria-label="Line 864">864</a>             const texts =</span>
+<span class="source-line" id="L865"><a class="line-number" href="#L865" aria-label="Line 865">865</a>                 await analytics.locator.cityLegendTextList.allInnerTexts()</span>
+<span class="source-line" id="L866"><a class="line-number" href="#L866" aria-label="Line 866">866</a>             texts.forEach((t) =&gt; legendCities.add(t.trim()))</span>
+<span class="source-line" id="L867"><a class="line-number" href="#L867" aria-label="Line 867">867</a>         })</span>
+<span class="source-line" id="L868"><a class="line-number" href="#L868" aria-label="Line 868">868</a>         await test.step(&#39;Verify selected cities appear in legend&#39;, async () =&gt; {</span>
+<span class="source-line" id="L869"><a class="line-number" href="#L869" aria-label="Line 869">869</a>             const missingCities = [...selectedCities].filter(</span>
+<span class="source-line" id="L870"><a class="line-number" href="#L870" aria-label="Line 870">870</a>                 (city) =&gt; !legendCities.has(city)</span>
+<span class="source-line" id="L871"><a class="line-number" href="#L871" aria-label="Line 871">871</a>             )</span>
+<span class="source-line" id="L872"><a class="line-number" href="#L872" aria-label="Line 872">872</a>             expect(</span>
+<span class="source-line" id="L873"><a class="line-number" href="#L873" aria-label="Line 873">873</a>                 missingCities.length,</span>
+<span class="source-line" id="L874"><a class="line-number" href="#L874" aria-label="Line 874">874</a>                 `Cities are missing in the legend: ${missingCities.join(&#39;, &#39;)}`</span>
+<span class="source-line" id="L875"><a class="line-number" href="#L875" aria-label="Line 875">875</a>             ).toBe(0)</span>
+<span class="source-line" id="L876"><a class="line-number" href="#L876" aria-label="Line 876">876</a>         })</span>
+<span class="source-line" id="L877"><a class="line-number" href="#L877" aria-label="Line 877">877</a>     })</span>
+<span class="source-line" id="L878"><a class="line-number" href="#L878" aria-label="Line 878">878</a> </span>
+<span class="source-line" id="L879"><a class="line-number" href="#L879" aria-label="Line 879">879</a>     test(&#39;TC-4808 Select all checkboxes manually&#39;, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L880"><a class="line-number" href="#L880" aria-label="Line 880">880</a>         test.skip(true, &#39;Temporarily disabled&#39;)</span>
+<span class="source-line" id="L881"><a class="line-number" href="#L881" aria-label="Line 881">881</a>         qase.id(4808)</span>
+<span class="source-line" id="L882"><a class="line-number" href="#L882" aria-label="Line 882">882</a>         qase.title(&#39;TC-4808 Select all checkboxes manually&#39;)</span>
+<span class="source-line" id="L883"><a class="line-number" href="#L883" aria-label="Line 883">883</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L884"><a class="line-number" href="#L884" aria-label="Line 884">884</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L885"><a class="line-number" href="#L885" aria-label="Line 885">885</a>         await test.step(&#39;Set period to Lifetime&#39;, async () =&gt; {</span>
+<span class="source-line" id="L886"><a class="line-number" href="#L886" aria-label="Line 886">886</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L887"><a class="line-number" href="#L887" aria-label="Line 887">887</a>             await analytics.locator.lifetimeBtn.click()</span>
+<span class="source-line" id="L888"><a class="line-number" href="#L888" aria-label="Line 888">888</a>         })</span>
+<span class="source-line" id="L889"><a class="line-number" href="#L889" aria-label="Line 889">889</a>         await test.step(&#39;Open Cities dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L890"><a class="line-number" href="#L890" aria-label="Line 890">890</a>             await analytics.locator.qrCodeAnalyticsCitiesDropdownBtn.click()</span>
+<span class="source-line" id="L891"><a class="line-number" href="#L891" aria-label="Line 891">891</a>         })</span>
+<span class="source-line" id="L892"><a class="line-number" href="#L892" aria-label="Line 892">892</a>         const cityCheckboxes = analytics.locator.cityCheckboxList</span>
+<span class="source-line" id="L893"><a class="line-number" href="#L893" aria-label="Line 893">893</a>         let total: number</span>
+<span class="source-line" id="L894"><a class="line-number" href="#L894" aria-label="Line 894">894</a>         await test.step(&#39;Ensure there are enough city checkboxes&#39;, async () =&gt; {</span>
+<span class="source-line" id="L895"><a class="line-number" href="#L895" aria-label="Line 895">895</a>             total = await cityCheckboxes.count()</span>
+<span class="source-line" id="L896"><a class="line-number" href="#L896" aria-label="Line 896">896</a>             expect(total, &#39;Not enough Cities checkboxes found&#39;).toBeGreaterThan(</span>
+<span class="source-line" id="L897"><a class="line-number" href="#L897" aria-label="Line 897">897</a>                 1</span>
+<span class="source-line" id="L898"><a class="line-number" href="#L898" aria-label="Line 898">898</a>             )</span>
+<span class="source-line" id="L899"><a class="line-number" href="#L899" aria-label="Line 899">899</a>         })</span>
+<span class="source-line" id="L900"><a class="line-number" href="#L900" aria-label="Line 900">900</a>         await test.step(&#39;Select all cities manually&#39;, async () =&gt; {</span>
+<span class="source-line" id="L901"><a class="line-number" href="#L901" aria-label="Line 901">901</a>             await cityCheckboxes.nth(0).click()</span>
+<span class="source-line" id="L902"><a class="line-number" href="#L902" aria-label="Line 902">902</a>             for (let i = 1; i &lt; total; i++) {</span>
+<span class="source-line" id="L903"><a class="line-number" href="#L903" aria-label="Line 903">903</a>                 await cityCheckboxes.nth(i).click()</span>
+<span class="source-line" id="L904"><a class="line-number" href="#L904" aria-label="Line 904">904</a>             }</span>
+<span class="source-line" id="L905"><a class="line-number" href="#L905" aria-label="Line 905">905</a>         })</span>
+<span class="source-line" id="L906"><a class="line-number" href="#L906" aria-label="Line 906">906</a>         await test.step(&#39;Verify all city checkboxes are checked&#39;, async () =&gt; {</span>
+<span class="source-line" id="L907"><a class="line-number" href="#L907" aria-label="Line 907">907</a>             await analytics.verifyCheckboxesState(cityCheckboxes, [])</span>
+<span class="source-line" id="L908"><a class="line-number" href="#L908" aria-label="Line 908">908</a>         })</span>
+<span class="source-line" id="L909"><a class="line-number" href="#L909" aria-label="Line 909">909</a>         const selectedCities: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L910"><a class="line-number" href="#L910" aria-label="Line 910">910</a>         await test.step(&#39;Collect selected city labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L911"><a class="line-number" href="#L911" aria-label="Line 911">911</a>             for (let i = 1; i &lt; total; i++) {</span>
+<span class="source-line" id="L912"><a class="line-number" href="#L912" aria-label="Line 912">912</a>                 const label = (</span>
+<span class="source-line" id="L913"><a class="line-number" href="#L913" aria-label="Line 913">913</a>                     await cityCheckboxes.nth(i).locator(&#39;..&#39;).innerText()</span>
+<span class="source-line" id="L914"><a class="line-number" href="#L914" aria-label="Line 914">914</a>                 ).trim()</span>
+<span class="source-line" id="L915"><a class="line-number" href="#L915" aria-label="Line 915">915</a>                 selectedCities.add(label)</span>
+<span class="source-line" id="L916"><a class="line-number" href="#L916" aria-label="Line 916">916</a>             }</span>
+<span class="source-line" id="L917"><a class="line-number" href="#L917" aria-label="Line 917">917</a>         })</span>
+<span class="source-line" id="L918"><a class="line-number" href="#L918" aria-label="Line 918">918</a>         const legendCities: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L919"><a class="line-number" href="#L919" aria-label="Line 919">919</a>         await test.step(&#39;Collect legend city labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L920"><a class="line-number" href="#L920" aria-label="Line 920">920</a>             const texts =</span>
+<span class="source-line" id="L921"><a class="line-number" href="#L921" aria-label="Line 921">921</a>                 await analytics.locator.cityLegendTextList.allInnerTexts()</span>
+<span class="source-line" id="L922"><a class="line-number" href="#L922" aria-label="Line 922">922</a>             texts.forEach((t) =&gt; legendCities.add(t.trim()))</span>
+<span class="source-line" id="L923"><a class="line-number" href="#L923" aria-label="Line 923">923</a>         })</span>
+<span class="source-line" id="L924"><a class="line-number" href="#L924" aria-label="Line 924">924</a>         await test.step(&#39;Verify all selected cities appear in legend&#39;, async () =&gt; {</span>
+<span class="source-line" id="L925"><a class="line-number" href="#L925" aria-label="Line 925">925</a>             const missingCities = [...selectedCities].filter(</span>
+<span class="source-line" id="L926"><a class="line-number" href="#L926" aria-label="Line 926">926</a>                 (city) =&gt; !legendCities.has(city)</span>
+<span class="source-line" id="L927"><a class="line-number" href="#L927" aria-label="Line 927">927</a>             )</span>
+<span class="source-line" id="L928"><a class="line-number" href="#L928" aria-label="Line 928">928</a>             expect(</span>
+<span class="source-line" id="L929"><a class="line-number" href="#L929" aria-label="Line 929">929</a>                 missingCities.length,</span>
+<span class="source-line" id="L930"><a class="line-number" href="#L930" aria-label="Line 930">930</a>                 `Cities are missing in the legend: ${missingCities.join(&#39;, &#39;)}`</span>
+<span class="source-line" id="L931"><a class="line-number" href="#L931" aria-label="Line 931">931</a>             ).toBe(0)</span>
+<span class="source-line" id="L932"><a class="line-number" href="#L932" aria-label="Line 932">932</a>         })</span>
+<span class="source-line" id="L933"><a class="line-number" href="#L933" aria-label="Line 933">933</a>     })</span>
+<span class="source-line" id="L934"><a class="line-number" href="#L934" aria-label="Line 934">934</a> </span>
+<span class="source-line" id="L935"><a class="line-number" href="#L935" aria-label="Line 935">935</a>     test(&#39;TC-4809 Partial selection&#39;, async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L936"><a class="line-number" href="#L936" aria-label="Line 936">936</a>         test.skip(true, &#39;Temporarily disabled&#39;)</span>
+<span class="source-line" id="L937"><a class="line-number" href="#L937" aria-label="Line 937">937</a>         qase.id(4809)</span>
+<span class="source-line" id="L938"><a class="line-number" href="#L938" aria-label="Line 938">938</a>         qase.title(&#39;TC-4809 Partial selection&#39;)</span>
+<span class="source-line" id="L939"><a class="line-number" href="#L939" aria-label="Line 939">939</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L940"><a class="line-number" href="#L940" aria-label="Line 940">940</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L941"><a class="line-number" href="#L941" aria-label="Line 941">941</a>         await test.step(&#39;Set period to Lifetime&#39;, async () =&gt; {</span>
+<span class="source-line" id="L942"><a class="line-number" href="#L942" aria-label="Line 942">942</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L943"><a class="line-number" href="#L943" aria-label="Line 943">943</a>             await analytics.locator.lifetimeBtn.click()</span>
+<span class="source-line" id="L944"><a class="line-number" href="#L944" aria-label="Line 944">944</a>         })</span>
+<span class="source-line" id="L945"><a class="line-number" href="#L945" aria-label="Line 945">945</a>         await test.step(&#39;Open Cities dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L946"><a class="line-number" href="#L946" aria-label="Line 946">946</a>             await analytics.locator.qrCodeAnalyticsCitiesDropdownBtn.click()</span>
+<span class="source-line" id="L947"><a class="line-number" href="#L947" aria-label="Line 947">947</a>         })</span>
+<span class="source-line" id="L948"><a class="line-number" href="#L948" aria-label="Line 948">948</a>         const cityCheckboxes = analytics.locator.cityCheckboxList</span>
+<span class="source-line" id="L949"><a class="line-number" href="#L949" aria-label="Line 949">949</a>         let total: number</span>
+<span class="source-line" id="L950"><a class="line-number" href="#L950" aria-label="Line 950">950</a>         await test.step(&#39;Ensure enough city checkboxes exist&#39;, async () =&gt; {</span>
+<span class="source-line" id="L951"><a class="line-number" href="#L951" aria-label="Line 951">951</a>             total = await cityCheckboxes.count()</span>
+<span class="source-line" id="L952"><a class="line-number" href="#L952" aria-label="Line 952">952</a>             expect(total, &#39;Not enough Cities checkboxes found&#39;).toBeGreaterThan(</span>
+<span class="source-line" id="L953"><a class="line-number" href="#L953" aria-label="Line 953">953</a>                 1</span>
+<span class="source-line" id="L954"><a class="line-number" href="#L954" aria-label="Line 954">954</a>             )</span>
+<span class="source-line" id="L955"><a class="line-number" href="#L955" aria-label="Line 955">955</a>         })</span>
+<span class="source-line" id="L956"><a class="line-number" href="#L956" aria-label="Line 956">956</a>         await test.step(&#39;Select city #0 and #1&#39;, async () =&gt; {</span>
+<span class="source-line" id="L957"><a class="line-number" href="#L957" aria-label="Line 957">957</a>             await cityCheckboxes.nth(0).click()</span>
+<span class="source-line" id="L958"><a class="line-number" href="#L958" aria-label="Line 958">958</a>             await cityCheckboxes.nth(1).click()</span>
+<span class="source-line" id="L959"><a class="line-number" href="#L959" aria-label="Line 959">959</a>         })</span>
+<span class="source-line" id="L960"><a class="line-number" href="#L960" aria-label="Line 960">960</a>         await test.step(&#39;Validate checkbox #1 is checked&#39;, async () =&gt; {</span>
+<span class="source-line" id="L961"><a class="line-number" href="#L961" aria-label="Line 961">961</a>             await expect(cityCheckboxes.nth(1)).toBeChecked()</span>
+<span class="source-line" id="L962"><a class="line-number" href="#L962" aria-label="Line 962">962</a>         })</span>
+<span class="source-line" id="L963"><a class="line-number" href="#L963" aria-label="Line 963">963</a>         await test.step(&#39;Validate checkbox #0 is NOT checked&#39;, async () =&gt; {</span>
+<span class="source-line" id="L964"><a class="line-number" href="#L964" aria-label="Line 964">964</a>             await expect(cityCheckboxes.nth(0)).not.toBeChecked()</span>
+<span class="source-line" id="L965"><a class="line-number" href="#L965" aria-label="Line 965">965</a>         })</span>
+<span class="source-line" id="L966"><a class="line-number" href="#L966" aria-label="Line 966">966</a>         let selectedCity: string</span>
+<span class="source-line" id="L967"><a class="line-number" href="#L967" aria-label="Line 967">967</a>         await test.step(&#39;Get selected city label&#39;, async () =&gt; {</span>
+<span class="source-line" id="L968"><a class="line-number" href="#L968" aria-label="Line 968">968</a>             selectedCity = (</span>
+<span class="source-line" id="L969"><a class="line-number" href="#L969" aria-label="Line 969">969</a>                 await cityCheckboxes.nth(1).locator(&#39;..&#39;).innerText()</span>
+<span class="source-line" id="L970"><a class="line-number" href="#L970" aria-label="Line 970">970</a>             ).trim()</span>
+<span class="source-line" id="L971"><a class="line-number" href="#L971" aria-label="Line 971">971</a>         })</span>
+<span class="source-line" id="L972"><a class="line-number" href="#L972" aria-label="Line 972">972</a>         const legendCities: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L973"><a class="line-number" href="#L973" aria-label="Line 973">973</a>         await test.step(&#39;Collect legend city labels&#39;, async () =&gt; {</span>
+<span class="source-line" id="L974"><a class="line-number" href="#L974" aria-label="Line 974">974</a>             const texts =</span>
+<span class="source-line" id="L975"><a class="line-number" href="#L975" aria-label="Line 975">975</a>                 await analytics.locator.cityLegendTextList.allInnerTexts()</span>
+<span class="source-line" id="L976"><a class="line-number" href="#L976" aria-label="Line 976">976</a>             texts.forEach((t) =&gt; legendCities.add(t.trim()))</span>
+<span class="source-line" id="L977"><a class="line-number" href="#L977" aria-label="Line 977">977</a>         })</span>
+<span class="source-line" id="L978"><a class="line-number" href="#L978" aria-label="Line 978">978</a>         await test.step(&#39;Verify selected city appears in legend&#39;, async () =&gt; {</span>
+<span class="source-line" id="L979"><a class="line-number" href="#L979" aria-label="Line 979">979</a>             const legendItem = analytics.locator.cityLegendTextList.filter({</span>
+<span class="source-line" id="L980"><a class="line-number" href="#L980" aria-label="Line 980">980</a>                 hasText: selectedCity,</span>
+<span class="source-line" id="L981"><a class="line-number" href="#L981" aria-label="Line 981">981</a>             })</span>
+<span class="source-line" id="L982"><a class="line-number" href="#L982" aria-label="Line 982">982</a> </span>
+<span class="source-line" id="L983"><a class="line-number" href="#L983" aria-label="Line 983">983</a>             await expect(legendItem).toBeVisible({ timeout: 5000 })</span>
+<span class="source-line" id="L984"><a class="line-number" href="#L984" aria-label="Line 984">984</a>         })</span>
+<span class="source-line" id="L985"><a class="line-number" href="#L985" aria-label="Line 985">985</a>     })</span>
+<span class="source-line" id="L986"><a class="line-number" href="#L986" aria-label="Line 986">986</a> </span>
+<span class="source-line" id="L987"><a class="line-number" href="#L987" aria-label="Line 987">987</a>     test(&#39;TC-4810 Country of the selected city is shown in the Analytics&#39;, async ({</span>
+<span class="source-line" id="L988"><a class="line-number" href="#L988" aria-label="Line 988">988</a>         pageManager,</span>
+<span class="source-line" id="L989"><a class="line-number" href="#L989" aria-label="Line 989">989</a>     }) =&gt; {</span>
+<span class="source-line" id="L990"><a class="line-number" href="#L990" aria-label="Line 990">990</a>         test.skip(true, &#39;Temporarily disabled&#39;)</span>
+<span class="source-line" id="L991"><a class="line-number" href="#L991" aria-label="Line 991">991</a>         qase.id(4810)</span>
+<span class="source-line" id="L992"><a class="line-number" href="#L992" aria-label="Line 992">992</a>         qase.title(</span>
+<span class="source-line" id="L993"><a class="line-number" href="#L993" aria-label="Line 993">993</a>             &#39;TC-4810 Country of the selected city is shown in the Analytics&#39;</span>
+<span class="source-line" id="L994"><a class="line-number" href="#L994" aria-label="Line 994">994</a>         )</span>
+<span class="source-line" id="L995"><a class="line-number" href="#L995" aria-label="Line 995">995</a>         qase.suite(&#39;QR Code Analytics&#39;)</span>
+<span class="source-line" id="L996"><a class="line-number" href="#L996" aria-label="Line 996">996</a>         const analytics = pageManager.qrAnalyticsPage</span>
+<span class="source-line" id="L997"><a class="line-number" href="#L997" aria-label="Line 997">997</a>         await test.step(&#39;Set period to Lifetime&#39;, async () =&gt; {</span>
+<span class="source-line" id="L998"><a class="line-number" href="#L998" aria-label="Line 998">998</a>             await analytics.locator.periodDropdownBtn.click()</span>
+<span class="source-line" id="L999"><a class="line-number" href="#L999" aria-label="Line 999">999</a>             await analytics.locator.lifetimeBtn.click()</span>
+<span class="source-line" id="L1000"><a class="line-number" href="#L1000" aria-label="Line 1000">1000</a>         })</span>
+<span class="source-line" id="L1001"><a class="line-number" href="#L1001" aria-label="Line 1001">1001</a>         await test.step(&#39;Open Cities dropdown&#39;, async () =&gt; {</span>
+<span class="source-line" id="L1002"><a class="line-number" href="#L1002" aria-label="Line 1002">1002</a>             await analytics.locator.qrCodeAnalyticsCitiesDropdownBtn.click()</span>
+<span class="source-line" id="L1003"><a class="line-number" href="#L1003" aria-label="Line 1003">1003</a>         })</span>
+<span class="source-line" id="L1004"><a class="line-number" href="#L1004" aria-label="Line 1004">1004</a>         const cityCheckboxes = analytics.locator.cityCheckboxList</span>
+<span class="source-line" id="L1005"><a class="line-number" href="#L1005" aria-label="Line 1005">1005</a>         await cityCheckboxes.nth(0).click()</span>
+<span class="source-line" id="L1006"><a class="line-number" href="#L1006" aria-label="Line 1006">1006</a>         const total = await cityCheckboxes.count()</span>
+<span class="source-line" id="L1007"><a class="line-number" href="#L1007" aria-label="Line 1007">1007</a>         await test.step(&#39;Select expected cities&#39;, async () =&gt; {</span>
+<span class="source-line" id="L1008"><a class="line-number" href="#L1008" aria-label="Line 1008">1008</a>             for (let i = 0; i &lt; total; i++) {</span>
+<span class="source-line" id="L1009"><a class="line-number" href="#L1009" aria-label="Line 1009">1009</a>                 const label = (</span>
+<span class="source-line" id="L1010"><a class="line-number" href="#L1010" aria-label="Line 1010">1010</a>                     await cityCheckboxes.nth(i).locator(&#39;..&#39;).innerText()</span>
+<span class="source-line" id="L1011"><a class="line-number" href="#L1011" aria-label="Line 1011">1011</a>                 ).trim()</span>
+<span class="source-line" id="L1012"><a class="line-number" href="#L1012" aria-label="Line 1012">1012</a>                 if (expectedCountryCitySet[label]) {</span>
+<span class="source-line" id="L1013"><a class="line-number" href="#L1013" aria-label="Line 1013">1013</a>                     await cityCheckboxes.nth(i).click()</span>
+<span class="source-line" id="L1014"><a class="line-number" href="#L1014" aria-label="Line 1014">1014</a>                 }</span>
+<span class="source-line" id="L1015"><a class="line-number" href="#L1015" aria-label="Line 1015">1015</a>             }</span>
+<span class="source-line" id="L1016"><a class="line-number" href="#L1016" aria-label="Line 1016">1016</a>         })</span>
+<span class="source-line" id="L1017"><a class="line-number" href="#L1017" aria-label="Line 1017">1017</a>         const selectedCities: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L1018"><a class="line-number" href="#L1018" aria-label="Line 1018">1018</a>         await test.step(&#39;Collect selected cities&#39;, async () =&gt; {</span>
+<span class="source-line" id="L1019"><a class="line-number" href="#L1019" aria-label="Line 1019">1019</a>             for (let i = 0; i &lt; total; i++) {</span>
+<span class="source-line" id="L1020"><a class="line-number" href="#L1020" aria-label="Line 1020">1020</a>                 const cb = cityCheckboxes.nth(i)</span>
+<span class="source-line" id="L1021"><a class="line-number" href="#L1021" aria-label="Line 1021">1021</a>                 if (await cb.isChecked()) {</span>
+<span class="source-line" id="L1022"><a class="line-number" href="#L1022" aria-label="Line 1022">1022</a>                     const label = (await cb.locator(&#39;..&#39;).innerText()).trim()</span>
+<span class="source-line" id="L1023"><a class="line-number" href="#L1023" aria-label="Line 1023">1023</a>                     selectedCities.add(label)</span>
+<span class="source-line" id="L1024"><a class="line-number" href="#L1024" aria-label="Line 1024">1024</a>                 }</span>
+<span class="source-line" id="L1025"><a class="line-number" href="#L1025" aria-label="Line 1025">1025</a>             }</span>
+<span class="source-line" id="L1026"><a class="line-number" href="#L1026" aria-label="Line 1026">1026</a>         })</span>
+<span class="source-line" id="L1027"><a class="line-number" href="#L1027" aria-label="Line 1027">1027</a>         await test.step(&#39;Validate selected cities match expected&#39;, async () =&gt; {</span>
+<span class="source-line" id="L1028"><a class="line-number" href="#L1028" aria-label="Line 1028">1028</a>             const expected = new Set(Object.keys(expectedCountryCitySet))</span>
+<span class="source-line" id="L1029"><a class="line-number" href="#L1029" aria-label="Line 1029">1029</a>             expect(</span>
+<span class="source-line" id="L1030"><a class="line-number" href="#L1030" aria-label="Line 1030">1030</a>                 selectedCities,</span>
+<span class="source-line" id="L1031"><a class="line-number" href="#L1031" aria-label="Line 1031">1031</a>                 `Incorrect countries are selected: ${[...selectedCities].join(</span>
+<span class="source-line" id="L1032"><a class="line-number" href="#L1032" aria-label="Line 1032">1032</a>                     &#39;, &#39;</span>
+<span class="source-line" id="L1033"><a class="line-number" href="#L1033" aria-label="Line 1033">1033</a>                 )}`</span>
+<span class="source-line" id="L1034"><a class="line-number" href="#L1034" aria-label="Line 1034">1034</a>             ).toEqual(expected)</span>
+<span class="source-line" id="L1035"><a class="line-number" href="#L1035" aria-label="Line 1035">1035</a>         })</span>
+<span class="source-line" id="L1036"><a class="line-number" href="#L1036" aria-label="Line 1036">1036</a>         const displayedCountries: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L1037"><a class="line-number" href="#L1037" aria-label="Line 1037">1037</a>         await test.step(&#39;Collect displayed countries from legend&#39;, async () =&gt; {</span>
+<span class="source-line" id="L1038"><a class="line-number" href="#L1038" aria-label="Line 1038">1038</a>             const texts =</span>
+<span class="source-line" id="L1039"><a class="line-number" href="#L1039" aria-label="Line 1039">1039</a>                 await analytics.locator.countryLegendTextList.allInnerTexts()</span>
+<span class="source-line" id="L1040"><a class="line-number" href="#L1040" aria-label="Line 1040">1040</a>             texts.forEach((t) =&gt; displayedCountries.add(t.trim()))</span>
+<span class="source-line" id="L1041"><a class="line-number" href="#L1041" aria-label="Line 1041">1041</a>         })</span>
+<span class="source-line" id="L1042"><a class="line-number" href="#L1042" aria-label="Line 1042">1042</a>         const expectedCountries: Set&lt;string&gt; = new Set()</span>
+<span class="source-line" id="L1043"><a class="line-number" href="#L1043" aria-label="Line 1043">1043</a>         Object.values(expectedCountryCitySet).forEach((countrySet) =&gt; {</span>
+<span class="source-line" id="L1044"><a class="line-number" href="#L1044" aria-label="Line 1044">1044</a>             countrySet.forEach((country) =&gt; expectedCountries.add(country))</span>
+<span class="source-line" id="L1045"><a class="line-number" href="#L1045" aria-label="Line 1045">1045</a>         })</span>
+<span class="source-line" id="L1046"><a class="line-number" href="#L1046" aria-label="Line 1046">1046</a>         await test.step(&#39;Validate displayed countries&#39;, async () =&gt; {</span>
+<span class="source-line" id="L1047"><a class="line-number" href="#L1047" aria-label="Line 1047">1047</a>             const extraCountries = [...displayedCountries].filter(</span>
+<span class="source-line" id="L1048"><a class="line-number" href="#L1048" aria-label="Line 1048">1048</a>                 (c) =&gt; !expectedCountries.has(c)</span>
+<span class="source-line" id="L1049"><a class="line-number" href="#L1049" aria-label="Line 1049">1049</a>             )</span>
+<span class="source-line" id="L1050"><a class="line-number" href="#L1050" aria-label="Line 1050">1050</a>             const missingCountries = [...expectedCountries].filter(</span>
+<span class="source-line" id="L1051"><a class="line-number" href="#L1051" aria-label="Line 1051">1051</a>                 (c) =&gt; !displayedCountries.has(c)</span>
+<span class="source-line" id="L1052"><a class="line-number" href="#L1052" aria-label="Line 1052">1052</a>             )</span>
+<span class="source-line" id="L1053"><a class="line-number" href="#L1053" aria-label="Line 1053">1053</a>             expect(</span>
+<span class="source-line" id="L1054"><a class="line-number" href="#L1054" aria-label="Line 1054">1054</a>                 missingCountries.length,</span>
+<span class="source-line" id="L1055"><a class="line-number" href="#L1055" aria-label="Line 1055">1055</a>                 `Expected countries are not displayed: ${missingCountries.join(</span>
+<span class="source-line" id="L1056"><a class="line-number" href="#L1056" aria-label="Line 1056">1056</a>                     &#39;, &#39;</span>
+<span class="source-line" id="L1057"><a class="line-number" href="#L1057" aria-label="Line 1057">1057</a>                 )}`</span>
+<span class="source-line" id="L1058"><a class="line-number" href="#L1058" aria-label="Line 1058">1058</a>             ).toBe(0)</span>
+<span class="source-line" id="L1059"><a class="line-number" href="#L1059" aria-label="Line 1059">1059</a>             expect(</span>
+<span class="source-line" id="L1060"><a class="line-number" href="#L1060" aria-label="Line 1060">1060</a>                 extraCountries.length,</span>
+<span class="source-line" id="L1061"><a class="line-number" href="#L1061" aria-label="Line 1061">1061</a>                 `Unexpected countries are displayed: ${extraCountries.join(</span>
+<span class="source-line" id="L1062"><a class="line-number" href="#L1062" aria-label="Line 1062">1062</a>                     &#39;, &#39;</span>
+<span class="source-line" id="L1063"><a class="line-number" href="#L1063" aria-label="Line 1063">1063</a>                 )}`</span>
+<span class="source-line" id="L1064"><a class="line-number" href="#L1064" aria-label="Line 1064">1064</a>             ).toBe(0)</span>
+<span class="source-line" id="L1065"><a class="line-number" href="#L1065" aria-label="Line 1065">1065</a>         })</span>
+<span class="source-line" id="L1066"><a class="line-number" href="#L1066" aria-label="Line 1066">1066</a>     })</span>
+<span class="source-line" id="L1067"><a class="line-number" href="#L1067" aria-label="Line 1067">1067</a> })</span>
+<span class="source-line" id="L1068"><a class="line-number" href="#L1068" aria-label="Line 1068">1068</a> </span></code></pre></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

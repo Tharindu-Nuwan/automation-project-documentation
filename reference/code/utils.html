@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/utils.html">
+<title>utils · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (5)</summary><a href="#utils-defineenv-ts">utils/defineEnv.ts</a>
+<a href="#utils-domainenv-ts">utils/domainEnv.ts</a>
+<a href="#utils-getenv-ts">utils/getEnv.ts</a>
+<a href="#utils-productenv-ts">utils/productEnv.ts</a>
+<a href="#utils-test-data-generators-ts">utils/test_data_generators.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="utils">utils</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="utils-defineenv-ts">utils/defineEnv.ts</h2>
+<p><a data-source="utils/defineEnv.ts" href="../../sources/utils/defineEnv.ts.html#L1">utils/defineEnv.ts:1</a></p>
+<h3 id="defineenv">defineEnv</h3>
+<p><code>defineEnv(createEnvironment: EnvironmentFactory&lt;T&gt;)</code></p>
+<p><a data-source="utils/defineEnv.ts" href="../../sources/utils/defineEnv.ts.html#L18">utils/defineEnv.ts:18</a></p>
+<h3 id="getenv">getEnv</h3>
+<p><code>getEnv(key: string, options: GetEnvOptions = {})</code></p>
+<p><a data-source="utils/defineEnv.ts" href="../../sources/utils/defineEnv.ts.html#L44">utils/defineEnv.ts:44</a></p>
+<h2 id="utils-domainenv-ts">utils/domainEnv.ts</h2>
+<p><a data-source="utils/domainEnv.ts" href="../../sources/utils/domainEnv.ts.html#L1">utils/domainEnv.ts:1</a></p>
+<h3 id="getdomain">getDomain</h3>
+<p><code>getDomain()</code></p>
+<p><a data-source="utils/domainEnv.ts" href="../../sources/utils/domainEnv.ts.html#L7">utils/domainEnv.ts:7</a></p>
+<p>Resolves the active product domain. <code>DOMAIN</code> wins when set; otherwise the host is taken from <code>BASE_URL</code>.</p>
+<ul>
+<li><code>process.env.DOMAIN?.trim().toLowerCase()</code> &#x2014; line 8</li>
+</ul>
+<h2 id="utils-getenv-ts">utils/getEnv.ts</h2>
+<p><a data-source="utils/getEnv.ts" href="../../sources/utils/getEnv.ts.html#L1">utils/getEnv.ts:1</a></p>
+<h3 id="getenv-1">getEnv</h3>
+<p><code>getEnv(key: string)</code></p>
+<p><a data-source="utils/getEnv.ts" href="../../sources/utils/getEnv.ts.html#L1">utils/getEnv.ts:1</a></p>
+<h2 id="utils-productenv-ts">utils/productEnv.ts</h2>
+<p><a data-source="utils/productEnv.ts" href="../../sources/utils/productEnv.ts.html#L1">utils/productEnv.ts:1</a></p>
+<ul>
+<li><code>type { Product }</code> &#x2190; <a data-source="base/Product.ts" href="../../sources/base/Product.ts.html#L1">base/Product.ts:1</a></li>
+</ul>
+<h3 id="normalizeurl">normalizeUrl</h3>
+<p><code>normalizeUrl(raw: string, envName: string)</code></p>
+<p><a data-source="utils/productEnv.ts" href="../../sources/utils/productEnv.ts.html#L13">utils/productEnv.ts:13</a></p>
+<h3 id="getproductbaseurl">getProductBaseUrl</h3>
+<p><code>getProductBaseUrl(product: Product)</code></p>
+<p><a data-source="utils/productEnv.ts" href="../../sources/utils/productEnv.ts.html#L28">utils/productEnv.ts:28</a></p>
+<p>Resolves the app base URL for a product. Product-specific configuration wins; <code>BASE_URL</code> supports legacy runs.</p>
+<ul>
+<li><code>normalizeUrl(raw, process.env[envKey] ? envKey : &apos;BASE_URL&apos;) .toString()</code> &#x2014; line 36</li>
+</ul>
+<h3 id="getproductorigin">getProductOrigin</h3>
+<p><code>getProductOrigin(product: Product)</code></p>
+<p><a data-source="utils/productEnv.ts" href="../../sources/utils/productEnv.ts.html#L44">utils/productEnv.ts:44</a></p>
+<p>Product origin (protocol + host, without locale/path).</p>
+<h3 id="getadminurl">getAdminUrl</h3>
+<p><code>getAdminUrl(product: Product)</code></p>
+<p><a data-source="utils/productEnv.ts" href="../../sources/utils/productEnv.ts.html#L49">utils/productEnv.ts:49</a></p>
+<p>Admin panel URL for the active product (<code>{origin}/admin</code>).</p>
+<h3 id="getadminusersurl">getAdminUsersUrl</h3>
+<p><code>getAdminUsersUrl(product: Product)</code></p>
+<p><a data-source="utils/productEnv.ts" href="../../sources/utils/productEnv.ts.html#L54">utils/productEnv.ts:54</a></p>
+<p>Admin Users list URL for the active product.</p>
+<h3 id="getdpfcreateurl">getDpfCreateUrl</h3>
+<p><code>getDpfCreateUrl(product: Product, step: 1 | 2 | 3 = 3)</code></p>
+<p><a data-source="utils/productEnv.ts" href="../../sources/utils/productEnv.ts.html#L62">utils/productEnv.ts:62</a></p>
+<p>DPF create URL for the active product. Defaults to step 3 to preserve the former hardcoded create-step behaviour.</p>
+<h3 id="getdpfpricingurl">getDpfPricingUrl</h3>
+<p><code>getDpfPricingUrl(product: Product)</code></p>
+<p><a data-source="utils/productEnv.ts" href="../../sources/utils/productEnv.ts.html#L67">utils/productEnv.ts:67</a></p>
+<p>DPF pricing URL for the active product.</p>
+<h3 id="getemaillinkorigin">getEmailLinkOrigin</h3>
+<p><code>getEmailLinkOrigin(product: Product)</code></p>
+<p><a data-source="utils/productEnv.ts" href="../../sources/utils/productEnv.ts.html#L72">utils/productEnv.ts:72</a></p>
+<p>Origin used by product-branded email links.</p>
+<h2 id="utils-test-data-generators-ts">utils/test_data_generators.ts</h2>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L1">utils/test_data_generators.ts:1</a></p>
+<h3 id="getexpirydateoneyearahead">getExpiryDateOneYearAhead</h3>
+<p><code>getExpiryDateOneYearAhead()</code></p>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L1">utils/test_data_generators.ts:1</a></p>
+<h3 id="getexpirydateinpast">getExpiryDateInPast</h3>
+<p><code>getExpiryDateInPast()</code></p>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L9">utils/test_data_generators.ts:9</a></p>
+<h3 id="presentday">presentDay</h3>
+<p><code>presentDay()</code></p>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L18">utils/test_data_generators.ts:18</a></p>
+<h3 id="presentmonth">presentMonth</h3>
+<p><code>presentMonth()</code></p>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L22">utils/test_data_generators.ts:22</a></p>
+<h3 id="pastday">pastDay</h3>
+<p><code>pastDay()</code></p>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L26">utils/test_data_generators.ts:26</a></p>
+<h3 id="pastmonth">pastMonth</h3>
+<p><code>pastMonth()</code></p>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L32">utils/test_data_generators.ts:32</a></p>
+<h3 id="tomorrowday">tomorrowDay</h3>
+<p><code>tomorrowDay()</code></p>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L38">utils/test_data_generators.ts:38</a></p>
+<h3 id="nextmonth">nextMonth</h3>
+<p><code>nextMonth()</code></p>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L44">utils/test_data_generators.ts:44</a></p>
+<h3 id="getexpirydateaftermonth">getExpiryDateAfterMonth</h3>
+<p><code>getExpiryDateAfterMonth()</code></p>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L50">utils/test_data_generators.ts:50</a></p>
+<h3 id="getexpirydateafterquarter">getExpiryDateAfterQuarter</h3>
+<p><code>getExpiryDateAfterQuarter()</code></p>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L62">utils/test_data_generators.ts:62</a></p>
+<h3 id="getexpirydateafteryear">getExpiryDateAfterYear</h3>
+<p><code>getExpiryDateAfterYear()</code></p>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L74">utils/test_data_generators.ts:74</a></p>
+<h3 id="getexpirydateyesterday">getExpiryDateYesterday</h3>
+<p><code>getExpiryDateYesterday()</code></p>
+<p><a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L86">utils/test_data_generators.ts:86</a></p></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

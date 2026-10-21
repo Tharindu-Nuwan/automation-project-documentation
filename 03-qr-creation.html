@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="03-qr-creation.html">
+<title>QR creation: types, fields, data, and completion · QA reference</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script defer src="assets/search-index.js"></script><script defer src="assets/app.js"></script>
+</head><body data-root-prefix="">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="index.html">Start here</a>
+<a href="00-qa-quick-start.html">Your first check</a>
+<a href="02-accounts-and-credentials.html">Accounts and login</a>
+<a href="03-qr-creation.html" class="active" aria-current="page">QR types and creation</a>
+<a href="04-data-and-inputs.html">What to enter and upload</a>
+<a href="05-other-flows.html">Other product flows</a>
+<a href="07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="glossary.html">Words used in this guide</a><details class="reference-nav"><summary>Technical reference (optional)</summary><a href="01-architecture-and-running.html">Automation setup and execution</a>
+<a href="06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="reference/index.html">Reference overview</a>
+<a href="reference/spec-index.html">Complete spec map</a>
+<a href="reference/code-index.html">Shared helpers and locators</a>
+<a href="reference/field-inputs.html">Field inputs and defaults</a>
+<a href="reference/data-index.html">Data sources and consumers</a>
+<a href="reference/environment-index.html">Environment variables</a>
+<a href="reference/assets.html">Upload asset inventory</a>
+<a href="reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Practical QA guide · reviewed 19 October 2026</div>
+
+<details class="toc"><summary>Jump to a section (10)</summary><a href="#create-a-qr-in-plain-language">Create a QR in plain language</a>
+<a href="#read-the-type-table-without-code">How to use the type and field tables</a>
+<a href="#exactly-how-many-types-are-implemented-in-this-code">Exactly how many types are implemented in this code?</a>
+<a href="#what-each-wizard-stage-means">What each wizard stage means</a>
+<a href="#input-source-legend">Input-source legend</a>
+<a href="#type-by-type-recipes">Type-by-type recipes</a>
+<a href="#shared-content-helpers-what-is-reused">Shared content helpers: what is reused?</a>
+<a href="#event-three-distinct-setup-paths">Event: three distinct setup paths</a>
+<a href="#email-content-qr-not-the-transactional-email-system">Email: content QR, not the transactional email system</a>
+<a href="#demonstrate-a-complete-website-creation">Worked reference: save a Website QR</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="3-qr-creation-types-fields-data-and-completion">QR creation: types, fields, data, and completion</h1>
+<p><a href="index.html">Start</a> &#xb7; <a href="02-accounts-and-credentials.html">Previous</a> &#xb7; <a href="04-data-and-inputs.html">Next: data cookbook</a></p>
+
+<h2 id="create-a-qr-in-plain-language">Create a QR in plain language</h2>
+<p>The creation form has three stages: <strong>choose the QR type, enter its content, then choose the QR design.</strong> The final Create action completes the flow. The pages after Create depend on whether you started as a signed-in user or a guest.</p>
+<ol>
+<li>Use the account and starting page named by the test case. A guest flow can ask for an email or a plan after Create; a signed-in flow can return to My QR Codes.</li>
+<li>In Step 1, select the type. If you choose Menu, also select Digital, PDF, or Website.</li>
+<li>In Step 2, enter the case&apos;s content. Use the type table below to identify fields and the <a href="04-data-and-inputs.html">input guide</a> to find sample values and files.</li>
+<li>Record the internal QR name so you can find the result in My QR Codes. This name may differ from a title shown on the QR&apos;s public page.</li>
+<li>Check the preview where the case requires it. On a small screen you may need to open the preview first. Continue with Next when the required fields are complete.</li>
+<li>In Step 3, select the design options required by the case and click Create if the case includes saving.</li>
+<li>Check the exact expected result: a saved QR, a download, a guest signup page, or another specified outcome. If the case checks saved content, reopen that QR and compare the values. If it checks scanning, open its scan destination as a separate check.</li>
+</ol>
+<p><strong>Preview, saving, and scanning are different checks.</strong> Seeing the correct preview does not establish that the same content was saved or appears after scanning.</p>
+<h2 id="read-the-type-table-without-code">How to use the type and field tables</h2>
+<p>A <em>recipe</em> below means a reusable sequence that the automation follows to fill a QR form. You can use the field descriptions for manual entry. The code names are included so an automation maintainer can locate the exact implementation.</p>
+<p><strong>Default</strong> means the sample value used when a particular test does not supply another value. <strong>Generated</strong> means the automation makes a new value each time. To repeat a failed run, use its recorded value. For a new manual check, choose a suitable value only when the case allows that choice, and record it. File names refer to test upload files that your team must supply separately from this HTML guide.</p>
+<h2 id="exactly-how-many-types-are-implemented-in-this-code">Exactly how many types are implemented in this code?</h2>
+<p>The shared Step 1 selectors name <strong>18 top-level types</strong>: Website, PDF, Links, vCard, Business, Images, Video, Apps, Coupon, MP3, Menu, WiFi, Facebook, Instagram, Social Media, WhatsApp, Event, and Email. Menu opens <strong>Digital, PDF, and Website</strong> choices. Counting those separately gives <strong>20 selectable type/variant paths</strong>. This is a source inventory, not a claim that all 20 are deployed on every product.</p>
+<p><code>QrCreationPage</code> has <strong>19 named full-content recipes</strong> for those paths except Email. Email uses dedicated Step 2 and <code>EmailTemplatesPage</code> helpers instead. Quick Website/DPF methods are additional shortcuts, not additional QR types.</p>
+<p>There is no universal master matrix. <code>tests/data/constants/global-constants.ts</code> exports only <strong>15 active <code>qrTypes</code> rows</strong>: it excludes Website and Email, leaves WiFi commented out, and includes only Digital Menu. Other matrices select their own types. A test that loops over that array covers only its selected types.</p>
+<p>Sources: <a data-source="pages/Step1Page/Step1PageLocators.ts" href="sources/pages/Step1Page/Step1PageLocators.ts.html">Step1 selectors</a>, <a data-source="pages/Step1Page/Step1Page.ts" href="sources/pages/Step1Page/Step1Page.ts.html">Step1 actions</a>, <a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="sources/pages/QrCreationPage/QrCreationFlowPage.ts.html">creation recipes</a>, <a data-source="tests/data/constants/global-constants.ts" href="sources/tests/data/constants/global-constants.ts.html">global matrix</a>.</p>
+<h2 id="what-each-wizard-stage-means">What each wizard stage means</h2>
+<div class="table-wrap"><table>
+<tr><th>Stage</th><th>What happens</th><th>Evidence to look for</th></tr>
+<tr><td>Entry</td><td>Fresh registration, dashboard Create, or guest <code>/create</code> funnel</td><td>User ownership and correct query parameters</td></tr>
+<tr><td>Step 1</td><td>Select QR type; Menu needs a second choice</td><td>Correct form and <code>step=2</code> navigation</td></tr>
+<tr><td>Step 2</td><td>Fill content, optional styling, password, folder, internal QR name</td><td>Input values and preview assertions; footer ready</td></tr>
+<tr><td>Step 2 &#x2192; 3</td><td>Next saves/transmits content as required by funnel</td><td>URL contains <code>step=3</code>; successful content response where asserted</td></tr>
+<tr><td>Step 3</td><td>QR design: frame, pattern, corners, colors, logo</td><td>QR design UI / rendered mockup</td></tr>
+<tr><td>Create</td><td>Submit final action</td><td>Dashboard, download modal or guest email/pricing gate, depending on route</td></tr>
+<tr><td>Verify saved result</td><td>Find named QR, reopen editor, inspect scan page</td><td>Persistence and rendered content assertions, if present in spec</td></tr>
+</table></div>
+<p><strong>Most <code>...QrCreate()</code> recipes stop after filling Step 2 and return the internal QR name.</strong> They do not call Next/Create. The caller normally follows with <code>clickStep2NextButton()</code> and <code>clickStep3CreateButton()</code>. <code>quickWebsiteCreate()</code> performs both clicks but returns no name. <code>website-qr.spec.ts</code> has tests that only reach Step 3; those are content/navigation tests, not proof a QR was published or scanned.</p>
+<p>Step 1 helper behavior is affected by onboarding; some paths need a repeated click to open Step 2. Help dialogs can reappear and intercept clicks. <code>clickStep2NextButton()</code> waits for its footer, normally waits for enabled state, pauses briefly, dismisses help, then clicks. For negative tests it supports <code>{ waitForEnabled: false }</code>. <code>clickStep3CreateButton()</code> handles Step 3 help and readiness. When maintaining automation, preserve these readiness checks instead of replacing them with arbitrary delays.</p>
+<h2 id="input-source-legend">Input-source legend</h2>
+<ul>
+<li><strong>D &#x2014; Default:</strong> fixed sample value used by the automation when the particular test does not provide its own value.</li>
+<li><strong>G &#x2014; Generated:</strong> new sample text produced by Faker, a test-data generator; it can change between runs.</li>
+<li><strong>F &#x2014; File:</strong> a particular upload sample stored with the test project.</li>
+<li><strong>S &#x2014; Scenario:</strong> the particular test case or its data file supplies the value; use it instead of a default.</li>
+<li><strong>U &#x2014; On-screen result:</strong> a value read from the running application, such as the QR name or its unique identifier (UID).</li>
+</ul>
+<p>Recipe inputs below are examples used by automation, not a declaration that all listed fields are mandatory. Required-field behavior must be checked in the corresponding positive/negative spec. Every exact method signature, default and field write is in the <a href="reference/field-inputs.html">field dictionary</a>; the <a href="reference/code/qrcreationpage.html">recipe call reference</a> preserves the sequence.</p>
+<h2 id="type-by-type-recipes">Type-by-type recipes</h2>
+<div class="table-wrap"><table>
+<tr><th>Type / recipe</th><th>Fields and data actually used by the shared recipe</th><th>Extra actions / checks</th></tr>
+<tr><td>Website &#x2014; <code>websiteQrCreate(url)</code></td><td>URL D=<code>google.com</code>, or caller S; name G=<code>fakeString(10)</code></td><td>URL preview contains supplied text. Returns name; no font/welcome/password in this recipe</td></tr>
+<tr><td>PDF &#x2014; <code>pdfQrCreate()</code></td><td>F=<code>pdf_files/valid.pdf</code>; company G=<code>fakeCompany()</code>; file title G=10 chars; description G=200 chars; website D=<code>google.com</code>; button text G=<code>fakeWord()</code></td><td>Checks uploaded PDF; shared font/welcome/password/name</td></tr>
+<tr><td>Links &#x2014; <code>linksQrCreate()</code></td><td>Logo F=<code>company_logos/google.png</code>; image F=<code>image_files/vscode_logo.png</code>; company D=<code>Test Company</code>; description D; link text D=<code>Test Link Text</code>; URL D=<code>example.com</code></td><td>Adds LinkedIn row; shared font/welcome/password/name</td></tr>
+<tr><td>vCard &#x2014; <code>v&#x421;ardQrCreate()</code></td><td>Avatar F=<code>vscode_logo.png</code>; first/last D=<code>John</code> / <code>Doe</code>; phone/email/website D; manual address D; company G; profession G=word; notes G=250 chars</td><td>Adds LinkedIn; shared font/welcome/password/name. Method&apos;s capital <code>&#x421;</code> is Cyrillic: copy symbol from code</td></tr>
+<tr><td>Business &#x2014; <code>businessQrCreate()</code></td><td>Logo F=<code>google.png</code>; company G; title G=20 chars; subtitle G=50 chars; manual address D; contact D=<code>John Doe</code>; phone/email/website D; about G=100 chars</td><td>Opening hours plus extra Monday slot, LinkedIn, Wi-Fi facility, shared font/welcome/password/name</td></tr>
+<tr><td>Images &#x2014; <code>imageQrCreate()</code></td><td>F=<code>vscode_logo.png</code>; title G=20 chars; description G=100 chars; website D=<code>example.com</code></td><td>Checks preview image block; shared font/welcome/password/name</td></tr>
+<tr><td>Video &#x2014; <code>videoQrCreate()</code></td><td>D YouTube URL from <code>setYoutubeVideo()</code>; F=<code>video_files/sample.mp4</code>; upload description D; company G; title G=30 chars; description G=100 chars</td><td>Adds both YouTube and uploaded video, opens social section, LinkedIn, shared options</td></tr>
+<tr><td>Apps &#x2014; <code>appsQrCreate()</code></td><td>App name G=word; developer G=company; logo F=<code>vscode_logo.png</code>; description G=200 chars; website D=<code>example.com</code>; Google Play D=<code>https://play.google.com/store/apps/</code>; Apple D=<code>https://apps.apple.com/</code>; Amazon D=<code>http://amazon.com/</code></td><td>Enables all three store controls before typing URLs; shared options</td></tr>
+<tr><td>Coupon &#x2014; <code>couponQrCreate()</code></td><td>Logo F=<code>vscode_logo.png</code>; company/title D=<code>Test Company</code>; description D; code D=<code>COUPON123</code>; terms D=<code>Terms and conditions apply.</code>; button D=<code>Get Coupon</code>; button URL D=<code>google.com</code></td><td>Unfolds coupon in preview before assertions; shared options</td></tr>
+<tr><td>MP3 &#x2014; <code>mp3QrCreate()</code></td><td>F=<code>audio_files/sample.mp3</code>; logo F=<code>google.png</code>; title D=<code>Sample MP3 Title</code>; description D=<code>This is a sample MP3 description.</code>; website D=<code>example.com</code></td><td>Checks upload controls, LinkedIn, shared options</td></tr>
+<tr><td>Menu / Digital &#x2014; <code>menuDigitalQrCreate()</code></td><td>Section title/description D; restaurant logo F=<code>vscode_logo.png</code>; restaurant D=<code>My Restaurant</code>; description D; product image F=<code>product_img.webp</code>; product D=<code>Sample Product</code>; translation D=<code>Translated Product Name</code>; description D; price D=<code>9.99</code>; allergen D=<code>Cereals</code></td><td>Contact rows, LinkedIn, shared options, opening hours</td></tr>
+<tr><td>Menu / PDF &#x2014; <code>menuPdfQrCreate()</code></td><td>Same content pattern as PDF after Menu &#x2192; PDF selection</td><td>Uses PDF helpers and shared options; not a separate top-level card</td></tr>
+<tr><td>Menu / Website &#x2014; <code>menuLinkQrCreate()</code></td><td>Menu &#x2192; Website; URL D=<code>google.com</code>; generated QR name</td><td>No shared font/welcome/password in this recipe</td></tr>
+<tr><td>WiFi &#x2014; <code>wifiQrCreate()</code></td><td>SSID D=<code>MyWiFiNetwork</code>; password D=<code>MySecurePassword</code> (dummy QR content, not account credential)</td><td>Selects WPA and checks hidden-network option; generated QR name</td></tr>
+<tr><td>Facebook &#x2014; <code>facebookQrCreate()</code></td><td>Logo F=<code>vscode_logo.png</code>; URL D=<code>https://www.facebook.com/yourpage</code>; title G=10 chars; description G=100 chars</td><td>Shared font/welcome/password/name</td></tr>
+<tr><td>Instagram &#x2014; <code>instagramQrCreate()</code></td><td>Username G=<code>fakeUserName()</code> filled directly by recipe; generated QR name</td><td>Separate <code>setInstagramUsername()</code> has a different fixed default; don&apos;t confuse it with the recipe</td></tr>
+<tr><td>Social Media &#x2014; <code>socialMediaQrCreate()</code></td><td>Title D=<code>Social Media Title</code>; description D; image F=<code>vscode_logo.png</code></td><td>Upload check, LinkedIn, shared font/welcome/password/name</td></tr>
+<tr><td>WhatsApp &#x2014; <code>whatsappQrCreate()</code></td><td>Phone D=<code>050 123 4545</code>; message D=<code>Hello, this is a test message!</code>; generated name</td><td>Recipe&apos;s simple phone setter does not select country; see submission-specific helper below</td></tr>
+<tr><td>Event &#x2014; <code>eventQrCreate()</code></td><td>Title G=20 chars; summary G=80 chars; image F=<code>vscode_logo.png</code>; start/end D=tomorrow; requested times <code>09:00</code>/<code>17:00</code>; details G=100 chars; link D=<code>Tickets</code> / <code>https://google.com</code>; manual location D; contact D=<code>John Doe</code></td><td>Wi-Fi facility, LinkedIn, shared options; specialized Event suites have richer/minimal setups</td></tr>
+<tr><td>Email &#x2014; dedicated helpers</td><td>Basic name S; optional description/image S; at least first template title/email S; optional subject/body/icon</td><td><code>EmailTemplatesPage</code>, Email setup helpers and imported <code>email-templates.data.ts</code>; no <code>emailQrCreate()</code> recipe</td></tr>
+</table></div>
+<p>All shortened file names above are under <code>tests/data/test_files/</code>. <a href="reference/assets.html">Full asset paths</a> include spaces, spelling and measured sizes.</p>
+<p><strong>Optional automation detail:</strong> the next table explains shared form actions. Several QR types reuse these actions, so their sample contact information, fonts, welcome image or scan password can be the same.</p>
+<h2 id="shared-content-helpers-what-is-reused">Shared content helpers: what is reused?</h2>
+<div class="table-wrap"><table>
+<tr><th>Helper</th><th>Default behavior</th><th>What this means when checking the form</th></tr>
+<tr><td><code>setQrCodeName()</code></td><td>Opens name section, fills <code>fakeString(10)</code>, returns <code>inputValue()</code></td><td>Internal dashboard name differs from PDF title/Event title/Business name</td></tr>
+<tr><td><code>setQrCodeFont()</code></td><td>Title font <code>Lato</code>, body font <code>Roboto</code></td><td>Applies content/landing fonts, not QR pattern style</td></tr>
+<tr><td><code>setWelcomeScreenImage()</code></td><td>Uploads <code>image_files/vscode_logo.png</code></td><td>Welcome image is separate from type logo/avatar and Step 3 QR logo</td></tr>
+<tr><td><code>setQrCodePassword()</code></td><td>Enables password protection and fills dummy <code>Admin123</code></td><td>Scanner gate password, not account/admin password; recipe can change public scan behavior</td></tr>
+<tr><td><code>setQrCodeFolder()</code></td><td>Generates a folder name, expands folder section, creates folder</td><td>Caller invokes separately; most recipes do not set folders automatically</td></tr>
+<tr><td><code>setContactInfoPhoneNumber()</code></td><td>Adds row, label <code>Phone</code>, number <code>14187777</code></td><td>Called by vCard, Business and Menu recipes</td></tr>
+<tr><td><code>setContactInfoEmail()</code></td><td>Adds row, label <code>Email</code>, value <code>test@test.com</code></td><td>Not the generated account email</td></tr>
+<tr><td><code>setContactInfoWebsite()</code></td><td>Adds row, label <code>Website</code>, value <code>example.com</code></td><td>Not the test deployment URL</td></tr>
+<tr><td><code>setShipAddress()</code> / Business variant</td><td>New York, Main St, 456, 10001, NY, USA</td><td>These fill QR content; billing address is a different dataset</td></tr>
+<tr><td><code>addSocialMediaLink()</code></td><td>Adds LinkedIn using <code>example.com</code> + <code>Test Link Text</code></td><td>Does not automatically iterate every social platform</td></tr>
+<tr><td><code>setOpeningHours()</code></td><td>Monday by default; picks existing 7/from and 1/to controls</td><td>Inspect picker selectors for actual clock semantics; not an arbitrary range parameter</td></tr>
+</table></div>
+<p>Most setters use <code>pressSequentially()</code>, which types rather than replaces. Some call <code>clear()</code> first; others do not. Reusing a creation setter on an already-filled edit field may append text. <code>setEventTitle()</code> and Email business name clear explicitly; read the helper before reusing it.</p>
+<p>Many setters contain their own preview assertions. If a call that &#x201c;just fills&#x201d; times out, it may be waiting for the iframe text, not failing to enter data. Mobile preview can be hidden or zero-sized until opened; use the feature&apos;s mobile helper rather than assuming desktop visibility.</p>
+<p><strong>For manual Event checks:</strong> provide an Event title and both a start date and an end date. Check the All day choice and any time values required by the case. Use the calendar controls. The automation normally chooses tomorrow using the date of the machine running it.</p>
+<h2 id="event-three-distinct-setup-paths">Event: three distinct setup paths</h2>
+<ol>
+<li><strong>Guest content:</strong> <code>openEventStep2()</code> opens <code>/create?step=1</code>, selects Event, dismisses help and waits for footer readiness. It does not create an authenticated dashboard owner.</li>
+<li><strong>Existing local account:</strong> <code>loginLocalUser()</code> reads <code>LOCAL_USER_*</code>. The helper comments describe a local stack where <code>/register</code> redirects; this is deployment context, not a universal rule.</li>
+<li><strong>Fresh registered publishing:</strong> <code>loginCreateAndPublishEventQr()</code> registers through <code>authorizeUser()</code> unless an already authenticated user&apos;s object is passed. It goes to dashboard, selects Event, fills required content, names the QR, advances and creates. Returns <code>{ title, qrName, user }</code>.</li>
+</ol>
+<p>The minimal <code>fillEventRequiredFields()</code> sets title plus <strong>both start and end date</strong>, normally tomorrow, then sets the All day state through its toggle helper. Omitting end date can prevent progression. Date defaults use the execution machine&apos;s clock/local date formatting; a near-midnight CI run can differ from your laptop.</p>
+<p>The fuller recipe&apos;s <code>setEventTimes(startTime, endTime)</code> is not a general-purpose arbitrary time setter: current implementation confirms the start picker default, and when arguments differ selects PM and 5 for end. For precise multi-row time scenarios inspect <code>setEventRowHour()</code> and the Event date specs. Passing two time strings does not guarantee that this helper selects those exact times.</p>
+<p><code>loginCreateAndEditEventQr()</code> calls <code>restoreEventDatesInEdit()</code>. That re-enters dates because the source documents lost Event date/time values on reopening (OQG3-2533). A passing later assertion does not prove original dates persisted. <a data-source="tests/helpers/eventLocalSetup.ts" href="sources/tests/helpers/eventLocalSetup.ts.html">Event helper source</a> explains this workaround.</p>
+<p><code>openEventScanPage()</code> reads QR link/UID, opens a new tab and only fills the scanner password if a gate is visible. With no gate, unconditional <code>ScannedPage.authorize()</code> would wait on a nonexistent field. Dashboard operations should use <strong>QR name</strong>; scanner content assertions should use <strong>Event title</strong>.</p>
+<p><strong>For manual Email QR checks:</strong> enter the Basic Information name and the first template&apos;s title and recipient email before checking other fields. Optional description, image, subject, body and icon depend on the case. This creates email-related QR content; account verification and password-reset messages are described under <a href="05-other-flows.html#transactional-email">transactional email</a>.</p>
+<h2 id="email-content-qr-not-the-transactional-email-system">Email: content QR, not the transactional email system</h2>
+<p><code>openEmailQrStep2()</code> enters <code>/qr?step=1</code>, selects Email, dismisses help/backdrop and waits for Basic Information. Name/business name is required; description and image have dedicated helpers. Supply first template title and recipient to avoid unrelated validation failures when testing Basic Information.</p>
+<p><code>openEmailTemplatesEditor()</code> skips if the Email card is absent for the selected product. <code>fillRequiredTemplateFields()</code> sets Basic Information name to <code>Green Life Architect</code> from the dataset and fills first template title/email. <code>saveEmailQr()</code> delegates to the shared logged-in finishing helper; <code>reopenSavedEmailQr()</code> opens by internal QR name.</p>
+<p>The template dataset defines 10 templates maximum, 4,000 body characters, title samples of 255/1,000/5,000, valid/invalid email samples, 17 expected icon labels, example subject/body, persistence data, and five viewports. Those are test expectations in source, not independently verified product specifications. Management, validation, responsive and persistence specs exercise different subsets.</p>
+<p>Sources: <a data-source="tests/data/email-templates.data.ts" href="sources/tests/data/email-templates.data.ts.html">Email data</a>, <a data-source="pages/EmailTemplatesPage/EmailTemplatesPage.ts" href="sources/pages/EmailTemplatesPage/EmailTemplatesPage.ts.html">Email Page Object</a>, <a data-source="tests/helpers/email-templates.helper.ts" href="sources/tests/helpers/email-templates.helper.ts.html">Email helper</a>, <a href="reference/specs/logged-in-user-create-qr-code.html">all creation specs</a>.</p>
+<h2 id="demonstrate-a-complete-website-creation">Worked reference: save a Website QR</h2>
+<p>For a manual reference check with a suitable test account, open My QR Codes, choose Create, select Website, and enter <code>example.com</code>. Give the QR a name you can recognize and record that name. Click Next, complete the design step, then Create. Close the download window if it appears and find the same name in My QR Codes.</p>
+<p>This is an illustrative sequence. For a particular test case, use its exact account setup, value and expected result. The optional code equivalent below creates a fresh account as part of its setup.</p>
+<pre><code>const user = await pageManager.registerPage.authorizeUser()
+await page.goto(&apos;/qr-codes&apos;)
+await pageManager.menuPage.goToCreateQrCode()
+const qrName = await pageManager.qrCreationPage.websiteQrCreate(&apos;example.com&apos;)
+await pageManager.qrCreationPage.clickStep2NextButton()
+await pageManager.qrCreationPage.clickStep3CreateButton()
+await pageManager.qrCreationPage.closeDownloadModalIfPresent()
+await page.goto(&apos;/qr-codes&apos;)
+await pageManager.myQrCodesPage.expectQrVisibleInList(qrName)
+// The surrounding spec must retain user.email and clean it up in afterEach.</code></pre>
+<p>To check that content was saved, reopen the QR by name and compare the website value. To check scanning, use its QR link and visit the destination. These are additional checks; not every creation test performs them.</p></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

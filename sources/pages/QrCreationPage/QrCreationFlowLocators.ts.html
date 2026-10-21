@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>pages/QrCreationPage/QrCreationFlowLocators.ts · QA reference</title>
+<link rel="stylesheet" href="../../../assets/styles.css">
+<script defer src="../../../assets/search-index.js"></script><script defer src="../../../assets/app.js"></script>
+</head><body data-root-prefix="../../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../../index.html">Start here</a>
+<a href="../../../00-qa-quick-start.html">Your first check</a>
+<a href="../../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../../03-qr-creation.html">QR types and creation</a>
+<a href="../../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../../05-other-flows.html">Other product flows</a>
+<a href="../../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../../reference/index.html">Reference overview</a>
+<a href="../../../reference/spec-index.html">Complete spec map</a>
+<a href="../../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../../reference/environment-index.html">Environment variables</a>
+<a href="../../../reference/assets.html">Upload asset inventory</a>
+<a href="../../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical detail · bundled source snapshot · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../../glossary.html">glossary</a>.</p>
+
+<article id="doc-content" tabindex="-1"><h1>pages/QrCreationPage/QrCreationFlowLocators.ts</h1><p class="source-note">Bundled source snapshot. Credential-like literals are omitted. Line numbers correspond to the audited repository file; this page is for reading and is not executable test code.</p><pre class="source-code"><code><span class="source-line" id="L1"><a class="line-number" href="#L1" aria-label="Line 1">1</a> import { Page, Locator } from &#39;@playwright/test&#39;</span>
+<span class="source-line" id="L2"><a class="line-number" href="#L2" aria-label="Line 2">2</a> import { BaseLocators } from &#39;../BaseLocators&#39;</span>
+<span class="source-line" id="L3"><a class="line-number" href="#L3" aria-label="Line 3">3</a> </span>
+<span class="source-line" id="L4"><a class="line-number" href="#L4" aria-label="Line 4">4</a> export class QrCreationFlowLocators extends BaseLocators {</span>
+<span class="source-line" id="L5"><a class="line-number" href="#L5" aria-label="Line 5">5</a>     step1BreadcrumbsSectionToVerifyPage: Locator</span>
+<span class="source-line" id="L6"><a class="line-number" href="#L6" aria-label="Line 6">6</a>     crossCloseBtn: Locator</span>
+<span class="source-line" id="L7"><a class="line-number" href="#L7" aria-label="Line 7">7</a>     customNameQrCodeDropdown: Locator</span>
+<span class="source-line" id="L8"><a class="line-number" href="#L8" aria-label="Line 8">8</a>     setupPasswordQrCodeDropdown: Locator</span>
+<span class="source-line" id="L9"><a class="line-number" href="#L9" aria-label="Line 9">9</a>     setupNewFolderQrCodeDropdown: Locator</span>
+<span class="source-line" id="L10"><a class="line-number" href="#L10" aria-label="Line 10">10</a>     updateFontsQrCodeDropdown: Locator</span>
+<span class="source-line" id="L11"><a class="line-number" href="#L11" aria-label="Line 11">11</a>     uploadWelcomeScreenQrCodeDropdown: Locator</span>
+<span class="source-line" id="L12"><a class="line-number" href="#L12" aria-label="Line 12">12</a>     updateColorThemeQrCodeDropdown: Locator</span>
+<span class="source-line" id="L13"><a class="line-number" href="#L13" aria-label="Line 13">13</a>     socialNetworkQrCodeDropdown: Locator</span>
+<span class="source-line" id="L14"><a class="line-number" href="#L14" aria-label="Line 14">14</a>     contactDetailsQrCodeDropdown: Locator</span>
+<span class="source-line" id="L15"><a class="line-number" href="#L15" aria-label="Line 15">15</a>     locationQrCodeDropdown: Locator</span>
+<span class="source-line" id="L16"><a class="line-number" href="#L16" aria-label="Line 16">16</a>     createNewFolderButton: Locator</span>
+<span class="source-line" id="L17"><a class="line-number" href="#L17" aria-label="Line 17">17</a>     folderNameInput: Locator</span>
+<span class="source-line" id="L18"><a class="line-number" href="#L18" aria-label="Line 18">18</a>     createFolderButton: Locator</span>
+<span class="source-line" id="L19"><a class="line-number" href="#L19" aria-label="Line 19">19</a>     fontsTitleDropdown: Locator</span>
+<span class="source-line" id="L20"><a class="line-number" href="#L20" aria-label="Line 20">20</a>     fontsTextsDropdown: Locator</span>
+<span class="source-line" id="L21"><a class="line-number" href="#L21" aria-label="Line 21">21</a>     socialNetworkTextInput: Locator</span>
+<span class="source-line" id="L22"><a class="line-number" href="#L22" aria-label="Line 22">22</a>     contactDetailsQrCodeAddPhoneBtn: Locator</span>
+<span class="source-line" id="L23"><a class="line-number" href="#L23" aria-label="Line 23">23</a>     contactDetailsQrCodeAddPhoneLabel: Locator</span>
+<span class="source-line" id="L24"><a class="line-number" href="#L24" aria-label="Line 24">24</a>     contactDetailsQrCodeAddPhoneNumber: Locator</span>
+<span class="source-line" id="L25"><a class="line-number" href="#L25" aria-label="Line 25">25</a>     contactDetailsQrCodeDeletePhoneBtn: Locator</span>
+<span class="source-line" id="L26"><a class="line-number" href="#L26" aria-label="Line 26">26</a>     contactDetailsQrCodeAddEmailBtn: Locator</span>
+<span class="source-line" id="L27"><a class="line-number" href="#L27" aria-label="Line 27">27</a>     contactDetailsQrCodeAddEmailLabel: Locator</span>
+<span class="source-line" id="L28"><a class="line-number" href="#L28" aria-label="Line 28">28</a>     contactDetailsQrCodeAddEmailAddress: Locator</span>
+<span class="source-line" id="L29"><a class="line-number" href="#L29" aria-label="Line 29">29</a>     contactDetailsQrCodeDeleteEmailBtn: Locator</span>
+<span class="source-line" id="L30"><a class="line-number" href="#L30" aria-label="Line 30">30</a>     contactDetailsQrCodeAddWebsiteBtn: Locator</span>
+<span class="source-line" id="L31"><a class="line-number" href="#L31" aria-label="Line 31">31</a>     contactDetailsQrCodeAddWebsiteLabel: Locator</span>
+<span class="source-line" id="L32"><a class="line-number" href="#L32" aria-label="Line 32">32</a>     contactDetailsQrCodeAddWebsiteUrl: Locator</span>
+<span class="source-line" id="L33"><a class="line-number" href="#L33" aria-label="Line 33">33</a>     contactDetailsQrCodeDeleteWebsiteBtn: Locator</span>
+<span class="source-line" id="L34"><a class="line-number" href="#L34" aria-label="Line 34">34</a>     addButtonWithLink: Locator</span>
+<span class="source-line" id="L35"><a class="line-number" href="#L35" aria-label="Line 35">35</a>     addButtonWithLinkName: Locator</span>
+<span class="source-line" id="L36"><a class="line-number" href="#L36" aria-label="Line 36">36</a>     addButtonWithLinkUrl: Locator</span>
+<span class="source-line" id="L37"><a class="line-number" href="#L37" aria-label="Line 37">37</a>     addButton2ImageWithLink: Locator</span>
+<span class="source-line" id="L38"><a class="line-number" href="#L38" aria-label="Line 38">38</a> </span>
+<span class="source-line" id="L39"><a class="line-number" href="#L39" aria-label="Line 39">39</a>     setupWebsiteQrCodeDropdown: Locator</span>
+<span class="source-line" id="L40"><a class="line-number" href="#L40" aria-label="Line 40">40</a>     uploadPdfQrTypeDropdown: Locator</span>
+<span class="source-line" id="L41"><a class="line-number" href="#L41" aria-label="Line 41">41</a>     uploadPdfQrTypeButton: Locator</span>
+<span class="source-line" id="L42"><a class="line-number" href="#L42" aria-label="Line 42">42</a>     uploadPdfQrTypeDropArea: Locator</span>
+<span class="source-line" id="L43"><a class="line-number" href="#L43" aria-label="Line 43">43</a>     directlyShowPdfCheckbox: Locator</span>
+<span class="source-line" id="L44"><a class="line-number" href="#L44" aria-label="Line 44">44</a>     addPdfInformationQrCodeDropdown: Locator</span>
+<span class="source-line" id="L45"><a class="line-number" href="#L45" aria-label="Line 45">45</a>     pdfTitleInput: Locator</span>
+<span class="source-line" id="L46"><a class="line-number" href="#L46" aria-label="Line 46">46</a>     basicInfoLinksQrCodeDropdown: Locator</span>
+<span class="source-line" id="L47"><a class="line-number" href="#L47" aria-label="Line 47">47</a>     basicInfoLinksQrCodeTitleInput: Locator</span>
+<span class="source-line" id="L48"><a class="line-number" href="#L48" aria-label="Line 48">48</a>     basicInfoLinksQrCodeDescriptionInput: Locator</span>
+<span class="source-line" id="L49"><a class="line-number" href="#L49" aria-label="Line 49">49</a>     listOfLinksQrCodeDropdown: Locator</span>
+<span class="source-line" id="L50"><a class="line-number" href="#L50" aria-label="Line 50">50</a>     listOfLinksQrCodeDeleteButton: Locator</span>
+<span class="source-line" id="L51"><a class="line-number" href="#L51" aria-label="Line 51">51</a>     listOfLinksQrCodeImageInput: Locator</span>
+<span class="source-line" id="L52"><a class="line-number" href="#L52" aria-label="Line 52">52</a>     listOfLinksQrCodeLinkTextInput: Locator</span>
+<span class="source-line" id="L53"><a class="line-number" href="#L53" aria-label="Line 53">53</a>     listOfLinksQrCodeLinkUrlInput: Locator</span>
+<span class="source-line" id="L54"><a class="line-number" href="#L54" aria-label="Line 54">54</a>     linksQrCodeSocialNetworkUrlInput: Locator</span>
+<span class="source-line" id="L55"><a class="line-number" href="#L55" aria-label="Line 55">55</a>     linksQrCodeSocialNetworkTextInput: Locator</span>
+<span class="source-line" id="L56"><a class="line-number" href="#L56" aria-label="Line 56">56</a>     vCardQrCodeImageInput: Locator</span>
+<span class="source-line" id="L57"><a class="line-number" href="#L57" aria-label="Line 57">57</a>     vCardQrCodeFirstNameInput: Locator</span>
+<span class="source-line" id="L58"><a class="line-number" href="#L58" aria-label="Line 58">58</a>     vCardQrCodeLastNameInput: Locator</span>
+<span class="source-line" id="L59"><a class="line-number" href="#L59" aria-label="Line 59">59</a>     vCardQrCodeCompanyDetailsDropdown: Locator</span>
+<span class="source-line" id="L60"><a class="line-number" href="#L60" aria-label="Line 60">60</a>     vCardQrCodeCompanyDetailsCompanyInput: Locator</span>
+<span class="source-line" id="L61"><a class="line-number" href="#L61" aria-label="Line 61">61</a>     vCardQrCodeCompanyDetailsProfessionInput: Locator</span>
+<span class="source-line" id="L62"><a class="line-number" href="#L62" aria-label="Line 62">62</a>     vCardQrCodeCompanyDetailsSummaryInput: Locator</span>
+<span class="source-line" id="L63"><a class="line-number" href="#L63" aria-label="Line 63">63</a>     businessInfoBusinessQrTypeImageInput: Locator</span>
+<span class="source-line" id="L64"><a class="line-number" href="#L64" aria-label="Line 64">64</a>     businessInfoBusinessQrTypeCompanyInput: Locator</span>
+<span class="source-line" id="L65"><a class="line-number" href="#L65" aria-label="Line 65">65</a>     businessInfoBusinessQrTypeTitleInput: Locator</span>
+<span class="source-line" id="L66"><a class="line-number" href="#L66" aria-label="Line 66">66</a>     businessInfoBusinessQrTypeSubtitleInput: Locator</span>
+<span class="source-line" id="L67"><a class="line-number" href="#L67" aria-label="Line 67">67</a>     businessInfoBusinessQrTypeAddButton: Locator</span>
+<span class="source-line" id="L68"><a class="line-number" href="#L68" aria-label="Line 68">68</a>     aboutCompanyBusinessQrTypeDropdown: Locator</span>
+<span class="source-line" id="L69"><a class="line-number" href="#L69" aria-label="Line 69">69</a>     aboutCompanyBusinessQrTypeTextarea: Locator</span>
+<span class="source-line" id="L70"><a class="line-number" href="#L70" aria-label="Line 70">70</a>     uploadImageQrCodeDropdown: Locator</span>
+<span class="source-line" id="L71"><a class="line-number" href="#L71" aria-label="Line 71">71</a>     uploadImageQrCodeButton: Locator</span>
+<span class="source-line" id="L72"><a class="line-number" href="#L72" aria-label="Line 72">72</a>     uploadImageQrCodeDropArea: Locator</span>
+<span class="source-line" id="L73"><a class="line-number" href="#L73" aria-label="Line 73">73</a>     verticalImageQrCodeCheckbox: Locator</span>
+<span class="source-line" id="L74"><a class="line-number" href="#L74" aria-label="Line 74">74</a>     imageInformationQrCodeDropdown: Locator</span>
+<span class="source-line" id="L75"><a class="line-number" href="#L75" aria-label="Line 75">75</a>     imageInformationQrCodeGalleryTitleInput: Locator</span>
+<span class="source-line" id="L76"><a class="line-number" href="#L76" aria-label="Line 76">76</a>     imageInformationQrCodeGalleryDescriptionInput: Locator</span>
+<span class="source-line" id="L77"><a class="line-number" href="#L77" aria-label="Line 77">77</a>     imageInformationQrCodeWebsiteInput: Locator</span>
+<span class="source-line" id="L78"><a class="line-number" href="#L78" aria-label="Line 78">78</a>     uploadVideoQrCodeDropdown: Locator</span>
+<span class="source-line" id="L79"><a class="line-number" href="#L79" aria-label="Line 79">79</a>     uploadVideoQrCodeUrlInput: Locator</span>
+<span class="source-line" id="L80"><a class="line-number" href="#L80" aria-label="Line 80">80</a>     uploadVideoQrCodeButton: Locator</span>
+<span class="source-line" id="L81"><a class="line-number" href="#L81" aria-label="Line 81">81</a>     uploadVideoQrCodeDropArea: Locator</span>
+<span class="source-line" id="L82"><a class="line-number" href="#L82" aria-label="Line 82">82</a>     videoShowDirectlyQrCodeCheckbox: Locator</span>
+<span class="source-line" id="L83"><a class="line-number" href="#L83" aria-label="Line 83">83</a>     videoInfoQrCodeDropdown: Locator</span>
+<span class="source-line" id="L84"><a class="line-number" href="#L84" aria-label="Line 84">84</a>     videoInfoQrCodeCompanyInput: Locator</span>
+<span class="source-line" id="L85"><a class="line-number" href="#L85" aria-label="Line 85">85</a>     videoInfoQrCodeVideoTitleInput: Locator</span>
+<span class="source-line" id="L86"><a class="line-number" href="#L86" aria-label="Line 86">86</a>     videoInfoQrCodeVideoDescriptionInput: Locator</span>
+<span class="source-line" id="L87"><a class="line-number" href="#L87" aria-label="Line 87">87</a>     appGooglePlayButton: Locator</span>
+<span class="source-line" id="L88"><a class="line-number" href="#L88" aria-label="Line 88">88</a>     appAppleStoreButton: Locator</span>
+<span class="source-line" id="L89"><a class="line-number" href="#L89" aria-label="Line 89">89</a>     appAmazonStoreButton: Locator</span>
+<span class="source-line" id="L90"><a class="line-number" href="#L90" aria-label="Line 90">90</a>     appInfoQrCodeDropdown: Locator</span>
+<span class="source-line" id="L91"><a class="line-number" href="#L91" aria-label="Line 91">91</a>     appInfoQrCodeAppNameInput: Locator</span>
+<span class="source-line" id="L92"><a class="line-number" href="#L92" aria-label="Line 92">92</a>     linksToPlatformsQrCodeDropdown: Locator</span>
+<span class="source-line" id="L93"><a class="line-number" href="#L93" aria-label="Line 93">93</a>     linksToPlatformsQrCodeGoogleAddButton: Locator</span>
+<span class="source-line" id="L94"><a class="line-number" href="#L94" aria-label="Line 94">94</a>     linksToPlatformsQrCodeGoogleInput: Locator</span>
+<span class="source-line" id="L95"><a class="line-number" href="#L95" aria-label="Line 95">95</a>     linksToPlatformsQrCodeAppleAddButton: Locator</span>
+<span class="source-line" id="L96"><a class="line-number" href="#L96" aria-label="Line 96">96</a>     linksToPlatformsQrCodeAppleInput: Locator</span>
+<span class="source-line" id="L97"><a class="line-number" href="#L97" aria-label="Line 97">97</a>     linksToPlatformsQrCodeAmazonAddButton: Locator</span>
+<span class="source-line" id="L98"><a class="line-number" href="#L98" aria-label="Line 98">98</a>     linksToPlatformsQrCodeAmazonInput: Locator</span>
+<span class="source-line" id="L99"><a class="line-number" href="#L99" aria-label="Line 99">99</a>     offerInfoQrCodeDropdown: Locator</span>
+<span class="source-line" id="L100"><a class="line-number" href="#L100" aria-label="Line 100">100</a>     offerInfoQrCodeImgInput: Locator</span>
+<span class="source-line" id="L101"><a class="line-number" href="#L101" aria-label="Line 101">101</a>     offerInfoQrCodeCompanyInput: Locator</span>
+<span class="source-line" id="L102"><a class="line-number" href="#L102" aria-label="Line 102">102</a>     offerInfoQrCodeTitleInput: Locator</span>
+<span class="source-line" id="L103"><a class="line-number" href="#L103" aria-label="Line 103">103</a>     offerInfoQrCodeDescriptionInput: Locator</span>
+<span class="source-line" id="L104"><a class="line-number" href="#L104" aria-label="Line 104">104</a>     offerInfoQrCodeBadgeInput: Locator</span>
+<span class="source-line" id="L105"><a class="line-number" href="#L105" aria-label="Line 105">105</a>     offerInfoQrCodeSeeCodeButton: Locator</span>
+<span class="source-line" id="L106"><a class="line-number" href="#L106" aria-label="Line 106">106</a>     couponInfoQrCodeDropdown: Locator</span>
+<span class="source-line" id="L107"><a class="line-number" href="#L107" aria-label="Line 107">107</a>     couponInfoQrCodeBarcodeToggle: Locator</span>
+<span class="source-line" id="L108"><a class="line-number" href="#L108" aria-label="Line 108">108</a>     couponInfoQrCodeCodeInput: Locator</span>
+<span class="source-line" id="L109"><a class="line-number" href="#L109" aria-label="Line 109">109</a>     couponInfoQrCodeTermsInput: Locator</span>
+<span class="source-line" id="L110"><a class="line-number" href="#L110" aria-label="Line 110">110</a>     couponInfoQrCodeButtonInput: Locator</span>
+<span class="source-line" id="L111"><a class="line-number" href="#L111" aria-label="Line 111">111</a>     couponInfoQrCodeWebsiteInput: Locator</span>
+<span class="source-line" id="L112"><a class="line-number" href="#L112" aria-label="Line 112">112</a>     mp3UploadDropdown: Locator</span>
+<span class="source-line" id="L113"><a class="line-number" href="#L113" aria-label="Line 113">113</a>     mp3UploadAddOptionCheckbox: Locator</span>
+<span class="source-line" id="L114"><a class="line-number" href="#L114" aria-label="Line 114">114</a>     mp3InfoImgInput: Locator</span>
+<span class="source-line" id="L115"><a class="line-number" href="#L115" aria-label="Line 115">115</a>     mp3InfoTitleInput: Locator</span>
+<span class="source-line" id="L116"><a class="line-number" href="#L116" aria-label="Line 116">116</a>     mp3InfoDescriptionInput: Locator</span>
+<span class="source-line" id="L117"><a class="line-number" href="#L117" aria-label="Line 117">117</a>     mp3InfoWebsiteInput: Locator</span>
+<span class="source-line" id="L118"><a class="line-number" href="#L118" aria-label="Line 118">118</a>     mp3InfoAddButton: Locator</span>
+<span class="source-line" id="L119"><a class="line-number" href="#L119" aria-label="Line 119">119</a>     mp3InfoButtonTextInput: Locator</span>
+<span class="source-line" id="L120"><a class="line-number" href="#L120" aria-label="Line 120">120</a>     mp3InfoButtonWebsiteInput: Locator</span>
+<span class="source-line" id="L121"><a class="line-number" href="#L121" aria-label="Line 121">121</a>     mp3InfoButtonRemoveButton: Locator</span>
+<span class="source-line" id="L122"><a class="line-number" href="#L122" aria-label="Line 122">122</a>     menuVarPopupModalTitle: Locator</span>
+<span class="source-line" id="L123"><a class="line-number" href="#L123" aria-label="Line 123">123</a>     menuVarPopupMenuTypeButton: Locator</span>
+<span class="source-line" id="L124"><a class="line-number" href="#L124" aria-label="Line 124">124</a>     menuVarPopupPdfTypeButton: Locator</span>
+<span class="source-line" id="L125"><a class="line-number" href="#L125" aria-label="Line 125">125</a>     menuVarPopupWebTypeButton: Locator</span>
+<span class="source-line" id="L126"><a class="line-number" href="#L126" aria-label="Line 126">126</a>     menuVarPopupCrossButton: Locator</span>
+<span class="source-line" id="L127"><a class="line-number" href="#L127" aria-label="Line 127">127</a>     menuMenuTypeRestaurantDropdown: Locator</span>
+<span class="source-line" id="L128"><a class="line-number" href="#L128" aria-label="Line 128">128</a>     menuMenuTypeRestaurantImgInput: Locator</span>
+<span class="source-line" id="L129"><a class="line-number" href="#L129" aria-label="Line 129">129</a>     menuMenuTypeRestaurantNameInput: Locator</span>
+<span class="source-line" id="L130"><a class="line-number" href="#L130" aria-label="Line 130">130</a>     menuMenuTypeRestaurantDescriptionInput: Locator</span>
+<span class="source-line" id="L131"><a class="line-number" href="#L131" aria-label="Line 131">131</a>     menuMenuTypeMenuDropdown: Locator</span>
+<span class="source-line" id="L132"><a class="line-number" href="#L132" aria-label="Line 132">132</a>     menuMenuTypeSection1Dropdown: Locator</span>
+<span class="source-line" id="L133"><a class="line-number" href="#L133" aria-label="Line 133">133</a>     menuMenuTypeSection1NameInput: Locator</span>
+<span class="source-line" id="L134"><a class="line-number" href="#L134" aria-label="Line 134">134</a>     menuMenuTypeSection1DescriptionOfSectionInput: Locator</span>
+<span class="source-line" id="L135"><a class="line-number" href="#L135" aria-label="Line 135">135</a>     menuMenuTypeSection1ImageInput: Locator</span>
+<span class="source-line" id="L136"><a class="line-number" href="#L136" aria-label="Line 136">136</a>     menuMenuTypeSection1ProductNameInput: Locator</span>
+<span class="source-line" id="L137"><a class="line-number" href="#L137" aria-label="Line 137">137</a>     menuMenuTypeSection1NameTranslatedInput: Locator</span>
+<span class="source-line" id="L138"><a class="line-number" href="#L138" aria-label="Line 138">138</a>     menuMenuTypeSection1DescriptionInput: Locator</span>
+<span class="source-line" id="L139"><a class="line-number" href="#L139" aria-label="Line 139">139</a>     menuMenuTypeSection1PriceInput: Locator</span>
+<span class="source-line" id="L140"><a class="line-number" href="#L140" aria-label="Line 140">140</a>     menuLinkTypeUrlInput: Locator</span>
+<span class="source-line" id="L141"><a class="line-number" href="#L141" aria-label="Line 141">141</a>     wiFiInfoDropdown: Locator</span>
+<span class="source-line" id="L142"><a class="line-number" href="#L142" aria-label="Line 142">142</a>     wiFiInfoNetworkNameInput: Locator</span>
+<span class="source-line" id="L143"><a class="line-number" href="#L143" aria-label="Line 143">143</a>     wiFiInfoNetworkPasswordInput: Locator</span>
+<span class="source-line" id="L144"><a class="line-number" href="#L144" aria-label="Line 144">144</a>     wiFiInfoEncryptingTypeDropdown: Locator</span>
+<span class="source-line" id="L145"><a class="line-number" href="#L145" aria-label="Line 145">145</a>     facebookDesignDropdown: Locator</span>
+<span class="source-line" id="L146"><a class="line-number" href="#L146" aria-label="Line 146">146</a>     facebookDesignImage0: Locator</span>
+<span class="source-line" id="L147"><a class="line-number" href="#L147" aria-label="Line 147">147</a>     facebookDesignImage1: Locator</span>
+<span class="source-line" id="L148"><a class="line-number" href="#L148" aria-label="Line 148">148</a>     facebookDesignImage2: Locator</span>
+<span class="source-line" id="L149"><a class="line-number" href="#L149" aria-label="Line 149">149</a>     facebookDesignBackgroundInput: Locator</span>
+<span class="source-line" id="L150"><a class="line-number" href="#L150" aria-label="Line 150">150</a>     facebookProfileImgDropdown: Locator</span>
+<span class="source-line" id="L151"><a class="line-number" href="#L151" aria-label="Line 151">151</a>     facebookProfileImgInput: Locator</span>
+<span class="source-line" id="L152"><a class="line-number" href="#L152" aria-label="Line 152">152</a>     facebookBasicInfoDropdown: Locator</span>
+<span class="source-line" id="L153"><a class="line-number" href="#L153" aria-label="Line 153">153</a>     facebookBasicInfoFacebookUrl: Locator</span>
+<span class="source-line" id="L154"><a class="line-number" href="#L154" aria-label="Line 154">154</a>     facebookBasicInfoFacebookTitle: Locator</span>
+<span class="source-line" id="L155"><a class="line-number" href="#L155" aria-label="Line 155">155</a>     facebookBasicInfoFacebookDescription: Locator</span>
+<span class="source-line" id="L156"><a class="line-number" href="#L156" aria-label="Line 156">156</a>     instagramBasicInfoDropdown: Locator</span>
+<span class="source-line" id="L157"><a class="line-number" href="#L157" aria-label="Line 157">157</a>     instagramBasicInfoUsernameInput: Locator</span>
+<span class="source-line" id="L158"><a class="line-number" href="#L158" aria-label="Line 158">158</a>     socialMediaDesignDropdown: Locator</span>
+<span class="source-line" id="L159"><a class="line-number" href="#L159" aria-label="Line 159">159</a>     socialMediaBasicInfoDropdown: Locator</span>
+<span class="source-line" id="L160"><a class="line-number" href="#L160" aria-label="Line 160">160</a>     socialMediaBasicInfoTitle: Locator</span>
+<span class="source-line" id="L161"><a class="line-number" href="#L161" aria-label="Line 161">161</a>     socialMediaBasicInfoDescription: Locator</span>
+<span class="source-line" id="L162"><a class="line-number" href="#L162" aria-label="Line 162">162</a>     whatsAppInformationCountryCodeButton: Locator</span>
+<span class="source-line" id="L163"><a class="line-number" href="#L163" aria-label="Line 163">163</a>     whatsAppInformationUsCodeOption: Locator</span>
+<span class="source-line" id="L164"><a class="line-number" href="#L164" aria-label="Line 164">164</a>     whatsAppInformationDropdown: Locator</span>
+<span class="source-line" id="L165"><a class="line-number" href="#L165" aria-label="Line 165">165</a>     whatsAppInformationPhoneInput: Locator</span>
+<span class="source-line" id="L166"><a class="line-number" href="#L166" aria-label="Line 166">166</a>     whatsAppInformationMessageInput: Locator</span>
+<span class="source-line" id="L167"><a class="line-number" href="#L167" aria-label="Line 167">167</a>     frameStep3Dropdown: Locator</span>
+<span class="source-line" id="L168"><a class="line-number" href="#L168" aria-label="Line 168">168</a>     qrcodePatternsStep3Dropdown: Locator</span>
+<span class="source-line" id="L169"><a class="line-number" href="#L169" aria-label="Line 169">169</a>     qrcodeCornersStep3Dropdown: Locator</span>
+<span class="source-line" id="L170"><a class="line-number" href="#L170" aria-label="Line 170">170</a>     qrcodeAddLogoStep3Dropdown: Locator</span>
+<span class="source-line" id="L171"><a class="line-number" href="#L171" aria-label="Line 171">171</a>     qrcodeUploadLogoInput: Locator</span>
+<span class="source-line" id="L172"><a class="line-number" href="#L172" aria-label="Line 172">172</a>     closeDownloadModalButton: Locator</span>
+<span class="source-line" id="L173"><a class="line-number" href="#L173" aria-label="Line 173">173</a>     step3FrameTab: Locator</span>
+<span class="source-line" id="L174"><a class="line-number" href="#L174" aria-label="Line 174">174</a>     // DPF pricing buttons inherited from BaseLocators:</span>
+<span class="source-line" id="L175"><a class="line-number" href="#L175" aria-label="Line 175">175</a>     // - days14LimitedAccessButton, days14FullAccessButton, annualPlanButton, continueUserPlanButton</span>
+<span class="source-line" id="L176"><a class="line-number" href="#L176" aria-label="Line 176">176</a>     dpfFormTitle: Locator</span>
+<span class="source-line" id="L177"><a class="line-number" href="#L177" aria-label="Line 177">177</a>     dpfFormSubmitButton: Locator</span>
+<span class="source-line" id="L178"><a class="line-number" href="#L178" aria-label="Line 178">178</a>     congratsTitleH2: Locator</span>
+<span class="source-line" id="L179"><a class="line-number" href="#L179" aria-label="Line 179">179</a>     congratsDownloadButton: Locator</span>
+<span class="source-line" id="L180"><a class="line-number" href="#L180" aria-label="Line 180">180</a>     qrBackdrop: Locator</span>
+<span class="source-line" id="L181"><a class="line-number" href="#L181" aria-label="Line 181">181</a>     overlay: Locator</span>
+<span class="source-line" id="L182"><a class="line-number" href="#L182" aria-label="Line 182">182</a>     setupWebsiteQrCodeInput: Locator</span>
+<span class="source-line" id="L183"><a class="line-number" href="#L183" aria-label="Line 183">183</a>     nextButtonStep1: Locator</span>
+<span class="source-line" id="L184"><a class="line-number" href="#L184" aria-label="Line 184">184</a> </span>
+<span class="source-line" id="L185"><a class="line-number" href="#L185" aria-label="Line 185">185</a>     closeCarouselButtonSt2: Locator</span>
+<span class="source-line" id="L186"><a class="line-number" href="#L186" aria-label="Line 186">186</a>     closeCarouselButtonSt1: Locator</span>
+<span class="source-line" id="L187"><a class="line-number" href="#L187" aria-label="Line 187">187</a>     closeCarouselButtonSt3: Locator</span>
+<span class="source-line" id="L188"><a class="line-number" href="#L188" aria-label="Line 188">188</a>     step2OnboardingCarousel: Locator</span>
+<span class="source-line" id="L189"><a class="line-number" href="#L189" aria-label="Line 189">189</a>     step3OnboardingCarousel: Locator</span>
+<span class="source-line" id="L190"><a class="line-number" href="#L190" aria-label="Line 190">190</a>     createButtonStep3: Locator</span>
+<span class="source-line" id="L191"><a class="line-number" href="#L191" aria-label="Line 191">191</a>     dpfFormEmailInput: Locator</span>
+<span class="source-line" id="L192"><a class="line-number" href="#L192" aria-label="Line 192">192</a>     fontsTab: Locator</span>
+<span class="source-line" id="L193"><a class="line-number" href="#L193" aria-label="Line 193">193</a>     titleFontStyleInput: Locator</span>
+<span class="source-line" id="L194"><a class="line-number" href="#L194" aria-label="Line 194">194</a>     textFontStyleInput: Locator</span>
+<span class="source-line" id="L195"><a class="line-number" href="#L195" aria-label="Line 195">195</a> </span>
+<span class="source-line" id="L196"><a class="line-number" href="#L196" aria-label="Line 196">196</a>     constructor(page: Page) {</span>
+<span class="source-line" id="L197"><a class="line-number" href="#L197" aria-label="Line 197">197</a>         super(page)</span>
+<span class="source-line" id="L198"><a class="line-number" href="#L198" aria-label="Line 198">198</a> </span>
+<span class="source-line" id="L199"><a class="line-number" href="#L199" aria-label="Line 199">199</a>         this.step1BreadcrumbsSectionToVerifyPage = page.locator(</span>
+<span class="source-line" id="L200"><a class="line-number" href="#L200" aria-label="Line 200">200</a>             &quot;//span[@id=&#39;tab1text&#39;]&quot;</span>
+<span class="source-line" id="L201"><a class="line-number" href="#L201" aria-label="Line 201">201</a>         )</span>
+<span class="source-line" id="L202"><a class="line-number" href="#L202" aria-label="Line 202">202</a>         this.step3FrameTab = page.locator(&quot;button[data-target=&#39;#acc_frame&#39;]&quot;)</span>
+<span class="source-line" id="L203"><a class="line-number" href="#L203" aria-label="Line 203">203</a>         this.crossCloseBtn = page.locator(&quot;//button[@id=&#39;closeBtn&#39;]&quot;)</span>
+<span class="source-line" id="L204"><a class="line-number" href="#L204" aria-label="Line 204">204</a>         this.customNameQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L205"><a class="line-number" href="#L205" aria-label="Line 205">205</a>             &quot;//button[@data-target=&#39;#acc_nameOfQrCode&#39;]&quot;</span>
+<span class="source-line" id="L206"><a class="line-number" href="#L206" aria-label="Line 206">206</a>         )</span>
+<span class="source-line" id="L207"><a class="line-number" href="#L207" aria-label="Line 207">207</a>         this.setupPasswordQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L208"><a class="line-number" href="#L208" aria-label="Line 208">208</a>             &quot;//button[@data-target=&#39;#acc_password&#39;]&quot;</span>
+<span class="source-line" id="L209"><a class="line-number" href="#L209" aria-label="Line 209">209</a>         )</span>
+<span class="source-line" id="L210"><a class="line-number" href="#L210" aria-label="Line 210">210</a>         this.setupNewFolderQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L211"><a class="line-number" href="#L211" aria-label="Line 211">211</a>             &quot;//button[@data-target=&#39;#acc_folder&#39;]&quot;</span>
+<span class="source-line" id="L212"><a class="line-number" href="#L212" aria-label="Line 212">212</a>         )</span>
+<span class="source-line" id="L213"><a class="line-number" href="#L213" aria-label="Line 213">213</a>         this.updateFontsQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L214"><a class="line-number" href="#L214" aria-label="Line 214">214</a>             &quot;//button[@data-target=&#39;#acc_nameOfFonts&#39;]&quot;</span>
+<span class="source-line" id="L215"><a class="line-number" href="#L215" aria-label="Line 215">215</a>         )</span>
+<span class="source-line" id="L216"><a class="line-number" href="#L216" aria-label="Line 216">216</a>         this.uploadWelcomeScreenQrCodeDropdown = page.getByTestId(</span>
+<span class="source-line" id="L217"><a class="line-number" href="#L217" aria-label="Line 217">217</a>             &#39;step2-welcome-screen-accordion-trigger&#39;</span>
+<span class="source-line" id="L218"><a class="line-number" href="#L218" aria-label="Line 218">218</a>         )</span>
+<span class="source-line" id="L219"><a class="line-number" href="#L219" aria-label="Line 219">219</a>         this.updateColorThemeQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L220"><a class="line-number" href="#L220" aria-label="Line 220">220</a>             &quot;//button[@data-target=&#39;#acc_Design&#39;]&quot;</span>
+<span class="source-line" id="L221"><a class="line-number" href="#L221" aria-label="Line 221">221</a>         )</span>
+<span class="source-line" id="L222"><a class="line-number" href="#L222" aria-label="Line 222">222</a>         this.socialNetworkQrCodeDropdown = page.getByRole(&#39;button&#39;, {</span>
+<span class="source-line" id="L223"><a class="line-number" href="#L223" aria-label="Line 223">223</a>             name: &#39;Social Networks Add social&#39;,</span>
+<span class="source-line" id="L224"><a class="line-number" href="#L224" aria-label="Line 224">224</a>         })</span>
+<span class="source-line" id="L225"><a class="line-number" href="#L225" aria-label="Line 225">225</a>         this.contactDetailsQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L226"><a class="line-number" href="#L226" aria-label="Line 226">226</a>             &quot;//button[@data-target=&#39;#acc_contactInfo&#39;]&quot;</span>
+<span class="source-line" id="L227"><a class="line-number" href="#L227" aria-label="Line 227">227</a>         )</span>
+<span class="source-line" id="L228"><a class="line-number" href="#L228" aria-label="Line 228">228</a>         this.locationQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L229"><a class="line-number" href="#L229" aria-label="Line 229">229</a>             &quot;//button[@data-target=&#39;#add_website-dis&#39;]&quot;</span>
+<span class="source-line" id="L230"><a class="line-number" href="#L230" aria-label="Line 230">230</a>         )</span>
+<span class="source-line" id="L231"><a class="line-number" href="#L231" aria-label="Line 231">231</a>         this.createNewFolderButton = page.getByTestId(</span>
+<span class="source-line" id="L232"><a class="line-number" href="#L232" aria-label="Line 232">232</a>             &#39;step2-folder-dropdown-create-option&#39;</span>
+<span class="source-line" id="L233"><a class="line-number" href="#L233" aria-label="Line 233">233</a>         )</span>
+<span class="source-line" id="L234"><a class="line-number" href="#L234" aria-label="Line 234">234</a>         this.folderNameInput = page.getByTestId(</span>
+<span class="source-line" id="L235"><a class="line-number" href="#L235" aria-label="Line 235">235</a>             &#39;step2-folder-create-name-input&#39;</span>
+<span class="source-line" id="L236"><a class="line-number" href="#L236" aria-label="Line 236">236</a>         )</span>
+<span class="source-line" id="L237"><a class="line-number" href="#L237" aria-label="Line 237">237</a>         this.createFolderButton = page.getByTestId(</span>
+<span class="source-line" id="L238"><a class="line-number" href="#L238" aria-label="Line 238">238</a>             &#39;step2-folder-create-submit-button&#39;</span>
+<span class="source-line" id="L239"><a class="line-number" href="#L239" aria-label="Line 239">239</a>         )</span>
+<span class="source-line" id="L240"><a class="line-number" href="#L240" aria-label="Line 240">240</a>         this.fontsTitleDropdown = page.locator(</span>
+<span class="source-line" id="L241"><a class="line-number" href="#L241" aria-label="Line 241">241</a>             &quot;//div[@id=&#39;dropdown_title&#39;]/../div/button[@class=&#39;drp-icon-btn-open&#39;]&quot;</span>
+<span class="source-line" id="L242"><a class="line-number" href="#L242" aria-label="Line 242">242</a>         )</span>
+<span class="source-line" id="L243"><a class="line-number" href="#L243" aria-label="Line 243">243</a>         this.fontsTextsDropdown = page.locator(</span>
+<span class="source-line" id="L244"><a class="line-number" href="#L244" aria-label="Line 244">244</a>             &quot;//div[@id=&#39;dropdown_text&#39;]/../div/button[@class=&#39;drp-icon-btn-open&#39;]&quot;</span>
+<span class="source-line" id="L245"><a class="line-number" href="#L245" aria-label="Line 245">245</a>         )</span>
+<span class="source-line" id="L246"><a class="line-number" href="#L246" aria-label="Line 246">246</a>         this.socialNetworkTextInput = page.locator(</span>
+<span class="source-line" id="L247"><a class="line-number" href="#L247" aria-label="Line 247">247</a>             &quot;//input[@name=&#39;social_icon_text[]&#39;]&quot;</span>
+<span class="source-line" id="L248"><a class="line-number" href="#L248" aria-label="Line 248">248</a>         )</span>
+<span class="source-line" id="L249"><a class="line-number" href="#L249" aria-label="Line 249">249</a>         this.contactDetailsQrCodeAddPhoneBtn = page.locator(</span>
+<span class="source-line" id="L250"><a class="line-number" href="#L250" aria-label="Line 250">250</a>             &quot;//button[@id=&#39;addPhone&#39;]&quot;</span>
+<span class="source-line" id="L251"><a class="line-number" href="#L251" aria-label="Line 251">251</a>         )</span>
+<span class="source-line" id="L252"><a class="line-number" href="#L252" aria-label="Line 252">252</a>         this.contactDetailsQrCodeAddPhoneLabel = page.locator(</span>
+<span class="source-line" id="L253"><a class="line-number" href="#L253" aria-label="Line 253">253</a>             &quot;//input[@id=&#39;vcard_phoneLabel&#39;]&quot;</span>
+<span class="source-line" id="L254"><a class="line-number" href="#L254" aria-label="Line 254">254</a>         )</span>
+<span class="source-line" id="L255"><a class="line-number" href="#L255" aria-label="Line 255">255</a>         this.contactDetailsQrCodeAddPhoneNumber = page.locator(</span>
+<span class="source-line" id="L256"><a class="line-number" href="#L256" aria-label="Line 256">256</a>             &quot;//input[@id=&#39;vcard_phone&#39;]&quot;</span>
+<span class="source-line" id="L257"><a class="line-number" href="#L257" aria-label="Line 257">257</a>         )</span>
+<span class="source-line" id="L258"><a class="line-number" href="#L258" aria-label="Line 258">258</a>         this.contactDetailsQrCodeDeletePhoneBtn = page.locator(</span>
+<span class="source-line" id="L259"><a class="line-number" href="#L259" aria-label="Line 259">259</a>             &quot;//div[@id=&#39;phoneBlock&#39;]//button[contains(@class,&#39;delete-btn vcard-remove&#39;)]&quot;</span>
+<span class="source-line" id="L260"><a class="line-number" href="#L260" aria-label="Line 260">260</a>         )</span>
+<span class="source-line" id="L261"><a class="line-number" href="#L261" aria-label="Line 261">261</a>         this.contactDetailsQrCodeAddEmailBtn = page.locator(</span>
+<span class="source-line" id="L262"><a class="line-number" href="#L262" aria-label="Line 262">262</a>             &quot;//button[@id=&#39;addEmail&#39;]&quot;</span>
+<span class="source-line" id="L263"><a class="line-number" href="#L263" aria-label="Line 263">263</a>         )</span>
+<span class="source-line" id="L264"><a class="line-number" href="#L264" aria-label="Line 264">264</a>         this.contactDetailsQrCodeAddEmailLabel = page.locator(</span>
+<span class="source-line" id="L265"><a class="line-number" href="#L265" aria-label="Line 265">265</a>             &quot;//input[@id=&#39;vcard_emailLabel&#39;]&quot;</span>
+<span class="source-line" id="L266"><a class="line-number" href="#L266" aria-label="Line 266">266</a>         )</span>
+<span class="source-line" id="L267"><a class="line-number" href="#L267" aria-label="Line 267">267</a>         this.contactDetailsQrCodeAddEmailAddress = page.locator(</span>
+<span class="source-line" id="L268"><a class="line-number" href="#L268" aria-label="Line 268">268</a>             &quot;//input[@id=&#39;vcard_email&#39;]&quot;</span>
+<span class="source-line" id="L269"><a class="line-number" href="#L269" aria-label="Line 269">269</a>         )</span>
+<span class="source-line" id="L270"><a class="line-number" href="#L270" aria-label="Line 270">270</a>         this.contactDetailsQrCodeDeleteEmailBtn = page.locator(</span>
+<span class="source-line" id="L271"><a class="line-number" href="#L271" aria-label="Line 271">271</a>             &quot;//div[@id=&#39;emailBlock&#39;]//button[contains(@class,&#39;delete-btn vcard-remove&#39;)]&quot;</span>
+<span class="source-line" id="L272"><a class="line-number" href="#L272" aria-label="Line 272">272</a>         )</span>
+<span class="source-line" id="L273"><a class="line-number" href="#L273" aria-label="Line 273">273</a>         this.contactDetailsQrCodeAddWebsiteBtn = page.locator(</span>
+<span class="source-line" id="L274"><a class="line-number" href="#L274" aria-label="Line 274">274</a>             &quot;//button[@id=&#39;addWebsite&#39;]&quot;</span>
+<span class="source-line" id="L275"><a class="line-number" href="#L275" aria-label="Line 275">275</a>         )</span>
+<span class="source-line" id="L276"><a class="line-number" href="#L276" aria-label="Line 276">276</a>         this.contactDetailsQrCodeAddWebsiteLabel = page.locator(</span>
+<span class="source-line" id="L277"><a class="line-number" href="#L277" aria-label="Line 277">277</a>             &quot;//input[@id=&#39;vcard_website_title&#39;]&quot;</span>
+<span class="source-line" id="L278"><a class="line-number" href="#L278" aria-label="Line 278">278</a>         )</span>
+<span class="source-line" id="L279"><a class="line-number" href="#L279" aria-label="Line 279">279</a>         this.contactDetailsQrCodeAddWebsiteUrl = page.locator(</span>
+<span class="source-line" id="L280"><a class="line-number" href="#L280" aria-label="Line 280">280</a>             &quot;//input[@id=&#39;vcard_website&#39;]&quot;</span>
+<span class="source-line" id="L281"><a class="line-number" href="#L281" aria-label="Line 281">281</a>         )</span>
+<span class="source-line" id="L282"><a class="line-number" href="#L282" aria-label="Line 282">282</a>         this.contactDetailsQrCodeDeleteWebsiteBtn = page.locator(</span>
+<span class="source-line" id="L283"><a class="line-number" href="#L283" aria-label="Line 283">283</a>             &quot;//div[@id=&#39;websiteBlock&#39;]//button[contains(@class,&#39;delete-btn vcard-remove&#39;)]&quot;</span>
+<span class="source-line" id="L284"><a class="line-number" href="#L284" aria-label="Line 284">284</a>         )</span>
+<span class="source-line" id="L285"><a class="line-number" href="#L285" aria-label="Line 285">285</a>         this.addButtonWithLink = page.locator(&quot;//button[@id=&#39;add&#39;]&quot;)</span>
+<span class="source-line" id="L286"><a class="line-number" href="#L286" aria-label="Line 286">286</a>         this.addButtonWithLinkName = page.locator(</span>
+<span class="source-line" id="L287"><a class="line-number" href="#L287" aria-label="Line 287">287</a>             &quot;//input[@id=&#39;businessButtons&#39;]&quot;</span>
+<span class="source-line" id="L288"><a class="line-number" href="#L288" aria-label="Line 288">288</a>         )</span>
+<span class="source-line" id="L289"><a class="line-number" href="#L289" aria-label="Line 289">289</a>         this.addButtonWithLinkUrl = page.locator(</span>
+<span class="source-line" id="L290"><a class="line-number" href="#L290" aria-label="Line 290">290</a>             &quot;//input[@id=&#39;businessButtonUrls&#39;]&quot;</span>
+<span class="source-line" id="L291"><a class="line-number" href="#L291" aria-label="Line 291">291</a>         )</span>
+<span class="source-line" id="L292"><a class="line-number" href="#L292" aria-label="Line 292">292</a>         this.addButton2ImageWithLink = page.locator(&quot;//button[@id=&#39;add2&#39;]&quot;)</span>
+<span class="source-line" id="L293"><a class="line-number" href="#L293" aria-label="Line 293">293</a> </span>
+<span class="source-line" id="L294"><a class="line-number" href="#L294" aria-label="Line 294">294</a>         this.setupWebsiteQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L295"><a class="line-number" href="#L295" aria-label="Line 295">295</a>             &quot;//button[@data-target=&#39;#acc_nameOfUrl&#39;]&quot;</span>
+<span class="source-line" id="L296"><a class="line-number" href="#L296" aria-label="Line 296">296</a>         )</span>
+<span class="source-line" id="L297"><a class="line-number" href="#L297" aria-label="Line 297">297</a>         this.uploadPdfQrTypeDropdown = page.locator(</span>
+<span class="source-line" id="L298"><a class="line-number" href="#L298" aria-label="Line 298">298</a>             &quot;//button[@data-target=&#39;#acc_nameOfQrPdf&#39;]&quot;</span>
+<span class="source-line" id="L299"><a class="line-number" href="#L299" aria-label="Line 299">299</a>         )</span>
+<span class="source-line" id="L300"><a class="line-number" href="#L300" aria-label="Line 300">300</a>         this.uploadPdfQrTypeButton = page.locator(&quot;//div[@id=&#39;pdf&#39;]&quot;)</span>
+<span class="source-line" id="L301"><a class="line-number" href="#L301" aria-label="Line 301">301</a>         this.uploadPdfQrTypeDropArea = page.locator(&#39;#pdf&#39;)</span>
+<span class="source-line" id="L302"><a class="line-number" href="#L302" aria-label="Line 302">302</a>         this.directlyShowPdfCheckbox = page.locator(</span>
+<span class="source-line" id="L303"><a class="line-number" href="#L303" aria-label="Line 303">303</a>             &quot;//input[@id=&#39;direct_pdf&#39;]/following-sibling::label&quot;</span>
+<span class="source-line" id="L304"><a class="line-number" href="#L304" aria-label="Line 304">304</a>         )</span>
+<span class="source-line" id="L305"><a class="line-number" href="#L305" aria-label="Line 305">305</a>         this.addPdfInformationQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L306"><a class="line-number" href="#L306" aria-label="Line 306">306</a>             &quot;//button[@data-target=&#39;#acc_pdfInformation&#39;]&quot;</span>
+<span class="source-line" id="L307"><a class="line-number" href="#L307" aria-label="Line 307">307</a>         )</span>
+<span class="source-line" id="L308"><a class="line-number" href="#L308" aria-label="Line 308">308</a>         this.pdfTitleInput = page.locator(&quot;//input[@id=&#39;pdftitle&#39;]&quot;)</span>
+<span class="source-line" id="L309"><a class="line-number" href="#L309" aria-label="Line 309">309</a>         this.basicInfoLinksQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L310"><a class="line-number" href="#L310" aria-label="Line 310">310</a>             &quot;//button[@data-target=&#39;#acc_listInfo&#39;]&quot;</span>
+<span class="source-line" id="L311"><a class="line-number" href="#L311" aria-label="Line 311">311</a>         )</span>
+<span class="source-line" id="L312"><a class="line-number" href="#L312" aria-label="Line 312">312</a>         this.basicInfoLinksQrCodeTitleInput = page.locator(</span>
+<span class="source-line" id="L313"><a class="line-number" href="#L313" aria-label="Line 313">313</a>             &quot;//input[@id=&#39;list_title&#39;]&quot;</span>
+<span class="source-line" id="L314"><a class="line-number" href="#L314" aria-label="Line 314">314</a>         )</span>
+<span class="source-line" id="L315"><a class="line-number" href="#L315" aria-label="Line 315">315</a>         this.basicInfoLinksQrCodeDescriptionInput = page.locator(</span>
+<span class="source-line" id="L316"><a class="line-number" href="#L316" aria-label="Line 316">316</a>             &quot;//textarea[@id=&#39;list_description&#39;]&quot;</span>
+<span class="source-line" id="L317"><a class="line-number" href="#L317" aria-label="Line 317">317</a>         )</span>
+<span class="source-line" id="L318"><a class="line-number" href="#L318" aria-label="Line 318">318</a>         this.listOfLinksQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L319"><a class="line-number" href="#L319" aria-label="Line 319">319</a>             &quot;//button[@data-target=&#39;#acc_link&#39;]&quot;</span>
+<span class="source-line" id="L320"><a class="line-number" href="#L320" aria-label="Line 320">320</a>         )</span>
+<span class="source-line" id="L321"><a class="line-number" href="#L321" aria-label="Line 321">321</a>         this.listOfLinksQrCodeDeleteButton = page.locator(</span>
+<span class="source-line" id="L322"><a class="line-number" href="#L322" aria-label="Line 322">322</a>             &quot;//div[@class=&#39;links-delete-wrap&#39;]/button&quot;</span>
+<span class="source-line" id="L323"><a class="line-number" href="#L323" aria-label="Line 323">323</a>         )</span>
+<span class="source-line" id="L324"><a class="line-number" href="#L324" aria-label="Line 324">324</a>         this.listOfLinksQrCodeImageInput = page.locator(</span>
+<span class="source-line" id="L325"><a class="line-number" href="#L325" aria-label="Line 325">325</a>             &quot;//input[@id=&#39;linkImages1&#39;]&quot;</span>
+<span class="source-line" id="L326"><a class="line-number" href="#L326" aria-label="Line 326">326</a>         )</span>
+<span class="source-line" id="L327"><a class="line-number" href="#L327" aria-label="Line 327">327</a>         this.listOfLinksQrCodeLinkTextInput = page.locator(</span>
+<span class="source-line" id="L328"><a class="line-number" href="#L328" aria-label="Line 328">328</a>             &quot;//input[@id=&#39;list_text&#39;]&quot;</span>
+<span class="source-line" id="L329"><a class="line-number" href="#L329" aria-label="Line 329">329</a>         )</span>
+<span class="source-line" id="L330"><a class="line-number" href="#L330" aria-label="Line 330">330</a>         this.listOfLinksQrCodeLinkUrlInput = page.locator(</span>
+<span class="source-line" id="L331"><a class="line-number" href="#L331" aria-label="Line 331">331</a>             &quot;//input[@id=&#39;list_URL&#39;]&quot;</span>
+<span class="source-line" id="L332"><a class="line-number" href="#L332" aria-label="Line 332">332</a>         )</span>
+<span class="source-line" id="L333"><a class="line-number" href="#L333" aria-label="Line 333">333</a>         this.linksQrCodeSocialNetworkUrlInput = page.locator(</span>
+<span class="source-line" id="L334"><a class="line-number" href="#L334" aria-label="Line 334">334</a>             &quot;//input[@id=&#39;socialUrl&#39;]&quot;</span>
+<span class="source-line" id="L335"><a class="line-number" href="#L335" aria-label="Line 335">335</a>         )</span>
+<span class="source-line" id="L336"><a class="line-number" href="#L336" aria-label="Line 336">336</a>         this.linksQrCodeSocialNetworkTextInput = page.locator(</span>
+<span class="source-line" id="L337"><a class="line-number" href="#L337" aria-label="Line 337">337</a>             &quot;//input[@name=&#39;social_icon_text[]&#39;]&quot;</span>
+<span class="source-line" id="L338"><a class="line-number" href="#L338" aria-label="Line 338">338</a>         )</span>
+<span class="source-line" id="L339"><a class="line-number" href="#L339" aria-label="Line 339">339</a>         this.vCardQrCodeImageInput = page.locator(&quot;//input[@id=&#39;companyLogo&#39;]&quot;)</span>
+<span class="source-line" id="L340"><a class="line-number" href="#L340" aria-label="Line 340">340</a>         this.vCardQrCodeFirstNameInput = page.locator(</span>
+<span class="source-line" id="L341"><a class="line-number" href="#L341" aria-label="Line 341">341</a>             &quot;//input[@id=&#39;vcard_first_name&#39;]&quot;</span>
+<span class="source-line" id="L342"><a class="line-number" href="#L342" aria-label="Line 342">342</a>         )</span>
+<span class="source-line" id="L343"><a class="line-number" href="#L343" aria-label="Line 343">343</a>         this.vCardQrCodeLastNameInput = page.locator(</span>
+<span class="source-line" id="L344"><a class="line-number" href="#L344" aria-label="Line 344">344</a>             &quot;//input[@id=&#39;vcard_last_name&#39;]&quot;</span>
+<span class="source-line" id="L345"><a class="line-number" href="#L345" aria-label="Line 345">345</a>         )</span>
+<span class="source-line" id="L346"><a class="line-number" href="#L346" aria-label="Line 346">346</a>         this.vCardQrCodeCompanyDetailsDropdown = page.locator(</span>
+<span class="source-line" id="L347"><a class="line-number" href="#L347" aria-label="Line 347">347</a>             &quot;//button[@data-target=&#39;#acc_companyInfo&#39;]&quot;</span>
+<span class="source-line" id="L348"><a class="line-number" href="#L348" aria-label="Line 348">348</a>         )</span>
+<span class="source-line" id="L349"><a class="line-number" href="#L349" aria-label="Line 349">349</a>         this.vCardQrCodeCompanyDetailsCompanyInput = page.locator(</span>
+<span class="source-line" id="L350"><a class="line-number" href="#L350" aria-label="Line 350">350</a>             &quot;//input[@id=&#39;vcard_company&#39;]&quot;</span>
+<span class="source-line" id="L351"><a class="line-number" href="#L351" aria-label="Line 351">351</a>         )</span>
+<span class="source-line" id="L352"><a class="line-number" href="#L352" aria-label="Line 352">352</a>         this.vCardQrCodeCompanyDetailsProfessionInput = page.locator(</span>
+<span class="source-line" id="L353"><a class="line-number" href="#L353" aria-label="Line 353">353</a>             &quot;//input[@id=&#39;vcard_profession&#39;]&quot;</span>
+<span class="source-line" id="L354"><a class="line-number" href="#L354" aria-label="Line 354">354</a>         )</span>
+<span class="source-line" id="L355"><a class="line-number" href="#L355" aria-label="Line 355">355</a>         this.vCardQrCodeCompanyDetailsSummaryInput = page.locator(</span>
+<span class="source-line" id="L356"><a class="line-number" href="#L356" aria-label="Line 356">356</a>             &quot;//textarea[@id=&#39;vcard_note&#39;]&quot;</span>
+<span class="source-line" id="L357"><a class="line-number" href="#L357" aria-label="Line 357">357</a>         )</span>
+<span class="source-line" id="L358"><a class="line-number" href="#L358" aria-label="Line 358">358</a>         this.businessInfoBusinessQrTypeImageInput = page</span>
+<span class="source-line" id="L359"><a class="line-number" href="#L359" aria-label="Line 359">359</a>             .getByTestId(&#39;step2-business-information-image-input&#39;)</span>
+<span class="source-line" id="L360"><a class="line-number" href="#L360" aria-label="Line 360">360</a>             .locator(&#39;xpath=following-sibling::input&#39;)</span>
+<span class="source-line" id="L361"><a class="line-number" href="#L361" aria-label="Line 361">361</a>             .first()</span>
+<span class="source-line" id="L362"><a class="line-number" href="#L362" aria-label="Line 362">362</a>         this.businessInfoBusinessQrTypeCompanyInput = page.locator(</span>
+<span class="source-line" id="L363"><a class="line-number" href="#L363" aria-label="Line 363">363</a>             &quot;//input[@id=&#39;company&#39;]&quot;</span>
+<span class="source-line" id="L364"><a class="line-number" href="#L364" aria-label="Line 364">364</a>         )</span>
+<span class="source-line" id="L365"><a class="line-number" href="#L365" aria-label="Line 365">365</a>         this.businessInfoBusinessQrTypeTitleInput = page.locator(</span>
+<span class="source-line" id="L366"><a class="line-number" href="#L366" aria-label="Line 366">366</a>             &quot;//input[@id=&#39;companyTitle&#39;]&quot;</span>
+<span class="source-line" id="L367"><a class="line-number" href="#L367" aria-label="Line 367">367</a>         )</span>
+<span class="source-line" id="L368"><a class="line-number" href="#L368" aria-label="Line 368">368</a>         this.businessInfoBusinessQrTypeSubtitleInput = page.locator(</span>
+<span class="source-line" id="L369"><a class="line-number" href="#L369" aria-label="Line 369">369</a>             &quot;//input[@id=&#39;companySubtitle&#39;]&quot;</span>
+<span class="source-line" id="L370"><a class="line-number" href="#L370" aria-label="Line 370">370</a>         )</span>
+<span class="source-line" id="L371"><a class="line-number" href="#L371" aria-label="Line 371">371</a>         this.businessInfoBusinessQrTypeAddButton = page.locator(</span>
+<span class="source-line" id="L372"><a class="line-number" href="#L372" aria-label="Line 372">372</a>             &quot;//button[@id=&#39;add&#39;]&quot;</span>
+<span class="source-line" id="L373"><a class="line-number" href="#L373" aria-label="Line 373">373</a>         )</span>
+<span class="source-line" id="L374"><a class="line-number" href="#L374" aria-label="Line 374">374</a>         this.aboutCompanyBusinessQrTypeDropdown = page.locator(</span>
+<span class="source-line" id="L375"><a class="line-number" href="#L375" aria-label="Line 375">375</a>             &quot;//textarea[@id=&#39;aboutCompany&#39;]&quot;</span>
+<span class="source-line" id="L376"><a class="line-number" href="#L376" aria-label="Line 376">376</a>         )</span>
+<span class="source-line" id="L377"><a class="line-number" href="#L377" aria-label="Line 377">377</a>         this.aboutCompanyBusinessQrTypeTextarea = page.locator(</span>
+<span class="source-line" id="L378"><a class="line-number" href="#L378" aria-label="Line 378">378</a>             &quot;//textarea[@id=&#39;aboutCompany&#39;]&quot;</span>
+<span class="source-line" id="L379"><a class="line-number" href="#L379" aria-label="Line 379">379</a>         )</span>
+<span class="source-line" id="L380"><a class="line-number" href="#L380" aria-label="Line 380">380</a>         this.uploadImageQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L381"><a class="line-number" href="#L381" aria-label="Line 381">381</a>             &quot;//button[@data-target=&#39;#acc_images&#39;]&quot;</span>
+<span class="source-line" id="L382"><a class="line-number" href="#L382" aria-label="Line 382">382</a>         )</span>
+<span class="source-line" id="L383"><a class="line-number" href="#L383" aria-label="Line 383">383</a>         this.uploadImageQrCodeButton = page.locator(&quot;//div[@id=&#39;files&#39;]&quot;)</span>
+<span class="source-line" id="L384"><a class="line-number" href="#L384" aria-label="Line 384">384</a>         this.uploadImageQrCodeDropArea = page.locator(&#39;#files&#39;)</span>
+<span class="source-line" id="L385"><a class="line-number" href="#L385" aria-label="Line 385">385</a>         this.verticalImageQrCodeCheckbox = page.locator(</span>
+<span class="source-line" id="L386"><a class="line-number" href="#L386" aria-label="Line 386">386</a>             &quot;//input[@id=&#39;uploadCheckbox&#39;]&quot;</span>
+<span class="source-line" id="L387"><a class="line-number" href="#L387" aria-label="Line 387">387</a>         )</span>
+<span class="source-line" id="L388"><a class="line-number" href="#L388" aria-label="Line 388">388</a>         this.imageInformationQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L389"><a class="line-number" href="#L389" aria-label="Line 389">389</a>             &quot;//button[@data-target=&#39;#acc_imageInfo&#39;]&quot;</span>
+<span class="source-line" id="L390"><a class="line-number" href="#L390" aria-label="Line 390">390</a>         )</span>
+<span class="source-line" id="L391"><a class="line-number" href="#L391" aria-label="Line 391">391</a>         this.imageInformationQrCodeGalleryTitleInput = page.locator(</span>
+<span class="source-line" id="L392"><a class="line-number" href="#L392" aria-label="Line 392">392</a>             &quot;//input[@id=&#39;image_title&#39;]&quot;</span>
+<span class="source-line" id="L393"><a class="line-number" href="#L393" aria-label="Line 393">393</a>         )</span>
+<span class="source-line" id="L394"><a class="line-number" href="#L394" aria-label="Line 394">394</a>         this.imageInformationQrCodeGalleryDescriptionInput = page.locator(</span>
+<span class="source-line" id="L395"><a class="line-number" href="#L395" aria-label="Line 395">395</a>             &quot;//textarea[@id=&#39;image_description&#39;]&quot;</span>
+<span class="source-line" id="L396"><a class="line-number" href="#L396" aria-label="Line 396">396</a>         )</span>
+<span class="source-line" id="L397"><a class="line-number" href="#L397" aria-label="Line 397">397</a>         this.imageInformationQrCodeWebsiteInput = page.locator(</span>
+<span class="source-line" id="L398"><a class="line-number" href="#L398" aria-label="Line 398">398</a>             &quot;//input[@id=&#39;website&#39;]&quot;</span>
+<span class="source-line" id="L399"><a class="line-number" href="#L399" aria-label="Line 399">399</a>         )</span>
+<span class="source-line" id="L400"><a class="line-number" href="#L400" aria-label="Line 400">400</a>         this.uploadVideoQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L401"><a class="line-number" href="#L401" aria-label="Line 401">401</a>             &quot;//button[@data-target=&#39;#acc_videoUpload&#39;]&quot;</span>
+<span class="source-line" id="L402"><a class="line-number" href="#L402" aria-label="Line 402">402</a>         )</span>
+<span class="source-line" id="L403"><a class="line-number" href="#L403" aria-label="Line 403">403</a>         this.uploadVideoQrCodeUrlInput = page.locator(</span>
+<span class="source-line" id="L404"><a class="line-number" href="#L404" aria-label="Line 404">404</a>             &quot;//input[@id=&#39;youTubeUrl&#39;]&quot;</span>
+<span class="source-line" id="L405"><a class="line-number" href="#L405" aria-label="Line 405">405</a>         )</span>
+<span class="source-line" id="L406"><a class="line-number" href="#L406" aria-label="Line 406">406</a>         this.uploadVideoQrCodeButton = page.locator(</span>
+<span class="source-line" id="L407"><a class="line-number" href="#L407" aria-label="Line 407">407</a>             &quot;//div[@id=&#39;files&#39;]//button&quot;</span>
+<span class="source-line" id="L408"><a class="line-number" href="#L408" aria-label="Line 408">408</a>         )</span>
+<span class="source-line" id="L409"><a class="line-number" href="#L409" aria-label="Line 409">409</a>         this.uploadVideoQrCodeDropArea = page.locator(&#39;#files&#39;)</span>
+<span class="source-line" id="L410"><a class="line-number" href="#L410" aria-label="Line 410">410</a>         this.videoShowDirectlyQrCodeCheckbox = page.locator(</span>
+<span class="source-line" id="L411"><a class="line-number" href="#L411" aria-label="Line 411">411</a>             &quot;//input[@id=&#39;direct_video&#39;]&quot;</span>
+<span class="source-line" id="L412"><a class="line-number" href="#L412" aria-label="Line 412">412</a>         )</span>
+<span class="source-line" id="L413"><a class="line-number" href="#L413" aria-label="Line 413">413</a>         this.videoInfoQrCodeDropdown = page.getByRole(&#39;button&#39;, {</span>
+<span class="source-line" id="L414"><a class="line-number" href="#L414" aria-label="Line 414">414</a>             name: &#39;Video Information Add some&#39;,</span>
+<span class="source-line" id="L415"><a class="line-number" href="#L415" aria-label="Line 415">415</a>         })</span>
+<span class="source-line" id="L416"><a class="line-number" href="#L416" aria-label="Line 416">416</a>         this.videoInfoQrCodeCompanyInput = page.locator(</span>
+<span class="source-line" id="L417"><a class="line-number" href="#L417" aria-label="Line 417">417</a>             &quot;//input[@id=&#39;companyName&#39;]&quot;</span>
+<span class="source-line" id="L418"><a class="line-number" href="#L418" aria-label="Line 418">418</a>         )</span>
+<span class="source-line" id="L419"><a class="line-number" href="#L419" aria-label="Line 419">419</a>         this.videoInfoQrCodeVideoTitleInput = page.locator(</span>
+<span class="source-line" id="L420"><a class="line-number" href="#L420" aria-label="Line 420">420</a>             &quot;//input[@id=&#39;videoTitle&#39;]&quot;</span>
+<span class="source-line" id="L421"><a class="line-number" href="#L421" aria-label="Line 421">421</a>         )</span>
+<span class="source-line" id="L422"><a class="line-number" href="#L422" aria-label="Line 422">422</a>         this.videoInfoQrCodeVideoDescriptionInput = page.locator(</span>
+<span class="source-line" id="L423"><a class="line-number" href="#L423" aria-label="Line 423">423</a>             &quot;//textarea[@id=&#39;videoDescription&#39;]&quot;</span>
+<span class="source-line" id="L424"><a class="line-number" href="#L424" aria-label="Line 424">424</a>         )</span>
+<span class="source-line" id="L425"><a class="line-number" href="#L425" aria-label="Line 425">425</a>         this.appGooglePlayButton = page.getByTestId(</span>
+<span class="source-line" id="L426"><a class="line-number" href="#L426" aria-label="Line 426">426</a>             &#39;step2-app-platforms-add-playStore-button&#39;</span>
+<span class="source-line" id="L427"><a class="line-number" href="#L427" aria-label="Line 427">427</a>         )</span>
+<span class="source-line" id="L428"><a class="line-number" href="#L428" aria-label="Line 428">428</a>         this.appAppleStoreButton = page.getByTestId(</span>
+<span class="source-line" id="L429"><a class="line-number" href="#L429" aria-label="Line 429">429</a>             &#39;step2-app-platforms-add-apple-button&#39;</span>
+<span class="source-line" id="L430"><a class="line-number" href="#L430" aria-label="Line 430">430</a>         )</span>
+<span class="source-line" id="L431"><a class="line-number" href="#L431" aria-label="Line 431">431</a>         this.appAmazonStoreButton = page.getByTestId(</span>
+<span class="source-line" id="L432"><a class="line-number" href="#L432" aria-label="Line 432">432</a>             &#39;step2-app-platforms-add-amazon-button&#39;</span>
+<span class="source-line" id="L433"><a class="line-number" href="#L433" aria-label="Line 433">433</a>         )</span>
+<span class="source-line" id="L434"><a class="line-number" href="#L434" aria-label="Line 434">434</a>         this.appInfoQrCodeDropdown = page.getByTestId(</span>
+<span class="source-line" id="L435"><a class="line-number" href="#L435" aria-label="Line 435">435</a>             &#39;step2-app-information-accordion-trigger&#39;</span>
+<span class="source-line" id="L436"><a class="line-number" href="#L436" aria-label="Line 436">436</a>         )</span>
+<span class="source-line" id="L437"><a class="line-number" href="#L437" aria-label="Line 437">437</a>         this.appInfoQrCodeAppNameInput = page.locator(</span>
+<span class="source-line" id="L438"><a class="line-number" href="#L438" aria-label="Line 438">438</a>             &quot;//input[@id=&#39;app_title&#39;]&quot;</span>
+<span class="source-line" id="L439"><a class="line-number" href="#L439" aria-label="Line 439">439</a>         )</span>
+<span class="source-line" id="L440"><a class="line-number" href="#L440" aria-label="Line 440">440</a> </span>
+<span class="source-line" id="L441"><a class="line-number" href="#L441" aria-label="Line 441">441</a>         this.linksToPlatformsQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L442"><a class="line-number" href="#L442" aria-label="Line 442">442</a>             &quot;//button[@data-target=&#39;#acc_imageInfo&#39;]&quot;</span>
+<span class="source-line" id="L443"><a class="line-number" href="#L443" aria-label="Line 443">443</a>         )</span>
+<span class="source-line" id="L444"><a class="line-number" href="#L444" aria-label="Line 444">444</a>         this.linksToPlatformsQrCodeGoogleAddButton = page.locator(</span>
+<span class="source-line" id="L445"><a class="line-number" href="#L445" aria-label="Line 445">445</a>             &quot;//button[contains(@class,&#39;google_btn&#39;)]&quot;</span>
+<span class="source-line" id="L446"><a class="line-number" href="#L446" aria-label="Line 446">446</a>         )</span>
+<span class="source-line" id="L447"><a class="line-number" href="#L447" aria-label="Line 447">447</a>         this.linksToPlatformsQrCodeGoogleInput = page.locator(</span>
+<span class="source-line" id="L448"><a class="line-number" href="#L448" aria-label="Line 448">448</a>             &quot;//input[@id=&#39;google&#39;]&quot;</span>
+<span class="source-line" id="L449"><a class="line-number" href="#L449" aria-label="Line 449">449</a>         )</span>
+<span class="source-line" id="L450"><a class="line-number" href="#L450" aria-label="Line 450">450</a>         this.linksToPlatformsQrCodeAppleAddButton = page.locator(</span>
+<span class="source-line" id="L451"><a class="line-number" href="#L451" aria-label="Line 451">451</a>             &quot;//button[contains(@class,&#39;apple_btn&#39;)]&quot;</span>
+<span class="source-line" id="L452"><a class="line-number" href="#L452" aria-label="Line 452">452</a>         )</span>
+<span class="source-line" id="L453"><a class="line-number" href="#L453" aria-label="Line 453">453</a>         this.linksToPlatformsQrCodeAppleInput = page.locator(</span>
+<span class="source-line" id="L454"><a class="line-number" href="#L454" aria-label="Line 454">454</a>             &quot;//input[@id=&#39;apple&#39;]&quot;</span>
+<span class="source-line" id="L455"><a class="line-number" href="#L455" aria-label="Line 455">455</a>         )</span>
+<span class="source-line" id="L456"><a class="line-number" href="#L456" aria-label="Line 456">456</a>         this.linksToPlatformsQrCodeAmazonAddButton = page.locator(</span>
+<span class="source-line" id="L457"><a class="line-number" href="#L457" aria-label="Line 457">457</a>             &quot;//button[contains(@class,&#39;amazone_btn&#39;)]&quot;</span>
+<span class="source-line" id="L458"><a class="line-number" href="#L458" aria-label="Line 458">458</a>         )</span>
+<span class="source-line" id="L459"><a class="line-number" href="#L459" aria-label="Line 459">459</a>         this.linksToPlatformsQrCodeAmazonInput = page.locator(</span>
+<span class="source-line" id="L460"><a class="line-number" href="#L460" aria-label="Line 460">460</a>             &quot;//input[@id=&#39;amazon&#39;]&quot;</span>
+<span class="source-line" id="L461"><a class="line-number" href="#L461" aria-label="Line 461">461</a>         )</span>
+<span class="source-line" id="L462"><a class="line-number" href="#L462" aria-label="Line 462">462</a>         this.offerInfoQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L463"><a class="line-number" href="#L463" aria-label="Line 463">463</a>             &quot;//button[@data-target=&#39;#acc_imageInfo&#39;]&quot;</span>
+<span class="source-line" id="L464"><a class="line-number" href="#L464" aria-label="Line 464">464</a>         )</span>
+<span class="source-line" id="L465"><a class="line-number" href="#L465" aria-label="Line 465">465</a>         this.offerInfoQrCodeImgInput = page.locator(</span>
+<span class="source-line" id="L466"><a class="line-number" href="#L466" aria-label="Line 466">466</a>             &quot;//input[@id=&#39;companyLogo&#39;]&quot;</span>
+<span class="source-line" id="L467"><a class="line-number" href="#L467" aria-label="Line 467">467</a>         )</span>
+<span class="source-line" id="L468"><a class="line-number" href="#L468" aria-label="Line 468">468</a>         this.offerInfoQrCodeCompanyInput = page.locator(</span>
+<span class="source-line" id="L469"><a class="line-number" href="#L469" aria-label="Line 469">469</a>             &quot;//input[@id=&#39;company&#39;]&quot;</span>
+<span class="source-line" id="L470"><a class="line-number" href="#L470" aria-label="Line 470">470</a>         )</span>
+<span class="source-line" id="L471"><a class="line-number" href="#L471" aria-label="Line 471">471</a>         this.offerInfoQrCodeTitleInput = page.locator(&quot;//input[@id=&#39;title&#39;]&quot;)</span>
+<span class="source-line" id="L472"><a class="line-number" href="#L472" aria-label="Line 472">472</a>         this.offerInfoQrCodeDescriptionInput = page.locator(</span>
+<span class="source-line" id="L473"><a class="line-number" href="#L473" aria-label="Line 473">473</a>             &quot;//textarea[@id=&#39;description&#39;]&quot;</span>
+<span class="source-line" id="L474"><a class="line-number" href="#L474" aria-label="Line 474">474</a>         )</span>
+<span class="source-line" id="L475"><a class="line-number" href="#L475" aria-label="Line 475">475</a>         this.offerInfoQrCodeBadgeInput = page.locator(</span>
+<span class="source-line" id="L476"><a class="line-number" href="#L476" aria-label="Line 476">476</a>             &quot;//input[@id=&#39;salesBadge&#39;]&quot;</span>
+<span class="source-line" id="L477"><a class="line-number" href="#L477" aria-label="Line 477">477</a>         )</span>
+<span class="source-line" id="L478"><a class="line-number" href="#L478" aria-label="Line 478">478</a>         this.offerInfoQrCodeSeeCodeButton = page.locator(</span>
+<span class="source-line" id="L479"><a class="line-number" href="#L479" aria-label="Line 479">479</a>             &quot;//input[@id=&#39;buttonToSeeCode&#39;]&quot;</span>
+<span class="source-line" id="L480"><a class="line-number" href="#L480" aria-label="Line 480">480</a>         )</span>
+<span class="source-line" id="L481"><a class="line-number" href="#L481" aria-label="Line 481">481</a>         this.couponInfoQrCodeDropdown = page.locator(</span>
+<span class="source-line" id="L482"><a class="line-number" href="#L482" aria-label="Line 482">482</a>             &quot;//button[@data-target=&#39;#acc_couponInfo&#39;]&quot;</span>
+<span class="source-line" id="L483"><a class="line-number" href="#L483" aria-label="Line 483">483</a>         )</span>
+<span class="source-line" id="L484"><a class="line-number" href="#L484" aria-label="Line 484">484</a> </span>
+<span class="source-line" id="L485"><a class="line-number" href="#L485" aria-label="Line 485">485</a>         this.couponInfoQrCodeBarcodeToggle = page.locator(</span>
+<span class="source-line" id="L486"><a class="line-number" href="#L486" aria-label="Line 486">486</a>             &quot;//input[@id=&#39;couponTgl&#39;]&quot;</span>
+<span class="source-line" id="L487"><a class="line-number" href="#L487" aria-label="Line 487">487</a>         )</span>
+<span class="source-line" id="L488"><a class="line-number" href="#L488" aria-label="Line 488">488</a>         this.couponInfoQrCodeCodeInput = page.locator(</span>
+<span class="source-line" id="L489"><a class="line-number" href="#L489" aria-label="Line 489">489</a>             &quot;//input[@id=&#39;couponCode&#39;]&quot;</span>
+<span class="source-line" id="L490"><a class="line-number" href="#L490" aria-label="Line 490">490</a>         )</span>
+<span class="source-line" id="L491"><a class="line-number" href="#L491" aria-label="Line 491">491</a>         this.couponInfoQrCodeTermsInput = page.locator(</span>
+<span class="source-line" id="L492"><a class="line-number" href="#L492" aria-label="Line 492">492</a>             &quot;//textarea[@id=&#39;terms&#39;]&quot;</span>
+<span class="source-line" id="L493"><a class="line-number" href="#L493" aria-label="Line 493">493</a>         )</span>
+<span class="source-line" id="L494"><a class="line-number" href="#L494" aria-label="Line 494">494</a>         this.couponInfoQrCodeButtonInput = page.locator(</span>
+<span class="source-line" id="L495"><a class="line-number" href="#L495" aria-label="Line 495">495</a>             &quot;//input[@id=&#39;buttonText&#39;]&quot;</span>
+<span class="source-line" id="L496"><a class="line-number" href="#L496" aria-label="Line 496">496</a>         )</span>
+<span class="source-line" id="L497"><a class="line-number" href="#L497" aria-label="Line 497">497</a>         this.couponInfoQrCodeWebsiteInput = page.locator(</span>
+<span class="source-line" id="L498"><a class="line-number" href="#L498" aria-label="Line 498">498</a>             &quot;//input[@id=&#39;buttonUrl&#39;]&quot;</span>
+<span class="source-line" id="L499"><a class="line-number" href="#L499" aria-label="Line 499">499</a>         )</span>
+<span class="source-line" id="L500"><a class="line-number" href="#L500" aria-label="Line 500">500</a>         this.mp3UploadDropdown = page.locator(</span>
+<span class="source-line" id="L501"><a class="line-number" href="#L501" aria-label="Line 501">501</a>             &quot;//button[@data-target=&#39;#acc_nameOfMp3&#39;]&quot;</span>
+<span class="source-line" id="L502"><a class="line-number" href="#L502" aria-label="Line 502">502</a>         )</span>
+<span class="source-line" id="L503"><a class="line-number" href="#L503" aria-label="Line 503">503</a>         this.mp3UploadAddOptionCheckbox = page.locator(</span>
+<span class="source-line" id="L504"><a class="line-number" href="#L504" aria-label="Line 504">504</a>             &quot;//input[@id=&#39;addDownloadOption&#39;]&quot;</span>
+<span class="source-line" id="L505"><a class="line-number" href="#L505" aria-label="Line 505">505</a>         )</span>
+<span class="source-line" id="L506"><a class="line-number" href="#L506" aria-label="Line 506">506</a>         this.mp3InfoImgInput = page.locator(&quot;//input[@id=&#39;companyLogo&#39;]&quot;)</span>
+<span class="source-line" id="L507"><a class="line-number" href="#L507" aria-label="Line 507">507</a>         this.mp3InfoTitleInput = page.locator(&quot;//input[@id=&#39;mp3_title&#39;]&quot;)</span>
+<span class="source-line" id="L508"><a class="line-number" href="#L508" aria-label="Line 508">508</a>         this.mp3InfoDescriptionInput = page.locator(</span>
+<span class="source-line" id="L509"><a class="line-number" href="#L509" aria-label="Line 509">509</a>             &quot;//textarea[@id=&#39;mp3_description&#39;]&quot;</span>
+<span class="source-line" id="L510"><a class="line-number" href="#L510" aria-label="Line 510">510</a>         )</span>
+<span class="source-line" id="L511"><a class="line-number" href="#L511" aria-label="Line 511">511</a>         this.mp3InfoWebsiteInput = page.locator(&quot;//input[@id=&#39;mp3_website&#39;]&quot;)</span>
+<span class="source-line" id="L512"><a class="line-number" href="#L512" aria-label="Line 512">512</a>         this.mp3InfoAddButton = page.locator(&quot;//div[@id=&#39;btn-item&#39;]&quot;)</span>
+<span class="source-line" id="L513"><a class="line-number" href="#L513" aria-label="Line 513">513</a>         this.mp3InfoButtonTextInput = page.locator(&quot;//input[@id=&#39;button_text&#39;]&quot;)</span>
+<span class="source-line" id="L514"><a class="line-number" href="#L514" aria-label="Line 514">514</a>         this.mp3InfoButtonWebsiteInput = page.locator(</span>
+<span class="source-line" id="L515"><a class="line-number" href="#L515" aria-label="Line 515">515</a>             &quot;//input[@id=&#39;button_url&#39;]&quot;</span>
+<span class="source-line" id="L516"><a class="line-number" href="#L516" aria-label="Line 516">516</a>         )</span>
+<span class="source-line" id="L517"><a class="line-number" href="#L517" aria-label="Line 517">517</a>         this.mp3InfoButtonRemoveButton = page.locator(</span>
+<span class="source-line" id="L518"><a class="line-number" href="#L518" aria-label="Line 518">518</a>             &quot;//div[@id=&#39;add-btn&#39;]//button[contains(@class,&#39;removeBtn&#39;)]&quot;</span>
+<span class="source-line" id="L519"><a class="line-number" href="#L519" aria-label="Line 519">519</a>         )</span>
+<span class="source-line" id="L520"><a class="line-number" href="#L520" aria-label="Line 520">520</a>         this.menuVarPopupModalTitle = page.locator(</span>
+<span class="source-line" id="L521"><a class="line-number" href="#L521" aria-label="Line 521">521</a>             &quot;//div[@id=&#39;helpCarousel1&#39;]//h5&quot;</span>
+<span class="source-line" id="L522"><a class="line-number" href="#L522" aria-label="Line 522">522</a>         )</span>
+<span class="source-line" id="L523"><a class="line-number" href="#L523" aria-label="Line 523">523</a>         this.menuVarPopupMenuTypeButton = page.locator(</span>
+<span class="source-line" id="L524"><a class="line-number" href="#L524" aria-label="Line 524">524</a>             &quot;//div[@id=&#39;menuModal&#39;]//button[@value=&#39;menu&#39;]&quot;</span>
+<span class="source-line" id="L525"><a class="line-number" href="#L525" aria-label="Line 525">525</a>         )</span>
+<span class="source-line" id="L526"><a class="line-number" href="#L526" aria-label="Line 526">526</a>         this.menuVarPopupPdfTypeButton = page.locator(</span>
+<span class="source-line" id="L527"><a class="line-number" href="#L527" aria-label="Line 527">527</a>             &quot;//div[@id=&#39;menuModal&#39;]//button[@value=&#39;pdf&#39;]&quot;</span>
+<span class="source-line" id="L528"><a class="line-number" href="#L528" aria-label="Line 528">528</a>         )</span>
+<span class="source-line" id="L529"><a class="line-number" href="#L529" aria-label="Line 529">529</a>         this.menuVarPopupWebTypeButton = page.locator(</span>
+<span class="source-line" id="L530"><a class="line-number" href="#L530" aria-label="Line 530">530</a>             &quot;//div[@id=&#39;menuModal&#39;]//button[@value=&#39;url&#39;]&quot;</span>
+<span class="source-line" id="L531"><a class="line-number" href="#L531" aria-label="Line 531">531</a>         )</span>
+<span class="source-line" id="L532"><a class="line-number" href="#L532" aria-label="Line 532">532</a>         this.menuVarPopupCrossButton = page.locator(</span>
+<span class="source-line" id="L533"><a class="line-number" href="#L533" aria-label="Line 533">533</a>             &quot;//div[@id=&#39;menuModal&#39;]//button[@value=&#39;url&#39;]&quot;</span>
+<span class="source-line" id="L534"><a class="line-number" href="#L534" aria-label="Line 534">534</a>         )</span>
+<span class="source-line" id="L535"><a class="line-number" href="#L535" aria-label="Line 535">535</a>         this.menuMenuTypeRestaurantDropdown = page.locator(</span>
+<span class="source-line" id="L536"><a class="line-number" href="#L536" aria-label="Line 536">536</a>             &quot;//button[@data-target=&#39;#acc_menuInfo&#39;]&quot;</span>
+<span class="source-line" id="L537"><a class="line-number" href="#L537" aria-label="Line 537">537</a>         )</span>
+<span class="source-line" id="L538"><a class="line-number" href="#L538" aria-label="Line 538">538</a>         this.menuMenuTypeRestaurantImgInput = page.locator(</span>
+<span class="source-line" id="L539"><a class="line-number" href="#L539" aria-label="Line 539">539</a>             &quot;//input[@id=&#39;companyLogo&#39;]&quot;</span>
+<span class="source-line" id="L540"><a class="line-number" href="#L540" aria-label="Line 540">540</a>         )</span>
+<span class="source-line" id="L541"><a class="line-number" href="#L541" aria-label="Line 541">541</a>         this.menuMenuTypeRestaurantNameInput = page.locator(</span>
+<span class="source-line" id="L542"><a class="line-number" href="#L542" aria-label="Line 542">542</a>             &quot;//input[@id=&#39;companyTitle&#39;]&quot;</span>
+<span class="source-line" id="L543"><a class="line-number" href="#L543" aria-label="Line 543">543</a>         )</span>
+<span class="source-line" id="L544"><a class="line-number" href="#L544" aria-label="Line 544">544</a>         this.menuMenuTypeRestaurantDescriptionInput = page.locator(</span>
+<span class="source-line" id="L545"><a class="line-number" href="#L545" aria-label="Line 545">545</a>             &quot;//textarea[@id=&#39;companyDescription&#39;]&quot;</span>
+<span class="source-line" id="L546"><a class="line-number" href="#L546" aria-label="Line 546">546</a>         )</span>
+<span class="source-line" id="L547"><a class="line-number" href="#L547" aria-label="Line 547">547</a>         this.menuMenuTypeMenuDropdown = page.locator(</span>
+<span class="source-line" id="L548"><a class="line-number" href="#L548" aria-label="Line 548">548</a>             &quot;//button[@data-target=&#39;#acc_product&#39;]&quot;</span>
+<span class="source-line" id="L549"><a class="line-number" href="#L549" aria-label="Line 549">549</a>         )</span>
+<span class="source-line" id="L550"><a class="line-number" href="#L550" aria-label="Line 550">550</a>         this.menuMenuTypeSection1Dropdown = page.locator(</span>
+<span class="source-line" id="L551"><a class="line-number" href="#L551" aria-label="Line 551">551</a>             &quot;//div[@id=&#39;add_section&#39;]//button[contains(@class,&#39;section-btn&#39;) and @data-target=&#39;#menu_section_1&#39;]&quot;</span>
+<span class="source-line" id="L552"><a class="line-number" href="#L552" aria-label="Line 552">552</a>         )</span>
+<span class="source-line" id="L553"><a class="line-number" href="#L553" aria-label="Line 553">553</a>         this.menuMenuTypeSection1NameInput = page.locator(</span>
+<span class="source-line" id="L554"><a class="line-number" href="#L554" aria-label="Line 554">554</a>             &quot;//input[@id=&#39;sectionNames&#39;]&quot;</span>
+<span class="source-line" id="L555"><a class="line-number" href="#L555" aria-label="Line 555">555</a>         )</span>
+<span class="source-line" id="L556"><a class="line-number" href="#L556" aria-label="Line 556">556</a>         this.menuMenuTypeSection1DescriptionOfSectionInput = page.locator(</span>
+<span class="source-line" id="L557"><a class="line-number" href="#L557" aria-label="Line 557">557</a>             &quot;//input[@id=&#39;sectionDescriptions&#39;]&quot;</span>
+<span class="source-line" id="L558"><a class="line-number" href="#L558" aria-label="Line 558">558</a>         )</span>
+<span class="source-line" id="L559"><a class="line-number" href="#L559" aria-label="Line 559">559</a>         this.menuMenuTypeSection1ImageInput = page.locator(</span>
+<span class="source-line" id="L560"><a class="line-number" href="#L560" aria-label="Line 560">560</a>             &quot;//input[@id=&#39;productImages1&#39;]&quot;</span>
+<span class="source-line" id="L561"><a class="line-number" href="#L561" aria-label="Line 561">561</a>         )</span>
+<span class="source-line" id="L562"><a class="line-number" href="#L562" aria-label="Line 562">562</a>         this.menuMenuTypeSection1ProductNameInput = page.locator(</span>
+<span class="source-line" id="L563"><a class="line-number" href="#L563" aria-label="Line 563">563</a>             &quot;//div[@class=&#39;row&#39;]//input[contains(@name,&#39;productNames&#39;) and contains(@class,&#39;pName&#39;)]&quot;</span>
+<span class="source-line" id="L564"><a class="line-number" href="#L564" aria-label="Line 564">564</a>         )</span>
+<span class="source-line" id="L565"><a class="line-number" href="#L565" aria-label="Line 565">565</a>         this.menuMenuTypeSection1NameTranslatedInput = page.locator(</span>
+<span class="source-line" id="L566"><a class="line-number" href="#L566" aria-label="Line 566">566</a>             &quot;//input[@id=&#39;productNamesTranslated&#39;]&quot;</span>
+<span class="source-line" id="L567"><a class="line-number" href="#L567" aria-label="Line 567">567</a>         )</span>
+<span class="source-line" id="L568"><a class="line-number" href="#L568" aria-label="Line 568">568</a>         this.menuMenuTypeSection1DescriptionInput = page.locator(</span>
+<span class="source-line" id="L569"><a class="line-number" href="#L569" aria-label="Line 569">569</a>             &quot;//input[@id=&#39;productDescriptions&#39;]&quot;</span>
+<span class="source-line" id="L570"><a class="line-number" href="#L570" aria-label="Line 570">570</a>         )</span>
+<span class="source-line" id="L571"><a class="line-number" href="#L571" aria-label="Line 571">571</a>         this.menuMenuTypeSection1PriceInput = page.locator(</span>
+<span class="source-line" id="L572"><a class="line-number" href="#L572" aria-label="Line 572">572</a>             &quot;//input[@id=&#39;productPrices&#39;]&quot;</span>
+<span class="source-line" id="L573"><a class="line-number" href="#L573" aria-label="Line 573">573</a>         )</span>
+<span class="source-line" id="L574"><a class="line-number" href="#L574" aria-label="Line 574">574</a>         this.menuLinkTypeUrlInput = page.locator(&quot;//input[@id=&#39;url&#39;]&quot;)</span>
+<span class="source-line" id="L575"><a class="line-number" href="#L575" aria-label="Line 575">575</a>         this.wiFiInfoDropdown = page.locator(</span>
+<span class="source-line" id="L576"><a class="line-number" href="#L576" aria-label="Line 576">576</a>             &quot;//button[@data-target=&#39;#acc_WiFi_Information&#39;]&quot;</span>
+<span class="source-line" id="L577"><a class="line-number" href="#L577" aria-label="Line 577">577</a>         )</span>
+<span class="source-line" id="L578"><a class="line-number" href="#L578" aria-label="Line 578">578</a>         this.wiFiInfoNetworkNameInput = page.locator(&quot;//input[@id=&#39;wifi_ssid&#39;]&quot;)</span>
+<span class="source-line" id="L579"><a class="line-number" href="#L579" aria-label="Line 579">579</a>         this.wiFiInfoNetworkPasswordInput = page.locator(</span>
+<span class="source-line" id="L580"><a class="line-number" href="#L580" aria-label="Line 580">580</a>             &quot;//input[@id=&#39;wifi_password&#39;]&quot;</span>
+<span class="source-line" id="L581"><a class="line-number" href="#L581" aria-label="Line 581">581</a>         )</span>
+<span class="source-line" id="L582"><a class="line-number" href="#L582" aria-label="Line 582">582</a>         this.wiFiInfoEncryptingTypeDropdown = page.locator(</span>
+<span class="source-line" id="L583"><a class="line-number" href="#L583" aria-label="Line 583">583</a>             &quot;//select[@id=&#39;wifi_encryption&#39;]&quot;</span>
+<span class="source-line" id="L584"><a class="line-number" href="#L584" aria-label="Line 584">584</a>         )</span>
+<span class="source-line" id="L585"><a class="line-number" href="#L585" aria-label="Line 585">585</a>         this.facebookDesignDropdown = page.locator(</span>
+<span class="source-line" id="L586"><a class="line-number" href="#L586" aria-label="Line 586">586</a>             &quot;//button[@data-target=&#39;#facebook-bg&#39;]&quot;</span>
+<span class="source-line" id="L587"><a class="line-number" href="#L587" aria-label="Line 587">587</a>         )</span>
+<span class="source-line" id="L588"><a class="line-number" href="#L588" aria-label="Line 588">588</a>         this.facebookDesignImage0 = page.locator(</span>
+<span class="source-line" id="L589"><a class="line-number" href="#L589" aria-label="Line 589">589</a>             &quot;//div[@id=&#39;facebook-bg&#39;]//div[@data-image_id=&#39;0&#39;]&quot;</span>
+<span class="source-line" id="L590"><a class="line-number" href="#L590" aria-label="Line 590">590</a>         )</span>
+<span class="source-line" id="L591"><a class="line-number" href="#L591" aria-label="Line 591">591</a>         this.facebookDesignImage1 = page.locator(</span>
+<span class="source-line" id="L592"><a class="line-number" href="#L592" aria-label="Line 592">592</a>             &quot;//div[@id=&#39;facebook-bg&#39;]//div[@data-image_id=&#39;1&#39;]&quot;</span>
+<span class="source-line" id="L593"><a class="line-number" href="#L593" aria-label="Line 593">593</a>         )</span>
+<span class="source-line" id="L594"><a class="line-number" href="#L594" aria-label="Line 594">594</a>         this.facebookDesignImage2 = page.locator(</span>
+<span class="source-line" id="L595"><a class="line-number" href="#L595" aria-label="Line 595">595</a>             &quot;//div[@id=&#39;facebook-bg&#39;]//div[@data-image_id=&#39;2&#39;]&quot;</span>
+<span class="source-line" id="L596"><a class="line-number" href="#L596" aria-label="Line 596">596</a>         )</span>
+<span class="source-line" id="L597"><a class="line-number" href="#L597" aria-label="Line 597">597</a>         this.facebookDesignBackgroundInput = page.locator(</span>
+<span class="source-line" id="L598"><a class="line-number" href="#L598" aria-label="Line 598">598</a>             &quot;//input[@id=&#39;fbBgImage&#39;]&quot;</span>
+<span class="source-line" id="L599"><a class="line-number" href="#L599" aria-label="Line 599">599</a>         )</span>
+<span class="source-line" id="L600"><a class="line-number" href="#L600" aria-label="Line 600">600</a>         this.facebookProfileImgDropdown = page.locator(</span>
+<span class="source-line" id="L601"><a class="line-number" href="#L601" aria-label="Line 601">601</a>             &quot;//button[@data-target=&#39;#facebook-profile&#39;]&quot;</span>
+<span class="source-line" id="L602"><a class="line-number" href="#L602" aria-label="Line 602">602</a>         )</span>
+<span class="source-line" id="L603"><a class="line-number" href="#L603" aria-label="Line 603">603</a>         this.facebookProfileImgInput = page.locator(</span>
+<span class="source-line" id="L604"><a class="line-number" href="#L604" aria-label="Line 604">604</a>             &quot;//input[@id=&#39;companyLogo&#39;]&quot;</span>
+<span class="source-line" id="L605"><a class="line-number" href="#L605" aria-label="Line 605">605</a>         )</span>
+<span class="source-line" id="L606"><a class="line-number" href="#L606" aria-label="Line 606">606</a>         this.facebookBasicInfoDropdown = page.locator(</span>
+<span class="source-line" id="L607"><a class="line-number" href="#L607" aria-label="Line 607">607</a>             &quot;//button[@data-target=&#39;#facebook-details&#39;]&quot;</span>
+<span class="source-line" id="L608"><a class="line-number" href="#L608" aria-label="Line 608">608</a>         )</span>
+<span class="source-line" id="L609"><a class="line-number" href="#L609" aria-label="Line 609">609</a>         this.facebookBasicInfoFacebookUrl = page.locator(</span>
+<span class="source-line" id="L610"><a class="line-number" href="#L610" aria-label="Line 610">610</a>             &quot;//input[@id=&#39;facebook_url&#39;]&quot;</span>
+<span class="source-line" id="L611"><a class="line-number" href="#L611" aria-label="Line 611">611</a>         )</span>
+<span class="source-line" id="L612"><a class="line-number" href="#L612" aria-label="Line 612">612</a>         this.facebookBasicInfoFacebookTitle = page.locator(</span>
+<span class="source-line" id="L613"><a class="line-number" href="#L613" aria-label="Line 613">613</a>             &quot;//input[@id=&#39;facebook_title&#39;]&quot;</span>
+<span class="source-line" id="L614"><a class="line-number" href="#L614" aria-label="Line 614">614</a>         )</span>
+<span class="source-line" id="L615"><a class="line-number" href="#L615" aria-label="Line 615">615</a>         this.facebookBasicInfoFacebookDescription = page.locator(</span>
+<span class="source-line" id="L616"><a class="line-number" href="#L616" aria-label="Line 616">616</a>             &quot;//textarea[@id=&#39;facebook_description&#39;]&quot;</span>
+<span class="source-line" id="L617"><a class="line-number" href="#L617" aria-label="Line 617">617</a>         )</span>
+<span class="source-line" id="L618"><a class="line-number" href="#L618" aria-label="Line 618">618</a>         this.instagramBasicInfoDropdown = page.getByTestId(</span>
+<span class="source-line" id="L619"><a class="line-number" href="#L619" aria-label="Line 619">619</a>             &#39;step2-instagram-basic-information-accordion-trigger&#39;</span>
+<span class="source-line" id="L620"><a class="line-number" href="#L620" aria-label="Line 620">620</a>         )</span>
+<span class="source-line" id="L621"><a class="line-number" href="#L621" aria-label="Line 621">621</a>         this.instagramBasicInfoUsernameInput = page.getByTestId(</span>
+<span class="source-line" id="L622"><a class="line-number" href="#L622" aria-label="Line 622">622</a>             &#39;step2-instagram-basic-information-username-input&#39;</span>
+<span class="source-line" id="L623"><a class="line-number" href="#L623" aria-label="Line 623">623</a>         )</span>
+<span class="source-line" id="L624"><a class="line-number" href="#L624" aria-label="Line 624">624</a>         this.socialMediaDesignDropdown = page.locator(</span>
+<span class="source-line" id="L625"><a class="line-number" href="#L625" aria-label="Line 625">625</a>             &quot;//button[@data-target=&#39;#acc_Design&#39;]&quot;</span>
+<span class="source-line" id="L626"><a class="line-number" href="#L626" aria-label="Line 626">626</a>         )</span>
+<span class="source-line" id="L627"><a class="line-number" href="#L627" aria-label="Line 627">627</a>         this.socialMediaBasicInfoDropdown = page.locator(</span>
+<span class="source-line" id="L628"><a class="line-number" href="#L628" aria-label="Line 628">628</a>             &quot;//button[@data-target=&#39;#social-media&#39;]&quot;</span>
+<span class="source-line" id="L629"><a class="line-number" href="#L629" aria-label="Line 629">629</a>         )</span>
+<span class="source-line" id="L630"><a class="line-number" href="#L630" aria-label="Line 630">630</a>         this.socialMediaBasicInfoTitle = page.locator(</span>
+<span class="source-line" id="L631"><a class="line-number" href="#L631" aria-label="Line 631">631</a>             &quot;//input[@id=&#39;social_title&#39;]&quot;</span>
+<span class="source-line" id="L632"><a class="line-number" href="#L632" aria-label="Line 632">632</a>         )</span>
+<span class="source-line" id="L633"><a class="line-number" href="#L633" aria-label="Line 633">633</a>         this.socialMediaBasicInfoDescription = page.locator(</span>
+<span class="source-line" id="L634"><a class="line-number" href="#L634" aria-label="Line 634">634</a>             &quot;//textarea[@id=&#39;social_description&#39;]&quot;</span>
+<span class="source-line" id="L635"><a class="line-number" href="#L635" aria-label="Line 635">635</a>         )</span>
+<span class="source-line" id="L636"><a class="line-number" href="#L636" aria-label="Line 636">636</a>         this.whatsAppInformationCountryCodeButton = page.locator(</span>
+<span class="source-line" id="L637"><a class="line-number" href="#L637" aria-label="Line 637">637</a>             &quot;//button[@class=&#39;iti__selected-country&#39;]&quot;</span>
+<span class="source-line" id="L638"><a class="line-number" href="#L638" aria-label="Line 638">638</a>         )</span>
+<span class="source-line" id="L639"><a class="line-number" href="#L639" aria-label="Line 639">639</a>         this.whatsAppInformationUsCodeOption = page.locator(</span>
+<span class="source-line" id="L640"><a class="line-number" href="#L640" aria-label="Line 640">640</a>             &quot;//li[@id=&#39;iti-0__item-us&#39;]&quot;</span>
+<span class="source-line" id="L641"><a class="line-number" href="#L641" aria-label="Line 641">641</a>         )</span>
+<span class="source-line" id="L642"><a class="line-number" href="#L642" aria-label="Line 642">642</a>         this.whatsAppInformationDropdown = page.locator(</span>
+<span class="source-line" id="L643"><a class="line-number" href="#L643" aria-label="Line 643">643</a>             &quot;//button[@data-target=&#39;#whatsapp_no&#39;]&quot;</span>
+<span class="source-line" id="L644"><a class="line-number" href="#L644" aria-label="Line 644">644</a>         )</span>
+<span class="source-line" id="L645"><a class="line-number" href="#L645" aria-label="Line 645">645</a>         this.whatsAppInformationPhoneInput = page.locator(</span>
+<span class="source-line" id="L646"><a class="line-number" href="#L646" aria-label="Line 646">646</a>             &quot;//input[@id=&#39;phone&#39;]&quot;</span>
+<span class="source-line" id="L647"><a class="line-number" href="#L647" aria-label="Line 647">647</a>         )</span>
+<span class="source-line" id="L648"><a class="line-number" href="#L648" aria-label="Line 648">648</a>         this.whatsAppInformationMessageInput = page.locator(</span>
+<span class="source-line" id="L649"><a class="line-number" href="#L649" aria-label="Line 649">649</a>             &quot;//textarea[@id=&#39;whatsapp_body&#39;]&quot;</span>
+<span class="source-line" id="L650"><a class="line-number" href="#L650" aria-label="Line 650">650</a>         )</span>
+<span class="source-line" id="L651"><a class="line-number" href="#L651" aria-label="Line 651">651</a>         this.frameStep3Dropdown = page.locator(</span>
+<span class="source-line" id="L652"><a class="line-number" href="#L652" aria-label="Line 652">652</a>             &quot;//button[@data-target=&#39;#acc_frame&#39;]&quot;</span>
+<span class="source-line" id="L653"><a class="line-number" href="#L653" aria-label="Line 653">653</a>         )</span>
+<span class="source-line" id="L654"><a class="line-number" href="#L654" aria-label="Line 654">654</a>         this.qrcodePatternsStep3Dropdown = page.locator(</span>
+<span class="source-line" id="L655"><a class="line-number" href="#L655" aria-label="Line 655">655</a>             &quot;//button[@data-target=&#39;#acc_patterns&#39;]&quot;</span>
+<span class="source-line" id="L656"><a class="line-number" href="#L656" aria-label="Line 656">656</a>         )</span>
+<span class="source-line" id="L657"><a class="line-number" href="#L657" aria-label="Line 657">657</a>         this.qrcodeCornersStep3Dropdown = page.locator(</span>
+<span class="source-line" id="L658"><a class="line-number" href="#L658" aria-label="Line 658">658</a>             &quot;//button[@data-target=&#39;#acc_corners&#39;]&quot;</span>
+<span class="source-line" id="L659"><a class="line-number" href="#L659" aria-label="Line 659">659</a>         )</span>
+<span class="source-line" id="L660"><a class="line-number" href="#L660" aria-label="Line 660">660</a>         this.qrcodeAddLogoStep3Dropdown = page.locator(</span>
+<span class="source-line" id="L661"><a class="line-number" href="#L661" aria-label="Line 661">661</a>             &quot;//button[@data-target=&#39;#acc_addLogo&#39;]&quot;</span>
+<span class="source-line" id="L662"><a class="line-number" href="#L662" aria-label="Line 662">662</a>         )</span>
+<span class="source-line" id="L663"><a class="line-number" href="#L663" aria-label="Line 663">663</a>         this.qrcodeUploadLogoInput = page.locator(&quot;//input[@id=&#39;qr_code_logo&#39;]&quot;)</span>
+<span class="source-line" id="L664"><a class="line-number" href="#L664" aria-label="Line 664">664</a>         this.closeDownloadModalButton = page.locator(</span>
+<span class="source-line" id="L665"><a class="line-number" href="#L665" aria-label="Line 665">665</a>             &quot;//div[@id=&#39;DownloadModal&#39;]//button[@aria-label=&#39;Close&#39;]&quot;</span>
+<span class="source-line" id="L666"><a class="line-number" href="#L666" aria-label="Line 666">666</a>         )</span>
+<span class="source-line" id="L667"><a class="line-number" href="#L667" aria-label="Line 667">667</a>         this.dpfFormTitle = page.locator(</span>
+<span class="source-line" id="L668"><a class="line-number" href="#L668" aria-label="Line 668">668</a>             &quot;//form[@id=&#39;register-dpf-form&#39;]/div[@class=&#39;-form-title&#39;]&quot;</span>
+<span class="source-line" id="L669"><a class="line-number" href="#L669" aria-label="Line 669">669</a>         )</span>
+<span class="source-line" id="L670"><a class="line-number" href="#L670" aria-label="Line 670">670</a>         this.dpfFormSubmitButton = page.locator(</span>
+<span class="source-line" id="L671"><a class="line-number" href="#L671" aria-label="Line 671">671</a>             &quot;//button[contains(@class,&#39;-btn-submit&#39;)]&quot;</span>
+<span class="source-line" id="L672"><a class="line-number" href="#L672" aria-label="Line 672">672</a>         )</span>
+<span class="source-line" id="L673"><a class="line-number" href="#L673" aria-label="Line 673">673</a>         this.congratsTitleH2 = page.locator(&quot;//div[@class=&#39;thank-you&#39;]/h2&quot;)</span>
+<span class="source-line" id="L674"><a class="line-number" href="#L674" aria-label="Line 674">674</a>         this.congratsDownloadButton = page.locator(</span>
+<span class="source-line" id="L675"><a class="line-number" href="#L675" aria-label="Line 675">675</a>             &quot;//div[@class=&#39;thank-you&#39;]/div[@class=&#39;thank-btn-area&#39;]/a&quot;</span>
+<span class="source-line" id="L676"><a class="line-number" href="#L676" aria-label="Line 676">676</a>         )</span>
+<span class="source-line" id="L677"><a class="line-number" href="#L677" aria-label="Line 677">677</a>         this.qrBackdrop = page.locator(&#39;.qr-backdrop&#39;).first()</span>
+<span class="source-line" id="L678"><a class="line-number" href="#L678" aria-label="Line 678">678</a>         this.overlay = page.locator(&#39;#overlay_img&#39;)</span>
+<span class="source-line" id="L679"><a class="line-number" href="#L679" aria-label="Line 679">679</a>         this.setupWebsiteQrCodeInput = page.locator(&quot;//input[@id=&#39;url&#39;]&quot;)</span>
+<span class="source-line" id="L680"><a class="line-number" href="#L680" aria-label="Line 680">680</a>         this.nextButtonStep1 = page.locator(&quot;//button[@id=&#39;temp_next&#39;]&quot;)</span>
+<span class="source-line" id="L681"><a class="line-number" href="#L681" aria-label="Line 681">681</a>         this.closeCarouselButtonSt1 = page.getByTestId(</span>
+<span class="source-line" id="L682"><a class="line-number" href="#L682" aria-label="Line 682">682</a>             &#39;help-popup-step-1-close-icon-button&#39;</span>
+<span class="source-line" id="L683"><a class="line-number" href="#L683" aria-label="Line 683">683</a>         )</span>
+<span class="source-line" id="L684"><a class="line-number" href="#L684" aria-label="Line 684">684</a>         this.closeCarouselButtonSt2 = page.getByTestId(</span>
+<span class="source-line" id="L685"><a class="line-number" href="#L685" aria-label="Line 685">685</a>             &#39;help-popup-step-2-close-icon-button&#39;</span>
+<span class="source-line" id="L686"><a class="line-number" href="#L686" aria-label="Line 686">686</a>         )</span>
+<span class="source-line" id="L687"><a class="line-number" href="#L687" aria-label="Line 687">687</a>         this.closeCarouselButtonSt3 = page.getByTestId(</span>
+<span class="source-line" id="L688"><a class="line-number" href="#L688" aria-label="Line 688">688</a>             &#39;help-popup-step-3-close-icon-button&#39;</span>
+<span class="source-line" id="L689"><a class="line-number" href="#L689" aria-label="Line 689">689</a>         )</span>
+<span class="source-line" id="L690"><a class="line-number" href="#L690" aria-label="Line 690">690</a>         this.step2OnboardingCarousel = page.locator(&#39;div.step-2-slides&#39;)</span>
+<span class="source-line" id="L691"><a class="line-number" href="#L691" aria-label="Line 691">691</a>         this.step3OnboardingCarousel = page.getByTestId(&#39;help-popup-step-3&#39;)</span>
+<span class="source-line" id="L692"><a class="line-number" href="#L692" aria-label="Line 692">692</a>         this.createButtonStep3 = page.locator(&quot;//button[@id=&#39;temp_submit&#39;]&quot;)</span>
+<span class="source-line" id="L693"><a class="line-number" href="#L693" aria-label="Line 693">693</a>         this.dpfFormEmailInput = page.locator(&quot;//input[@id=&#39;input-email&#39;]&quot;)</span>
+<span class="source-line" id="L694"><a class="line-number" href="#L694" aria-label="Line 694">694</a>         this.fontsTab = page.getByTestId(&#39;step2-fonts-accordion-trigger&#39;)</span>
+<span class="source-line" id="L695"><a class="line-number" href="#L695" aria-label="Line 695">695</a>         this.titleFontStyleInput = page.getByTestId(</span>
+<span class="source-line" id="L696"><a class="line-number" href="#L696" aria-label="Line 696">696</a>             &#39;step2-fonts-title-dropdown-button&#39;</span>
+<span class="source-line" id="L697"><a class="line-number" href="#L697" aria-label="Line 697">697</a>         )</span>
+<span class="source-line" id="L698"><a class="line-number" href="#L698" aria-label="Line 698">698</a>         this.textFontStyleInput = page.getByTestId(</span>
+<span class="source-line" id="L699"><a class="line-number" href="#L699" aria-label="Line 699">699</a>             &#39;step2-fonts-text-dropdown-button&#39;</span>
+<span class="source-line" id="L700"><a class="line-number" href="#L700" aria-label="Line 700">700</a>         )</span>
+<span class="source-line" id="L701"><a class="line-number" href="#L701" aria-label="Line 701">701</a>     }</span>
+<span class="source-line" id="L702"><a class="line-number" href="#L702" aria-label="Line 702">702</a> }</span>
+<span class="source-line" id="L703"><a class="line-number" href="#L703" aria-label="Line 703">703</a> </span></code></pre></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

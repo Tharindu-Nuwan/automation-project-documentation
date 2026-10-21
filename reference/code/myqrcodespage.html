@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/myqrcodespage.html">
+<title>MyQrCodesPage · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-myqrcodespage-myqrcodeslocators-ts">pages/MyQrCodesPage/MyQrCodesLocators.ts</a>
+<a href="#pages-myqrcodespage-myqrcodespage-ts">pages/MyQrCodesPage/MyQrCodesPage.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="myqrcodespage">MyQrCodesPage</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-myqrcodespage-myqrcodeslocators-ts">pages/MyQrCodesPage/MyQrCodesLocators.ts</h2>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L1">pages/MyQrCodesPage/MyQrCodesLocators.ts:1</a></p>
+<ul>
+<li><code>{ Page, Locator }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseLocators }</code> &#x2190; <a data-source="pages/BaseLocators.ts" href="../../sources/pages/BaseLocators.ts.html#L1">pages/BaseLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L155">pages/MyQrCodesPage/MyQrCodesLocators.ts:155</a></p>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.downloadModalH3Title</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;DownloadModal&apos;]//h3&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L158">pages/MyQrCodesPage/MyQrCodesLocators.ts:158</a></li>
+<li><code>this.editFolderCancelButtonCross</code> &#x2190; <code>page .locator(&quot;div.modal-content&gt;div&gt;button[aria-label=&apos;Close&apos;]&quot;) .first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L161">pages/MyQrCodesPage/MyQrCodesLocators.ts:161</a></li>
+<li><code>this.availableFolder</code> &#x2190; <code>page.locator( &apos;div#availableFolder&gt;div.folder-container&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L164">pages/MyQrCodesPage/MyQrCodesLocators.ts:164</a></li>
+<li><code>this.qrReadyToUseModal</code> &#x2190; <code>page.getByText( &apos;Your QR code is now ready to use!&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L167">pages/MyQrCodesPage/MyQrCodesLocators.ts:167</a></li>
+<li><code>this.deleteQrCodeCancelButton</code> &#x2190; <code>page .getByRole(&apos;dialog&apos;) .getByRole(&apos;button&apos;, { name: &apos;Close&apos;, exact: true })</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L170">pages/MyQrCodesPage/MyQrCodesLocators.ts:170</a></li>
+<li><code>this.qrDeleteKebabLink</code> &#x2190; <code>page.getByRole(&apos;link&apos;, { name: /Delete/, })</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L173">pages/MyQrCodesPage/MyQrCodesLocators.ts:173</a></li>
+<li><code>this.folderBackLink</code> &#x2190; <code>page.locator(&quot;main a[href&#x24;=&apos;/qr-codes&apos;]&quot;).first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L176">pages/MyQrCodesPage/MyQrCodesLocators.ts:176</a></li>
+<li><code>this.downloadModalCloseButton</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;DownloadModal&apos;]//button[@type=&apos;button&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L177">pages/MyQrCodesPage/MyQrCodesLocators.ts:177</a></li>
+<li><code>this.paymentTabButton</code> &#x2190; <code>page.locator(&apos;button#subscriptions-tab&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L180">pages/MyQrCodesPage/MyQrCodesLocators.ts:180</a></li>
+<li><code>this.billingPageButton</code> &#x2190; <code>page.locator(&quot;a[href*=&apos;billing&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L181">pages/MyQrCodesPage/MyQrCodesLocators.ts:181</a></li>
+<li><code>this.folderKebabButton</code> &#x2190; <code>page.getByTestId( &apos;step2-folder-accordion-trigger&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L182">pages/MyQrCodesPage/MyQrCodesLocators.ts:182</a></li>
+<li><code>this.ConfirmDeleteButton</code> &#x2190; <code>page.locator( &quot;//button[@name=&apos;qr_status_deleted&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L185">pages/MyQrCodesPage/MyQrCodesLocators.ts:185</a></li>
+<li><code>this.downloadQrCodeButton</code> &#x2190; <code>page.locator( &quot;//div[contains(@class,&apos;position-relative&apos;)]/button[@data-target=&apos;#DownloadModal&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L188">pages/MyQrCodesPage/MyQrCodesLocators.ts:188</a></li>
+<li><code>this.uniqPageDownloadQrCodeButton</code> &#x2190; <code>page.locator( &apos;div#DownloadModal button.download-prtint-btn&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L191">pages/MyQrCodesPage/MyQrCodesLocators.ts:191</a></li>
+<li><code>this.uniqueQrDownloadPageDownButton</code> &#x2190; <code>page.locator(&apos;div#qrCode button&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L194">pages/MyQrCodesPage/MyQrCodesLocators.ts:194</a></li>
+<li><code>this.uniqueQrDownloadPageSelectAllCheckbox</code> &#x2190; <code>page.locator(&apos;label#selectAllBtn&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L195">pages/MyQrCodesPage/MyQrCodesLocators.ts:195</a></li>
+<li><code>this.uniqueQrDownloadPageFooterDownloadButton</code> &#x2190; <code>page.locator( &apos;section#qrCodeFooter button&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L197">pages/MyQrCodesPage/MyQrCodesLocators.ts:197</a></li>
+<li><code>this.uniqueQrDownloadPageManageMyQrCodesLink</code> &#x2190; <code>page.getByRole(&apos;link&apos;, { name: &apos;Manage My QR Codes&apos;, })</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L200">pages/MyQrCodesPage/MyQrCodesLocators.ts:200</a></li>
+<li><code>this.uniqueQrDownloadPageTrackMyQrCodesLink</code> &#x2190; <code>page.getByRole(&apos;link&apos;, { name: &apos;Track My QR Codes&apos;, })</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L203">pages/MyQrCodesPage/MyQrCodesLocators.ts:203</a></li>
+<li><code>this.modalDownloadButton</code> &#x2190; <code>page.locator( &quot;//button[contains(@class, &apos;downloadQrCode&apos;)]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L206">pages/MyQrCodesPage/MyQrCodesLocators.ts:206</a></li>
+<li><code>this.downloadButton</code> &#x2190; <code>page.locator( &quot;//div[@class=&apos;dl-modal-footer-buttons&apos;]/button&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L209">pages/MyQrCodesPage/MyQrCodesLocators.ts:209</a></li>
+<li><code>this.alertLocator</code> &#x2190; <code>page.locator(&quot;//div[@id=&apos;alert_msg&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L212">pages/MyQrCodesPage/MyQrCodesLocators.ts:212</a></li>
+<li><code>this.qrCodeLink</code> &#x2190; <code>page.locator(&apos;span.overflow-link&apos;).first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L213">pages/MyQrCodesPage/MyQrCodesLocators.ts:213</a></li>
+<li><code>this.qrCodeUidInput</code> &#x2190; <code>page.locator(&apos;input.qrCodeUid&apos;).first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L214">pages/MyQrCodesPage/MyQrCodesLocators.ts:214</a></li>
+<li><code>this.pngFileDownload</code> &#x2190; <code>page.locator( &quot;//div[contains(@class,&apos;dl-modal-option-card&apos;)]//h6[text()=&apos;PNG&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L217">pages/MyQrCodesPage/MyQrCodesLocators.ts:217</a></li>
+<li><code>this.jpegFileDownload</code> &#x2190; <code>page.locator( &quot;//div[contains(@class,&apos;dl-modal-option-card&apos;)]//h6[text()=&apos;JPEG&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L220">pages/MyQrCodesPage/MyQrCodesLocators.ts:220</a></li>
+<li><code>this.svgFileDownload</code> &#x2190; <code>page.locator( &quot;//div[contains(@class,&apos;dl-modal-option-card&apos;)]//h6[text()=&apos;SVG&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L223">pages/MyQrCodesPage/MyQrCodesLocators.ts:223</a></li>
+<li><code>this.pdfFileDownload</code> &#x2190; <code>page.locator( &quot;//div[contains(@class,&apos;dl-modal-option-card&apos;)]//h6[text()=&apos;PDF&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L226">pages/MyQrCodesPage/MyQrCodesLocators.ts:226</a></li>
+<li><code>this.epsFileDownload</code> &#x2190; <code>page.locator( &quot;//div[contains(@class,&apos;dl-modal-option-card&apos;)]//h6[text()=&apos;EPS&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L229">pages/MyQrCodesPage/MyQrCodesLocators.ts:229</a></li>
+<li><code>this.foldersKebabButton</code> &#x2190; <code>page .locator(&apos;a.a-decoration&gt;div&gt;div.card-top&gt;button&apos;) .all()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L232">pages/MyQrCodesPage/MyQrCodesLocators.ts:232</a></li>
+<li><code>this.printFileDownload</code> &#x2190; <code>page.locator( &quot;//div[contains(@class,&apos;dl-modal-option-card&apos;)]//h6[text()=&apos;Print&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L235">pages/MyQrCodesPage/MyQrCodesLocators.ts:235</a></li>
+<li><code>this.myAccountSidebarButton</code> &#x2190; <code>page.locator(&quot;li&gt;a[href*=&apos;account&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L238">pages/MyQrCodesPage/MyQrCodesLocators.ts:238</a></li>
+<li><code>this.trialUpgradeArea</code> &#x2190; <code>page.locator(&apos;div.upgrade_area&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L239">pages/MyQrCodesPage/MyQrCodesLocators.ts:239</a></li>
+<li><code>this.trialUpgradeButton</code> &#x2190; <code>page.locator( &apos;div.upgrade_area a.upgrade-btn, div.upgrade_area a[href*=&quot;plan&quot;]&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L240">pages/MyQrCodesPage/MyQrCodesLocators.ts:240</a></li>
+<li><code>this.downloadModal</code> &#x2190; <code>page.locator(&apos;#DownloadModal&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L243">pages/MyQrCodesPage/MyQrCodesLocators.ts:243</a></li>
+<li><code>this.downloadModalFreeOfferText</code> &#x2190; <code>page.locator( &apos;#DownloadModal .dpf-offer-text&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L244">pages/MyQrCodesPage/MyQrCodesLocators.ts:244</a></li>
+<li><code>this.downloadModalTenDayHeading</code> &#x2190; <code>page.locator( &apos;#DownloadModal .dpf-heading-1.desktop-heading-dpf&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L247">pages/MyQrCodesPage/MyQrCodesLocators.ts:247</a></li>
+<li><code>this.downloadModalNoCreditCardHeading</code> &#x2190; <code>page.locator( &apos;#DownloadModal .dpf-heading-2&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L250">pages/MyQrCodesPage/MyQrCodesLocators.ts:250</a></li>
+<li><code>this.freeTrialTopBanner</code> &#x2190; <code>page.locator(&apos;.free-trial-wrap&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L255">pages/MyQrCodesPage/MyQrCodesLocators.ts:255</a></li>
+<li><code>this.sizeOfQrFileDownloadDropdown</code> &#x2190; <code>page.locator( &quot;//div[contains(@class,&apos;dl-modal-size-picker&apos;)]/span[contains(@class,&apos;icon-arrow-down&apos;)]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L258">pages/MyQrCodesPage/MyQrCodesLocators.ts:258</a></li>
+<li><code>this.sizeDefaultOfQrFileDownload</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;Default&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L261">pages/MyQrCodesPage/MyQrCodesLocators.ts:261</a></li>
+<li><code>this.size512OfQrFileDownload</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;512x512&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L264">pages/MyQrCodesPage/MyQrCodesLocators.ts:264</a></li>
+<li><code>this.size1024OfQrFileDownload</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;1024x1024&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L265">pages/MyQrCodesPage/MyQrCodesLocators.ts:265</a></li>
+<li><code>this.size2048OfQrFileDownload</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;2048x2048&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L266">pages/MyQrCodesPage/MyQrCodesLocators.ts:266</a></li>
+<li><code>this.size4096OfQrFileDownload</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;4096x4096&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L267">pages/MyQrCodesPage/MyQrCodesLocators.ts:267</a></li>
+<li><code>this.sizeA4OfPdfQrFileDownload</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;A4&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L268">pages/MyQrCodesPage/MyQrCodesLocators.ts:268</a></li>
+<li><code>this.sizeA3OfPdfQrFileDownload</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;A3&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L269">pages/MyQrCodesPage/MyQrCodesLocators.ts:269</a></li>
+<li><code>this.sizeA2OfPdfQrFileDownload</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;A2&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L270">pages/MyQrCodesPage/MyQrCodesLocators.ts:270</a></li>
+<li><code>this.sizeA1OfPdfQrFileDownload</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;A1&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L271">pages/MyQrCodesPage/MyQrCodesLocators.ts:271</a></li>
+<li><code>this.sizeA0OfPdfQrFileDownload</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;A0&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L272">pages/MyQrCodesPage/MyQrCodesLocators.ts:272</a></li>
+<li><code>this.sidebarBillingButton</code> &#x2190; <code>page.locator(&quot;a[href*=&apos;billing&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L273">pages/MyQrCodesPage/MyQrCodesLocators.ts:273</a></li>
+<li><code>this.expiredSubscriptionBanner</code> &#x2190; <code>page.locator(&apos;div.triel&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L274">pages/MyQrCodesPage/MyQrCodesLocators.ts:274</a></li>
+<li><code>this.signUpSuccessImage</code> &#x2190; <code>page.locator( &quot;//img[contains(@class,&apos;dl-modal-head-img&apos;)]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L275">pages/MyQrCodesPage/MyQrCodesLocators.ts:275</a></li>
+<li><code>this.qrCodeSearchInput</code> &#x2190; <code>page.locator(&apos;#filters_search&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L279">pages/MyQrCodesPage/MyQrCodesLocators.ts:279</a></li>
+<li><code>this.createQrSidebarButton</code> &#x2190; <code>page.locator(&apos;li.create-qr-btn&gt;a&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L281">pages/MyQrCodesPage/MyQrCodesLocators.ts:281</a></li>
+<li><code>this.createQrHeaderButton</code> &#x2190; <code>page .locator( &quot;//div[@id=&apos;myQrCode&apos;]//a[contains(@class, &apos;create-qr-btn&apos;)]&quot; ) .first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L282">pages/MyQrCodesPage/MyQrCodesLocators.ts:282</a></li>
+<li><code>this.qrCodeStatusDropdownButton</code> &#x2190; <code>page.locator( &apos;div.qr-code-status&gt;div&gt;button&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L287">pages/MyQrCodesPage/MyQrCodesLocators.ts:287</a></li>
+<li><code>this.deletedQrCodesStatus</code> &#x2190; <code>page.locator( &apos;div.qr-code-status &gt; div &gt; ul &gt; li:nth-child(3)&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L290">pages/MyQrCodesPage/MyQrCodesLocators.ts:290</a></li>
+<li><code>this.activeQrCodesStatus</code> &#x2190; <code>page.locator( &apos;div.qr-code-status &gt; div &gt; ul &gt; li:nth-child(1)&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L293">pages/MyQrCodesPage/MyQrCodesLocators.ts:293</a></li>
+<li><code>this.pausedQrCodesStatus</code> &#x2190; <code>page.locator( &apos;div.qr-code-status &gt; div &gt; ul &gt; li:nth-child(2)&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L296">pages/MyQrCodesPage/MyQrCodesLocators.ts:296</a></li>
+<li><code>this.qrCodeKebabButton</code> &#x2190; <code>page.locator(&quot;//button[@class=&apos;kebab-button&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L299">pages/MyQrCodesPage/MyQrCodesLocators.ts:299</a></li>
+<li><code>this.deleteKebabOption</code> &#x2190; <code>page .locator(&quot;//button[@data-target=&apos;#DeleteModal&apos;]&quot;) .first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L300">pages/MyQrCodesPage/MyQrCodesLocators.ts:300</a></li>
+<li><code>this.deleteFolderOption</code> &#x2190; <code>page .locator(&apos;div#folder-details-model&gt;button&apos;) .last()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L303">pages/MyQrCodesPage/MyQrCodesLocators.ts:303</a></li>
+<li><code>this.confirmDeleteFolderButton</code> &#x2190; <code>page.locator( &apos;button#deleteFolderButton&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L306">pages/MyQrCodesPage/MyQrCodesLocators.ts:306</a></li>
+<li><code>this.modalDeleteQrCodeButton</code> &#x2190; <code>page.locator( &quot;//section[@id=&apos;qrCodeFooterActive&apos;]//button[@data-target=&apos;#DeleteModal&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L309">pages/MyQrCodesPage/MyQrCodesLocators.ts:309</a></li>
+<li><code>this.detailsBtn</code> &#x2190; <code>page.locator(&apos;.btn.outline-btn.detail-btn &apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L312">pages/MyQrCodesPage/MyQrCodesLocators.ts:312</a></li>
+<li><code>this.newFolderHeaderButton</code> &#x2190; <code>page.locator( &quot;a[data-target=&apos;#createFolder&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L313">pages/MyQrCodesPage/MyQrCodesLocators.ts:313</a></li>
+<li><code>this.newFolderSectionButton</code> &#x2190; <code>page.locator(&apos;div#availableFolder&gt;button&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L316">pages/MyQrCodesPage/MyQrCodesLocators.ts:316</a></li>
+<li><code>this.folderNameInput</code> &#x2190; <code>page.locator(&apos;form#folderForm&gt;div&gt;input&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L317">pages/MyQrCodesPage/MyQrCodesLocators.ts:317</a></li>
+<li><code>this.editFolderNameInput</code> &#x2190; <code>page.locator(&apos;form#editFolderForm&gt;div&gt;input&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L318">pages/MyQrCodesPage/MyQrCodesLocators.ts:318</a></li>
+<li><code>this.createFolderButton</code> &#x2190; <code>page.locator(&apos;button#makeFolder&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L319">pages/MyQrCodesPage/MyQrCodesLocators.ts:319</a></li>
+<li><code>this.createdFolderName</code> &#x2190; <code>page.locator(&apos;div.folder-inner&gt;h4&apos;).first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L320">pages/MyQrCodesPage/MyQrCodesLocators.ts:320</a></li>
+<li><code>this.createdFolderBlock</code> &#x2190; <code>page.locator(&apos;div.my-folder&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L321">pages/MyQrCodesPage/MyQrCodesLocators.ts:321</a></li>
+<li><code>this.editFolderNameKebabOption</code> &#x2190; <code>page.locator(&apos;button#edit-folder-link&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L322">pages/MyQrCodesPage/MyQrCodesLocators.ts:322</a></li>
+<li><code>this.deleteFolderKebabOption</code> &#x2190; <code>page.locator( &quot;button[data-target=&apos;#deleteFolderModal&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L323">pages/MyQrCodesPage/MyQrCodesLocators.ts:323</a></li>
+<li><code>this.qrKebabButton</code> &#x2190; <code>page .locator(&quot;//button[@class=&apos;kebab-button&apos; and @data-qrcodeid]&quot;) .first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L326">pages/MyQrCodesPage/MyQrCodesLocators.ts:326</a></li>
+<li><code>this.qrDropdownMenu</code> &#x2190; <code>page.locator(&apos;div.dropdown-menu&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L329">pages/MyQrCodesPage/MyQrCodesLocators.ts:329</a></li>
+<li><code>this.editQrContentButton</code> &#x2190; <code>page.locator(&apos;div.dropdown-menu&gt;a&apos;).first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L330">pages/MyQrCodesPage/MyQrCodesLocators.ts:330</a></li>
+<li><code>this.changeQrTypeButton</code> &#x2190; <code>page.locator(&apos;a#helpInfoModal&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L331">pages/MyQrCodesPage/MyQrCodesLocators.ts:331</a></li>
+<li><code>this.saveEditFolderButton</code> &#x2190; <code>page.locator(&apos;button#editFolder&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L332">pages/MyQrCodesPage/MyQrCodesLocators.ts:332</a></li>
+<li><code>this.cancelEditFolderButton</code> &#x2190; <code>page.locator( &quot;form#editFolderForm&gt;div&gt;button[aria-label=&apos;Close&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L333">pages/MyQrCodesPage/MyQrCodesLocators.ts:333</a></li>
+<li><code>this.websiteQrLink</code> &#x2190; <code>page.locator(&apos;span.overflow-link&apos;).first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L336">pages/MyQrCodesPage/MyQrCodesLocators.ts:336</a></li>
+<li><code>this.qrCodeType</code> &#x2190; <code>page.locator(&apos;div.qrCode-info&gt;span.name&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L337">pages/MyQrCodesPage/MyQrCodesLocators.ts:337</a></li>
+<li><code>this.cancelEditFolderIcon</code> &#x2190; <code>page.locator( &quot;//form[@id=&apos;editFolderForm&apos;]/..//button[@class=&apos;close&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L338">pages/MyQrCodesPage/MyQrCodesLocators.ts:338</a></li>
+<li><code>this.qrCodeListingArea</code> &#x2190; <code>page.locator(&apos;div#qrCodeListing&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L342">pages/MyQrCodesPage/MyQrCodesLocators.ts:342</a></li>
+<li><code>this.qrCodeCard</code> &#x2190; <code>page.locator(&apos;div.qrCode-card&apos;).first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L343">pages/MyQrCodesPage/MyQrCodesLocators.ts:343</a></li>
+<li><code>this.createFolderInputErrorMessage</code> &#x2190; <code>page.locator( &apos;form#folderForm&gt;p#nameReq&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L344">pages/MyQrCodesPage/MyQrCodesLocators.ts:344</a></li>
+<li><code>this.qrCodeDetailButton</code> &#x2190; <code>page.locator(&apos;a.detail-btn&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L347">pages/MyQrCodesPage/MyQrCodesLocators.ts:347</a></li>
+<li><code>this.qrCodeDetailBackButton</code> &#x2190; <code>page.locator(&apos;a.back-btn&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L348">pages/MyQrCodesPage/MyQrCodesLocators.ts:348</a></li>
+<li><code>this.qrCodeDetailPauseButton</code> &#x2190; <code>page.locator(&apos;button#PauseModalOpenBtn&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L349">pages/MyQrCodesPage/MyQrCodesLocators.ts:349</a></li>
+<li><code>this.qrCodeDetailResumeButton</code> &#x2190; <code>page.locator( &apos;button#ResumeModalOpenBtn&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L350">pages/MyQrCodesPage/MyQrCodesLocators.ts:350</a></li>
+<li><code>this.pauseConfirmButton</code> &#x2190; <code>page.locator( &quot;button[name=&apos;qr_status_paused&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L353">pages/MyQrCodesPage/MyQrCodesLocators.ts:353</a></li>
+<li><code>this.resumeConfirmButton</code> &#x2190; <code>page.locator( &quot;button[name=&apos;qr_status_resume&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L356">pages/MyQrCodesPage/MyQrCodesLocators.ts:356</a></li>
+<li><code>this.scanCounter</code> &#x2190; <code>page.locator(&apos;div.scan-info&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L359">pages/MyQrCodesPage/MyQrCodesLocators.ts:359</a></li>
+<li><code>this.exportInformationButton</code> &#x2190; <code>page.locator(&apos;button#exportBtn&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L360">pages/MyQrCodesPage/MyQrCodesLocators.ts:360</a></li>
+<li><code>this.exportInformationModalWindow</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;exportModal&apos;]//div[@class=&apos;modal-content&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L361">pages/MyQrCodesPage/MyQrCodesLocators.ts:361</a></li>
+<li><code>this.csvExportInfomrationButton</code> &#x2190; <code>page.locator(&quot;button[name=&apos;CSV&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L364">pages/MyQrCodesPage/MyQrCodesLocators.ts:364</a></li>
+<li><code>this.xlsxExportInfomrationButton</code> &#x2190; <code>page.locator(&quot;button[name=&apos;XLSX&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L365">pages/MyQrCodesPage/MyQrCodesLocators.ts:365</a></li>
+<li><code>this.campaignInformationModal</code> &#x2190; <code>page.locator(&apos;div.innerLeft&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L366">pages/MyQrCodesPage/MyQrCodesLocators.ts:366</a></li>
+<li><code>this.campaignInformationModalWindow</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;campaign&apos;]//div[@class=&apos;modal-content&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L367">pages/MyQrCodesPage/MyQrCodesLocators.ts:367</a></li>
+<li><code>this.startCampaignInput</code> &#x2190; <code>page.locator(&apos;input#startDate&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L370">pages/MyQrCodesPage/MyQrCodesLocators.ts:370</a></li>
+<li><code>this.endCampaignInput</code> &#x2190; <code>page.locator(&apos;input#endDate&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L371">pages/MyQrCodesPage/MyQrCodesLocators.ts:371</a></li>
+<li><code>this.campaignMediumSelect</code> &#x2190; <code>page.locator(&apos;select#medium&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L372">pages/MyQrCodesPage/MyQrCodesLocators.ts:372</a></li>
+<li><code>this.campaignPrintRunInput</code> &#x2190; <code>page.locator(&quot;input[name=&apos;print_run&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L373">pages/MyQrCodesPage/MyQrCodesLocators.ts:373</a></li>
+<li><code>this.campaignInfoUpdateButton</code> &#x2190; <code>page.locator(&apos;button#saveCampaignBtn&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L374">pages/MyQrCodesPage/MyQrCodesLocators.ts:374</a></li>
+<li><code>this.campaignInfoCancelButton</code> &#x2190; <code>page.locator(&apos;button.close-btn&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L375">pages/MyQrCodesPage/MyQrCodesLocators.ts:375</a></li>
+<li><code>this.campaignStartDateLabel</code> &#x2190; <code>page.locator(&apos;span#campaignStarDateLable&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L376">pages/MyQrCodesPage/MyQrCodesLocators.ts:376</a></li>
+<li><code>this.campaignEndDateLabel</code> &#x2190; <code>page.locator(&apos;span#campaignEndDateLable&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L377">pages/MyQrCodesPage/MyQrCodesLocators.ts:377</a></li>
+<li><code>this.campaignMediumLabel</code> &#x2190; <code>page.locator(&apos;span#campaignMediumLable&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L378">pages/MyQrCodesPage/MyQrCodesLocators.ts:378</a></li>
+<li><code>this.qrCodeName</code> &#x2190; <code>page.locator(&apos;span.qrCodeName&apos;).first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L379">pages/MyQrCodesPage/MyQrCodesLocators.ts:379</a></li>
+<li><code>this.createdQrCodesList</code> &#x2190; <code>page.locator( &apos;div#qrCodeListing&gt;div.qrcode-card-wrapper&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L380">pages/MyQrCodesPage/MyQrCodesLocators.ts:380</a></li>
+<li><code>this.listOfCretedQrCodesName</code> &#x2190; <code>page.locator(&apos;span.qrCodeName&apos;).all()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L383">pages/MyQrCodesPage/MyQrCodesLocators.ts:383</a></li>
+<li><code>this.qrCodeTypeDropdown</code> &#x2190; <code>page.locator( &apos;div.multiSelect-qrTypes&gt;div&gt;button&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L384">pages/MyQrCodesPage/MyQrCodesLocators.ts:384</a></li>
+<li><code>this.pauseIcons</code> &#x2190; <code>page.locator(&apos;span.icon-pause&apos;).all()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L387">pages/MyQrCodesPage/MyQrCodesLocators.ts:387</a></li>
+<li><code>this.deleteIcons</code> &#x2190; <code>page.locator(&apos;span.deleteIcon&apos;).all()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L388">pages/MyQrCodesPage/MyQrCodesLocators.ts:388</a></li>
+<li><code>this.quantityOfQrCodesLocator</code> &#x2190; <code>page.locator( &apos;div.rows-count-wrp&gt;div&gt;div&gt;button&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L389">pages/MyQrCodesPage/MyQrCodesLocators.ts:389</a></li>
+<li><code>this.perPageOption10</code> &#x2190; <code>page.locator( &quot;//input[@type=&apos;radio&apos; and @value=&apos;10&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L392">pages/MyQrCodesPage/MyQrCodesLocators.ts:392</a></li>
+<li><code>this.perPageOption20</code> &#x2190; <code>page.locator( &quot;//input[@type=&apos;radio&apos; and @value=&apos;20&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L395">pages/MyQrCodesPage/MyQrCodesLocators.ts:395</a></li>
+<li><code>this.perPageOption50</code> &#x2190; <code>page.locator( &quot;//input[@type=&apos;radio&apos; and @value=&apos;50&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L398">pages/MyQrCodesPage/MyQrCodesLocators.ts:398</a></li>
+<li><code>this.perPageOption100</code> &#x2190; <code>page.locator( &quot;//input[@type=&apos;radio&apos; and @value=&apos;100&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L401">pages/MyQrCodesPage/MyQrCodesLocators.ts:401</a></li>
+<li><code>this.nextPageButton</code> &#x2190; <code>page.locator(&quot;a[aria-label=&apos;Next&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L404">pages/MyQrCodesPage/MyQrCodesLocators.ts:404</a></li>
+<li><code>this.previousPageButton</code> &#x2190; <code>page.locator(&quot;a[aria-label=&apos;Previous&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L405">pages/MyQrCodesPage/MyQrCodesLocators.ts:405</a></li>
+<li><code>this.editQrCodeNameButton</code> &#x2190; <code>page.locator(&apos;button.qrnameChange&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L406">pages/MyQrCodesPage/MyQrCodesLocators.ts:406</a></li>
+<li><code>this.editQrCodeNameInput</code> &#x2190; <code>page.locator(&apos;input.editQrField&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L407">pages/MyQrCodesPage/MyQrCodesLocators.ts:407</a></li>
+<li><code>this.saveEditQrCodeNameButton</code> &#x2190; <code>page.locator(&apos;button.qrnameSaveBtn&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L408">pages/MyQrCodesPage/MyQrCodesLocators.ts:408</a></li>
+<li><code>this.qrKebabDuplicateOption</code> &#x2190; <code>page.locator(&apos;a.whenOpenDuplicateModal&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L409">pages/MyQrCodesPage/MyQrCodesLocators.ts:409</a></li>
+<li><code>this.confirmDuplicateQrCodeButton</code> &#x2190; <code>page.locator( &apos;button.makeDuplicateQrCode&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L410">pages/MyQrCodesPage/MyQrCodesLocators.ts:410</a></li>
+<li><code>this.writeReviewButton</code> &#x2190; <code>page.locator(&apos;button.feedback-review-btn&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L413">pages/MyQrCodesPage/MyQrCodesLocators.ts:413</a></li>
+<li><code>this.fifthReviewStart</code> &#x2190; <code>page.locator(&apos;span.review-star:nth-child(5)&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L414">pages/MyQrCodesPage/MyQrCodesLocators.ts:414</a></li>
+<li><code>this.restoreConfirmButton</code> &#x2190; <code>page.locator( &quot;button[name=&apos;qr_status_restore&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L415">pages/MyQrCodesPage/MyQrCodesLocators.ts:415</a></li>
+<li><code>this.qrCodesStatusDropdownButton</code> &#x2190; <code>page.locator( &apos;div.qr-code-status&gt;div&gt;button&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L418">pages/MyQrCodesPage/MyQrCodesLocators.ts:418</a></li>
+<li><code>this.qrCodesStatusActiveOption</code> &#x2190; <code>page.locator( &quot;(//div[contains(@class, &apos;qr-code-status&apos;)]//ul/li)[1]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L421">pages/MyQrCodesPage/MyQrCodesLocators.ts:421</a></li>
+<li><code>this.qrCodesStatusPausedOption</code> &#x2190; <code>page.locator( &quot;(//div[contains(@class, &apos;qr-code-status&apos;)]//ul/li)[2]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L424">pages/MyQrCodesPage/MyQrCodesLocators.ts:424</a></li>
+<li><code>this.qrCodesStatusDeletedOption</code> &#x2190; <code>page.locator( &quot;(//div[contains(@class, &apos;qr-code-status&apos;)]//ul/li)[3]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L427">pages/MyQrCodesPage/MyQrCodesLocators.ts:427</a></li>
+<li><code>this.pauseQrCodesModalButton</code> &#x2190; <code>page.locator( &quot;button[data-target=&apos;#PauseModal&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L430">pages/MyQrCodesPage/MyQrCodesLocators.ts:430</a></li>
+<li><code>this.resumeQrCodesModalButton</code> &#x2190; <code>page .locator(&quot;button[data-target=&apos;#ResumeModal&apos;]&quot;) .last()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L433">pages/MyQrCodesPage/MyQrCodesLocators.ts:433</a></li>
+<li><code>this.restoreQrCodesModalButton</code> &#x2190; <code>page.locator( &quot;button[data-target=&apos;#RestoreModal&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L436">pages/MyQrCodesPage/MyQrCodesLocators.ts:436</a></li>
+<li><code>this.selectAllQrCodes</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;qrAllSelected&apos;]/..&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L439">pages/MyQrCodesPage/MyQrCodesLocators.ts:439</a></li>
+<li><code>this.resumeModalWindow</code> &#x2190; <code>page.locator(&apos;div#ResumeModal&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L440">pages/MyQrCodesPage/MyQrCodesLocators.ts:440</a></li>
+<li><code>this.sendToFolderKebabOption</code> &#x2190; <code>page .locator(&apos;a.send-to-btn[data-target=&quot;#SendToModal&quot;]&apos;) .first()</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L441">pages/MyQrCodesPage/MyQrCodesLocators.ts:441</a></li>
+<li><code>this.sendToFolderModal</code> &#x2190; <code>page.locator(&apos;div#SendToModal&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L444">pages/MyQrCodesPage/MyQrCodesLocators.ts:444</a></li>
+<li><code>this.sendToFolderList</code> &#x2190; <code>page.locator(&apos;div#sendTofolderList&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L445">pages/MyQrCodesPage/MyQrCodesLocators.ts:445</a></li>
+<li><code>this.sendToFolderConfirmButton</code> &#x2190; <code>page.locator( &quot;button.qr-send-to-btn[name=&apos;qr_send_to_folder&apos;]&quot; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L446">pages/MyQrCodesPage/MyQrCodesLocators.ts:446</a></li>
+<li><code>this.newFolderFromSendModalButton</code> &#x2190; <code>page.locator( &apos;button.newFolderFromSendModal&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L449">pages/MyQrCodesPage/MyQrCodesLocators.ts:449</a></li>
+<li><code>this.createFolderWithQrModal</code> &#x2190; <code>page.locator(&apos;div#createFolderWithQr&apos;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L452">pages/MyQrCodesPage/MyQrCodesLocators.ts:452</a></li>
+<li><code>this.createFolderWithQrNameInput</code> &#x2190; <code>page.locator( &apos;form#folderFormWithQr input[name=&quot;name&quot;]&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L453">pages/MyQrCodesPage/MyQrCodesLocators.ts:453</a></li>
+<li><code>this.createFolderWithQrSubmitButton</code> &#x2190; <code>page.locator( &apos;button#makeFolderWithQr&apos; )</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L456">pages/MyQrCodesPage/MyQrCodesLocators.ts:456</a></li>
+<li><code>this.sidebarLogoutLink</code> &#x2190; <code>page.locator(&quot;a[href*=&apos;logout&apos;]&quot;)</code> &#x2014; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L459">pages/MyQrCodesPage/MyQrCodesLocators.ts:459</a></li>
+</ul>
+<h2 id="pages-myqrcodespage-myqrcodespage-ts">pages/MyQrCodesPage/MyQrCodesPage.ts</h2>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L1">pages/MyQrCodesPage/MyQrCodesPage.ts:1</a></p>
+<ul>
+<li><code>{ expect, type Locator, type Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>* as fs</code> &#x2190; <code>fs</code></li>
+<li><code>* as path</code> &#x2190; <code>path</code></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>{ MyQrCodesLocators }</code> &#x2190; <a data-source="pages/MyQrCodesPage/MyQrCodesLocators.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesLocators.ts.html#L1">pages/MyQrCodesPage/MyQrCodesLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L12">pages/MyQrCodesPage/MyQrCodesPage.ts:12</a></p>
+<h3 id="performqrdownload">performQrDownload</h3>
+<p><code>performQrDownload(downloadDir: string, format: keyof typeof this.qrFormatLocators, sizeKey: keyof typeof this.qrSizeLocators)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L46">pages/MyQrCodesPage/MyQrCodesPage.ts:46</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(300)</code> &#x2014; line 51</li>
+<li><code>this.locator.downloadQrCodeButton.click()</code> &#x2014; line 52</li>
+<li><code>this.qrFormatLocators[format].click()</code> &#x2014; line 53</li>
+<li><code>this.locator.sizeOfQrFileDownloadDropdown.click({ force: true })</code> &#x2014; line 54</li>
+<li><code>this.qrSizeLocators[sizeKey].click()</code> &#x2014; line 55</li>
+<li><code>expect(this.locator.modalDownloadButton).toBeVisible({ timeout: 10_000, })</code> &#x2014; line 56</li>
+<li><code>this.page.waitForEvent(&apos;download&apos;)</code> &#x2014; line 61</li>
+<li><code>this.locator.modalDownloadButton.click()</code> &#x2014; line 62</li>
+<li><code>expect(fs.existsSync(filePath)).toBeTruthy()</code> &#x2014; line 68</li>
+<li><code>expect(fs.statSync(filePath).size).toBeGreaterThan(0)</code> &#x2014; line 69</li>
+</ul>
+<h3 id="openqrlink">openQrLink</h3>
+<p><code>openQrLink(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L74">pages/MyQrCodesPage/MyQrCodesPage.ts:74</a></p>
+<ul>
+<li><code>this.page .locator( &#x2032;//span[text()=&apos;&#x24;{qrName}&apos;]/../../../..//a[@class=&apos;qr-card-link&apos;]&#x2032; ) .first()</code> &#x2014; line 75</li>
+<li><code>this.page .locator(&#x2032;//span[text()=&apos;&#x24;{qrName}&apos;]/../../../..//a[@class=&apos;qr-card-link&apos;]&#x2032;)</code> &#x2014; line 75</li>
+</ul>
+<h3 id="openlastqrlink">openLastQrLink</h3>
+<p><code>openLastQrLink()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L82">pages/MyQrCodesPage/MyQrCodesPage.ts:82</a></p>
+<ul>
+<li><code>this.page.locator(&quot;//a[@class=&apos;qr-card-link&apos;]&quot;).first()</code> &#x2014; line 83</li>
+<li><code>this.page.locator(&quot;//a[@class=&apos;qr-card-link&apos;]&quot;)</code> &#x2014; line 83</li>
+</ul>
+<h3 id="turnoffiframe">turnOffIframe</h3>
+<p><code>turnOffIframe()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L86">pages/MyQrCodesPage/MyQrCodesPage.ts:86</a></p>
+<ul>
+<li><code>this.page.locator(&apos;body&apos;).press(&apos;ControlOrMeta+.&apos;)</code> &#x2014; line 87</li>
+<li><code>this.page.locator(&apos;body&apos;)</code> &#x2014; line 87</li>
+</ul>
+<h3 id="findqrcode">findQrCode</h3>
+<p><code>findQrCode(qrCodeName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L90">pages/MyQrCodesPage/MyQrCodesPage.ts:90</a></p>
+<ul>
+<li><code>this.locator.qrCodeSearchInput.click()</code> &#x2014; line 91</li>
+<li><code>this.locator.qrCodeSearchInput.fill(qrCodeName)</code> &#x2014; line 92</li>
+<li><code>this.page.keyboard.press(&apos;Enter&apos;)</code> &#x2014; line 93</li>
+</ul>
+<h3 id="clickcreateqrcodebutton">clickCreateQrCodeButton</h3>
+<p><code>clickCreateQrCodeButton()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L96">pages/MyQrCodesPage/MyQrCodesPage.ts:96</a></p>
+<ul>
+<li><code>this.locator.createQrSidebarButton.click()</code> &#x2014; line 97</li>
+</ul>
+<h3 id="startqrcreationfromcurrentview">startQrCreationFromCurrentView</h3>
+<p><code>startQrCreationFromCurrentView()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L100">pages/MyQrCodesPage/MyQrCodesPage.ts:100</a></p>
+<ul>
+<li><code>this.page.waitForURL(/\/qr\?step=1(?:&amp;|&#x24;)/)</code> &#x2014; line 101</li>
+<li><code>this.locator.createQrHeaderButton.click({ noWaitAfter: true })</code> &#x2014; line 102</li>
+</ul>
+<h3 id="getcreatedqrcodename">getCreatedQrCodeName</h3>
+<p><code>getCreatedQrCodeName(qrCodeName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L106">pages/MyQrCodesPage/MyQrCodesPage.ts:106</a></p>
+<ul>
+<li><code>this.page.locator(&#x2032;//span[text()=&apos;&#x24;{qrCodeName}&apos;]&#x2032;)</code> &#x2014; line 107</li>
+</ul>
+<h3 id="deletefoundqrcode">deleteFoundQrCode</h3>
+<p><code>deleteFoundQrCode()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L110">pages/MyQrCodesPage/MyQrCodesPage.ts:110</a></p>
+<ul>
+<li><code>this.locator.qrCodeKebabButton.click()</code> &#x2014; line 111</li>
+<li><code>this.locator.deleteKebabOption.click()</code> &#x2014; line 112</li>
+<li><code>this.locator.ConfirmDeleteButton.click()</code> &#x2014; line 113</li>
+</ul>
+<h3 id="deleteqrfolder">deleteQrFolder</h3>
+<p><code>deleteQrFolder()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L116">pages/MyQrCodesPage/MyQrCodesPage.ts:116</a></p>
+<ul>
+<li><code>this.locator.folderKebabButton.click()</code> &#x2014; line 117</li>
+<li><code>this.locator.deleteFolderOption.click()</code> &#x2014; line 118</li>
+<li><code>this.locator.confirmDeleteFolderButton.dispatchEvent(&apos;click&apos;)</code> &#x2014; line 119</li>
+</ul>
+<h3 id="deleteqrcode">deleteQrCode</h3>
+<p><code>deleteQrCode()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L122">pages/MyQrCodesPage/MyQrCodesPage.ts:122</a></p>
+<ul>
+<li><code>this.locator.qrCodeKebabButton.click()</code> &#x2014; line 123</li>
+<li><code>this.locator.deleteKebabOption.click()</code> &#x2014; line 124</li>
+<li><code>this.locator.ConfirmDeleteButton.click()</code> &#x2014; line 125</li>
+</ul>
+<h3 id="deleteallqrcodes">deleteAllQrCodes</h3>
+<p><code>deleteAllQrCodes()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L128">pages/MyQrCodesPage/MyQrCodesPage.ts:128</a></p>
+<ul>
+<li><code>this.locator.qrCodeSearchInput.click()</code> &#x2014; line 129</li>
+<li><code>this.locator.qrCodeSearchInput.clear()</code> &#x2014; line 130</li>
+<li><code>this.locator.selectAllQrCodes.click()</code> &#x2014; line 131</li>
+<li><code>this.locator.modalDeleteQrCodeButton.click()</code> &#x2014; line 132</li>
+<li><code>this.locator.ConfirmDeleteButton.click()</code> &#x2014; line 133</li>
+</ul>
+<h3 id="getbytext">getByText</h3>
+<p><code>getByText(text: string, exact: boolean = true)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L136">pages/MyQrCodesPage/MyQrCodesPage.ts:136</a></p>
+<ul>
+<li><code>this.page.getByText(text, { exact })</code> &#x2014; line 137</li>
+</ul>
+<h3 id="openpaymenttab">openPaymentTab</h3>
+<p><code>openPaymentTab()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L140">pages/MyQrCodesPage/MyQrCodesPage.ts:140</a></p>
+<ul>
+<li><code>this.locator.myAccountSidebarButton.click()</code> &#x2014; line 141</li>
+<li><code>this.locator.paymentTabButton.click()</code> &#x2014; line 142</li>
+</ul>
+<h3 id="expectfreecffdownloadmodalbanners">expectFreeCffDownloadModalBanners</h3>
+<p><code>expectFreeCffDownloadModalBanners()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L146">pages/MyQrCodesPage/MyQrCodesPage.ts:146</a></p>
+<p>Asserts CFF free-download modal headers are visible (10-day unpaid path).</p>
+<ul>
+<li><code>expect(this.locator.downloadModal).toBeVisible()</code> &#x2014; line 147</li>
+<li><code>expect(this.locator.downloadModalFreeOfferText).toBeVisible()</code> &#x2014; line 148</li>
+<li><code>expect(this.locator.downloadModalFreeOfferText).toHaveText(/Free Download/i)</code> &#x2014; line 149</li>
+<li><code>expect(this.locator.downloadModalTenDayHeading).toBeVisible()</code> &#x2014; line 152</li>
+<li><code>expect(this.locator.downloadModalTenDayHeading).toContainText(&apos;10-day free trial&apos;)</code> &#x2014; line 153</li>
+<li><code>expect( this.locator.downloadModalNoCreditCardHeading ).toBeVisible()</code> &#x2014; line 156</li>
+<li><code>expect( this.locator.downloadModalNoCreditCardHeading ).toContainText(/No credit card required/i)</code> &#x2014; line 159</li>
+</ul>
+<h3 id="expectpaidtrialdownloadmodalwithoutfreebanners">expectPaidTrialDownloadModalWithoutFreeBanners</h3>
+<p><code>expectPaidTrialDownloadModalWithoutFreeBanners()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L165">pages/MyQrCodesPage/MyQrCodesPage.ts:165</a></p>
+<p>Asserts Free Download / 10-day CFF banners are absent (paid DPF path).</p>
+<ul>
+<li><code>expect(this.locator.downloadModal).toBeVisible()</code> &#x2014; line 166</li>
+<li><code>expect(this.locator.downloadModalFreeOfferText).not.toBeVisible()</code> &#x2014; line 167</li>
+<li><code>expect(this.locator.downloadModalTenDayHeading).not.toBeVisible()</code> &#x2014; line 168</li>
+<li><code>expect( this.locator.downloadModalNoCreditCardHeading ).not.toBeVisible()</code> &#x2014; line 169</li>
+<li><code>expect(this.locator.freeTrialTopBanner).toHaveCount(0)</code> &#x2014; line 174</li>
+</ul>
+<h3 id="expectpaidtrialupgradecontrolsabsent">expectPaidTrialUpgradeControlsAbsent</h3>
+<p><code>expectPaidTrialUpgradeControlsAbsent()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L178">pages/MyQrCodesPage/MyQrCodesPage.ts:178</a></p>
+<p>Asserts sidebar Upgrade / free-trial countdown is not shown to a paid user.</p>
+<ul>
+<li><code>expect(this.locator.trialUpgradeArea).not.toBeVisible()</code> &#x2014; line 179</li>
+<li><code>expect(this.locator.trialUpgradeButton).not.toBeVisible()</code> &#x2014; line 180</li>
+<li><code>expect(this.locator.freeTrialTopBanner).toHaveCount(0)</code> &#x2014; line 181</li>
+</ul>
+<h3 id="clickfolder">clickFolder</h3>
+<p><code>clickFolder(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L184">pages/MyQrCodesPage/MyQrCodesPage.ts:184</a></p>
+<ul>
+<li><code>this.page .locator(&#x2032;//div[@class=&apos;folder-inner&apos;]/h4[text()=&apos;&#x24;{folderName}&apos;]&#x2032;) .click()</code> &#x2014; line 185</li>
+<li><code>this.page .locator(&#x2032;//div[@class=&apos;folder-inner&apos;]/h4[text()=&apos;&#x24;{folderName}&apos;]&#x2032;)</code> &#x2014; line 185</li>
+</ul>
+<h3 id="getfoldercard">getFolderCard</h3>
+<p><code>getFolderCard(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L190">pages/MyQrCodesPage/MyQrCodesPage.ts:190</a></p>
+<ul>
+<li><code>this.page.locator(&apos;div.my-folder&apos;).filter({ has: this.page.getByRole(&apos;heading&apos;, { name: folderName, exact: true, }), })</code> &#x2014; line 191</li>
+<li><code>this.page.locator(&apos;div.my-folder&apos;)</code> &#x2014; line 191</li>
+<li><code>this.page.getByRole(&apos;heading&apos;, { name: folderName, exact: true, })</code> &#x2014; line 192</li>
+</ul>
+<h3 id="getfolderfilecounter">getFolderFileCounter</h3>
+<p><code>getFolderFileCounter(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L199">pages/MyQrCodesPage/MyQrCodesPage.ts:199</a></p>
+<ul>
+<li><code>this.getFolderCard(folderName).getByText(/\d+\s+File(?:s|\(s\))?/)</code> &#x2014; line 200</li>
+<li><code>this.getFolderCard(folderName)</code> &#x2014; line 200</li>
+</ul>
+<h3 id="getfolderfilecount">getFolderFileCount</h3>
+<p><code>getFolderFileCount(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L205">pages/MyQrCodesPage/MyQrCodesPage.ts:205</a></p>
+<ul>
+<li><code>this.getFolderFileCounter(folderName).innerText()</code> &#x2014; line 207</li>
+<li><code>this.getFolderFileCounter(folderName)</code> &#x2014; line 207</li>
+</ul>
+<h3 id="expectfolderfilecount">expectFolderFileCount</h3>
+<p><code>expectFolderFileCount(folderName: string, count: number)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L222">pages/MyQrCodesPage/MyQrCodesPage.ts:222</a></p>
+<p>Asserts the folder card shows the expected &quot;N File(s)&quot; label.</p>
+<ul>
+<li><code>this.expect(this.getFolderFileCounter(folderName)).toHaveText(&#x2032;&#x24;{count} File(s)&#x2032;)</code> &#x2014; line 226</li>
+<li><code>this.getFolderFileCounter(folderName)</code> &#x2014; line 226</li>
+</ul>
+<h3 id="openqrcardactionmenu">openQrCardActionMenu</h3>
+<p><code>openQrCardActionMenu(qrCard: Locator, page: Page = this.page)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L240">pages/MyQrCodesPage/MyQrCodesPage.ts:240</a></p>
+<p>Opens a QR card&apos;s kebab menu and returns the open menu.</p>
+<p>The listing closes any open dropdown when the page scrolls, so a click that has to scroll the kebab into view opens the menu and loses it a frame later &#x2014; the state the all-codes view lands in, where the card sits at the bottom edge of the viewport. Centring the button first keeps the click itself scroll-free; Escape resets the toggle before a retry.</p>
+<ul>
+<li><code>kebabButton.click()</code> &#x2014; line 254</li>
+</ul>
+<h3 id="openfirstqrcodedeletedialog">openFirstQrCodeDeleteDialog</h3>
+<p><code>openFirstQrCodeDeleteDialog()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L269">pages/MyQrCodesPage/MyQrCodesPage.ts:269</a></p>
+<ul>
+<li><code>this.locator.createdQrCodesList.first()</code> &#x2014; line 270</li>
+<li><code>this.openQrCardActionMenu(firstQrCard)</code> &#x2014; line 271</li>
+<li><code>actionMenu.locator(&quot;a[data-target=&apos;#DeleteModal&apos;]&quot;).click()</code> &#x2014; line 272</li>
+</ul>
+<h3 id="confirmqrcodedeletion">confirmQrCodeDeletion</h3>
+<p><code>confirmQrCodeDeletion()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L275">pages/MyQrCodesPage/MyQrCodesPage.ts:275</a></p>
+<ul>
+<li><code>this.page.locator(&apos;#DeleteModal.show&apos;)</code> &#x2014; line 276</li>
+<li><code>deleteModal .getByRole(&apos;button&apos;, { name: &apos;Delete&apos;, exact: true }) .click()</code> &#x2014; line 280</li>
+</ul>
+<h3 id="cancelqrcodedeletion">cancelQrCodeDeletion</h3>
+<p><code>cancelQrCodeDeletion()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L286">pages/MyQrCodesPage/MyQrCodesPage.ts:286</a></p>
+<ul>
+<li><code>this.page.locator(&apos;#DeleteModal.show&apos;)</code> &#x2014; line 287</li>
+<li><code>this.locator.deleteQrCodeCancelButton.click()</code> &#x2014; line 289</li>
+</ul>
+<h3 id="openfirstqrcodeedit">openFirstQrCodeEdit</h3>
+<p><code>openFirstQrCodeEdit()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L296">pages/MyQrCodesPage/MyQrCodesPage.ts:296</a></p>
+<p>Opens the first QR kebab menu and starts the Edit Content flow.</p>
+<ul>
+<li><code>this.locator.qrKebabButton.click()</code> &#x2014; line 297</li>
+<li><code>this.locator.editQrContentButton.click()</code> &#x2014; line 298</li>
+</ul>
+<h3 id="bulkdeleteallvisibleqrcodes">bulkDeleteAllVisibleQrCodes</h3>
+<p><code>bulkDeleteAllVisibleQrCodes()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L304">pages/MyQrCodesPage/MyQrCodesPage.ts:304</a></p>
+<p>Bulk-selects all visible QR codes and confirms deletion.</p>
+<ul>
+<li><code>this.locator.selectAllQrCodes.click()</code> &#x2014; line 305</li>
+<li><code>this.locator.modalDeleteQrCodeButton.click()</code> &#x2014; line 306</li>
+<li><code>this.confirmQrCodeDeletion()</code> &#x2014; line 307</li>
+</ul>
+<h3 id="deletefirstvisibleqrcode">deleteFirstVisibleQrCode</h3>
+<p><code>deleteFirstVisibleQrCode()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L313">pages/MyQrCodesPage/MyQrCodesPage.ts:313</a></p>
+<p>Deletes the first QR code in the current listing via the kebab menu.</p>
+<ul>
+<li><code>this.openFirstQrCodeDeleteDialog()</code> &#x2014; line 314</li>
+<li><code>this.confirmQrCodeDeletion()</code> &#x2014; line 315</li>
+</ul>
+<h3 id="duplicatefirstvisibleqrcode">duplicateFirstVisibleQrCode</h3>
+<p><code>duplicateFirstVisibleQrCode()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L321">pages/MyQrCodesPage/MyQrCodesPage.ts:321</a></p>
+<p>Duplicates the first QR code in the current listing via the kebab menu.</p>
+<ul>
+<li><code>this.page.locator(&apos;#DuplicateModal.show&apos;)</code> &#x2014; line 322</li>
+<li><code>this.locator.createdQrCodesList.first()</code> &#x2014; line 325</li>
+<li><code>this.openQrCardActionMenu(firstQrCard)</code> &#x2014; line 326</li>
+<li><code>(element as HTMLElement).click()</code> &#x2014; line 340</li>
+<li><code>this.page.keyboard.press(&apos;Escape&apos;)</code> &#x2014; line 352</li>
+<li><code>this.locator.confirmDuplicateQrCodeButton.click()</code> &#x2014; line 356</li>
+<li><code>this.locator.createdQrCodesList.first().waitFor({ state: &apos;visible&apos;, })</code> &#x2014; line 358</li>
+<li><code>this.locator.createdQrCodesList.first()</code> &#x2014; line 358</li>
+</ul>
+<h3 id="openfolderon">openFolderOn</h3>
+<p><code>openFolderOn(page: Page, folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L363">pages/MyQrCodesPage/MyQrCodesPage.ts:363</a></p>
+<ul>
+<li><code>page .locator(&#x2032;//div[@class=&apos;folder-inner&apos;]/h4[text()=&apos;&#x24;{folderName}&apos;]&#x2032;) .click()</code> &#x2014; line 364</li>
+</ul>
+<h3 id="openfirstqrcodedeletedialogon">openFirstQrCodeDeleteDialogOn</h3>
+<p><code>openFirstQrCodeDeleteDialogOn(page: Page)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L369">pages/MyQrCodesPage/MyQrCodesPage.ts:369</a></p>
+<ul>
+<li><code>this.openQrCardActionMenu(firstQrCard, page)</code> &#x2014; line 373</li>
+<li><code>actionMenu.locator(&quot;a[data-target=&apos;#DeleteModal&apos;]&quot;).click()</code> &#x2014; line 374</li>
+</ul>
+<h3 id="confirmqrcodedeletionon">confirmQrCodeDeletionOn</h3>
+<p><code>confirmQrCodeDeletionOn(page: Page)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L378">pages/MyQrCodesPage/MyQrCodesPage.ts:378</a></p>
+<ul>
+<li><code>deleteModal .getByRole(&apos;button&apos;, { name: &apos;Delete&apos;, exact: true }) .click()</code> &#x2014; line 389</li>
+</ul>
+<h3 id="getfolderfilecounteron">getFolderFileCounterOn</h3>
+<p><code>getFolderFileCounterOn(page: Page, folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L400">pages/MyQrCodesPage/MyQrCodesPage.ts:400</a></p>
+<h3 id="getlocalizedfoldercounter">getLocalizedFolderCounter</h3>
+<p><code>getLocalizedFolderCounter(folderName: string, count: number)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L412">pages/MyQrCodesPage/MyQrCodesPage.ts:412</a></p>
+<ul>
+<li><code>this.getFolderCard(folderName).getByText(new RegExp(&#x2032;^&#x24;{count}\\s+\\S+&#x2032;))</code> &#x2014; line 413</li>
+<li><code>this.getFolderCard(folderName)</code> &#x2014; line 413</li>
+</ul>
+<h3 id="returntofolderlist">returnToFolderList</h3>
+<p><code>returnToFolderList()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L418">pages/MyQrCodesPage/MyQrCodesPage.ts:418</a></p>
+<ul>
+<li><code>this.page .locator(&apos;#DeleteModal.show&apos;) .waitFor({ state: &apos;hidden&apos;, timeout: 5_000 }) .catch([callback: see source])</code> &#x2014; line 419</li>
+<li><code>this.page .locator(&apos;#DeleteModal.show&apos;) .waitFor({ state: &apos;hidden&apos;, timeout: 5_000 })</code> &#x2014; line 419</li>
+<li><code>this.page .locator(&apos;#DeleteModal.show&apos;)</code> &#x2014; line 419</li>
+<li><code>this.locator.folderBackLink.click()</code> &#x2014; line 423</li>
+</ul>
+<h3 id="pauseqrcode">pauseQrCode</h3>
+<p><code>pauseQrCode()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L426">pages/MyQrCodesPage/MyQrCodesPage.ts:426</a></p>
+<ul>
+<li><code>this.locator.qrCodeDetailButton.click()</code> &#x2014; line 427</li>
+<li><code>this.locator.qrCodeDetailPauseButton.click()</code> &#x2014; line 428</li>
+<li><code>this.locator.pauseConfirmButton.click()</code> &#x2014; line 429</li>
+<li><code>this.locator.sidebarMyQrCodesButton.click()</code> &#x2014; line 430</li>
+</ul>
+<h3 id="activateqrcode">activateQrCode</h3>
+<p><code>activateQrCode()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L433">pages/MyQrCodesPage/MyQrCodesPage.ts:433</a></p>
+<ul>
+<li><code>this.locator.qrCodeDetailButton.click()</code> &#x2014; line 434</li>
+<li><code>this.locator.qrCodeDetailResumeButton.click()</code> &#x2014; line 435</li>
+<li><code>this.locator.resumeConfirmButton.click()</code> &#x2014; line 436</li>
+<li><code>this.locator.sidebarMyQrCodesButton.click()</code> &#x2014; line 437</li>
+</ul>
+<h3 id="createnewfolder">createNewFolder</h3>
+<p><code>createNewFolder(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L440">pages/MyQrCodesPage/MyQrCodesPage.ts:440</a></p>
+<ul>
+<li><code>this.locator.newFolderHeaderButton.click()</code> &#x2014; line 441</li>
+<li><code>this.locator.folderNameInput.fill(folderName)</code> &#x2014; line 442</li>
+<li><code>this.locator.folderNameInput.inputValue()</code> &#x2014; line 443</li>
+<li><code>this.locator.createFolderButton.click()</code> &#x2014; line 444</li>
+<li><code>this.expect( this.getFolderCard(savedFolderName).getByRole(&apos;heading&apos;, { name: savedFolderName, exact: true, }) ).toBeVisible()</code> &#x2014; line 445</li>
+<li><code>this.getFolderCard(savedFolderName).getByRole(&apos;heading&apos;, { name: savedFolderName, exact: true, })</code> &#x2014; line 446</li>
+<li><code>this.getFolderCard(savedFolderName)</code> &#x2014; line 446</li>
+</ul>
+<h3 id="getfolderkebabbutton">getFolderKebabButton</h3>
+<p><code>getFolderKebabButton(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L453">pages/MyQrCodesPage/MyQrCodesPage.ts:453</a></p>
+<ul>
+<li><code>this.page.locator(&#x2032;//div/h4[text()=&quot;&#x24;{folderName}&quot;]/../../div/button&#x2032;)</code> &#x2014; line 454</li>
+</ul>
+<h3 id="selectalldeletedqrcodes">selectAllDeletedQrCodes</h3>
+<p><code>selectAllDeletedQrCodes()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L459">pages/MyQrCodesPage/MyQrCodesPage.ts:459</a></p>
+<ul>
+<li><code>this.locator.qrCodesStatusDropdownButton.click()</code> &#x2014; line 460</li>
+<li><code>this.locator.qrCodesStatusDeletedOption.click()</code> &#x2014; line 461</li>
+</ul>
+<h3 id="selectallactiveqrcodes">selectAllActiveQrCodes</h3>
+<p><code>selectAllActiveQrCodes()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L463">pages/MyQrCodesPage/MyQrCodesPage.ts:463</a></p>
+<ul>
+<li><code>this.locator.qrCodesStatusDropdownButton.click()</code> &#x2014; line 464</li>
+<li><code>this.locator.qrCodesStatusActiveOption.click()</code> &#x2014; line 465</li>
+</ul>
+<h3 id="selectallpausedqrcodes">selectAllPausedQrCodes</h3>
+<p><code>selectAllPausedQrCodes()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L467">pages/MyQrCodesPage/MyQrCodesPage.ts:467</a></p>
+<ul>
+<li><code>this.locator.qrCodesStatusDropdownButton.click()</code> &#x2014; line 468</li>
+<li><code>this.locator.qrCodesStatusPausedOption.click()</code> &#x2014; line 469</li>
+</ul>
+<h3 id="getfolderwrap">getFolderWrap</h3>
+<p><code>getFolderWrap(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L472">pages/MyQrCodesPage/MyQrCodesPage.ts:472</a></p>
+<ul>
+<li><code>this.page .locator(&apos;div.folder-wrap&apos;) .filter({ has: this.page.locator(&apos;div.folder-inner &gt; h4&apos;, { hasText: folderName, }), }) .first()</code> &#x2014; line 473</li>
+<li><code>this.page .locator(&apos;div.folder-wrap&apos;) .filter({ has: this.page.locator(&apos;div.folder-inner &gt; h4&apos;, { hasText: folderName, }), })</code> &#x2014; line 473</li>
+<li><code>this.page .locator(&apos;div.folder-wrap&apos;)</code> &#x2014; line 473</li>
+<li><code>this.page.locator(&apos;div.folder-inner &gt; h4&apos;, { hasText: folderName, })</code> &#x2014; line 476</li>
+</ul>
+<h3 id="getfoldertitle">getFolderTitle</h3>
+<p><code>getFolderTitle(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L483">pages/MyQrCodesPage/MyQrCodesPage.ts:483</a></p>
+<ul>
+<li><code>this.getFolderWrap(folderName).locator(&apos;div.folder-inner &gt; h4&apos;)</code> &#x2014; line 484</li>
+<li><code>this.getFolderWrap(folderName)</code> &#x2014; line 484</li>
+</ul>
+<h3 id="getfolderfilecountlocator">getFolderFileCountLocator</h3>
+<p><code>getFolderFileCountLocator(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L487">pages/MyQrCodesPage/MyQrCodesPage.ts:487</a></p>
+<ul>
+<li><code>this.getFolderWrap(folderName).locator(&apos;div.files-count.file-section&apos;)</code> &#x2014; line 488</li>
+<li><code>this.getFolderWrap(folderName)</code> &#x2014; line 488</li>
+</ul>
+<h3 id="dismissdownloadmodal">dismissDownloadModal</h3>
+<p><code>dismissDownloadModal()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L497">pages/MyQrCodesPage/MyQrCodesPage.ts:497</a></p>
+<p>Dismisses #DownloadModal when it has Bootstrap <code>show</code>. Safe no-op if the modal is absent (React wizard) or already closed.</p>
+<ul>
+<li><code>this.page.locator(&apos;#DownloadModal&apos;)</code> &#x2014; line 498</li>
+<li><code>this.page.locator(&apos;#DownloadModal button[aria-label=&quot;Close&quot;]&apos;)</code> &#x2014; line 501</li>
+<li><code>closeBtn.click({ force: true })</code> &#x2014; line 509</li>
+<li><code>expect .poll( async () =&gt; !(await modal .evaluate((el) =&gt; el.classList.contains(&apos;show&apos;)) .catch(() =&gt; false)), { timeout: 15_000 } ) .toBe(true)</code> &#x2014; line 511</li>
+</ul>
+<h3 id="gotorootmyqrcodes">goToRootMyQrCodes</h3>
+<p><code>goToRootMyQrCodes()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L522">pages/MyQrCodesPage/MyQrCodesPage.ts:522</a></p>
+<ul>
+<li><code>this.dismissDownloadModal()</code> &#x2014; line 523</li>
+<li><code>this.page.goto(&apos;/qr-codes&apos;, { waitUntil: &apos;domcontentloaded&apos; })</code> &#x2014; line 524</li>
+<li><code>this.dismissDownloadModal()</code> &#x2014; line 525</li>
+<li><code>expect(this.locator.qrCodeListingArea).toBeVisible({ timeout: 15_000, })</code> &#x2014; line 526</li>
+</ul>
+<h3 id="openfolder">openFolder</h3>
+<p><code>openFolder(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L532">pages/MyQrCodesPage/MyQrCodesPage.ts:532</a></p>
+<p>Opens a folder by name (navigates to qr-codes?project_id=&#x2026;).</p>
+<ul>
+<li><code>this.getFolderWrap(folderName).locator(&apos;a.a-decoration&apos;)</code> &#x2014; line 533</li>
+<li><code>this.getFolderWrap(folderName)</code> &#x2014; line 533</li>
+<li><code>expect(link).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 534</li>
+<li><code>this.page.goto(href, { waitUntil: &apos;domcontentloaded&apos; })</code> &#x2014; line 537</li>
+<li><code>link.click({ force: true })</code> &#x2014; line 539</li>
+<li><code>expect(this.page).toHaveURL(/project_id=/, { timeout: 15_000 })</code> &#x2014; line 541</li>
+<li><code>expect(this.locator.qrCodeListingArea).toBeVisible({ timeout: 15_000, })</code> &#x2014; line 542</li>
+</ul>
+<h3 id="deletefolderbyname">deleteFolderByName</h3>
+<p><code>deleteFolderByName(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L547">pages/MyQrCodesPage/MyQrCodesPage.ts:547</a></p>
+<ul>
+<li><code>this.dismissDownloadModal()</code> &#x2014; line 548</li>
+<li><code>this.getFolderWrap(folderName) .locator(&apos;button.folder-model-dropdown-btn&apos;) .click()</code> &#x2014; line 549</li>
+<li><code>this.getFolderWrap(folderName) .locator(&apos;button.folder-model-dropdown-btn&apos;)</code> &#x2014; line 549</li>
+<li><code>this.getFolderWrap(folderName)</code> &#x2014; line 549</li>
+<li><code>this.getFolderWrap(folderName) .locator(&apos;button.delete-folder&apos;) // The listing can re-render and close its custom dropdown while // Playwright waits for actionability. Dispatching the menu action // is stable and still exercises the application&apos;s click handler. .dispatchEvent(&apos;click&apos;)</code> &#x2014; line 552</li>
+<li><code>this.getFolderWrap(folderName) .locator(&apos;button.delete-folder&apos;)</code> &#x2014; line 552</li>
+<li><code>this.getFolderWrap(folderName)</code> &#x2014; line 552</li>
+<li><code>this.locator.confirmDeleteFolderButton.dispatchEvent(&apos;click&apos;)</code> &#x2014; line 560</li>
+<li><code>expect(this.getFolderTitle(folderName)).toHaveCount(0, { timeout: 15_000, })</code> &#x2014; line 561</li>
+<li><code>this.getFolderTitle(folderName)</code> &#x2014; line 561</li>
+</ul>
+<h3 id="renamefolder">renameFolder</h3>
+<p><code>renameFolder(currentFolderName: string, newFolderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L567">pages/MyQrCodesPage/MyQrCodesPage.ts:567</a></p>
+<p>Renames a folder from its card action menu.</p>
+<ul>
+<li><code>this.getFolderKebabButton(currentFolderName).click()</code> &#x2014; line 571</li>
+<li><code>this.getFolderKebabButton(currentFolderName)</code> &#x2014; line 571</li>
+<li><code>this.locator.editFolderNameKebabOption.click()</code> &#x2014; line 572</li>
+<li><code>this.locator.editFolderNameInput.fill(newFolderName)</code> &#x2014; line 573</li>
+<li><code>this.locator.saveEditFolderButton.click()</code> &#x2014; line 574</li>
+<li><code>expect(this.getFolderTitle(newFolderName)).toBeVisible({ timeout: 15_000, })</code> &#x2014; line 575</li>
+<li><code>this.getFolderTitle(newFolderName)</code> &#x2014; line 575</li>
+</ul>
+<h3 id="expectqrvisibleinlist">expectQrVisibleInList</h3>
+<p><code>expectQrVisibleInList(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L580">pages/MyQrCodesPage/MyQrCodesPage.ts:580</a></p>
+<ul>
+<li><code>expect(this.getCreatedQrCodeName(qrName).first()).toBeVisible({ timeout: 15_000, })</code> &#x2014; line 581</li>
+<li><code>this.getCreatedQrCodeName(qrName).first()</code> &#x2014; line 581</li>
+<li><code>this.getCreatedQrCodeName(qrName)</code> &#x2014; line 581</li>
+</ul>
+<h3 id="expectqrnotvisibleinlist">expectQrNotVisibleInList</h3>
+<p><code>expectQrNotVisibleInList(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L586">pages/MyQrCodesPage/MyQrCodesPage.ts:586</a></p>
+<ul>
+<li><code>expect(this.getCreatedQrCodeName(qrName)).toHaveCount(0, { timeout: 10_000, })</code> &#x2014; line 587</li>
+<li><code>this.getCreatedQrCodeName(qrName)</code> &#x2014; line 587</li>
+</ul>
+<h3 id="expectqrtype">expectQrType</h3>
+<p><code>expectQrType(qrName: string, expectedType: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L593">pages/MyQrCodesPage/MyQrCodesPage.ts:593</a></p>
+<p>Asserts the QR type shown on the named dashboard card.</p>
+<ul>
+<li><code>expect( this.getQrCardByName(qrName).locator(&apos;div.qrCode-info &gt; span.name&apos;) ).toHaveText(expectedType, { timeout: 15_000 })</code> &#x2014; line 594</li>
+<li><code>this.getQrCardByName(qrName).locator(&apos;div.qrCode-info &gt; span.name&apos;)</code> &#x2014; line 595</li>
+<li><code>this.getQrCardByName(qrName)</code> &#x2014; line 595</li>
+</ul>
+<h3 id="duplicateqr">duplicateQr</h3>
+<p><code>duplicateQr(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L599">pages/MyQrCodesPage/MyQrCodesPage.ts:599</a></p>
+<ul>
+<li><code>this.openDuplicateModalForQr(qrName)</code> &#x2014; line 600</li>
+<li><code>this.locator.confirmDuplicateQrCodeButton.click()</code> &#x2014; line 601</li>
+</ul>
+<h3 id="openduplicatemodalforqr">openDuplicateModalForQr</h3>
+<p><code>openDuplicateModalForQr(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L604">pages/MyQrCodesPage/MyQrCodesPage.ts:604</a></p>
+<ul>
+<li><code>this.getQrCardByName(qrName)</code> &#x2014; line 605</li>
+<li><code>expect(card).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 606</li>
+<li><code>card.locator(&apos;button.kebab-button[data-qrcodeid]&apos;).click()</code> &#x2014; line 607</li>
+<li><code>expect(this.locator.confirmDuplicateQrCodeButton).toBeVisible({ timeout: 10_000, })</code> &#x2014; line 609</li>
+</ul>
+<h3 id="opensendtofolderforqr">openSendToFolderForQr</h3>
+<p><code>openSendToFolderForQr(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L614">pages/MyQrCodesPage/MyQrCodesPage.ts:614</a></p>
+<ul>
+<li><code>this.openSendToFolderForCard(this.getQrCardByName(qrName))</code> &#x2014; line 615</li>
+<li><code>this.getQrCardByName(qrName)</code> &#x2014; line 615</li>
+</ul>
+<h3 id="opensendtofolderforqrid">openSendToFolderForQrId</h3>
+<p><code>openSendToFolderForQrId(qrId: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L618">pages/MyQrCodesPage/MyQrCodesPage.ts:618</a></p>
+<ul>
+<li><code>this.openSendToFolderForCard(this.getQrCardById(qrId))</code> &#x2014; line 619</li>
+<li><code>this.getQrCardById(qrId)</code> &#x2014; line 619</li>
+</ul>
+<h3 id="opensendtofolderforcard">openSendToFolderForCard</h3>
+<p><code>openSendToFolderForCard(card: Locator)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L622">pages/MyQrCodesPage/MyQrCodesPage.ts:622</a></p>
+<ul>
+<li><code>expect(card).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 623</li>
+<li><code>card.locator(&apos;button.kebab-button[data-qrcodeid]&apos;).click()</code> &#x2014; line 624</li>
+<li><code>expect(this.locator.sendToFolderModal).toBeVisible({ timeout: 10_000, })</code> &#x2014; line 628</li>
+</ul>
+<h3 id="cancelsendtofolder">cancelSendToFolder</h3>
+<p><code>cancelSendToFolder()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L634">pages/MyQrCodesPage/MyQrCodesPage.ts:634</a></p>
+<p>Closes Send to folder without changing the QR association.</p>
+<ul>
+<li><code>this.locator.sendToFolderModal .getByRole(&apos;button&apos;, { name: &apos;Close&apos;, exact: true }) .click()</code> &#x2014; line 635</li>
+<li><code>this.locator.sendToFolderModal .getByRole(&apos;button&apos;, { name: &apos;Close&apos;, exact: true })</code> &#x2014; line 635</li>
+<li><code>expect(this.locator.sendToFolderModal).toBeHidden({ timeout: 10_000, })</code> &#x2014; line 638</li>
+</ul>
+<h3 id="getsendtofolderoption">getSendToFolderOption</h3>
+<p><code>getSendToFolderOption(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L643">pages/MyQrCodesPage/MyQrCodesPage.ts:643</a></p>
+<ul>
+<li><code>this.locator.sendToFolderList.locator(&apos;button.selectFolder&apos;, { hasText: folderName, })</code> &#x2014; line 644</li>
+</ul>
+<h3 id="sendqrtoexistingfolder">sendQrToExistingFolder</h3>
+<p><code>sendQrToExistingFolder(qrName: string, folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L649">pages/MyQrCodesPage/MyQrCodesPage.ts:649</a></p>
+<ul>
+<li><code>this.openSendToFolderForQr(qrName)</code> &#x2014; line 653</li>
+<li><code>this.confirmSendToExistingFolder(folderName)</code> &#x2014; line 654</li>
+</ul>
+<h3 id="sendqrtoexistingfolderbyid">sendQrToExistingFolderById</h3>
+<p><code>sendQrToExistingFolderById(qrId: string, folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L657">pages/MyQrCodesPage/MyQrCodesPage.ts:657</a></p>
+<ul>
+<li><code>this.openSendToFolderForQrId(qrId)</code> &#x2014; line 661</li>
+<li><code>this.confirmSendToExistingFolder(folderName)</code> &#x2014; line 662</li>
+</ul>
+<h3 id="confirmsendtoexistingfolder">confirmSendToExistingFolder</h3>
+<p><code>confirmSendToExistingFolder(folderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L665">pages/MyQrCodesPage/MyQrCodesPage.ts:665</a></p>
+<ul>
+<li><code>this.getSendToFolderOption(folderName).click()</code> &#x2014; line 668</li>
+<li><code>this.getSendToFolderOption(folderName)</code> &#x2014; line 668</li>
+<li><code>expect(this.locator.sendToFolderConfirmButton).toBeEnabled({ timeout: 10_000, })</code> &#x2014; line 669</li>
+<li><code>this.locator.sendToFolderConfirmButton.click()</code> &#x2014; line 672</li>
+<li><code>expect(this.locator.sendToFolderModal).toBeHidden({ timeout: 15_000, })</code> &#x2014; line 673</li>
+</ul>
+<h3 id="sendqrtonewfolder">sendQrToNewFolder</h3>
+<p><code>sendQrToNewFolder(qrName: string, newFolderName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L678">pages/MyQrCodesPage/MyQrCodesPage.ts:678</a></p>
+<ul>
+<li><code>this.openSendToFolderForQr(qrName)</code> &#x2014; line 682</li>
+<li><code>this.locator.newFolderFromSendModalButton.click()</code> &#x2014; line 683</li>
+<li><code>expect(this.locator.createFolderWithQrModal).toBeVisible({ timeout: 10_000, })</code> &#x2014; line 684</li>
+<li><code>this.locator.createFolderWithQrNameInput.fill(newFolderName)</code> &#x2014; line 687</li>
+<li><code>this.locator.createFolderWithQrSubmitButton.click()</code> &#x2014; line 688</li>
+<li><code>expect(this.locator.sendToFolderModal).toBeVisible({ timeout: 15_000, })</code> &#x2014; line 689</li>
+<li><code>this.getSendToFolderOption(newFolderName).click()</code> &#x2014; line 692</li>
+<li><code>this.getSendToFolderOption(newFolderName)</code> &#x2014; line 692</li>
+<li><code>expect(this.locator.sendToFolderConfirmButton).toBeEnabled({ timeout: 10_000, })</code> &#x2014; line 693</li>
+<li><code>this.locator.sendToFolderConfirmButton.click()</code> &#x2014; line 696</li>
+<li><code>expect(this.locator.sendToFolderModal).toBeHidden({ timeout: 15_000, })</code> &#x2014; line 697</li>
+</ul>
+<h3 id="restorefirstdeletedqrcode">restoreFirstDeletedQrCode</h3>
+<p><code>restoreFirstDeletedQrCode()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L702">pages/MyQrCodesPage/MyQrCodesPage.ts:702</a></p>
+<ul>
+<li><code>this.locator.selectAllQrCodes.click()</code> &#x2014; line 703</li>
+<li><code>this.locator.restoreQrCodesModalButton.click()</code> &#x2014; line 704</li>
+<li><code>this.locator.restoreConfirmButton.click()</code> &#x2014; line 705</li>
+</ul>
+<h3 id="logoutviasidebar">logoutViaSidebar</h3>
+<p><code>logoutViaSidebar()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L708">pages/MyQrCodesPage/MyQrCodesPage.ts:708</a></p>
+<ul>
+<li><code>this.locator.sidebarLogoutLink.click()</code> &#x2014; line 709</li>
+<li><code>this.page.waitForURL(/login|\/&#x24;/)</code> &#x2014; line 710</li>
+</ul>
+<h3 id="getqrcardbyname">getQrCardByName</h3>
+<p><code>getQrCardByName(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L714">pages/MyQrCodesPage/MyQrCodesPage.ts:714</a></p>
+<p>QR card on the current list matching <code>qrName</code>.</p>
+<ul>
+<li><code>this.locator.createdQrCodesList .filter({ has: this.page.locator(&apos;span.qrCodeName&apos;, { hasText: qrName }), }) .first()</code> &#x2014; line 715</li>
+<li><code>this.locator.createdQrCodesList .filter({ has: this.page.locator(&apos;span.qrCodeName&apos;, { hasText: qrName }), })</code> &#x2014; line 715</li>
+<li><code>this.page.locator(&apos;span.qrCodeName&apos;, { hasText: qrName })</code> &#x2014; line 717</li>
+</ul>
+<h3 id="getqrcardbyid">getQrCardById</h3>
+<p><code>getQrCardById(qrId: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L722">pages/MyQrCodesPage/MyQrCodesPage.ts:722</a></p>
+<ul>
+<li><code>this.locator.createdQrCodesList .filter({ has: this.page.locator( &#x2032;button.kebab-button[data-qrcodeid=&quot;&#x24;{qrId}&quot;]&#x2032; ), }) .first()</code> &#x2014; line 723</li>
+<li><code>this.locator.createdQrCodesList .filter({ has: this.page.locator( &#x2032;button.kebab-button[data-qrcodeid=&quot;&#x24;{qrId}&quot;]&#x2032; ), })</code> &#x2014; line 723</li>
+<li><code>this.page.locator(&#x2032;button.kebab-button[data-qrcodeid=&quot;&#x24;{qrId}&quot;]&#x2032;)</code> &#x2014; line 725</li>
+</ul>
+<h3 id="getqrscanlink">getQrScanLink</h3>
+<p><code>getQrScanLink(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L733">pages/MyQrCodesPage/MyQrCodesPage.ts:733</a></p>
+<p>Public scan/destination link shown on the named QR card.</p>
+<ul>
+<li><code>this.getQrCardByName(qrName).locator(&apos;a:has(span.overflow-link)&apos;)</code> &#x2014; line 734</li>
+<li><code>this.getQrCardByName(qrName)</code> &#x2014; line 734</li>
+</ul>
+<h3 id="getqrcardidbyname">getQrCardIdByName</h3>
+<p><code>getQrCardIdByName(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L737">pages/MyQrCodesPage/MyQrCodesPage.ts:737</a></p>
+<ul>
+<li><code>this.getQrCardByName(qrName).locator(&apos;button.kebab-button[data-qrcodeid]&apos;)</code> &#x2014; line 738</li>
+<li><code>this.getQrCardByName(qrName)</code> &#x2014; line 738</li>
+<li><code>expect(idLocator).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 741</li>
+</ul>
+<h3 id="getqrfolderlabel">getQrFolderLabel</h3>
+<p><code>getQrFolderLabel(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L750">pages/MyQrCodesPage/MyQrCodesPage.ts:750</a></p>
+<p>Folder label (<code>span.folderName</code>) on the QR card.</p>
+<ul>
+<li><code>this.getQrCardByName(qrName).locator(&apos;span.folderName&apos;)</code> &#x2014; line 751</li>
+<li><code>this.getQrCardByName(qrName)</code> &#x2014; line 751</li>
+</ul>
+<h3 id="getvisibleqrcardids">getVisibleQrCardIds</h3>
+<p><code>getVisibleQrCardIds()</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L755">pages/MyQrCodesPage/MyQrCodesPage.ts:755</a></p>
+<p>Returns the distinct QR ids exposed by visible card action buttons.</p>
+<ul>
+<li><code>this.locator.createdQrCodesList .locator(&apos;button.kebab-button[data-qrcodeid]&apos;) .evaluateAll([callback: see source])</code> &#x2014; line 756</li>
+<li><code>this.locator.createdQrCodesList .locator(&apos;button.kebab-button[data-qrcodeid]&apos;)</code> &#x2014; line 756</li>
+</ul>
+<h3 id="renameqr">renameQr</h3>
+<p><code>renameQr(qrName: string, newName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L766">pages/MyQrCodesPage/MyQrCodesPage.ts:766</a></p>
+<p>Renames a QR card without changing its content or folder.</p>
+<ul>
+<li><code>this.getQrCardByName(qrName)</code> &#x2014; line 767</li>
+<li><code>expect(card).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 768</li>
+<li><code>card.locator(&apos;button.qrnameChange&apos;).click()</code> &#x2014; line 769</li>
+<li><code>card.locator(&apos;input.editQrField&apos;).fill(newName)</code> &#x2014; line 770</li>
+<li><code>card.locator(&apos;button.qrnameSaveBtn&apos;).click()</code> &#x2014; line 771</li>
+<li><code>expect(this.getQrCardByName(newName)).toBeVisible({ timeout: 15_000, })</code> &#x2014; line 772</li>
+<li><code>this.getQrCardByName(newName)</code> &#x2014; line 772</li>
+</ul>
+<h3 id="openeditforqr">openEditForQr</h3>
+<p><code>openEditForQr(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L778">pages/MyQrCodesPage/MyQrCodesPage.ts:778</a></p>
+<p>Opens Edit content for the named QR (kebab &#x2192; first dropdown link).</p>
+<ul>
+<li><code>this.getQrCardByName(qrName)</code> &#x2014; line 779</li>
+<li><code>expect(card).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 780</li>
+<li><code>card.locator(&apos;button.kebab-button[data-qrcodeid]&apos;).click()</code> &#x2014; line 781</li>
+<li><code>expect(this.page).toHaveURL(/step=2|qr\?/, { timeout: 20_000 })</code> &#x2014; line 783</li>
+</ul>
+<h3 id="opendetailsforqr">openDetailsForQr</h3>
+<p><code>openDetailsForQr(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L787">pages/MyQrCodesPage/MyQrCodesPage.ts:787</a></p>
+<p>Opens the QR details view from the card Details control.</p>
+<ul>
+<li><code>this.getQrCardByName(qrName)</code> &#x2014; line 788</li>
+<li><code>expect(card).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 789</li>
+<li><code>card.locator(&apos;a.detail-btn&apos;).click()</code> &#x2014; line 790</li>
+<li><code>expect(this.locator.qrCodeDetailBackButton).toBeVisible({ timeout: 15_000, })</code> &#x2014; line 791</li>
+</ul>
+<h3 id="deleteqrbyname">deleteQrByName</h3>
+<p><code>deleteQrByName(qrName: string)</code></p>
+<p><a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="../../sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html#L797">pages/MyQrCodesPage/MyQrCodesPage.ts:797</a></p>
+<p>Deletes the named QR via kebab &#x2192; Delete.</p>
+<ul>
+<li><code>this.getQrCardByName(qrName)</code> &#x2014; line 798</li>
+<li><code>expect(card).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 799</li>
+<li><code>card.locator(&apos;button.kebab-button[data-qrcodeid]&apos;).click()</code> &#x2014; line 800</li>
+<li><code>expect(this.locator.ConfirmDeleteButton).toBeVisible({ timeout: 10_000, })</code> &#x2014; line 804</li>
+<li><code>this.locator.ConfirmDeleteButton.click()</code> &#x2014; line 807</li>
+<li><code>expect(this.page.locator(&apos;#DeleteModal&apos;)).not.toHaveClass(/show/, { timeout: 15_000, })</code> &#x2014; line 808</li>
+<li><code>this.page.locator(&apos;#DeleteModal&apos;)</code> &#x2014; line 808</li>
+<li><code>expect(this.getCreatedQrCodeName(qrName)).toHaveCount(0, { timeout: 15_000, })</code> &#x2014; line 814</li>
+<li><code>this.getCreatedQrCodeName(qrName)</code> &#x2014; line 814</li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

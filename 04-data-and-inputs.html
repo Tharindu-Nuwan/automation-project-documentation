@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="04-data-and-inputs.html">
+<title>Where to get data and how to fill inputs · QA reference</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script defer src="assets/search-index.js"></script><script defer src="assets/app.js"></script>
+</head><body data-root-prefix="">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="index.html">Start here</a>
+<a href="00-qa-quick-start.html">Your first check</a>
+<a href="02-accounts-and-credentials.html">Accounts and login</a>
+<a href="03-qr-creation.html">QR types and creation</a>
+<a href="04-data-and-inputs.html" class="active" aria-current="page">What to enter and upload</a>
+<a href="05-other-flows.html">Other product flows</a>
+<a href="07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="glossary.html">Words used in this guide</a><details class="reference-nav"><summary>Technical reference (optional)</summary><a href="01-architecture-and-running.html">Automation setup and execution</a>
+<a href="06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="reference/index.html">Reference overview</a>
+<a href="reference/spec-index.html">Complete spec map</a>
+<a href="reference/code-index.html">Shared helpers and locators</a>
+<a href="reference/field-inputs.html">Field inputs and defaults</a>
+<a href="reference/data-index.html">Data sources and consumers</a>
+<a href="reference/environment-index.html">Environment variables</a>
+<a href="reference/assets.html">Upload asset inventory</a>
+<a href="reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Practical QA guide · reviewed 19 October 2026</div>
+
+<details class="toc"><summary>Jump to a section (10)</summary><a href="#choose-your-input-before-filling-the-form">Choose your input before filling the form</a>
+<a href="#record-the-values-you-used">Record the values you used</a>
+<a href="#follow-the-value-backwards">Optional automation detail: trace a value to its source</a>
+<a href="#data-source-directory">Data source directory</a>
+<a href="#faker-details-that-matter-for-qa">Faker details that matter for QA</a>
+<a href="#uploads-manual-and-automated">Uploads: manual and automated</a>
+<a href="#phone-url-date-and-number-pitfalls">Phone, URL, date and number pitfalls</a>
+<a href="#shared-matrices-are-selections-not-universal-coverage">Shared matrices are selections, not universal coverage</a>
+<a href="#additional-matrices-and-run-filters">Additional matrices and run filters</a>
+<a href="#make-a-one-test-override-safely">Optional automation detail: change one case without changing shared defaults</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="4-where-to-get-data-and-how-to-fill-inputs">Where to get data and how to fill inputs</h1>
+<p><a href="index.html">Start</a> &#xb7; <a href="03-qr-creation.html">Previous</a> &#xb7; <a href="05-other-flows.html">Next: other flows</a></p>
+
+<h2 id="choose-your-input-before-filling-the-form">Choose your input before filling the form</h2>
+<p><strong>Use the values required by the particular test case.</strong> The suite uses a mixture of fixed samples, newly generated text, existing accounts and uploaded files. A name shown in another example is not automatically the right value for your case.</p>
+<div class="table-wrap"><table>
+<tr><th>What you need to enter</th><th>What you should do</th><th>Where this guide helps</th></tr>
+<tr><td>Login email and password</td><td>Obtain the assigned account for the correct test website. QR contact emails and sample QR passwords are different values.</td><td><a href="02-accounts-and-credentials.html#get-the-right-account-before-starting">Accounts and access</a></td></tr>
+<tr><td>Ordinary QR text, such as company or title</td><td>Use the case&apos;s fixed value if supplied. For a generated value, keep the value from the run you are reproducing. For a fresh manual case that allows any suitable text, choose and record your own sample.</td><td><a href="03-qr-creation.html#type-by-type-recipes">Fields by QR type</a></td></tr>
+<tr><td>Empty, invalid or maximum-length text</td><td>Use the exact scenario value, including spaces, punctuation and length. Do not replace it with ordinary sample text.</td><td><a href="reference/data-index.html">Feature data reference</a></td></tr>
+<tr><td>An upload file</td><td>Request the actual file at the listed project path. Choose that file in the browser&apos;s file picker.</td><td><a href="#uploads-manual-and-automated">Common files below</a> and <a href="reference/assets.html">complete asset list</a></td></tr>
+<tr><td>A special account condition, such as expired or paid</td><td>Ask for an account prepared for that scenario. Typing a form value does not establish a subscription condition.</td><td><a href="05-other-flows.html">Flow preparation</a></td></tr>
+<tr><td>A code or link from an email</td><td>Use the new message for the exact recipient and action in the configured test mail viewer.</td><td><a href="05-other-flows.html#transactional-email">Transactional email</a></td></tr>
+</table></div>
+<p>The HTML bundle includes file descriptions and readable data/source references. <strong>It does not contain the binary upload samples, working account credentials, or a running application.</strong> The test-project paths tell the automation maintainer which files or setup to provide.</p>
+<h2 id="record-the-values-you-used">Record the values you used</h2>
+<p>A useful test note records the product and website, case name, account condition, input value or file name, expected result, and actual result. For example: &#x201c;Website QR; URL <code>example.com</code>; internal QR name <code>QA Website Check 01</code>; expected the saved URL to remain unchanged after reopening.&#x201d; The QR name in this example is an illustrative manual choice, not a fixed value used by the suite.</p>
+<p>For a failure from an automated run, obtain the captured input or prepared-data record from that run. Asking the generator to make another name or date can give a different value and a different result.</p>
+<p><strong>Optional automation detail follows.</strong> A <em>dataset</em> is a file of test values. A <em>default</em> is a helper&apos;s fallback sample value. A <em>fixture file</em> is a prepared upload sample. These terms describe where values come from; they are not fields to enter in the application.</p>
+<h2 id="follow-the-value-backwards">Optional automation detail: trace a value to its source</h2>
+<p>Example: <code>pdfQrCreate()</code> calls <code>setPdfCompanyName(this.fakeCompany())</code>. The input method receives a string, types it, and asserts preview text. The company value comes from Faker, <strong>not the DB, <code>.env</code>, account profile or PDF file</strong>. Conversely, <code>setPdfWebsite()</code> without arguments uses its own fixed <code>google.com</code> default.</p>
+<pre><code>spec argument / dataset row
+  &#x2192; recipe argument or explicit setter argument
+  &#x2192; if omitted, method default applies
+  &#x2192; locator fill / typing / upload / selection
+  &#x2192; preview or persistence assertion</code></pre>
+<p>For any field, find the test in <a href="reference/spec-index.html">spec map</a>, inspect its imports/local variables, find the called method in <a href="reference/code-index.html">code index</a>, and check its signature plus <a href="reference/field-inputs.html">field writes</a>. Use the exact assertion&apos;s expected value, not an unrelated similarly named dataset.</p>
+<h2 id="data-source-directory">Data source directory</h2>
+<div class="table-wrap"><table>
+<tr><th>Data required</th><th>Obtain it from</th><th>What to change for a new case</th></tr>
+<tr><td>Existing account login</td><td>Approved local/CI values for <code>DEFAULT_USER_*</code></td><td>Point to a valid test account on selected deployment</td></tr>
+<tr><td>Isolated account</td><td><code>registerPage.createUserData()</code> / <code>authorizeUser()</code></td><td>Normally reuse generator; retain returned identity for cleanup</td></tr>
+<tr><td>Random text/name/company/URL</td><td><code>BasePage</code> Faker helpers</td><td>Pass explicit deterministic values for validation boundaries</td></tr>
+<tr><td>Basic QR content</td><td>Step2 method defaults and creation recipe overrides</td><td>Supply arguments in your spec rather than changing global defaults</td></tr>
+<tr><td>Per-feature valid/invalid cases</td><td><code>tests/data/*.data.ts</code></td><td>Add case in matching dataset if tests loop over it</td></tr>
+<tr><td>Upload payload</td><td><code>tests/data/test_files/</code></td><td>Pass exact fixture path; add a new fixture only when needed</td></tr>
+<tr><td>Event validation</td><td><code>event-field-validation.data.ts</code>, master JSON and Event scenario data</td><td>Choose field + scenario + expected result; don&apos;t assume every dataset row is executed</td></tr>
+<tr><td>Email QR content</td><td><code>email-templates.data.ts</code> and Basic Information spec constants</td><td>Title, recipient, optional subject/body/icon; satisfy other required fields</td></tr>
+<tr><td>Payment card and address</td><td><code>payments_test_data.ts</code>, Iceland-specific data</td><td>Select appropriate success/decline/3DS fixture</td></tr>
+<tr><td>Expected pricing</td><td>Default/DPF/promo tables and <code>pricing-integrity/</code> sources</td><td>Match currency, plan, offer and source-of-truth assertion</td></tr>
+<tr><td>Expiry/date offsets</td><td><code>utils/test_data_generators.ts</code>, Event date helpers</td><td>Check units, formatting and machine date</td></tr>
+<tr><td>Translation and preview strings</td><td><code>translation_test_data.ts</code>, <code>trial-translations.data.ts</code>, <code>static-preview-translations/</code></td><td>Match product and locale; expected copy is not generated by Faker</td></tr>
+<tr><td>Download formats/sizes</td><td><code>download_test_data.ts</code>, constants/download matrices</td><td>Extend format/size row and verify corresponding UI supports it</td></tr>
+<tr><td>Backend user/token/UID/subscription</td><td>UserApi/UI/Stripe/DbApi response</td><td>Read from actual created fixture; do not fabricate IDs</td></tr>
+</table></div>
+<p><a href="reference/data-index.html">Data reference</a> lists exports and every direct TypeScript consumer, including less common datasets. Direct imports are not a full transitive dependency graph; follow intermediate modules as needed.</p>
+<h2 id="faker-details-that-matter-for-qa">Faker details that matter for QA</h2>
+<div class="table-wrap"><table>
+<tr><th>Helper</th><th>Actual implementation implication</th></tr>
+<tr><td><code>fakeString(n=50)</code></td><td>Takes the first n characters of a lorem text and trims; <strong>maximum</strong>, not exact length</td></tr>
+<tr><td><code>fakeText(n=100)</code></td><td>Generates <code>ceil(n/100)</code> paragraphs; does <strong>not</strong> truncate to n characters</td></tr>
+<tr><td><code>fakeUrl()</code></td><td>Generates URL then strips scheme and trailing slash; not necessarily a live destination</td></tr>
+<tr><td><code>fakeNumber(digits=9, fixLen=true)</code></td><td>Numeric string, preserving leading zeroes; variable length when false</td></tr>
+<tr><td><code>fakeInt(min,max)</code></td><td>Faker integer in supplied bounds</td></tr>
+<tr><td><code>fakePassword()</code></td><td>Faker password; unrelated to generated registration&apos;s email-as-password</td></tr>
+<tr><td><code>fakePhoneNumber()</code></td><td>National-style phone; not guaranteed valid for whichever country the form auto-selected</td></tr>
+<tr><td>Name/company/city/username helpers</td><td>Random per call; calling again in an assertion can produce a different value</td></tr>
+</table></div>
+<p>For exactly 255 characters use an explicit deterministic string such as <code>&apos;A&apos;.repeat(255)</code> or the feature&apos;s <code>asciiTitle()</code> helper. Capture a generated value once and reuse it for the action and expected result. Do not change every test to fixed data: unique user/QR/folder names help avoid collisions.</p>
+<h2 id="uploads-manual-and-automated">Uploads: manual and automated</h2>
+<p><strong>Manual use:</strong> obtain the actual sample file from the automation maintainer, select it through the browser, and check the preview or error specified by the case. The table gives the exact project paths to request.</p>
+<p><strong>Automation detail:</strong> run from repository root because default asset paths are relative. Upload methods either call <code>setInputFiles(path)</code> on a native input or wait for a <code>filechooser</code> event before clicking the upload zone and then <code>setFiles(path)</code>. The event promise must be created before the click.</p>
+<div class="table-wrap"><table>
+<tr><th>Happy-path purpose</th><th>Default fixture</th></tr>
+<tr><td>PDF / Menu PDF</td><td><code>tests/data/test_files/pdf_files/valid.pdf</code></td></tr>
+<tr><td>Video</td><td><code>tests/data/test_files/video_files/sample.mp4</code></td></tr>
+<tr><td>MP3</td><td><code>tests/data/test_files/audio_files/sample.mp3</code></td></tr>
+<tr><td>Generic image/avatar/welcome</td><td><code>tests/data/test_files/image_files/vscode_logo.png</code></td></tr>
+<tr><td>Shared company logo</td><td><code>tests/data/test_files/company_logos/google.png</code></td></tr>
+<tr><td>Menu product image</td><td><code>tests/data/test_files/image_files/product_img.webp</code></td></tr>
+</table></div>
+<p>The asset library also contains large files, unsupported-format samples, malformed/corrupt images, transparent/very wide/very tall images, protected PDF, silent videos, MP3s with/without covers, and an SVG payload. Use the <a href="reference/assets.html">complete asset list</a>; a filename like <code>30mb.jpg</code> is not an authoritative measured size. Generated upload security fixtures may be built in code rather than stored as files; trace <a data-source="tests/data/uploadSecurityPayloads.data.ts" href="sources/tests/data/uploadSecurityPayloads.data.ts.html">uploadSecurityPayloads.data.ts</a> and its consumers.</p>
+<p>Manual reproduction: select the same file through the browser, use the same preceding help-dialog and accordion actions, then compare the same upload/preview/error result. Native <code>FileList</code> can be cleared after frontend upload; Event uses preview/delete controls to prove success. Upload success does not prove the public scan image persists after save.</p>
+<h2 id="phone-url-date-and-number-pitfalls">Phone, URL, date and number pitfalls</h2>
+<ul>
+<li><strong>WhatsApp:</strong> <code>fillWhatsappPhoneForSubmit()</code> chooses Israel then types its default national number. <code>setWhatsappPhoneNumber()</code> only fills the number. If the widget auto-selects another country, the same number may fail validation.</li>
+<li><strong>URLs:</strong> <code>BASE_URL</code> identifies the app under test; <code>example.com</code>/<code>google.com</code> are QR content. Scan origin, app origin, admin origin and Stripe origin are separate.</li>
+<li><strong>Dates:</strong> yearly/quarterly/monthly expiry helpers use 365/90/30 day offsets, not calendar-year/quarter/month arithmetic. <code>getExpiryDateOneYearAhead()</code> returns <code>MM/YY</code>; subscription helpers return SQL-like datetime strings.</li>
+<li><strong>Event dates:</strong> helpers select calendar buttons and confirm; readonly inputs cannot be treated as ordinary text fields. Default tomorrow uses the host clock.</li>
+<li><strong>Numbers:</strong> phone, ZIP, card number and coupon code are strings; preserve leading zeroes. Monetary unit conversion must follow the specific Stripe/pricing helper and currency rules.</li>
+<li><strong>Typing:</strong> <code>fill()</code> replaces; <code>pressSequentially()</code> appends unless the helper first clears. Match the test&apos;s event behavior when reproducing a bug.</li>
+</ul>
+<h2 id="shared-matrices-are-selections-not-universal-coverage">Shared matrices are selections, not universal coverage</h2>
+<p><code>global-constants.ts</code> supplies <code>qrTypes</code>, <code>allPlans</code>, and <code>flows=[&apos;DPF&apos;,&apos;CFF&apos;]</code>. It does not include NSF in that flow array. Edit, download, analytics and Step 3 constants are separate matrices. Adding a type to one does not add it everywhere. Before editing a shared row, use the generated data consumer list to see which suites will expand.</p>
+<p>Event scenario catalogues, acceptance criteria and field master JSON are distinct: a documented scenario is not automatically an executable test. Status gates, loops, feature availability and project filters still decide what runs. <a href="reference/spec-index.html">Spec reference</a> exposes the test declarations and skip/fail/fixme calls.</p>
+<h2 id="additional-matrices-and-run-filters">Additional matrices and run filters</h2>
+<p>These concrete matrices help when selecting a manual example:</p>
+<ul>
+<li><code>constants/download-tests.ts</code> defines PNG, JPEG, SVG and EPS with default/512/1024/2048/4096 selections. PNG/JPEG rows include expected pixel size; vector rows do not assert a pixel size through that field. Follow the consuming spec for file-content checks.</li>
+<li><code>pricing-integrity/official-stripe-prices.data.ts</code> maps plan IDs 1=monthly, 2=annual monthly-equivalent, 3=quarterly monthly-equivalent, 4=discounted, 5=one-time, 6=14-day full-access total, 7=14-day limited-access total. It reads <code>official stripe prices.csv</code>, with annual/quarterly monthly equivalents falling back to total divided by 12/3 and rounded to two decimals. This is this parser&apos;s mapping, not a universal rule for every Stripe price ID or currency.</li>
+<li>Visual helpers accept comma-separated <code>VISUAL_LANG</code> and <code>VISUAL_VIEWPORT</code> to filter configured language/viewport rows. Use IDs from <code>screens.config.ts</code>/the visual helper, not arbitrary display labels. <code>constants/step3-tests.ts</code> also contains hardcoded OQG dev onboarding URLs, so those cases can navigate away from a differently configured project URL.</li>
+</ul>
+<h2 id="make-a-one-test-override-safely">Optional automation detail: change one case without changing shared defaults</h2>
+<pre><code>const title = &apos;QA image validation title&apos;
+await pageManager.step2Page.setImageTitle(title)
+await pageManager.step2Page.setImageWebsite(&apos;example.com&apos;)
+await pageManager.step2Page.uploadImage(
+    &apos;tests/data/test_files/image_files/sample-blue.webp&apos;
+)</code></pre>
+<p>This only changes the chosen call. Editing <code>setImageTitle()</code>&apos;s default changes every caller that omits its argument. Editing a shared locator affects all consumers. Put new feature datasets under <code>tests/data/&lt;feature&gt;.data.ts</code> and reusable setup under <code>tests/helpers/&lt;feature&gt;.helper.ts</code>, following <a data-source="CLAUDE.md" href="sources/CLAUDE-md.html">repository standards</a>.</p></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

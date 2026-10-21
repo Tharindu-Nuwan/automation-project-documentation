@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/accountpage.html">
+<title>AccountPage · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-accountpage-accountpage-ts">pages/AccountPage/AccountPage.ts</a>
+<a href="#pages-accountpage-accountpagelocators-ts">pages/AccountPage/AccountPageLocators.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="accountpage">AccountPage</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-accountpage-accountpage-ts">pages/AccountPage/AccountPage.ts</h2>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L1">pages/AccountPage/AccountPage.ts:1</a></p>
+<ul>
+<li><code>type { Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>{ PageFactory }</code> &#x2190; <a data-source="base/PageFactory.ts" href="../../sources/base/PageFactory.ts.html#L1">base/PageFactory.ts:1</a></li>
+<li><code>{ AccountPageLocators }</code> &#x2190; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L1">pages/AccountPage/AccountPageLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L9">pages/AccountPage/AccountPage.ts:9</a></p>
+<h3 id="setfirstname">setFirstName</h3>
+<p><code>setFirstName(firstName: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L14">pages/AccountPage/AccountPage.ts:14</a></p>
+<ul>
+<li><code>this.locator.nameInput.clear()</code> &#x2014; line 15</li>
+<li><code>this.locator.nameInput.fill(firstName)</code> &#x2014; line 16</li>
+</ul>
+<h3 id="setlastname">setLastName</h3>
+<p><code>setLastName(lastName: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L19">pages/AccountPage/AccountPage.ts:19</a></p>
+<ul>
+<li><code>this.locator.surnameInput.clear()</code> &#x2014; line 20</li>
+<li><code>this.locator.surnameInput.fill(lastName)</code> &#x2014; line 21</li>
+</ul>
+<h3 id="setemail">setEmail</h3>
+<p><code>setEmail(email: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L24">pages/AccountPage/AccountPage.ts:24</a></p>
+<ul>
+<li><code>this.locator.emailInput.clear()</code> &#x2014; line 25</li>
+<li><code>this.locator.emailInput.fill(email)</code> &#x2014; line 26</li>
+</ul>
+<h3 id="setaccountemailsuccessfully">setAccountEmailSuccessfully</h3>
+<p><code>setAccountEmailSuccessfully(email: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L40">pages/AccountPage/AccountPage.ts:40</a></p>
+<p>Updates My Account personal email (fills required name fields) and waits for the save POST and success flash. Product may keep the previous address as verified with <code>pending_email</code> set, or update the account email immediately.</p>
+<p>Must wait for <code>/api/auth_data</code> before treating the UI as saved: QCI&apos;s success flash is async, and the email field already holds the typed value, so a value check alone is not proof the backend applied it.</p>
+<ul>
+<li><code>this.setFirstName(this.fakeFirstName())</code> &#x2014; line 41</li>
+<li><code>this.fakeFirstName()</code> &#x2014; line 41</li>
+<li><code>this.setLastName(this.fakeLastName())</code> &#x2014; line 42</li>
+<li><code>this.fakeLastName()</code> &#x2014; line 42</li>
+<li><code>this.setEmail(email)</code> &#x2014; line 43</li>
+<li><code>this.page.waitForResponse([callback: see source])</code> &#x2014; line 45</li>
+<li><code>this.submitPersonalInfo()</code> &#x2014; line 51</li>
+<li><code>this.expect( this.locator.successAlert.filter({ visible: true }).last() ).toBeVisible()</code> &#x2014; line 54</li>
+<li><code>this.locator.successAlert.filter({ visible: true }).last()</code> &#x2014; line 55</li>
+<li><code>this.locator.successAlert.filter({ visible: true })</code> &#x2014; line 55</li>
+<li><code>this.expect(this.locator.emailInput).toHaveValue(email)</code> &#x2014; line 57</li>
+</ul>
+<h3 id="setphonenumber">setPhoneNumber</h3>
+<p><code>setPhoneNumber(phoneNumber: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L60">pages/AccountPage/AccountPage.ts:60</a></p>
+<ul>
+<li><code>this.locator.phoneNumberInput.clear()</code> &#x2014; line 61</li>
+<li><code>this.locator.phoneNumberInput.fill(phoneNumber)</code> &#x2014; line 62</li>
+</ul>
+<h3 id="submitpersonalinfo">submitPersonalInfo</h3>
+<p><code>submitPersonalInfo()</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L65">pages/AccountPage/AccountPage.ts:65</a></p>
+<ul>
+<li><code>this.locator.personalInfoSubmitButton.click()</code> &#x2014; line 66</li>
+</ul>
+<h3 id="clicklogout">clickLogout</h3>
+<p><code>clickLogout()</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L69">pages/AccountPage/AccountPage.ts:69</a></p>
+<ul>
+<li><code>this.locator.logOutButton.click()</code> &#x2014; line 70</li>
+</ul>
+<h3 id="openbillinginfotab">openBillingInfoTab</h3>
+<p><code>openBillingInfoTab()</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L73">pages/AccountPage/AccountPage.ts:73</a></p>
+<ul>
+<li><code>this.locator.taxInfoButton.click()</code> &#x2014; line 74</li>
+</ul>
+<h3 id="selectcompanytype">selectCompanyType</h3>
+<p><code>selectCompanyType()</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L77">pages/AccountPage/AccountPage.ts:77</a></p>
+<ul>
+<li><code>this.locator.companyTypeButton.click()</code> &#x2014; line 78</li>
+</ul>
+<h3 id="selectprivatetype">selectPrivateType</h3>
+<p><code>selectPrivateType()</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L81">pages/AccountPage/AccountPage.ts:81</a></p>
+<ul>
+<li><code>this.locator.privateTypeButton.click()</code> &#x2014; line 82</li>
+</ul>
+<h3 id="setcompanyname">setCompanyName</h3>
+<p><code>setCompanyName(companyName: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L85">pages/AccountPage/AccountPage.ts:85</a></p>
+<ul>
+<li><code>this.locator.taxInfoCompanyNameInput.clear()</code> &#x2014; line 86</li>
+<li><code>this.locator.taxInfoCompanyNameInput.fill(companyName)</code> &#x2014; line 87</li>
+</ul>
+<h3 id="setcompanytaxid">setCompanyTaxId</h3>
+<p><code>setCompanyTaxId(taxId: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L90">pages/AccountPage/AccountPage.ts:90</a></p>
+<ul>
+<li><code>this.locator.taxInfoCompanyTaxIdInput.clear()</code> &#x2014; line 91</li>
+<li><code>this.locator.taxInfoCompanyTaxIdInput.fill(taxId)</code> &#x2014; line 92</li>
+</ul>
+<h3 id="setcompanyfirstname">setCompanyFirstName</h3>
+<p><code>setCompanyFirstName(firstName: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L95">pages/AccountPage/AccountPage.ts:95</a></p>
+<ul>
+<li><code>this.locator.taxInfoFirstNameInput.clear()</code> &#x2014; line 96</li>
+<li><code>this.locator.taxInfoFirstNameInput.fill(firstName)</code> &#x2014; line 97</li>
+</ul>
+<h3 id="setcompanylastname">setCompanyLastName</h3>
+<p><code>setCompanyLastName(lastName: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L100">pages/AccountPage/AccountPage.ts:100</a></p>
+<ul>
+<li><code>this.locator.taxInfoLastNameInput.clear()</code> &#x2014; line 101</li>
+<li><code>this.locator.taxInfoLastNameInput.fill(lastName)</code> &#x2014; line 102</li>
+</ul>
+<h3 id="setcompanyemail">setCompanyEmail</h3>
+<p><code>setCompanyEmail(email: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L105">pages/AccountPage/AccountPage.ts:105</a></p>
+<ul>
+<li><code>this.locator.taxInfoEmailInput.clear()</code> &#x2014; line 106</li>
+<li><code>this.locator.taxInfoEmailInput.fill(email)</code> &#x2014; line 107</li>
+</ul>
+<h3 id="setcompanyaddress">setCompanyAddress</h3>
+<p><code>setCompanyAddress(address: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L110">pages/AccountPage/AccountPage.ts:110</a></p>
+<ul>
+<li><code>this.locator.taxInfoAddressInput.clear()</code> &#x2014; line 111</li>
+<li><code>this.locator.taxInfoAddressInput.fill(address)</code> &#x2014; line 112</li>
+</ul>
+<h3 id="setcompanypostalcode">setCompanyPostalCode</h3>
+<p><code>setCompanyPostalCode(postalCode: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L115">pages/AccountPage/AccountPage.ts:115</a></p>
+<ul>
+<li><code>this.locator.taxInfoPostalCodeInput.clear()</code> &#x2014; line 116</li>
+<li><code>this.locator.taxInfoPostalCodeInput.fill(postalCode)</code> &#x2014; line 117</li>
+</ul>
+<h3 id="setcompanycity">setCompanyCity</h3>
+<p><code>setCompanyCity(city: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L120">pages/AccountPage/AccountPage.ts:120</a></p>
+<ul>
+<li><code>this.locator.taxInfoCityInput.clear()</code> &#x2014; line 121</li>
+<li><code>this.locator.taxInfoCityInput.fill(city)</code> &#x2014; line 122</li>
+</ul>
+<h3 id="selectcompanycountry">selectCompanyCountry</h3>
+<p><code>selectCompanyCountry(country: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L125">pages/AccountPage/AccountPage.ts:125</a></p>
+<ul>
+<li><code>this.locator.taxInfoCountrySelect.selectOption({ value: country })</code> &#x2014; line 126</li>
+</ul>
+<h3 id="setnewpassword">setNewPassword</h3>
+<p><code>setNewPassword(password: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L129">pages/AccountPage/AccountPage.ts:129</a></p>
+<ul>
+<li><code>this.locator.passwordInput.clear()</code> &#x2014; line 130</li>
+<li><code>this.locator.passwordInput.fill(password)</code> &#x2014; line 131</li>
+<li><code>this.locator.passwordConfirmInput.clear()</code> &#x2014; line 132</li>
+<li><code>this.locator.passwordConfirmInput.fill(password)</code> &#x2014; line 133</li>
+<li><code>this.locator.passwordUpdateSubmitButton.click()</code> &#x2014; line 134</li>
+</ul>
+<h3 id="setlanguage">setLanguage</h3>
+<p><code>setLanguage(languageCode: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L142">pages/AccountPage/AccountPage.ts:142</a></p>
+<p>Switches the account UI language via My Account &#x2192; Language and waits until the select reflects the saved value.</p>
+<ul>
+<li><code>this.locator.languageSelect.waitFor({ state: &apos;visible&apos; })</code> &#x2014; line 143</li>
+<li><code>this.locator.languageSelect.selectOption(languageCode)</code> &#x2014; line 144</li>
+<li><code>this.locator.languageUpdateButton.click()</code> &#x2014; line 145</li>
+<li><code>this.expect(this.locator.languageSelect).toHaveValue(languageCode)</code> &#x2014; line 146</li>
+</ul>
+<h3 id="setnewpasswordsuccessfully">setNewPasswordSuccessfully</h3>
+<p><code>setNewPasswordSuccessfully(password: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L156">pages/AccountPage/AccountPage.ts:156</a></p>
+<p>Changes password from My Account and waits for the success flash. Use when proving the change completed without waiting on email delivery (e.g. rapid successive changes). Waits for the password field to clear after the form POST so a sticky flash cannot satisfy the next save early.</p>
+<ul>
+<li><code>this.locator.passwordInput.clear()</code> &#x2014; line 157</li>
+<li><code>this.locator.passwordInput.fill(password)</code> &#x2014; line 158</li>
+<li><code>this.locator.passwordConfirmInput.clear()</code> &#x2014; line 159</li>
+<li><code>this.locator.passwordConfirmInput.fill(password)</code> &#x2014; line 160</li>
+<li><code>this.page.waitForResponse([callback: see source])</code> &#x2014; line 162</li>
+<li><code>this.locator.passwordUpdateSubmitButton.click()</code> &#x2014; line 168</li>
+<li><code>this.waitForPasswordChangeApplied()</code> &#x2014; line 171</li>
+<li><code>this.expectSuccessAlertVisible()</code> &#x2014; line 172</li>
+</ul>
+<h3 id="fillpasswordchangewithoutsubmit">fillPasswordChangeWithoutSubmit</h3>
+<p><code>fillPasswordChangeWithoutSubmit(password: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L186">pages/AccountPage/AccountPage.ts:186</a></p>
+<p>Fills matching password fields on My Account without clicking Save. Used for cancel / leave-without-submit negative cases.</p>
+<ul>
+<li><code>this.locator.passwordInput.clear()</code> &#x2014; line 187</li>
+<li><code>this.locator.passwordInput.fill(password)</code> &#x2014; line 188</li>
+<li><code>this.locator.passwordConfirmInput.clear()</code> &#x2014; line 189</li>
+<li><code>this.locator.passwordConfirmInput.fill(password)</code> &#x2014; line 190</li>
+</ul>
+<h3 id="submitinvalidpasswordchange">submitInvalidPasswordChange</h3>
+<p><code>submitInvalidPasswordChange(password: string, confirmPassword: string)</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L198">pages/AccountPage/AccountPage.ts:198</a></p>
+<p>Submits an invalid / incomplete password change (does not wait for success).</p>
+<ul>
+<li><code>this.locator.passwordInput.clear()</code> &#x2014; line 202</li>
+<li><code>this.locator.passwordInput.fill(password)</code> &#x2014; line 204</li>
+<li><code>this.locator.passwordConfirmInput.clear()</code> &#x2014; line 206</li>
+<li><code>this.locator.passwordConfirmInput.fill(confirmPassword)</code> &#x2014; line 208</li>
+<li><code>this.locator.passwordUpdateSubmitButton.click()</code> &#x2014; line 210</li>
+</ul>
+<h3 id="expectpasswordconfirmerror">expectPasswordConfirmError</h3>
+<p><code>expectPasswordConfirmError()</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L214">pages/AccountPage/AccountPage.ts:214</a></p>
+<p>Asserts password confirmation / mismatch validation error is shown.</p>
+<ul>
+<li><code>this.expect(this.locator.passwordConfirmInputError).toBeVisible()</code> &#x2014; line 215</li>
+<li><code>this.expect(this.locator.errorAlert).toBeVisible()</code> &#x2014; line 216</li>
+</ul>
+<h3 id="logout">logout</h3>
+<p><code>logout()</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L219">pages/AccountPage/AccountPage.ts:219</a></p>
+<ul>
+<li><code>this.locator.logOutButton.click()</code> &#x2014; line 220</li>
+</ul>
+<h3 id="expectsuccessalertvisible">expectSuccessAlertVisible</h3>
+<p><code>expectSuccessAlertVisible()</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L226">pages/AccountPage/AccountPage.ts:226</a></p>
+<ul>
+<li><code>this.expect(this.locator.successAlert).toBeVisible()</code> &#x2014; line 227</li>
+</ul>
+<h3 id="waitforpasswordchangeapplied">waitForPasswordChangeApplied</h3>
+<p><code>waitForPasswordChangeApplied()</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L230">pages/AccountPage/AccountPage.ts:230</a></p>
+<ul>
+<li><code>this.expect(this.locator.passwordInput).toHaveValue(&apos;&apos;)</code> &#x2014; line 231</li>
+<li><code>this.expect(this.locator.passwordConfirmInput).toHaveValue(&apos;&apos;)</code> &#x2014; line 232</li>
+</ul>
+<h3 id="expectsuccessalertvisible-1">expectSuccessAlertVisible</h3>
+<p><code>expectSuccessAlertVisible()</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L241">pages/AccountPage/AccountPage.ts:241</a></p>
+<ul>
+<li><code>this.page .locator(&apos;div.alert-success&apos;) .filter({ visible: true })</code> &#x2014; line 242</li>
+<li><code>this.page .locator(&apos;div.alert-success&apos;)</code> &#x2014; line 242</li>
+<li><code>this.expect(visibleFlash.last()).toBeVisible()</code> &#x2014; line 246</li>
+</ul>
+<h3 id="waitforpasswordchangeapplied-1">waitForPasswordChangeApplied</h3>
+<p><code>waitForPasswordChangeApplied()</code></p>
+<p><a data-source="pages/AccountPage/AccountPage.ts" href="../../sources/pages/AccountPage/AccountPage.ts.html#L250">pages/AccountPage/AccountPage.ts:250</a></p>
+<ul>
+<li><code>this.expect(this.locator.passwordInput) .toHaveValue(&apos;&apos;) .then([callback: see source])</code> &#x2014; line 253</li>
+<li><code>this.expect(this.locator.passwordInput) .toHaveValue(&apos;&apos;)</code> &#x2014; line 253</li>
+<li><code>this.expect( this.locator.passwordConfirmInput ).toHaveValue(&apos;&apos;)</code> &#x2014; line 256</li>
+<li><code>this.page.waitForURL(/\/qr-codes(?:\/|&#x24;|\?)/, { timeout: 25_000, })</code> &#x2014; line 260</li>
+</ul>
+<h2 id="pages-accountpage-accountpagelocators-ts">pages/AccountPage/AccountPageLocators.ts</h2>
+<p><a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L1">pages/AccountPage/AccountPageLocators.ts:1</a></p>
+<ul>
+<li><code>type { Locator, Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseLocators }</code> &#x2190; <a data-source="pages/BaseLocators.ts" href="../../sources/pages/BaseLocators.ts.html#L1">pages/BaseLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L43">pages/AccountPage/AccountPageLocators.ts:43</a></p>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.surnameInput</code> &#x2190; <code>page.locator(&apos;input#surname&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L45">pages/AccountPage/AccountPageLocators.ts:45</a></li>
+<li><code>this.emailInput</code> &#x2190; <code>page.locator(&apos;div.input-field-area&gt;input#email&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L46">pages/AccountPage/AccountPageLocators.ts:46</a></li>
+<li><code>this.phoneNumberInput</code> &#x2190; <code>page.locator(&apos;input#telephone&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L47">pages/AccountPage/AccountPageLocators.ts:47</a></li>
+<li><code>this.personalInfoSubmitButton</code> &#x2190; <code>page.locator(&apos;button#sbmt&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L48">pages/AccountPage/AccountPageLocators.ts:48</a></li>
+<li><code>this.errorAlert</code> &#x2190; <code>page .getByRole(&apos;alert&apos;) .and(page.locator(&apos;div.alert-danger&apos;))</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L51">pages/AccountPage/AccountPageLocators.ts:51</a></li>
+<li><code>this.passwordInput</code> &#x2190; <code>page.locator(&apos;input#password&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L56">pages/AccountPage/AccountPageLocators.ts:56</a></li>
+<li><code>this.passwordConfirmInput</code> &#x2190; <code>page.locator(&apos;input#re_password&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L57">pages/AccountPage/AccountPageLocators.ts:57</a></li>
+<li><code>this.passwordUpdateSubmitButton</code> &#x2190; <code>page.locator(&apos;button#passSave&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L58">pages/AccountPage/AccountPageLocators.ts:58</a></li>
+<li><code>this.passwordInputError</code> &#x2190; <code>page.locator(&apos;label#password-error&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L59">pages/AccountPage/AccountPageLocators.ts:59</a></li>
+<li><code>this.passwordConfirmInputError</code> &#x2190; <code>page.locator(&apos;span#password_error&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L60">pages/AccountPage/AccountPageLocators.ts:60</a></li>
+<li><code>this.passwordInputEyeToggle</code> &#x2190; <code>page .locator(&apos;input#password_check&apos;) .first()</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L61">pages/AccountPage/AccountPageLocators.ts:61</a></li>
+<li><code>this.passwordConfirmInputEyeToggle</code> &#x2190; <code>page .locator(&apos;input#re_password_check&apos;) .last()</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L64">pages/AccountPage/AccountPageLocators.ts:64</a></li>
+<li><code>this.languageSelect</code> &#x2190; <code>page.locator(&apos;select#language&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L69">pages/AccountPage/AccountPageLocators.ts:69</a></li>
+<li><code>this.languageUpdateButton</code> &#x2190; <code>page.locator(&apos;button#LangSave&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L70">pages/AccountPage/AccountPageLocators.ts:70</a></li>
+<li><code>this.logOutButton</code> &#x2190; <code>page.locator(&apos;div.my-account-form-group&gt;button&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L72">pages/AccountPage/AccountPageLocators.ts:72</a></li>
+<li><code>this.firstNameError</code> &#x2190; <code>page.locator(&apos;label#name-error&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L74">pages/AccountPage/AccountPageLocators.ts:74</a></li>
+<li><code>this.lastNameError</code> &#x2190; <code>page.locator(&apos;label#surname-error&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L75">pages/AccountPage/AccountPageLocators.ts:75</a></li>
+<li><code>this.emailError</code> &#x2190; <code>page.locator(&apos;label#email-error&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L76">pages/AccountPage/AccountPageLocators.ts:76</a></li>
+<li><code>this.taxInfoButton</code> &#x2190; <code>page.locator(&apos;button#taxInfo-tab&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L78">pages/AccountPage/AccountPageLocators.ts:78</a></li>
+<li><code>this.companyTypeButton</code> &#x2190; <code>page.locator(&apos;input#comapanyRadio&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L79">pages/AccountPage/AccountPageLocators.ts:79</a></li>
+<li><code>this.privateTypeButton</code> &#x2190; <code>page.locator(&apos;input#privateRadio&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L80">pages/AccountPage/AccountPageLocators.ts:80</a></li>
+<li><code>this.taxInfoCompanyNameInput</code> &#x2190; <code>page.locator(&apos;input#company_name&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L81">pages/AccountPage/AccountPageLocators.ts:81</a></li>
+<li><code>this.taxInfoCompanyTaxIdInput</code> &#x2190; <code>page.locator(&apos;input#taxId&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L82">pages/AccountPage/AccountPageLocators.ts:82</a></li>
+<li><code>this.taxInfoFirstNameInput</code> &#x2190; <code>page.locator(&apos;input#taxName&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L83">pages/AccountPage/AccountPageLocators.ts:83</a></li>
+<li><code>this.taxInfoLastNameInput</code> &#x2190; <code>page.locator(&apos;input#taxSurname&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L84">pages/AccountPage/AccountPageLocators.ts:84</a></li>
+<li><code>this.taxInfoEmailInput</code> &#x2190; <code>page.locator(&apos;div.email&gt;div&gt;input#email&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L85">pages/AccountPage/AccountPageLocators.ts:85</a></li>
+<li><code>this.taxInfoAddressInput</code> &#x2190; <code>page.locator(&apos;input#taxAdd&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L86">pages/AccountPage/AccountPageLocators.ts:86</a></li>
+<li><code>this.taxInfoPostalCodeInput</code> &#x2190; <code>page.locator(&apos;input#taxPcode&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L87">pages/AccountPage/AccountPageLocators.ts:87</a></li>
+<li><code>this.taxInfoCityInput</code> &#x2190; <code>page.locator(&apos;input#taxCity&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L88">pages/AccountPage/AccountPageLocators.ts:88</a></li>
+<li><code>this.taxInfoCountrySelect</code> &#x2190; <code>page.locator(&apos;select#country&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L89">pages/AccountPage/AccountPageLocators.ts:89</a></li>
+<li><code>this.taxInfoUpdateButton</code> &#x2190; <code>page.locator(&apos;button#Users_tax&apos;)</code> &#x2014; <a data-source="pages/AccountPage/AccountPageLocators.ts" href="../../sources/pages/AccountPage/AccountPageLocators.ts.html#L90">pages/AccountPage/AccountPageLocators.ts:90</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

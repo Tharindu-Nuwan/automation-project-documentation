@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/fityourneedspage.html">
+<title>FitYourNeedsPage · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-fityourneedspage-fityourneedspage-ts">pages/FitYourNeedsPage/FitYourNeedsPage.ts</a>
+<a href="#pages-fityourneedspage-fityourneedspagelocators-ts">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="fityourneedspage">FitYourNeedsPage</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-fityourneedspage-fityourneedspage-ts">pages/FitYourNeedsPage/FitYourNeedsPage.ts</h2>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L1">pages/FitYourNeedsPage/FitYourNeedsPage.ts:1</a></p>
+<ul>
+<li><code>type { Locator, Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>{ PageFactory }</code> &#x2190; <a data-source="base/PageFactory.ts" href="../../sources/base/PageFactory.ts.html#L1">base/PageFactory.ts:1</a></li>
+<li><code>{ FitYourNeedsPageLocators, FitYourNeedsQrType, }</code> &#x2190; <a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L1">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L17">pages/FitYourNeedsPage/FitYourNeedsPage.ts:17</a></p>
+<h3 id="waitforsectionready">waitForSectionReady</h3>
+<p><code>waitForSectionReady(ready: Locator)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L23">pages/FitYourNeedsPage/FitYourNeedsPage.ts:23</a></p>
+<p>Wait until fonts/layout settle after navigation or type switch.</p>
+<ul>
+<li><code>this.page.waitForLoadState(&apos;domcontentloaded&apos;)</code> &#x2014; line 24</li>
+<li><code>this.page .evaluate( () =&gt; new Promise&lt;void&gt;((resolve) =&gt; { requestAnimationFrame(() =&gt; { requestAnimationFrame(() =&gt; resolve()) }) }) ) .catch([callback: see source])</code> &#x2014; line 26</li>
+<li><code>this.page .evaluate([callback: see source])</code> &#x2014; line 26</li>
+</ul>
+<h3 id="openhomepage">openHomepage</h3>
+<p><code>openHomepage(locale: string)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L42">pages/FitYourNeedsPage/FitYourNeedsPage.ts:42</a></p>
+<p>Opens the homepage for a locale and waits until the fit-your-needs type grid is ready.</p>
+<ul>
+<li><code>this.page.goto(&#x2032;/&#x24;{locale}&#x2032;)</code> &#x2014; line 43</li>
+<li><code>this.waitForSectionReady(this.locator.typeCardsGrid)</code> &#x2014; line 44</li>
+<li><code>this.locator.typeCardsGrid.scrollIntoViewIfNeeded()</code> &#x2014; line 45</li>
+</ul>
+<h3 id="selectqrtype">selectQrType</h3>
+<p><code>selectQrType(type: FitYourNeedsQrType)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L52">pages/FitYourNeedsPage/FitYourNeedsPage.ts:52</a></p>
+<p>Selects a QR type tile and waits for its preview panel.</p>
+<ul>
+<li><code>this.locator.typeCard(type)</code> &#x2014; line 53</li>
+<li><code>card.click()</code> &#x2014; line 55</li>
+<li><code>this.locator.typePreview(type)</code> &#x2014; line 56</li>
+<li><code>this.waitForSectionReady(preview)</code> &#x2014; line 57</li>
+</ul>
+<h3 id="expecttypeheading">expectTypeHeading</h3>
+<p><code>expectTypeHeading(expected: string, type: FitYourNeedsQrType = this.selectedType)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L64">pages/FitYourNeedsPage/FitYourNeedsPage.ts:64</a></p>
+<p>Asserts the selected type heading matches the expected translation.</p>
+<ul>
+<li><code>this.expect(this.locator.typeHeading(type)).toHaveText(expected)</code> &#x2014; line 68</li>
+<li><code>this.locator.typeHeading(type)</code> &#x2014; line 68</li>
+</ul>
+<h3 id="expecttypecardlabel">expectTypeCardLabel</h3>
+<p><code>expectTypeCardLabel(type: FitYourNeedsQrType, expected: string)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L74">pages/FitYourNeedsPage/FitYourNeedsPage.ts:74</a></p>
+<p>Asserts a type card label matches the expected translation.</p>
+<ul>
+<li><code>this.expect(this.locator.typeCard(type)).toContainText(expected)</code> &#x2014; line 78</li>
+<li><code>this.locator.typeCard(type)</code> &#x2014; line 78</li>
+</ul>
+<h3 id="expecttextwithinphoneframe">expectTextWithinPhoneFrame</h3>
+<p><code>expectTextWithinPhoneFrame(textLocator: Locator, type: FitYourNeedsQrType = this.selectedType)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L86">pages/FitYourNeedsPage/FitYourNeedsPage.ts:86</a></p>
+<p>Asserts rendered text glyphs stay inside the phone preview frame. Uses Range client rects (not the element box) so CSS transform:scale on preview titles does not produce false positives.</p>
+<ul>
+<li><code>this.locator.phoneFrame(type)</code> &#x2014; line 91</li>
+<li><code>this.expect( result.ok, &#x2032;text outside phone frame for type=&#x24;{type}: &#x24;{result.reason}&#x2032; ).toBeTruthy()</code> &#x2014; line 151</li>
+</ul>
+<h3 id="expecttextfullyvisible">expectTextFullyVisible</h3>
+<p><code>expectTextFullyVisible(textLocator: Locator)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L162">pages/FitYourNeedsPage/FitYourNeedsPage.ts:162</a></p>
+<p>Asserts text is not ellipsized / horizontally self-clipped. Ancestor overflow:hidden is ignored &#x2014; preview frames intentionally clip scaled content; use expectTextWithinPhoneFrame for boundary checks.</p>
+<ul>
+<li><code>this.expect(result.ok, result.reason).toBeTruthy()</code> &#x2014; line 190</li>
+</ul>
+<h3 id="expectsingleline">expectSingleLine</h3>
+<p><code>expectSingleLine(textLocator: Locator)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L199">pages/FitYourNeedsPage/FitYourNeedsPage.ts:199</a></p>
+<p>Asserts the target text renders on a single visual line. Counts unique glyph Y positions &#x2014; not raw getClientRects length &#x2014; because inline children (e.g. <code>.text-nowrap</code> spans) create multiple fragment rects on the same line.</p>
+<ul>
+<li><code>this.expect( lineCount, &#x2032;expected single line, got &#x24;{lineCount}&#x2032; ).toBeLessThanOrEqual(2)</code> &#x2014; line 214</li>
+</ul>
+<h3 id="expectwifitokenonsingleline">expectWifiTokenOnSingleLine</h3>
+<p><code>expectWifiTokenOnSingleLine(type: FitYourNeedsQrType = &apos;wifi&apos;)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L227">pages/FitYourNeedsPage/FitYourNeedsPage.ts:227</a></p>
+<p>Asserts the Wi-Fi header keeps its &quot;Wi-Fi&quot; token unbroken.</p>
+<p>The header sentence itself wraps by design (English reference copy also renders on two lines at every width), so only the <code>.text-nowrap</code> token is required to stay on one line.</p>
+<ul>
+<li><code>this.locator.wifiNoWrapToken(type)</code> &#x2014; line 230</li>
+<li><code>this.expect(token).toBeVisible()</code> &#x2014; line 231</li>
+<li><code>this.expectSingleLine(token)</code> &#x2014; line 232</li>
+</ul>
+<h3 id="expectopeningquotesonsameline">expectOpeningQuotesOnSameLine</h3>
+<p><code>expectOpeningQuotesOnSameLine(textLocator: Locator)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L238">pages/FitYourNeedsPage/FitYourNeedsPage.ts:238</a></p>
+<p>Asserts opening quotation marks share a client-rect line with following text.</p>
+<ul>
+<li><code>this.expect(result.ok, result.reason).toBeTruthy()</code> &#x2014; line 312</li>
+</ul>
+<h3 id="expectclosingquotespresent">expectClosingQuotesPresent</h3>
+<p><code>expectClosingQuotesPresent(textLocator: Locator)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L318">pages/FitYourNeedsPage/FitYourNeedsPage.ts:318</a></p>
+<p>Asserts closing quotation marks are present when the text opens a quote.</p>
+<ul>
+<li><code>this.expect( asciiCount % 2, &#x2032;unbalanced ASCII quotes in: &#x24;{text}&#x2032; ).toBe(0)</code> &#x2014; line 325</li>
+<li><code>this.expect(balanced, &#x2032;missing closing quote in: &#x24;{text}&#x2032;).toBeTruthy()</code> &#x2014; line 339</li>
+</ul>
+<h3 id="expecttypecardbottombordervisible">expectTypeCardBottomBorderVisible</h3>
+<p><code>expectTypeCardBottomBorderVisible(type: FitYourNeedsQrType)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L345">pages/FitYourNeedsPage/FitYourNeedsPage.ts:345</a></p>
+<p>Asserts a tile (type card) bottom border is painted / visible.</p>
+<ul>
+<li><code>this.locator.typeCard(type)</code> &#x2014; line 348</li>
+<li><code>this.expect( result.ok, &#x2032;bottom border not visible (width=&#x24;{result.width}, color=&#x24;{result.color})&#x2032; ).toBeTruthy()</code> &#x2014; line 367</li>
+</ul>
+<h3 id="expectrtldirection">expectRtlDirection</h3>
+<p><code>expectRtlDirection()</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L376">pages/FitYourNeedsPage/FitYourNeedsPage.ts:376</a></p>
+<p>Asserts page / preview HTML direction for RTL locales.</p>
+<ul>
+<li><code>this.page.locator(&apos;html&apos;).getAttribute(&apos;dir&apos;)</code> &#x2014; line 377</li>
+<li><code>this.page.locator(&apos;html&apos;)</code> &#x2014; line 377</li>
+<li><code>this.expect(dir).toBe(&apos;rtl&apos;)</code> &#x2014; line 378</li>
+</ul>
+<h3 id="expectvcardavatarsizematchesdesign">expectVcardAvatarSizeMatchesDesign</h3>
+<p><code>expectVcardAvatarSizeMatchesDesign()</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L384">pages/FitYourNeedsPage/FitYourNeedsPage.ts:384</a></p>
+<p>Asserts vCard avatar rendered size is within Figma-ish bounds (120px source).</p>
+<ul>
+<li><code>this.selectQrType(&apos;vcard&apos;)</code> &#x2014; line 385</li>
+<li><code>this.locator.vcardAvatar()</code> &#x2014; line 386</li>
+<li><code>this.expect(box, &apos;avatar bounding box missing&apos;).toBeTruthy()</code> &#x2014; line 390</li>
+<li><code>this.expect(box!.width).toBeGreaterThanOrEqual(40)</code> &#x2014; line 391</li>
+<li><code>this.expect(box!.width).toBeLessThanOrEqual(140)</code> &#x2014; line 392</li>
+<li><code>this.expect(Math.abs(box!.width - box!.height)).toBeLessThanOrEqual(2)</code> &#x2014; line 393</li>
+</ul>
+<h3 id="expectvcardnamefontspresent">expectVcardNameFontsPresent</h3>
+<p><code>expectVcardNameFontsPresent()</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L399">pages/FitYourNeedsPage/FitYourNeedsPage.ts:399</a></p>
+<p>Asserts Name / Role use a non-default font stack (design typography).</p>
+<ul>
+<li><code>this.selectQrType(&apos;vcard&apos;)</code> &#x2014; line 400</li>
+<li><code>this.locator.vcardName()</code> &#x2014; line 401</li>
+<li><code>this.locator.vcardRole()</code> &#x2014; line 402</li>
+<li><code>this.expect(fontFamily.length).toBeGreaterThan(0)</code> &#x2014; line 408</li>
+<li><code>this.expect(name).toBeVisible()</code> &#x2014; line 409</li>
+<li><code>this.expect(role).toBeVisible()</code> &#x2014; line 410</li>
+</ul>
+<h3 id="expectvcardcontacticonsvisible">expectVcardContactIconsVisible</h3>
+<p><code>expectVcardContactIconsVisible()</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L416">pages/FitYourNeedsPage/FitYourNeedsPage.ts:416</a></p>
+<p>Asserts Phone / Mail / Location action icons are visible in the vCard preview.</p>
+<ul>
+<li><code>this.selectQrType(&apos;vcard&apos;)</code> &#x2014; line 417</li>
+<li><code>this.locator .phoneFrame(&apos;vcard&apos;) .locator(&apos;button&apos;) .filter({ has: this.page.locator(&apos;svg&apos;) })</code> &#x2014; line 418</li>
+<li><code>this.locator .phoneFrame(&apos;vcard&apos;) .locator(&apos;button&apos;)</code> &#x2014; line 418</li>
+<li><code>this.locator .phoneFrame(&apos;vcard&apos;)</code> &#x2014; line 418</li>
+<li><code>this.page.locator(&apos;svg&apos;)</code> &#x2014; line 421</li>
+<li><code>this.expect(count).toBeGreaterThanOrEqual(3)</code> &#x2014; line 423</li>
+<li><code>this.expect(actionButtons.nth(i)).toBeVisible()</code> &#x2014; line 425</li>
+</ul>
+<h3 id="expectpreviewshellbackground">expectPreviewShellBackground</h3>
+<p><code>expectPreviewShellBackground(type: FitYourNeedsQrType = this.selectedType)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L432">pages/FitYourNeedsPage/FitYourNeedsPage.ts:432</a></p>
+<p>Asserts preview shell uses the designed light-green background (#EAF4ED).</p>
+<ul>
+<li><code>this.locator.previewPanel(type)</code> &#x2014; line 435</li>
+<li><code>this.expect(bg).toMatch(/234,\s*244,\s*237/)</code> &#x2014; line 450</li>
+</ul>
+<h3 id="expectvcardtextcontrastsufficient">expectVcardTextContrastSufficient</h3>
+<p><code>expectVcardTextContrastSufficient()</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L456">pages/FitYourNeedsPage/FitYourNeedsPage.ts:456</a></p>
+<p>Asserts vCard name text has sufficient contrast against the dark backdrop.</p>
+<ul>
+<li><code>this.selectQrType(&apos;vcard&apos;)</code> &#x2014; line 457</li>
+<li><code>this.locator.vcardName()</code> &#x2014; line 458</li>
+<li><code>this.expect(contrast).toBeGreaterThanOrEqual(3)</code> &#x2014; line 490</li>
+</ul>
+<h3 id="expectnopreviewtextoverflow">expectNoPreviewTextOverflow</h3>
+<p><code>expectNoPreviewTextOverflow(type: FitYourNeedsQrType = this.selectedType)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L496">pages/FitYourNeedsPage/FitYourNeedsPage.ts:496</a></p>
+<p>Sweeps preview text elements and asserts none overflow the phone frame.</p>
+<ul>
+<li><code>this.locator.phoneFrame(type)</code> &#x2014; line 499</li>
+<li><code>this.expectTextWithinPhoneFrame(el, type)</code> &#x2014; line 516</li>
+<li><code>this.expectTextFullyVisible(el)</code> &#x2014; line 517</li>
+</ul>
+<h3 id="reloadandwait">reloadAndWait</h3>
+<p><code>reloadAndWait()</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L524">pages/FitYourNeedsPage/FitYourNeedsPage.ts:524</a></p>
+<p>Reloads the current page and waits for the type grid again.</p>
+<ul>
+<li><code>this.page.reload()</code> &#x2014; line 525</li>
+<li><code>this.waitForSectionReady(this.locator.typeCardsGrid)</code> &#x2014; line 526</li>
+<li><code>this.locator.typeCardsGrid.scrollIntoViewIfNeeded()</code> &#x2014; line 527</li>
+</ul>
+<h3 id="switchlocale">switchLocale</h3>
+<p><code>switchLocale(locale: string)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html#L534">pages/FitYourNeedsPage/FitYourNeedsPage.ts:534</a></p>
+<p>Switches locale via URL and re-checks the section is usable.</p>
+<ul>
+<li><code>this.openHomepage(locale)</code> &#x2014; line 535</li>
+<li><code>this.expect(this.locator.typeCardsGrid).toBeVisible()</code> &#x2014; line 536</li>
+</ul>
+<h2 id="pages-fityourneedspage-fityourneedspagelocators-ts">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts</h2>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L1">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:1</a></p>
+<ul>
+<li><code>type { Locator, Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseLocators }</code> &#x2190; <a data-source="pages/BaseLocators.ts" href="../../sources/pages/BaseLocators.ts.html#L1">pages/BaseLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L29">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:29</a></p>
+<h3 id="typecard">typeCard</h3>
+<p><code>typeCard(type: FitYourNeedsQrType)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L40">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:40</a></p>
+<p>Type selector tile for a QR preview type.</p>
+<ul>
+<li><code>this.pageRef.getByTestId(&#x2032;home-fit-your-needs-&#x24;{type}-card&#x2032;)</code> &#x2014; line 41</li>
+</ul>
+<h3 id="typepreview">typePreview</h3>
+<p><code>typePreview(type: FitYourNeedsQrType)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L45">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:45</a></p>
+<p>Active phone-preview panel for a QR type.</p>
+<ul>
+<li><code>this.pageRef.getByTestId(&#x2032;fit-your-needs-&#x24;{type}-preview&#x2032;)</code> &#x2014; line 46</li>
+</ul>
+<h3 id="phoneframe">phoneFrame</h3>
+<p><code>phoneFrame(type: FitYourNeedsQrType)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L50">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:50</a></p>
+<p>Phone mockup frame inside a type preview (skip Activity-hidden vCard frame).</p>
+<ul>
+<li><code>this.typePreview(type) .locator(&apos;.content-wrapper&apos;) .filter({ visible: true }) .first()</code> &#x2014; line 51</li>
+<li><code>this.typePreview(type) .locator(&apos;.content-wrapper&apos;) .filter({ visible: true })</code> &#x2014; line 51</li>
+<li><code>this.typePreview(type) .locator(&apos;.content-wrapper&apos;)</code> &#x2014; line 51</li>
+<li><code>this.typePreview(type)</code> &#x2014; line 51</li>
+</ul>
+<h3 id="typeheading">typeHeading</h3>
+<p><code>typeHeading(type: FitYourNeedsQrType)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L57">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:57</a></p>
+<ul>
+<li><code>this.typePreview(type).locator(&apos;h3&apos;).first()</code> &#x2014; line 58</li>
+<li><code>this.typePreview(type).locator(&apos;h3&apos;)</code> &#x2014; line 58</li>
+<li><code>this.typePreview(type)</code> &#x2014; line 58</li>
+</ul>
+<h3 id="businesssubtitle">businessSubtitle</h3>
+<p><code>businessSubtitle(type: FitYourNeedsQrType = &apos;business&apos;)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L61">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:61</a></p>
+<ul>
+<li><code>this.typePreview(type).locator(&apos;.business-subtitle&apos;).first()</code> &#x2014; line 62</li>
+<li><code>this.typePreview(type).locator(&apos;.business-subtitle&apos;)</code> &#x2014; line 62</li>
+<li><code>this.typePreview(type)</code> &#x2014; line 62</li>
+</ul>
+<h3 id="videotitle">videoTitle</h3>
+<p><code>videoTitle(type: FitYourNeedsQrType = &apos;video&apos;)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L65">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:65</a></p>
+<ul>
+<li><code>this.typePreview(type).locator(&apos;.video-title&apos;).first()</code> &#x2014; line 66</li>
+<li><code>this.typePreview(type).locator(&apos;.video-title&apos;)</code> &#x2014; line 66</li>
+<li><code>this.typePreview(type)</code> &#x2014; line 66</li>
+</ul>
+<h3 id="wifiheader">wifiHeader</h3>
+<p><code>wifiHeader(type: FitYourNeedsQrType = &apos;wifi&apos;)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L69">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:69</a></p>
+<ul>
+<li><code>this.typePreview(type).locator(&apos;.wifi-header&apos;).first()</code> &#x2014; line 70</li>
+<li><code>this.typePreview(type).locator(&apos;.wifi-header&apos;)</code> &#x2014; line 70</li>
+<li><code>this.typePreview(type)</code> &#x2014; line 70</li>
+</ul>
+<h3 id="wifinowraptoken">wifiNoWrapToken</h3>
+<p><code>wifiNoWrapToken(type: FitYourNeedsQrType = &apos;wifi&apos;)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L74">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:74</a></p>
+<p>The non-breaking &quot;Wi-Fi&quot; token inside the Wi-Fi header.</p>
+<ul>
+<li><code>this.wifiHeader(type).locator(&apos;.text-nowrap&apos;).first()</code> &#x2014; line 75</li>
+<li><code>this.wifiHeader(type).locator(&apos;.text-nowrap&apos;)</code> &#x2014; line 75</li>
+<li><code>this.wifiHeader(type)</code> &#x2014; line 75</li>
+</ul>
+<h3 id="facebookdescription">facebookDescription</h3>
+<p><code>facebookDescription(type: FitYourNeedsQrType = &apos;facebook&apos;)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L78">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:78</a></p>
+<ul>
+<li><code>this.typePreview(type).locator(&apos;.facebook-description&apos;).first()</code> &#x2014; line 79</li>
+<li><code>this.typePreview(type).locator(&apos;.facebook-description&apos;)</code> &#x2014; line 79</li>
+<li><code>this.typePreview(type)</code> &#x2014; line 79</li>
+</ul>
+<h3 id="facebooktitle">facebookTitle</h3>
+<p><code>facebookTitle(type: FitYourNeedsQrType = &apos;facebook&apos;)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L82">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:82</a></p>
+<ul>
+<li><code>this.typePreview(type).locator(&apos;.facebook-title&apos;).first()</code> &#x2014; line 83</li>
+<li><code>this.typePreview(type).locator(&apos;.facebook-title&apos;)</code> &#x2014; line 83</li>
+<li><code>this.typePreview(type)</code> &#x2014; line 83</li>
+</ul>
+<h3 id="vcardavatar">vcardAvatar</h3>
+<p><code>vcardAvatar(type: FitYourNeedsQrType = &apos;vcard&apos;)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L86">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:86</a></p>
+<ul>
+<li><code>this.typePreview(type).locator(&apos;div.rounded-full img&apos;).first()</code> &#x2014; line 87</li>
+<li><code>this.typePreview(type).locator(&apos;div.rounded-full img&apos;)</code> &#x2014; line 87</li>
+<li><code>this.typePreview(type)</code> &#x2014; line 87</li>
+</ul>
+<h3 id="vcardname">vcardName</h3>
+<p><code>vcardName(type: FitYourNeedsQrType = &apos;vcard&apos;)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L90">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:90</a></p>
+<ul>
+<li><code>this.typePreview(type).locator(&apos;#vcardName .vcard-name&apos;).first()</code> &#x2014; line 91</li>
+<li><code>this.typePreview(type).locator(&apos;#vcardName .vcard-name&apos;)</code> &#x2014; line 91</li>
+<li><code>this.typePreview(type)</code> &#x2014; line 91</li>
+</ul>
+<h3 id="vcardrole">vcardRole</h3>
+<p><code>vcardRole(type: FitYourNeedsQrType = &apos;vcard&apos;)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L94">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:94</a></p>
+<ul>
+<li><code>this.typePreview(type).locator(&apos;#vcardName .vcard-role&apos;).first()</code> &#x2014; line 95</li>
+<li><code>this.typePreview(type).locator(&apos;#vcardName .vcard-role&apos;)</code> &#x2014; line 95</li>
+<li><code>this.typePreview(type)</code> &#x2014; line 95</li>
+</ul>
+<h3 id="vcardnotes">vcardNotes</h3>
+<p><code>vcardNotes(type: FitYourNeedsQrType = &apos;vcard&apos;)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L98">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:98</a></p>
+<ul>
+<li><code>this.typePreview(type).locator(&apos;#vcardNotes&apos;).first()</code> &#x2014; line 99</li>
+<li><code>this.typePreview(type).locator(&apos;#vcardNotes&apos;)</code> &#x2014; line 99</li>
+<li><code>this.typePreview(type)</code> &#x2014; line 99</li>
+</ul>
+<h3 id="previewpanel">previewPanel</h3>
+<p><code>previewPanel(type: FitYourNeedsQrType)</code></p>
+<p><a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L102">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:102</a></p>
+<ul>
+<li><code>this.typePreview(type).locator(&apos;div.overflow-hidden&apos;).first()</code> &#x2014; line 103</li>
+<li><code>this.typePreview(type).locator(&apos;div.overflow-hidden&apos;)</code> &#x2014; line 103</li>
+<li><code>this.typePreview(type)</code> &#x2014; line 103</li>
+</ul>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.pageRef</code> &#x2190; <code>page</code> &#x2014; <a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L31">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:31</a></li>
+<li><code>this.typeCardsGrid</code> &#x2190; <code>page.locator(&apos;.fit-your-needs-qr-grid&apos;)</code> &#x2014; <a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L33">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:33</a></li>
+<li><code>this.createQrButton</code> &#x2190; <code>page.getByTestId( &apos;home-fit-your-needs-create-qr-button&apos; )</code> &#x2014; <a data-source="pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts" href="../../sources/pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts.html#L34">pages/FitYourNeedsPage/FitYourNeedsPageLocators.ts:34</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

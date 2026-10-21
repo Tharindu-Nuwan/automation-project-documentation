@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="06-apis-database-cleanup.html">
+<title>APIs, database, mail, and cleanup · QA reference</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script defer src="assets/search-index.js"></script><script defer src="assets/app.js"></script>
+</head><body data-root-prefix="">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="index.html">Start here</a>
+<a href="00-qa-quick-start.html">Your first check</a>
+<a href="02-accounts-and-credentials.html">Accounts and login</a>
+<a href="03-qr-creation.html">QR types and creation</a>
+<a href="04-data-and-inputs.html">What to enter and upload</a>
+<a href="05-other-flows.html">Other product flows</a>
+<a href="07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="01-architecture-and-running.html">Automation setup and execution</a>
+<a href="06-apis-database-cleanup.html" class="active" aria-current="page">APIs, database and cleanup</a>
+<a href="09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="reference/index.html">Reference overview</a>
+<a href="reference/spec-index.html">Complete spec map</a>
+<a href="reference/code-index.html">Shared helpers and locators</a>
+<a href="reference/field-inputs.html">Field inputs and defaults</a>
+<a href="reference/data-index.html">Data sources and consumers</a>
+<a href="reference/environment-index.html">Environment variables</a>
+<a href="reference/assets.html">Upload asset inventory</a>
+<a href="reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (7)</summary><a href="#ui-tests-also-manipulate-backend-state">UI tests also manipulate backend state</a>
+<a href="#userapi-operations">UserApi operations</a>
+<a href="#dbapi-where-the-configuration-comes-from">DbApi: where the configuration comes from</a>
+<a href="#dbapi-method-by-method-behavior">DbApi method-by-method behavior</a>
+<a href="#stripe-helper-and-pricing-evidence">Stripe helper and pricing evidence</a>
+<a href="#mailpit-matching-details">Mailpit matching details</a>
+<a href="#cleanup-is-explicit-and-varies-by-test">Cleanup is explicit and varies by test</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="6-apis-dbapi-mail-stripe-and-cleanup">APIs, database, mail, and cleanup</h1>
+<p><a href="index.html">Start</a> &#xb7; <a href="05-other-flows.html">Previous</a> &#xb7; <a href="07-qa-workflow-and-troubleshooting.html">Next: QA workflow</a></p>
+<p class="callout"><strong>Optional technical detail.</strong> Some automated cases prepare or verify records behind the product screens. This page explains those operations for test maintainers. If a manual check needs a particular plan, email, or account state, ask for that prepared state; you do not need to run database commands yourself.</p><h2 id="ui-tests-also-manipulate-backend-state">UI tests also manipulate backend state</h2>
+<p><code>apiManager</code> contains <code>userApi</code>, <code>stripeApi</code>, and <code>dbApi</code>. UserApi talks to the selected application&apos;s test endpoints. StripeAPI talks to Stripe. DbApi connects directly to MySQL. Mailpit has its own HTTP context and is instantiated separately. These are different systems and can fail independently.</p>
+<pre><code>selected project baseURL &#x2192; UserApi &#x2192; application test endpoints
+selected env DB fields &#x2192; DbApi &#x2192; selected product plan schema
+STRIPE_* &#x2192; StripeAPI &#x2192; Stripe customers/subscriptions/invoices/clocks
+MAILPIT_* &#x2192; MailpitApi &#x2192; captured outgoing messages</code></pre>
+<p>Source: <a data-source="base/APIManager.ts" href="sources/base/APIManager.ts.html">APIManager</a>, <a data-source="fixtures/baseFixture.ts" href="sources/fixtures/baseFixture.ts.html">fixture</a>, <a data-source="api/ApiClient.ts" href="sources/api/ApiClient.ts.html">API client</a>.</p>
+<h2 id="userapi-operations">UserApi operations</h2>
+<div class="table-wrap"><table>
+<tr><th>Method</th><th>Endpoint / payload</th><th>What QA needs to know</th></tr>
+<tr><td><code>createUser(email,password)</code></td><td>Form POST <code>api/test</code>, action <code>create_user</code></td><td>Returns response; not a browser registration flow</td></tr>
+<tr><td><code>loginWithPassword(email,password)</code></td><td>Form POST <code>api/test</code>, action <code>login_with_password</code></td><td>Extracts <code>data.user.token_code</code> and <code>user_id</code>; logs sensitive request/response data in current code</td></tr>
+<tr><td><code>createAndLoginUser()</code></td><td>The two calls above</td><td>Returns stored token/ID; does not itself drive browser UI</td></tr>
+<tr><td><code>getUserByEmail(email)</code></td><td>Form POST <code>api/test</code>, action <code>get_user_by_email</code></td><td>Validates status and nonempty token/ID; updates helper&apos;s stored identity</td></tr>
+<tr><td><code>getQrCodesByEmail(email)</code></td><td>Lookup identity, GET <code>api/test/get_qr_codes</code></td><td>Queries QR records using user ID/token</td></tr>
+<tr><td><code>updateUserCurrency(email,currency,paymentCurrency,country)</code></td><td>Form action <code>contact_info_data</code></td><td>Payment currency defaults to currency; country defaults to US</td></tr>
+<tr><td><code>updateSubscriptionDate(email,expiredAt)</code></td><td>POST <code>api/auto-test</code>, action <code>change_plan_expire_date</code></td><td>Used to manufacture expired/renewal states quickly; inspect response in caller</td></tr>
+<tr><td><code>deleteUser(emails)</code></td><td>JSON POST <code>api/delete-test-user-records</code>, action <code>delete_test_users</code></td><td>Returns response; method does not itself assert successful deletion</td></tr>
+</table></div>
+<p><code>BaseAPI</code> normalizes a trailing slash but retains any URL path (such as <code>/en</code>). A UI navigation like <code>/login</code> resolves from origin, while API string concatenation can produce <code>/en/api/test</code>; confirm the deployment handles that path. Correct frontend access does not guarantee test endpoints are enabled or reachable.</p>
+<p>The stored <code>tokenCode</code>/<code>userId</code> belong to the most recently looked-up user in that helper instance. Tests that work with several users should use returned IDs explicitly rather than assuming the helper still refers to the first one. Source: <a data-source="api/UserApi.ts" href="sources/api/UserApi.ts.html">UserApi</a>.</p>
+<h2 id="dbapi-where-the-configuration-comes-from">DbApi: where the configuration comes from</h2>
+<p>The active IDE file, <a data-source="api/DbApi.ts" href="sources/api/DbApi.ts.html">api/DbApi.ts</a>, is a MySQL helper. Its constructor accepts <code>DbConfig</code>: product plus host/user/password/planName/emailName. The custom fixture passes these from the selected product&apos;s <code>env</code>; it does not read a global DB name internally.</p>
+<p><code>requireConnection(&apos;plan&apos;)</code> requires <code>DB_HOST</code>, <code>DB_USER</code>, <code>DB_PASSWORD</code>, and the selected <code>&lt;PRODUCT&gt;_DB_PLAN</code>. The optional email target would require <code>&lt;PRODUCT&gt;_DB_EMAIL</code>. Missing values produce an error naming missing keys, without printing credentials. <code>ApiManager</code> can be constructed with only a product fallback, but that does not supply a usable DB connection.</p>
+<p>Connections use MySQL port <strong>3306</strong>, <strong>30-second connect timeout</strong>, and up to <strong>three connection attempts</strong>. Each public query operation normally opens and ends a connection in <code>finally</code>; this is not a connection pool. Polling opens repeated connections. The class comment mentions email DB support, but <strong>current public methods all use the plan target</strong>. Declaring email DB names does not mean emails are read through SQL.</p>
+<h2 id="dbapi-method-by-method-behavior">DbApi method-by-method behavior</h2>
+<div class="table-wrap"><table>
+<tr><th>Method</th><th>Read/write and result</th><th>Important detail</th></tr>
+<tr><td><code>getReferralKeys(emails)</code></td><td>SELECT <code>users.referral_key</code> for each email; map email &#x2192; key/null</td><td>One connection for all queries; parameterized email values</td></tr>
+<tr><td><code>getReferralKey(email)</code></td><td>Single-email wrapper</td><td>Discount-link binding; not an input Faker should invent</td></tr>
+<tr><td><code>getPlanPrices(planIds=[])</code></td><td>SELECT <code>plan_prices</code>: id, plan_id, code, value, 70/90 discount prices</td><td>Empty filter means all rows; code lowercased, base values numeric, discount fields string/null</td></tr>
+<tr><td><code>getTrialPrices(planIds=[6,7])</code></td><td>SELECT <code>trial_prices</code>: id, plan_id, code, charge_1, charge_2</td><td>Separate split-charge table, not ordinary plan prices</td></tr>
+<tr><td><code>getUserRow(email)</code></td><td>SELECT full users row or null</td><td>Schema-dependent object; may contain sensitive user state</td></tr>
+<tr><td><code>waitForUserByEmail(email,timeout=30000)</code></td><td>Poll every 500 ms until row exists</td><td>Throws on deadline; handles delayed DB visibility</td></tr>
+<tr><td><code>updateUserCurrency(email,currency,paymentCurrency=currency)</code></td><td>UPDATE <code>currency_code</code> and <code>payment_currency</code></td><td>Trims/uppercases; waits for user, checks affected rows, then polls up to 20s for visibility; does not update country</td></tr>
+<tr><td><code>getUserBilling(email)</code></td><td>SELECT currency_code, payment_currency, country or null</td><td>Compare stored billing state with UI/API expectation</td></tr>
+<tr><td><code>getSubscriptionRetryState(email)</code></td><td>Reads user row and maps candidate schema columns</td><td>Returns raw row plus normalized status/retryAttempt/nextAmount/stripeCustomerId; missing columns map to null</td></tr>
+<tr><td><code>orphanQrForArchivedPricing(uid)</code></td><td>UPDATE QR owner to NULL and datetime to one month ago; updates last_datetime if present</td><td>A write used to manufacture archived QR state; checks affected row and polls up to 20s</td></tr>
+<tr><td><code>nullQrUserId(uid)</code></td><td>Alias of orphan method</td><td><strong>Also backdates the QR</strong>; its short name hides this extra effect</td></tr>
+<tr><td><code>getQrUserId(uid)</code></td><td>SELECT current QR ownership</td><td>Null can mean orphaned or no matching row; not by itself proof row exists</td></tr>
+</table></div>
+<p><code>getSubscriptionRetryState()</code> tries status names <code>subscription_status</code>, <code>plan_status</code>, <code>status</code>, <code>sub_status</code>; retry names include <code>retry_attempt</code>, <code>retry_count</code>, <code>dunning_attempt</code>, <code>payment_retry_attempt</code>, <code>stripe_retry_attempt</code>. Amount and Stripe ID also have candidate lists. A missing value may reflect a schema mismatch, not a product retry failure. Inspect the full method&apos;s candidate mapping and selected schema.</p>
+<h3 id="how-qr-table-discovery-works">How QR table discovery works</h3>
+<p>DbApi queries <code>INFORMATION_SCHEMA.COLUMNS</code> in the configured plan schema. It searches for a UID column (<code>uId</code>, <code>uid</code>, <code>unique_id</code>, <code>qr_uid</code>) plus <code>user_id</code>, with optional <code>datetime</code>/<code>last_datetime</code>. Selection preference is <code>qr_codes</code>, then a QR-named non-view table, then the first candidate. The chosen shape is cached on the instance.</p>
+<p>Orphaning requires a datetime column. It sets SQL dates using database <code>NOW() - INTERVAL 1 MONTH</code>; the poll verifies owner is NULL and date is at least 20 days old. This combines database time and JavaScript time. A schema with several plausible tables should be checked before relying on the automatic choice. These methods act on the exact UID supplied by the test; use a test-created QR.</p>
+<p>For full implementation and source-line details: <a href="reference/code/api.html">API method reference</a>. These are code behavior descriptions, not claims about the actual deployed schema, grants, replication topology or current connectivity.</p>
+<h2 id="stripe-helper-and-pricing-evidence">Stripe helper and pricing evidence</h2>
+<p><code>StripeAPI</code> uses <code>STRIPE_BASE_URL</code> or <code>https://api.stripe.com</code> and an authorization header from <code>STRIPE_SECRET_KEY</code>. It reads prices/coupons, finds customers by email, inspects subscriptions/schedules/invoices/discounts, and provides mutation helpers for cancellation, payment methods, subscription creation/coupons and test clocks.</p>
+<p>UI checkout is asynchronous. Customer/subscription lookup has wait helpers; retry tests wait for test-clock readiness and invoice/status updates. Do not replace these with a single immediate fetch and assume missing records are final. Exact timeouts/defaults are in <a data-source="api/StripeApi.ts" href="sources/api/StripeApi.ts.html">Stripe source</a> and <a data-source="tests/helpers/stripeRetryStrategy.ts" href="sources/tests/helpers/stripeRetryStrategy.ts.html">retry helper</a>.</p>
+<p>Pricing checks have separate sources: expected files/CSV, actual Stripe API records, database plan/trial records, and visible UI text. A useful assertion compares independent sources with the right plan, currency and discount. Reading one source twice is not a cross-system consistency check. Do not label source snapshots as current pricing without a live comparison.</p>
+<h2 id="mailpit-matching-details">Mailpit matching details</h2>
+<p>The client requires <code>MAILPIT_BASE_URL</code>; if <code>MAILPIT_USER</code> is set it sends Basic auth with that user/password. It first searches <code>/api/v1/search</code> by recipient (limit 50), then falls back to the latest <code>/api/v1/messages</code> (limit 50). Matching checks recipient case-insensitively, optional subject substring case-insensitively, and timestamp with a <strong>two-minute tolerance</strong>. Unparseable timestamps bypass that time test. Thus a timestamp alone is not perfect isolation; unique recipients and relevant subject filters matter.</p>
+<p><code>waitForEmail()</code> defaults to 60s timeout and 5s polling, then fetches again to return a matching message. Other methods retrieve HTML, plain text, raw message, details, count messages or assert no message within a window. An absent email can mean trigger failure, asynchronous delay, wrong recipient/subject, or mismatched SMTP catcher. Source: <a data-source="api/Mailpit.ts" href="sources/api/Mailpit.ts.html">Mailpit</a>.</p>
+<h2 id="cleanup-is-explicit-and-varies-by-test">Cleanup is explicit and varies by test</h2>
+<div class="table-wrap"><table>
+<tr><th>Resource</th><th>Common cleanup</th><th>What must be verified</th></tr>
+<tr><td>Generated application user</td><td><code>afterEach &#x2192; deleteUser([email])</code></td><td>Response success, correct current email, hook runs even after failure</td></tr>
+<tr><td>Application QR/folder</td><td>UI delete helpers or user cleanup</td><td>User deletion&apos;s server-side cascade is not proven by this client alone</td></tr>
+<tr><td>Existing shared account</td><td>Usually preserve account</td><td>Only remove your own test records; some suites assume preexisting data</td></tr>
+<tr><td>Stripe subscription/test clock</td><td>Spec/helper cancellation and clock cleanup</td><td>Application user deletion is not universal external cleanup</td></tr>
+<tr><td>Mail messages</td><td>No global mail purge in base fixture</td><td>Use unique recipient/time/subject; don&apos;t assume empty inbox</td></tr>
+<tr><td>Downloads/artifacts</td><td>Runner output or spec-selected path</td><td>Preserve evidence for investigation; avoid deleting baselines</td></tr>
+<tr><td>Validation seed account/records</td><td>Intentionally retained</td><td>Stored account/manifest are part of manual QA workflow</td></tr>
+</table></div>
+<p><code>tests/global.teardown.ts</code> contains logic to delete emails from <code>.auth/testUsers.json</code>, but <strong>the main config does not register it as global teardown or a teardown project</strong>. It is not an automatic fallback for missing <code>afterEach</code> cleanup. The base fixture also has no deletion after <code>await use(...)</code>. Inspect the actual cleanup hook in the selected file.</p></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

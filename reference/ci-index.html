@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/ci-index.html">
+<title>CI workflow commands and configuration names · QA reference</title>
+<link rel="stylesheet" href="../assets/styles.css">
+<script defer src="../assets/search-index.js"></script><script defer src="../assets/app.js"></script>
+</head><body data-root-prefix="../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../index.html">Start here</a>
+<a href="../00-qa-quick-start.html">Your first check</a>
+<a href="../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../03-qr-creation.html">QR types and creation</a>
+<a href="../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../05-other-flows.html">Other product flows</a>
+<a href="../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../reference/index.html">Reference overview</a>
+<a href="../reference/spec-index.html">Complete spec map</a>
+<a href="../reference/code-index.html">Shared helpers and locators</a>
+<a href="../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../reference/data-index.html">Data sources and consumers</a>
+<a href="../reference/environment-index.html">Environment variables</a>
+<a href="../reference/assets.html">Upload asset inventory</a>
+<a href="../reference/ci-index.html" class="active" aria-current="page">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (18)</summary><a href="#github-workflows-config-job-yml">.github/workflows/config-job.yml</a>
+<a href="#github-workflows-debug-job-yml">.github/workflows/debug-job.yml</a>
+<a href="#github-workflows-qase-billing-default-subscription-check-active-subs-yml">.github/workflows/qase-billing-default-subscription-check-active-subs.yml</a>
+<a href="#github-workflows-qase-billing-default-subscription-check-yml">.github/workflows/qase-billing-default-subscription-check.yml</a>
+<a href="#github-workflows-qase-create-qr-tests-yml">.github/workflows/qase-create-qr-tests.yml</a>
+<a href="#github-workflows-qase-dashboard-page-tests-yml">.github/workflows/qase-dashboard-page-tests.yml</a>
+<a href="#github-workflows-qase-default-pricing-tests-yml">.github/workflows/qase-default-pricing-tests.yml</a>
+<a href="#github-workflows-qase-dpf-pricing-tests-yml">.github/workflows/qase-dpf-pricing-tests.yml</a>
+<a href="#github-workflows-qase-emails-yml">.github/workflows/qase-emails.yml</a>
+<a href="#github-workflows-qase-homepage-page-tests-yml">.github/workflows/qase-homepage-page-tests.yml</a>
+<a href="#github-workflows-qase-login-page-tests-yml">.github/workflows/qase-login-page-tests.yml</a>
+<a href="#github-workflows-qase-my-account-page-tests-yml">.github/workflows/qase-my-account-page-tests.yml</a>
+<a href="#github-workflows-qase-my-qr-codes-page-tests-yml">.github/workflows/qase-my-qr-codes-page-tests.yml</a>
+<a href="#github-workflows-qase-qr-analytics-tests-yml">.github/workflows/qase-qr-analytics-tests.yml</a>
+<a href="#github-workflows-qase-qr-details-tests-yml">.github/workflows/qase-qr-details-tests.yml</a>
+<a href="#github-workflows-qase-regression-tests-yml">.github/workflows/qase-regression-tests.yml</a>
+<a href="#github-workflows-qase-reqirements-3-step-yml">.github/workflows/qase-reqirements-3-step.yml</a>
+<a href="#github-workflows-regression-tests-yml">.github/workflows/regression-tests.yml</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="ci-workflow-commands-and-configuration-names">CI workflow commands and configuration names</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="github-workflows-config-job-yml">.github/workflows/config-job.yml</h2>
+<p><a data-source=".github/workflows/config-job.yml" href="../sources/.github/workflows/config-job.yml.html#L1">.github/workflows/config-job.yml:1</a></p>
+<ul>
+<li><code>node-version: lts/*</code> &#x2014; line 16</li>
+<li><code>run: npm ci</code> &#x2014; line 20</li>
+</ul>
+<h2 id="github-workflows-debug-job-yml">.github/workflows/debug-job.yml</h2>
+<p><a data-source=".github/workflows/debug-job.yml" href="../sources/.github/workflows/debug-job.yml.html#L1">.github/workflows/debug-job.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 22</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 23</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 24</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 25</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 26</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ vars.DEFAULT_USER_LOGIN }}</code> &#x2014; line 28</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 29</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 30</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 31</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 32</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 33</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 34</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 35</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 36</li>
+<li><code>DPF_BASE_URL: &#x24;{{ vars.DPF_BASE_URL }}</code> &#x2014; line 37</li>
+<li><code>DPF_PRICING_URL: &#x24;{{ vars.DPF_PRICING_URL }}</code> &#x2014; line 38</li>
+<li><code>STRIPE_BASE_URL: &#x24;{{ secrets.STRIPE_BASE_URL }}</code> &#x2014; line 39</li>
+<li><code>STRIPE_SECRET_KEY: &#x24;{{ secrets.STRIPE_SECRET_KEY }}</code> &#x2014; line 40</li>
+<li><code>node-version: lts/*</code> &#x2014; line 48</li>
+<li><code>run: npm ci</code> &#x2014; line 52</li>
+<li><code>run: npx playwright test &#x24;{{ github.event.inputs.test_path }} --workers=&#x24;{{ github.event.inputs.workers }}</code> &#x2014; line 58</li>
+<li><code>github_token: &#x24;{{ secrets.CI_TOKEN }}</code> &#x2014; line 64</li>
+</ul>
+<h2 id="github-workflows-qase-billing-default-subscription-check-active-subs-yml">.github/workflows/qase-billing-default-subscription-check-active-subs.yml</h2>
+<p><a data-source=".github/workflows/qase-billing-default-subscription-check-active-subs.yml" href="../sources/.github/workflows/qase-billing-default-subscription-check-active-subs.yml.html#L1">.github/workflows/qase-billing-default-subscription-check-active-subs.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>STRIPE_BASE_URL: &#x24;{{ secrets.STRIPE_BASE_URL }}</code> &#x2014; line 56</li>
+<li><code>STRIPE_SECRET_KEY: &#x24;{{ secrets.STRIPE_SECRET_KEY }}</code> &#x2014; line 57</li>
+<li><code>node-version: lts/*</code> &#x2014; line 69</li>
+<li><code>run: npm ci</code> &#x2014; line 73</li>
+<li><code>run: npx playwright test tests/logged-in-user/billing-page/active-subscription.spec.ts --workers=2 --retries=1</code> &#x2014; line 79</li>
+</ul>
+<h2 id="github-workflows-qase-billing-default-subscription-check-yml">.github/workflows/qase-billing-default-subscription-check.yml</h2>
+<p><a data-source=".github/workflows/qase-billing-default-subscription-check.yml" href="../sources/.github/workflows/qase-billing-default-subscription-check.yml.html#L1">.github/workflows/qase-billing-default-subscription-check.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>STRIPE_BASE_URL: &#x24;{{ secrets.STRIPE_BASE_URL }}</code> &#x2014; line 56</li>
+<li><code>STRIPE_SECRET_KEY: &#x24;{{ secrets.STRIPE_SECRET_KEY }}</code> &#x2014; line 57</li>
+<li><code>node-version: lts/*</code> &#x2014; line 69</li>
+<li><code>run: npm ci</code> &#x2014; line 73</li>
+<li><code>run: npx playwright test tests/logged-in-user/billing-page --workers=2 --retries=1</code> &#x2014; line 79</li>
+</ul>
+<h2 id="github-workflows-qase-create-qr-tests-yml">.github/workflows/qase-create-qr-tests.yml</h2>
+<p><a data-source=".github/workflows/qase-create-qr-tests.yml" href="../sources/.github/workflows/qase-create-qr-tests.yml.html#L1">.github/workflows/qase-create-qr-tests.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>node-version: lts/*</code> &#x2014; line 67</li>
+<li><code>run: npm ci</code> &#x2014; line 71</li>
+<li><code>run: npx playwright test tests/logged-in-user/create-qr-code --workers=2</code> &#x2014; line 77</li>
+</ul>
+<h2 id="github-workflows-qase-dashboard-page-tests-yml">.github/workflows/qase-dashboard-page-tests.yml</h2>
+<p><a data-source=".github/workflows/qase-dashboard-page-tests.yml" href="../sources/.github/workflows/qase-dashboard-page-tests.yml.html#L1">.github/workflows/qase-dashboard-page-tests.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>node-version: lts/*</code> &#x2014; line 67</li>
+<li><code>run: npm ci</code> &#x2014; line 71</li>
+<li><code>run: npx playwright test tests/logged-in-user/dashboard/dashboard.spec.ts --workers=2</code> &#x2014; line 77</li>
+</ul>
+<h2 id="github-workflows-qase-default-pricing-tests-yml">.github/workflows/qase-default-pricing-tests.yml</h2>
+<p><a data-source=".github/workflows/qase-default-pricing-tests.yml" href="../sources/.github/workflows/qase-default-pricing-tests.yml.html#L1">.github/workflows/qase-default-pricing-tests.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>node-version: lts/*</code> &#x2014; line 67</li>
+<li><code>run: npm ci</code> &#x2014; line 71</li>
+<li><code>run: npx playwright test tests/logged-out-user/prices/default-pricing.spec.ts --workers=2 --retries=1</code> &#x2014; line 77</li>
+</ul>
+<h2 id="github-workflows-qase-dpf-pricing-tests-yml">.github/workflows/qase-dpf-pricing-tests.yml</h2>
+<p><a data-source=".github/workflows/qase-dpf-pricing-tests.yml" href="../sources/.github/workflows/qase-dpf-pricing-tests.yml.html#L1">.github/workflows/qase-dpf-pricing-tests.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>DPF_BASE_URL: &#x24;{{ vars.DPF_BASE_URL }}</code> &#x2014; line 56</li>
+<li><code>DPF_PRICING_URL: &#x24;{{ vars.DPF_PRICING_URL }}</code> &#x2014; line 57</li>
+<li><code>node-version: lts/*</code> &#x2014; line 69</li>
+<li><code>run: npm ci</code> &#x2014; line 73</li>
+<li><code>run: npx playwright test tests/logged-out-user/prices/dpf-pricing.spec.ts --workers=1 --retries=1</code> &#x2014; line 79</li>
+</ul>
+<h2 id="github-workflows-qase-emails-yml">.github/workflows/qase-emails.yml</h2>
+<p><a data-source=".github/workflows/qase-emails.yml" href="../sources/.github/workflows/qase-emails.yml.html#L1">.github/workflows/qase-emails.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>node-version: lts/*</code> &#x2014; line 67</li>
+<li><code>run: npm ci</code> &#x2014; line 71</li>
+<li><code>run: npx playwright test tests/emails --workers=2</code> &#x2014; line 77</li>
+</ul>
+<h2 id="github-workflows-qase-homepage-page-tests-yml">.github/workflows/qase-homepage-page-tests.yml</h2>
+<p><a data-source=".github/workflows/qase-homepage-page-tests.yml" href="../sources/.github/workflows/qase-homepage-page-tests.yml.html#L1">.github/workflows/qase-homepage-page-tests.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>node-version: lts/*</code> &#x2014; line 67</li>
+<li><code>run: npm ci</code> &#x2014; line 71</li>
+<li><code>run: npx playwright test tests/logged-out-user/homepage/homepage.spec.ts --workers=1</code> &#x2014; line 77</li>
+</ul>
+<h2 id="github-workflows-qase-login-page-tests-yml">.github/workflows/qase-login-page-tests.yml</h2>
+<p><a data-source=".github/workflows/qase-login-page-tests.yml" href="../sources/.github/workflows/qase-login-page-tests.yml.html#L1">.github/workflows/qase-login-page-tests.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>node-version: lts/*</code> &#x2014; line 67</li>
+<li><code>run: npm ci</code> &#x2014; line 71</li>
+<li><code>run: npx playwright test tests/logged-out-user/login/login.spec.ts --workers=2</code> &#x2014; line 77</li>
+</ul>
+<h2 id="github-workflows-qase-my-account-page-tests-yml">.github/workflows/qase-my-account-page-tests.yml</h2>
+<p><a data-source=".github/workflows/qase-my-account-page-tests.yml" href="../sources/.github/workflows/qase-my-account-page-tests.yml.html#L1">.github/workflows/qase-my-account-page-tests.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>node-version: lts/*</code> &#x2014; line 67</li>
+<li><code>run: npm ci</code> &#x2014; line 71</li>
+<li><code>run: npx playwright test tests/logged-in-user/my-account --workers=2</code> &#x2014; line 77</li>
+</ul>
+<h2 id="github-workflows-qase-my-qr-codes-page-tests-yml">.github/workflows/qase-my-qr-codes-page-tests.yml</h2>
+<p><a data-source=".github/workflows/qase-my-qr-codes-page-tests.yml" href="../sources/.github/workflows/qase-my-qr-codes-page-tests.yml.html#L1">.github/workflows/qase-my-qr-codes-page-tests.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>node-version: lts/*</code> &#x2014; line 67</li>
+<li><code>run: npm ci</code> &#x2014; line 71</li>
+<li><code>run: npx playwright test tests/logged-in-user/my-qr-codes --workers=2</code> &#x2014; line 77</li>
+</ul>
+<h2 id="github-workflows-qase-qr-analytics-tests-yml">.github/workflows/qase-qr-analytics-tests.yml</h2>
+<p><a data-source=".github/workflows/qase-qr-analytics-tests.yml" href="../sources/.github/workflows/qase-qr-analytics-tests.yml.html#L1">.github/workflows/qase-qr-analytics-tests.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>node-version: lts/*</code> &#x2014; line 67</li>
+<li><code>run: npm ci</code> &#x2014; line 71</li>
+<li><code>run: npx playwright test tests/logged-in-user/qr-code-analytics --workers=2</code> &#x2014; line 77</li>
+</ul>
+<h2 id="github-workflows-qase-qr-details-tests-yml">.github/workflows/qase-qr-details-tests.yml</h2>
+<p><a data-source=".github/workflows/qase-qr-details-tests.yml" href="../sources/.github/workflows/qase-qr-details-tests.yml.html#L1">.github/workflows/qase-qr-details-tests.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>node-version: lts/*</code> &#x2014; line 67</li>
+<li><code>run: npm ci</code> &#x2014; line 71</li>
+<li><code>run: npx playwright test tests/logged-in-user/qr-code-details --workers=4</code> &#x2014; line 77</li>
+</ul>
+<h2 id="github-workflows-qase-regression-tests-yml">.github/workflows/qase-regression-tests.yml</h2>
+<p><a data-source=".github/workflows/qase-regression-tests.yml" href="../sources/.github/workflows/qase-regression-tests.yml.html#L1">.github/workflows/qase-regression-tests.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ vars.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>DPF_BASE_URL: &#x24;{{ vars.DPF_BASE_URL }}</code> &#x2014; line 56</li>
+<li><code>DPF_PRICING_URL: &#x24;{{ vars.DPF_PRICING_URL }}</code> &#x2014; line 57</li>
+<li><code>STRIPE_BASE_URL: &#x24;{{ secrets.STRIPE_BASE_URL }}</code> &#x2014; line 58</li>
+<li><code>STRIPE_SECRET_KEY: &#x24;{{ secrets.STRIPE_SECRET_KEY }}</code> &#x2014; line 59</li>
+<li><code>node-version: lts/*</code> &#x2014; line 71</li>
+<li><code>run: npm ci</code> &#x2014; line 75</li>
+<li><code>run: npx playwright test --workers=2 &quot;^(?!.*tests/logged-out-user/prices/).*&#x24;&quot;</code> &#x2014; line 81</li>
+</ul>
+<h2 id="github-workflows-qase-reqirements-3-step-yml">.github/workflows/qase-reqirements-3-step.yml</h2>
+<p><a data-source=".github/workflows/qase-reqirements-3-step.yml" href="../sources/.github/workflows/qase-reqirements-3-step.yml.html#L1">.github/workflows/qase-reqirements-3-step.yml:1</a></p>
+<ul>
+<li><code>STAGE_ADMIN_LINK: &#x24;{{ secrets.STAGE_ADMIN_LINK }}</code> &#x2014; line 30</li>
+<li><code>STAGE_ADMIN_EMAIL: &#x24;{{ secrets.STAGE_ADMIN_EMAIL }}</code> &#x2014; line 31</li>
+<li><code>BASE_URL: &#x24;{{ vars.BASE_URL }}</code> &#x2014; line 32</li>
+<li><code>DELETE_USER_URL: &#x24;{{ vars.DELETE_USER_URL }}</code> &#x2014; line 33</li>
+<li><code>STAGE_ADMIN_PASSWORD: &#x24;{{ secrets.STAGE_ADMIN_PASSWORD }}</code> &#x2014; line 34</li>
+<li><code>DEFAULT_USER_LOGIN: &#x24;{{ VARS.DEFAULT_USER_LOGIN }}</code> &#x2014; line 36</li>
+<li><code>DEFAULT_USER_PASSWORD: &#x24;{{ vars.DEFAULT_USER_PASSWORD }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 41</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 43</li>
+<li><code>PHRASE_API_TOKEN: &#x24;{{ secrets.PHRASE_API_TOKEN }}</code> &#x2014; line 48</li>
+<li><code>PHRASE_API_BASE_URL: &#x24;{{ secrets.PHRASE_API_BASE_URL }}</code> &#x2014; line 49</li>
+<li><code>PHRASE_OQG_PROJECT_ID: &#x24;{{ secrets.PHRASE_OQG_PROJECT_ID }}</code> &#x2014; line 50</li>
+<li><code>MAILTRAP_BASE_URL: &#x24;{{ secrets.MAILTRAP_BASE_URL }}</code> &#x2014; line 51</li>
+<li><code>MAILTRAP_API_KEY: &#x24;{{ secrets.MAILTRAP_API_KEY }}</code> &#x2014; line 52</li>
+<li><code>MAILTRAP_ACCOUNT_ID: &#x24;{{ secrets.MAILTRAP_ACCOUNT_ID }}</code> &#x2014; line 53</li>
+<li><code>MAILTRAP_INBOX_ID: &#x24;{{ secrets.MAILTRAP_INBOX_ID }}</code> &#x2014; line 54</li>
+<li><code>QASE_API_TOKEN: &#x24;{{ secrets.QASE_API_TOKEN }}</code> &#x2014; line 55</li>
+<li><code>node-version: lts/*</code> &#x2014; line 67</li>
+<li><code>run: npm ci</code> &#x2014; line 71</li>
+<li><code>run: npx playwright test tests/requirements-3-steps --workers=2</code> &#x2014; line 77</li>
+</ul>
+<h2 id="github-workflows-regression-tests-yml">.github/workflows/regression-tests.yml</h2>
+<p><a data-source=".github/workflows/regression-tests.yml" href="../sources/.github/workflows/regression-tests.yml.html#L1">.github/workflows/regression-tests.yml:1</a></p>
+<ul>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 31</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 33</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 37</li>
+<li><code>QASE_TESTOPS_API_TOKEN: &#x24;{{ secrets.QASE_TESTOPS_API_TOKEN }}</code> &#x2014; line 53</li>
+<li><code>QASE_MODE: &apos;testops&apos;</code> &#x2014; line 55</li>
+<li><code>CF_ACCESS_CLIENT_ID: &#x24;{{ secrets.CF_ACCESS_CLIENT_ID }}</code> &#x2014; line 60</li>
+<li><code>CF_ACCESS_CLIENT_SECRET: &#x24;{{ secrets.CF_ACCESS_CLIENT_SECRET }}</code> &#x2014; line 61</li>
+<li><code>BASE_URL: &#x24;{{vars.BASE_URL}}</code> &#x2014; line 62</li>
+<li><code>STRIPE_PUBLIC_KEY: &#x24;{{ secrets.STRIPE_PUBLIC_KEY }}</code> &#x2014; line 63</li>
+<li><code>STRIPE_SECRET_KEY: &#x24;{{ secrets.STRIPE_SECRET_KEY }}</code> &#x2014; line 64</li>
+<li><code>node-version: lts/*</code> &#x2014; line 72</li>
+<li><code>run: npm ci</code> &#x2014; line 76</li>
+<li><code>run: npx playwright test --shard=&#x24;{{ matrix.shard }}/6 --workers 4</code> &#x2014; line 94</li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

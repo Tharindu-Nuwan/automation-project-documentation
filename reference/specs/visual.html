@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/specs/visual.html">
+<title>visual · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (5)</summary><a href="#tests-visual-create-page-visual-spec-ts">tests/visual/create-page-visual.spec.ts</a>
+<a href="#tests-visual-event-qr-percy-spec-ts">tests/visual/event-qr-percy.spec.ts</a>
+<a href="#tests-visual-generate-page-visual-spec-ts">tests/visual/generate-page-visual.spec.ts</a>
+<a href="#tests-visual-qr-list-percy-spec-ts">tests/visual/qr-list-percy.spec.ts</a>
+<a href="#tests-visual-width-sweep-spec-ts">tests/visual/width-sweep.spec.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="visual">visual</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="tests-visual-create-page-visual-spec-ts">tests/visual/create-page-visual.spec.ts</h2>
+<p><a data-source="tests/visual/create-page-visual.spec.ts" href="../../sources/tests/visual/create-page-visual.spec.ts.html#L1">tests/visual/create-page-visual.spec.ts:1</a></p>
+<h3 id="imports-follow-these-to-find-data-and-setup">Imports: follow these to find data and setup</h3>
+<ul>
+<li><code>{ test }</code> &#x2190; <a data-source="fixtures/baseFixture.ts" href="../../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></li>
+<li><code>{ createStep1VisualUrl, loadLanguagesForRun, loadViewportsForRun, }</code> &#x2190; <a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L1">tests/helpers/visualQaConfig.ts:1</a></li>
+<li><code>{ expectNoHorizontalOverflowForViewport, saveOrCompareLandingPageVisual, }</code> &#x2190; <a data-source="tests/helpers/visualQaCapture.ts" href="../../sources/tests/helpers/visualQaCapture.ts.html#L1">tests/helpers/visualQaCapture.ts:1</a></li>
+</ul>
+<h3 id="setup-cleanup-and-execution-options">Setup, cleanup, and execution options</h3>
+<ul>
+<li><code>test.describe.configure</code> &#x2014; <a data-source="tests/visual/create-page-visual.spec.ts" href="../../sources/tests/visual/create-page-visual.spec.ts.html#L16">tests/visual/create-page-visual.spec.ts:16</a></li>
+</ul>
+<h3 id="local-data-and-generated-values">Local data and generated values</h3>
+<ul>
+<li><code>LANGUAGES</code> &#x2190; <code>loadLanguagesForRun()</code> &#x2014; <a data-source="tests/visual/create-page-visual.spec.ts" href="../../sources/tests/visual/create-page-visual.spec.ts.html#L12">tests/visual/create-page-visual.spec.ts:12</a></li>
+<li><code>VIEWPORTS</code> &#x2190; <code>loadViewportsForRun()</code> &#x2014; <a data-source="tests/visual/create-page-visual.spec.ts" href="../../sources/tests/visual/create-page-visual.spec.ts.html#L13">tests/visual/create-page-visual.spec.ts:13</a></li>
+<li><code>tags</code> &#x2190; <code>[ &apos;@create-page-visual&apos;, &#x2032;@lang-&#x24;{lang.id}&#x2032;, &#x2032;@viewport-&#x24;{viewport.id}&#x2032;, ]</code> &#x2014; <a data-source="tests/visual/create-page-visual.spec.ts" href="../../sources/tests/visual/create-page-visual.spec.ts.html#L21">tests/visual/create-page-visual.spec.ts:21</a></li>
+</ul>
+<h3 id="test-declarations-and-actions">Test declarations and actions</h3>
+<p>Loops may expand one declaration into many runnable cases. Calls below are in source order, including conditional branches; they are not a runtime trace. Hooks above also apply according to their enclosing describe block.</p>
+<h4 id="viewport-name">viewport.name</h4>
+<p><a data-source="tests/visual/create-page-visual.spec.ts" href="../../sources/tests/visual/create-page-visual.spec.ts.html#L30">tests/visual/create-page-visual.spec.ts:30</a></p>
+<p>Metadata: <code>{ tag: tags }</code></p>
+<ul>
+<li><code>page.goto(createStep1VisualUrl(lang.id))</code> &#x2014; <a data-source="tests/visual/create-page-visual.spec.ts" href="../../sources/tests/visual/create-page-visual.spec.ts.html#L34">tests/visual/create-page-visual.spec.ts:34</a></li>
+<li><code>pageManager.visualLandingPage.prepareCapture(&apos;create-step-1&apos;, viewport)</code> &#x2014; <a data-source="tests/visual/create-page-visual.spec.ts" href="../../sources/tests/visual/create-page-visual.spec.ts.html#L35">tests/visual/create-page-visual.spec.ts:35</a></li>
+</ul>
+<h2 id="tests-visual-event-qr-percy-spec-ts">tests/visual/event-qr-percy.spec.ts</h2>
+<p><a data-source="tests/visual/event-qr-percy.spec.ts" href="../../sources/tests/visual/event-qr-percy.spec.ts.html#L1">tests/visual/event-qr-percy.spec.ts:1</a></p>
+<h3 id="imports-follow-these-to-find-data-and-setup-1">Imports: follow these to find data and setup</h3>
+<ul>
+<li><code>{ test }</code> &#x2190; <a data-source="fixtures/baseFixture.ts" href="../../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></li>
+<li><code>percySnapshot</code> &#x2190; <code>@percy/playwright</code></li>
+<li><code>{ LANGUAGE, PERCY_CSS, SCREENS, VIEWPORTS, Step3UnavailableError, prepareLongestLocaleSession, resetLocaleToEnglish, }</code> &#x2190; <a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L1">tests/visual/screens.config.ts:1</a></li>
+</ul>
+<h3 id="setup-cleanup-and-execution-options-1">Setup, cleanup, and execution options</h3>
+<p>No direct hook declaration in this file; inspect imported helpers and fixtures.</p>
+<h3 id="local-data-and-generated-values-1">Local data and generated values</h3>
+<ul>
+<li><code>{ loggedIn }</code> &#x2190; <code>await prepareLongestLocaleSession(page, pageManager)</code> &#x2014; <a data-source="tests/visual/event-qr-percy.spec.ts" href="../../sources/tests/visual/event-qr-percy.spec.ts.html#L33">tests/visual/event-qr-percy.spec.ts:33</a></li>
+<li><code>screen</code> &#x2190; <code>SCREENS.find((s) =&gt; s.name === &apos;event-qr&apos;)</code> &#x2014; <a data-source="tests/visual/event-qr-percy.spec.ts" href="../../sources/tests/visual/event-qr-percy.spec.ts.html#L35">tests/visual/event-qr-percy.spec.ts:35</a></li>
+<li><code>ctx</code> &#x2190; <code>{ page, pageManager }</code> &#x2014; <a data-source="tests/visual/event-qr-percy.spec.ts" href="../../sources/tests/visual/event-qr-percy.spec.ts.html#L38">tests/visual/event-qr-percy.spec.ts:38</a></li>
+</ul>
+<h3 id="test-declarations-and-actions-1">Test declarations and actions</h3>
+<p>Loops may expand one declaration into many runnable cases. Calls below are in source order, including conditional branches; they are not a runtime trace. Hooks above also apply according to their enclosing describe block.</p>
+<h4 id="capture-event-qr-creation-flow-across-viewports-ts-lg-locale">&apos;Capture Event QR creation flow across viewports (ts-lg locale)&apos;</h4>
+<p><a data-source="tests/visual/event-qr-percy.spec.ts" href="../../sources/tests/visual/event-qr-percy.spec.ts.html#L29">tests/visual/event-qr-percy.spec.ts:29</a></p>
+<h2 id="tests-visual-generate-page-visual-spec-ts">tests/visual/generate-page-visual.spec.ts</h2>
+<p><a data-source="tests/visual/generate-page-visual.spec.ts" href="../../sources/tests/visual/generate-page-visual.spec.ts.html#L1">tests/visual/generate-page-visual.spec.ts:1</a></p>
+<h3 id="imports-follow-these-to-find-data-and-setup-2">Imports: follow these to find data and setup</h3>
+<ul>
+<li><code>{ test }</code> &#x2190; <a data-source="fixtures/baseFixture.ts" href="../../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></li>
+<li><code>{ generateVisualUrl, loadLanguagesForRun, loadViewportsForRun, }</code> &#x2190; <a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L1">tests/helpers/visualQaConfig.ts:1</a></li>
+<li><code>{ expectNoHorizontalOverflowForViewport, saveOrCompareLandingPageVisual, }</code> &#x2190; <a data-source="tests/helpers/visualQaCapture.ts" href="../../sources/tests/helpers/visualQaCapture.ts.html#L1">tests/helpers/visualQaCapture.ts:1</a></li>
+</ul>
+<h3 id="setup-cleanup-and-execution-options-2">Setup, cleanup, and execution options</h3>
+<ul>
+<li><code>test.describe.configure</code> &#x2014; <a data-source="tests/visual/generate-page-visual.spec.ts" href="../../sources/tests/visual/generate-page-visual.spec.ts.html#L16">tests/visual/generate-page-visual.spec.ts:16</a></li>
+</ul>
+<h3 id="local-data-and-generated-values-2">Local data and generated values</h3>
+<ul>
+<li><code>LANGUAGES</code> &#x2190; <code>loadLanguagesForRun()</code> &#x2014; <a data-source="tests/visual/generate-page-visual.spec.ts" href="../../sources/tests/visual/generate-page-visual.spec.ts.html#L12">tests/visual/generate-page-visual.spec.ts:12</a></li>
+<li><code>VIEWPORTS</code> &#x2190; <code>loadViewportsForRun()</code> &#x2014; <a data-source="tests/visual/generate-page-visual.spec.ts" href="../../sources/tests/visual/generate-page-visual.spec.ts.html#L13">tests/visual/generate-page-visual.spec.ts:13</a></li>
+<li><code>tags</code> &#x2190; <code>[ &apos;@generate-page-visual&apos;, &#x2032;@lang-&#x24;{lang.id}&#x2032;, &#x2032;@viewport-&#x24;{viewport.id}&#x2032;, ]</code> &#x2014; <a data-source="tests/visual/generate-page-visual.spec.ts" href="../../sources/tests/visual/generate-page-visual.spec.ts.html#L21">tests/visual/generate-page-visual.spec.ts:21</a></li>
+</ul>
+<h3 id="test-declarations-and-actions-2">Test declarations and actions</h3>
+<p>Loops may expand one declaration into many runnable cases. Calls below are in source order, including conditional branches; they are not a runtime trace. Hooks above also apply according to their enclosing describe block.</p>
+<h4 id="viewport-name-1">viewport.name</h4>
+<p><a data-source="tests/visual/generate-page-visual.spec.ts" href="../../sources/tests/visual/generate-page-visual.spec.ts.html#L30">tests/visual/generate-page-visual.spec.ts:30</a></p>
+<p>Metadata: <code>{ tag: tags }</code></p>
+<ul>
+<li><code>page.goto(generateVisualUrl(lang.id))</code> &#x2014; <a data-source="tests/visual/generate-page-visual.spec.ts" href="../../sources/tests/visual/generate-page-visual.spec.ts.html#L34">tests/visual/generate-page-visual.spec.ts:34</a></li>
+<li><code>pageManager.visualLandingPage.prepareCapture(&apos;generate&apos;, viewport)</code> &#x2014; <a data-source="tests/visual/generate-page-visual.spec.ts" href="../../sources/tests/visual/generate-page-visual.spec.ts.html#L35">tests/visual/generate-page-visual.spec.ts:35</a></li>
+</ul>
+<h2 id="tests-visual-qr-list-percy-spec-ts">tests/visual/qr-list-percy.spec.ts</h2>
+<p><a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L1">tests/visual/qr-list-percy.spec.ts:1</a></p>
+<h3 id="imports-follow-these-to-find-data-and-setup-3">Imports: follow these to find data and setup</h3>
+<ul>
+<li><code>{ test }</code> &#x2190; <a data-source="fixtures/baseFixture.ts" href="../../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></li>
+<li><code>percySnapshot</code> &#x2190; <code>@percy/playwright</code></li>
+<li><code>{ waitForAccountLanguageReady, waitForQrListReady, waitForVisualReady, }</code> &#x2190; <a data-source="tests/helpers/waitForVisualReady.ts" href="../../sources/tests/helpers/waitForVisualReady.ts.html#L1">tests/helpers/waitForVisualReady.ts:1</a></li>
+</ul>
+<h3 id="setup-cleanup-and-execution-options-3">Setup, cleanup, and execution options</h3>
+<p>No direct hook declaration in this file; inspect imported helpers and fixtures.</p>
+<h3 id="local-data-and-generated-values-3">Local data and generated values</h3>
+<ul>
+<li><code>LANGUAGES</code> &#x2190; <code>[ { code: &apos;bs&apos;, name: &apos;Bosnian&apos; }, { code: &apos;bg&apos;, name: &apos;Bulgarian&apos; }, { code: &apos;zh-hk&apos;, name: &apos;Cantonese&apos; }, { code: &apos;zh-CN&apos;, name: &apos;Chinese_Simplified&apos; }, { code: &apos;hr&apos;, name: &apos;Croatian&apos; }, { code: &apos;cs&apos;, name: &apos;Czech&apos; }, &#x2026; [see source]</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L9">tests/visual/qr-list-percy.spec.ts:9</a></li>
+<li><code>LANGUAGES_TO_RUN</code> &#x2190; <code>LANGUAGES.slice(8, 9)</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L55">tests/visual/qr-list-percy.spec.ts:55</a></li>
+<li><code>VIEWPORTS</code> &#x2190; <code>[ // Desktop { width: 1366, height: 768, label: &apos;desktop_1366x768&apos; }, { width: 1536, height: 864, label: &apos;desktop_1536x864&apos; }, { width: 1920, height: 1080, label: &apos;desktop_1920x1080&apos; }, { width: 2560, height: 1440, label &#x2026; [see source]</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L57">tests/visual/qr-list-percy.spec.ts:57</a></li>
+<li><code>email</code> &#x2190; <code>process.env.TEST_ACCOUNT_EMAIL!</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L78">tests/visual/qr-list-percy.spec.ts:78</a></li>
+<li><code>password</code> &#x2190; <code>process.env.TEST_ACCOUNT_PASSWORD!</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L79">tests/visual/qr-list-percy.spec.ts:79</a></li>
+</ul>
+<h3 id="test-declarations-and-actions-3">Test declarations and actions</h3>
+<p>Loops may expand one declaration into many runnable cases. Calls below are in source order, including conditional branches; they are not a runtime trace. Hooks above also apply according to their enclosing describe block.</p>
+<h4 id="capture-qr-list-across-languages-and-screen-sizes">&apos;Capture QR list across languages and screen sizes&apos;</h4>
+<p><a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L77">tests/visual/qr-list-percy.spec.ts:77</a></p>
+<ul>
+<li><code>page.goto(&apos;/login&apos;)</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L82">tests/visual/qr-list-percy.spec.ts:82</a></li>
+<li><code>pageManager.loginPage.logIn(email, password)</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L83">tests/visual/qr-list-percy.spec.ts:83</a></li>
+<li><code>page.waitForURL(&apos;**/qr-codes**&apos;, { timeout: 30_000 })</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L84">tests/visual/qr-list-percy.spec.ts:84</a></li>
+<li><code>waitForQrListReady(page, pageManager)</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L86">tests/visual/qr-list-percy.spec.ts:86</a></li>
+<li><code>page.goto(&apos;/account&apos;)</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L90">tests/visual/qr-list-percy.spec.ts:90</a></li>
+<li><code>pageManager.accountPage.locator.languageSelect.selectOption({ value: lang.code })</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L97">tests/visual/qr-list-percy.spec.ts:97</a></li>
+<li><code>pageManager.accountPage.locator.languageUpdateButton.click()</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L98">tests/visual/qr-list-percy.spec.ts:98</a></li>
+<li><code>page.goto(&apos;/qr-codes&apos;)</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L103">tests/visual/qr-list-percy.spec.ts:103</a></li>
+<li><code>waitForQrListReady(page, pageManager)</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L105">tests/visual/qr-list-percy.spec.ts:105</a></li>
+<li><code>pageManager.myQrCodesPage.locator.quantityOfQrCodesLocator.click()</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L108">tests/visual/qr-list-percy.spec.ts:108</a></li>
+<li><code>pageManager.myQrCodesPage.locator.perPageOption100.click()</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L109">tests/visual/qr-list-percy.spec.ts:109</a></li>
+<li><code>waitForQrListReady(page, pageManager)</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L111">tests/visual/qr-list-percy.spec.ts:111</a></li>
+<li><code>page.goto(&apos;/account&apos;)</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L125">tests/visual/qr-list-percy.spec.ts:125</a></li>
+<li><code>pageManager.accountPage.locator.languageSelect.selectOption({ value: &apos;en&apos; })</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L131">tests/visual/qr-list-percy.spec.ts:131</a></li>
+<li><code>pageManager.accountPage.locator.languageUpdateButton.click()</code> &#x2014; <a data-source="tests/visual/qr-list-percy.spec.ts" href="../../sources/tests/visual/qr-list-percy.spec.ts.html#L132">tests/visual/qr-list-percy.spec.ts:132</a></li>
+</ul>
+<h2 id="tests-visual-width-sweep-spec-ts">tests/visual/width-sweep.spec.ts</h2>
+<p><a data-source="tests/visual/width-sweep.spec.ts" href="../../sources/tests/visual/width-sweep.spec.ts.html#L1">tests/visual/width-sweep.spec.ts:1</a></p>
+<h3 id="imports-follow-these-to-find-data-and-setup-4">Imports: follow these to find data and setup</h3>
+<ul>
+<li><code>* as fs</code> &#x2190; <code>fs</code></li>
+<li><code>* as path</code> &#x2190; <code>path</code></li>
+<li><code>{ test }</code> &#x2190; <a data-source="fixtures/baseFixture.ts" href="../../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></li>
+<li><code>{ LANGUAGE, SCREENS, SWEEP, Step3UnavailableError, prepareLongestLocaleSession, resetLocaleToEnglish, }</code> &#x2190; <a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L1">tests/visual/screens.config.ts:1</a></li>
+<li><code>{ sweepWidths, writeSweepReport, printSweepSummary, }</code> &#x2190; <a data-source="tests/helpers/layoutAudit.ts" href="../../sources/tests/helpers/layoutAudit.ts.html#L1">tests/helpers/layoutAudit.ts:1</a></li>
+</ul>
+<h3 id="setup-cleanup-and-execution-options-4">Setup, cleanup, and execution options</h3>
+<p>No direct hook declaration in this file; inspect imported helpers and fixtures.</p>
+<h3 id="local-data-and-generated-values-4">Local data and generated values</h3>
+<ul>
+<li><code>REPORT_DIR</code> &#x2190; <code>path.resolve(process.cwd(), &apos;test-results&apos;, &apos;width-sweep&apos;)</code> &#x2014; <a data-source="tests/visual/width-sweep.spec.ts" href="../../sources/tests/visual/width-sweep.spec.ts.html#L33">tests/visual/width-sweep.spec.ts:33</a></li>
+<li><code>{ loggedIn }</code> &#x2190; <code>await prepareLongestLocaleSession( page, pageManager )</code> &#x2014; <a data-source="tests/visual/width-sweep.spec.ts" href="../../sources/tests/visual/width-sweep.spec.ts.html#L42">tests/visual/width-sweep.spec.ts:42</a></li>
+<li><code>totalRanges</code> &#x2190; <code>0</code> &#x2014; <a data-source="tests/visual/width-sweep.spec.ts" href="../../sources/tests/visual/width-sweep.spec.ts.html#L47">tests/visual/width-sweep.spec.ts:47</a></li>
+<li><code>ctx</code> &#x2190; <code>{ page, pageManager }</code> &#x2014; <a data-source="tests/visual/width-sweep.spec.ts" href="../../sources/tests/visual/width-sweep.spec.ts.html#L50">tests/visual/width-sweep.spec.ts:50</a></li>
+<li><code>evidenceDir</code> &#x2190; <code>path.join( REPORT_DIR, &apos;evidence&apos;, screen.name, state.name )</code> &#x2014; <a data-source="tests/visual/width-sweep.spec.ts" href="../../sources/tests/visual/width-sweep.spec.ts.html#L66">tests/visual/width-sweep.spec.ts:66</a></li>
+<li><code>{ issues, ranges }</code> &#x2190; <code>await sweepWidths(page, { ...SWEEP, onBreak: async (width, batch) =&gt; { fs.mkdirSync(evidenceDir, { recursive: true }) const file = path.join( evidenceDir, &#x2032;w&#x24;{width}-&#x24;{batch[0].kind}.png&#x2032; ) await page.screenshot({ path: &#x2026; [see source]</code> &#x2014; <a data-source="tests/visual/width-sweep.spec.ts" href="../../sources/tests/visual/width-sweep.spec.ts.html#L73">tests/visual/width-sweep.spec.ts:73</a></li>
+<li><code>file</code> &#x2190; <code>path.join( evidenceDir, &#x2032;w&#x24;{width}-&#x24;{batch[0].kind}.png&#x2032; )</code> &#x2014; <a data-source="tests/visual/width-sweep.spec.ts" href="../../sources/tests/visual/width-sweep.spec.ts.html#L77">tests/visual/width-sweep.spec.ts:77</a></li>
+<li><code>report</code> &#x2190; <code>{ screen: screen.name, state: state.name, locale: LANGUAGE.code, generatedAt: new Date().toISOString(), sweep: { minWidth: SWEEP.minWidth, maxWidth: SWEEP.maxWidth, step: SWEEP.step, }, issueCount: issues.length, rangeCo &#x2026; [see source]</code> &#x2014; <a data-source="tests/visual/width-sweep.spec.ts" href="../../sources/tests/visual/width-sweep.spec.ts.html#L85">tests/visual/width-sweep.spec.ts:85</a></li>
+<li><code>reportPath</code> &#x2190; <code>writeSweepReport(report, REPORT_DIR)</code> &#x2014; <a data-source="tests/visual/width-sweep.spec.ts" href="../../sources/tests/visual/width-sweep.spec.ts.html#L100">tests/visual/width-sweep.spec.ts:100</a></li>
+</ul>
+<h3 id="test-declarations-and-actions-4">Test declarations and actions</h3>
+<p>Loops may expand one declaration into many runnable cases. Calls below are in source order, including conditional branches; they are not a runtime trace. Hooks above also apply according to their enclosing describe block.</p>
+<h4 id="detect-layout-breakage-across-continuous-widths">&apos;Detect layout breakage across continuous widths&apos;</h4>
+<p><a data-source="tests/visual/width-sweep.spec.ts" href="../../sources/tests/visual/width-sweep.spec.ts.html#L38">tests/visual/width-sweep.spec.ts:38</a></p>
+<ul>
+<li><code>new Date().toISOString()</code> &#x2014; <a data-source="tests/visual/width-sweep.spec.ts" href="../../sources/tests/visual/width-sweep.spec.ts.html#L89">tests/visual/width-sweep.spec.ts:89</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

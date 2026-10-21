@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="07-qa-workflow-and-troubleshooting.html">
+<title>Check a case, understand results and report a problem · QA reference</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script defer src="assets/search-index.js"></script><script defer src="assets/app.js"></script>
+</head><body data-root-prefix="">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="index.html">Start here</a>
+<a href="00-qa-quick-start.html">Your first check</a>
+<a href="02-accounts-and-credentials.html">Accounts and login</a>
+<a href="03-qr-creation.html">QR types and creation</a>
+<a href="04-data-and-inputs.html">What to enter and upload</a>
+<a href="05-other-flows.html">Other product flows</a>
+<a href="07-qa-workflow-and-troubleshooting.html" class="active" aria-current="page">Check results and report problems</a>
+<a href="glossary.html">Words used in this guide</a><details class="reference-nav"><summary>Technical reference (optional)</summary><a href="01-architecture-and-running.html">Automation setup and execution</a>
+<a href="06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="reference/index.html">Reference overview</a>
+<a href="reference/spec-index.html">Complete spec map</a>
+<a href="reference/code-index.html">Shared helpers and locators</a>
+<a href="reference/field-inputs.html">Field inputs and defaults</a>
+<a href="reference/data-index.html">Data sources and consumers</a>
+<a href="reference/environment-index.html">Environment variables</a>
+<a href="reference/assets.html">Upload asset inventory</a>
+<a href="reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Practical QA guide · reviewed 19 October 2026</div>
+
+<details class="toc"><summary>Jump to a section (10)</summary><a href="#a-simple-workflow-for-manual-checks">A simple workflow for manual checks</a>
+<a href="#when-something-does-not-work">When something does not work</a>
+<a href="#a-report-template-you-can-copy">A report template you can copy</a>
+<a href="#how-to-reproduce-manually">How to reproduce manually</a>
+<a href="#interpret-result-statuses-correctly">Interpret result statuses correctly</a>
+<a href="#read-a-test-in-this-order">Optional automation detail: read a test in this order</a>
+<a href="#small-deliberate-commands">Optional automation detail: run a focused check</a>
+<a href="#add-or-adjust-a-case">Optional automation detail: add or adjust a case</a>
+<a href="#troubleshooting-by-failing-layer">Optional automation detail: investigate the failing layer</a>
+<a href="#evidence-for-a-useful-bug-or-automation-report">Evidence for a useful bug or automation report</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="7-how-a-qa-should-work-on-this-suite">Check a case, understand results and report a problem</h1>
+<p><a href="index.html">Start</a> &#xb7; <a href="05-other-flows.html">Previous: other flows</a> &#xb7; <a href="09-evidence-and-caveats.html">Next: coverage and limitations</a></p>
+
+<h2 id="a-simple-workflow-for-manual-checks">A simple workflow for manual checks</h2>
+<ol>
+<li><strong>Choose one case.</strong> Write down the action and its expected result. Start with a defined login or Website QR case before combining several flows.</li>
+<li><strong>Confirm the starting conditions.</strong> Record the product, test website, account condition, language, screen size or device, and starting page.</li>
+<li><strong>Collect the inputs.</strong> Use <a href="02-accounts-and-credentials.html">account access</a> and the <a href="04-data-and-inputs.html">input guide</a>. Request the exact upload files and any specially prepared account or records.</li>
+<li><strong>Perform the actions in order.</strong> Record what you entered and which QR or folder you created. For validation cases, keep the exact invalid or boundary value specified.</li>
+<li><strong>Compare expected and actual results.</strong> Check the stage named by the case: preview, saved content, download, scan destination or email. Stopping on an earlier page is a different result.</li>
+<li><strong>Record the outcome.</strong> Include screenshots and the relevant QR/folder name. If you could not start because access, a file or prepared data was missing, record that reason separately from an application failure.</li>
+<li><strong>Finish the agreed cleanup.</strong> Remove only disposable records assigned to this case. Keep shared login and prepared analytics accounts. Confirm with the account owner if cleanup ownership is unclear.</li>
+</ol>
+<p>Source-code sections are optional for manual testing. An automation maintainer can use them to explain a setup dependency, locate the exact input value, or investigate a failing automated step.</p>
+<h2 id="when-something-does-not-work">When something does not work</h2>
+<div class="table-wrap"><table>
+<tr><th>What you see</th><th>Check first</th><th>What to record or request</th></tr>
+<tr><td>Login does not show the expected password step</td><td>Correct website, exact account email, and whether the account uses a code instead</td><td>The page shown and the assigned account type; ask the maintainer to verify the account</td></tr>
+<tr><td>Next or Create is unavailable</td><td>Required fields, validation messages and any help dialog; Event needs both start and end dates</td><td>Entered values and the visible error or disabled button</td></tr>
+<tr><td>An upload fails</td><td>The exact file, its type and the case&apos;s expected acceptance or rejection</td><td>File path/name and the upload message or preview</td></tr>
+<tr><td>A QR cannot be found</td><td>Account, folder, internal QR name and whether Create completed</td><td>The recorded name and the final page after creation</td></tr>
+<tr><td>A payment page differs from the case</td><td>Plan, country, currency, offer link and account condition</td><td>The selected values and page; request the correct prepared scenario</td></tr>
+<tr><td>An expected email is missing</td><td>The triggering action, recipient, subject and configured mail viewer</td><td>Action time and recipient; ask the maintainer to check delivery if necessary</td></tr>
+<tr><td>Analytics data is empty</td><td>The assigned account and selected date range</td><td>Request the account containing the required scan history</td></tr>
+<tr><td>The automated result is skipped or passed after retry</td><td>The result status and reason in the report</td><td>Report that exact status; use the status table below to interpret it</td></tr>
+</table></div>
+<h2 id="a-report-template-you-can-copy">A report template you can copy</h2>
+<pre><code>Case / feature:
+Product and test website:
+Date, browser or device, language:
+Account condition (for example, free or paid):
+Starting page and prepared records:
+Steps followed:
+Inputs and file names used (omit passwords and login codes):
+Expected result:
+Actual result:
+QR / folder name and relevant screenshot:
+Could you repeat it? If so, how often?
+Cleanup completed or records retained:</code></pre>
+<p>If you are reporting an automated run, also include its report link or file, case name, selected project, first failure and retry status. The maintainer can add the code revision and command used. Review logs before sharing because some current API logging includes credentials or tokens.</p>
+<h2 id="how-to-reproduce-manually">How to reproduce manually</h2>
+<p>Record the same product URL, language, screen size, account condition, and starting page as the failed run. Use its captured input values and exact upload file. If the report does not show those values, ask the automation maintainer to trace them using the input guide. Keep the same phone country, and reuse the recorded generated values instead of generating new ones.</p>
+<p>Perform the same action and compare the same expected result. Some tests arrange an expired subscription, an older QR with no owner, or simulated payment dates before they start. Ask the maintainer for that prepared state; an ordinary free account will not reproduce it. If the automated steps work around a known product problem, include that in the reproduction notes.</p>
+
+<h2 id="interpret-result-statuses-correctly">Interpret result statuses correctly</h2>
+<div class="table-wrap"><table>
+<tr><th>Result / declaration</th><th>Meaning</th></tr>
+<tr><td>Passed</td><td>The assertions that actually ran succeeded</td></tr>
+<tr><td>Passed after retry / flaky</td><td>First attempt failed; inspect cause, do not describe as clean first-pass success</td></tr>
+<tr><td><code>test.skip()</code></td><td>Not executed under current conditions; often environment/product availability</td></tr>
+<tr><td><code>test.fixme()</code></td><td>Disabled known problem; no current successful execution evidence</td></tr>
+<tr><td><code>test.fail()</code></td><td>Executed with failure expected; unexpected pass means the expectation needs review</td></tr>
+<tr><td>No tests found</td><td>Path/project/grep/ignore configuration or discovery issue; not a passing suite</td></tr>
+<tr><td>Factory skip</td><td>Selected product has no registered implementation for accessed page</td></tr>
+<tr><td>Dataset row / test-case catalogue entry</td><td>Specification/data presence, not proof an executable case exists</td></tr>
+</table></div>
+<p><strong>Optional detail about selecting automated cases:</strong> tags are case-sensitive regular-expression text. Older files contain <code>@Automated_Smoke</code> and <code>@Regression</code>; newer guidance names <code>@Automated_smoke</code> and priority tags. <code>test:smoke</code> greps <code>@Smoke</code>; do not assume every historical spelling is included.</p>
+<p><strong>Optional automation detail follows.</strong> The next sections help someone reading, running or changing the code. For a manual-only check, use the workflow above and the result-status table.</p>
+<h2 id="read-a-test-in-this-order">Optional automation detail: read a test in this order</h2>
+<ol>
+<li><strong>Imports:</strong> custom fixture or raw Playwright? Which data/helpers are used?</li>
+<li><strong>Describe and metadata:</strong> ticket/TC, priority, Qase mapping, serial/parallel configuration.</li>
+<li><strong>beforeEach / beforeAll:</strong> account source, route, plan state, seed records, mocks.</li>
+<li><strong>Test body:</strong> data declarations &#x2192; actions &#x2192; assertions. A method may assert internally.</li>
+<li><strong>afterEach / afterAll:</strong> user, QR, Stripe and artifact cleanup.</li>
+<li><strong>Runtime gates:</strong> <code>skip</code>, <code>fail</code>, <code>fixme</code>, product proxy, missing environment and CLI filters.</li>
+</ol>
+<p>Start with <a data-source="tests/logged-out-user/login/login.spec.ts" href="sources/tests/logged-out-user/login/login.spec.ts.html">login</a>, <a data-source="tests/logged-in-user/create-qr-code/website-qr.spec.ts" href="sources/tests/logged-in-user/create-qr-code/website-qr.spec.ts.html">Website</a>, then a <a data-source="tests/helpers/create-from-folder.helper.ts" href="sources/tests/helpers/create-from-folder.helper.ts.html">folder helper</a>. These expose the most common patterns before the larger billing/Event suites.</p>
+<h2 id="small-deliberate-commands">Optional automation detail: run a focused check</h2>
+<p>Set the required environment first. Commands are examples to run against an approved test deployment; they were not executed during this documentation audit.</p>
+<pre><code># Inventory one feature without executing it.
+QASE_MODE=off npx playwright test tests/logged-in-user/create-qr-code/website-qr.spec.ts --project=oqg-chromium --list
+
+# One case, one worker, no retry masking.
+QASE_MODE=off npx playwright test tests/logged-in-user/create-qr-code/website-qr.spec.ts --project=oqg-chromium --grep &apos;Fill only the required fields&apos; --workers=1 --retries=0 --headed
+
+# UI explorer for a narrow project.
+QASE_MODE=off npx playwright test tests/logged-out-user/login --project=oqg-chromium --ui
+
+# Capture a diagnostic trace explicitly.
+QASE_MODE=off npx playwright test tests/logged-in-user/create-qr-code/website-qr.spec.ts --project=oqg-chromium --workers=1 --retries=0 --trace on
+
+npx playwright show-report
+
+# Landing visuals use a separate project name.
+QASE_MODE=off npm run test:visual -- --project=oqg-chromium-visual --workers=1</code></pre>
+<p>Open a trace from its actual path in <code>test-results/runs</code> using <code>npx playwright show-trace &lt;path-to-trace.zip&gt;</code>. A trace exists only if capture was enabled. Do not expect first-retry video when retries were disabled.</p>
+<p><code>npm run test:event</code> caps workers at two but does not select one product or magically target the local Event stack. Append an appropriate <code>--project=...</code> and configure that project&apos;s URL. <code>npm run test:billing</code> uses one worker but likewise does not choose the product. Inspect <code>--list</code> for the selected command.</p>
+<h2 id="add-or-adjust-a-case">Optional automation detail: add or adjust a case</h2>
+<p>Use <a data-source="CLAUDE.md" href="sources/CLAUDE-md.html">CLAUDE.md</a> as the repository engineering standard. Current code includes legacy exceptions; copying one is not automatically the preferred pattern.</p>
+<ul>
+<li>Put the spec in the feature folder and use feature-based <code>*-automations.spec.ts</code> naming for new work.</li>
+<li>Import <code>test</code> from <code>@/fixtures/baseFixture</code>, <strong>expect from <code>@playwright/test</code></strong>. The fixture does not export expect.</li>
+<li>Use <code>pageManager</code> and <code>apiManager</code>; reuse base helpers, existing locators and feature helpers.</li>
+<li>Keep new cross-directory imports on <code>@/</code>; preserve unrelated legacy imports.</li>
+<li>Put new environment-backed product values in <code>env.ts</code>; consume the selected <code>env</code> fixture, pass only needed fields.</li>
+<li>Put deterministic cases in <code>tests/data/&lt;feature&gt;.data.ts</code>; pass one-off overrides to helpers instead of changing shared defaults.</li>
+<li>Use actual existing <code>data-qa-id</code>/role/label selectors; inspect the DOM before adding a selector.</li>
+<li>Record ticket, covered TC comments/annotations, priority and Qase metadata. Repository convention uses <code>qase.id(0)</code> for new unmapped tests; preserve existing IDs.</li>
+<li>Create isolated accounts when supported, retain their identity, and implement cleanup that can cope with setup failure.</li>
+<li>Add assertions for the intended behavior; don&apos;t mistake navigation or a visible modal for end-to-end persistence.</li>
+<li>Run focused checks appropriate to the changed files, then the smallest supported product/browser set. Do not expand to every project by default.</li>
+</ul>
+<p>Use the <a data-source="docs/MULTI-PRODUCT-TEST-REFACTOR.md" href="sources/docs/MULTI-PRODUCT-TEST-REFACTOR-md.html">multi-product playbook</a> only when deliberately migrating a flow. Product differences in selectors belong in Page Objects; different product requirements deserve separate tests. Existing factory registrations do not justify pretending unsupported products are covered.</p>
+<h2 id="troubleshooting-by-failing-layer">Optional automation detail: investigate the failing layer</h2>
+<div class="table-wrap"><table>
+<tr><th>Symptom</th><th>First inspection</th><th>Likely next action</th></tr>
+<tr><td>Missing OQG/QCI/QGA URL before run</td><td><code>env.ts</code> required lookups</td><td>Supply all three configured test targets, even for one selected project</td></tr>
+<tr><td>Login waits forever for password</td><td>Email lookup request, correct deployment/account, passwordless vs password user</td><td>Use appropriate identity/OTP flow; don&apos;t only increase timeout</td></tr>
+<tr><td>Registered user never reaches Step 1</td><td><code>/register</code> behavior, response, factory product, heading</td><td>Distinguish blocked registration from selector/translation mismatch</td></tr>
+<tr><td>URL assertion misses slash or locale</td><td><code>&#x24;{baseURL}path</code> vs <code>/path</code> navigation</td><td>Match selected legacy spec&apos;s expected form; record migration debt</td></tr>
+<tr><td>No Next/Create transition</td><td>Required fields, disabled footer, help overlay, failing content request</td><td>Check end date for Event; wait for actual readiness</td></tr>
+<tr><td>Field filled but helper times out</td><td>Embedded preview assertion / hidden mobile iframe</td><td>Open preview or use appropriate mobile helper</td></tr>
+<tr><td>Upload file not found</td><td>CWD and exact path including spaces/case</td><td>Run from root; use tracked fixture path</td></tr>
+<tr><td>Uploaded image has empty FileList</td><td>Frontend cleared native input</td><td>Check preview/delete/loading state used by helper</td></tr>
+<tr><td>WhatsApp number invalid</td><td>Selected country and national format</td><td>Use country-selecting submission helper</td></tr>
+<tr><td>Stripe iframe invisible</td><td>Plan/billing step, Card tab, network, payment already completed</td><td>Complete earlier step and inspect PaymentPage readiness logic</td></tr>
+<tr><td>Stripe customer/subscription absent</td><td>Correct key/account and asynchronous creation</td><td>Use existing polling helpers; verify payment result</td></tr>
+<tr><td>DB missing credentials / timeout</td><td>Selected product schema, MySQL host/port/access</td><td>Obtain correct test DB configuration; do not swap products blindly</td></tr>
+<tr><td>DB retry field null</td><td>Actual schema column names</td><td>Compare candidate mapping before claiming retry-state bug</td></tr>
+<tr><td>Email timeout</td><td>Trigger, recipient, subject, timestamp, SMTP &#x2192; Mailpit target</td><td>Check mail catcher API and app mail routing separately</td></tr>
+<tr><td>Duplicate stale email match</td><td>Reused recipient and timestamp tolerance</td><td>Use isolated recipient and relevant subject/action evidence</td></tr>
+<tr><td>QGA test skipped</td><td>PageFactory registration</td><td>Report unsupported page implementation, not success</td></tr>
+<tr><td>Event edit passes despite lost dates</td><td><code>restoreEventDatesInEdit()</code></td><td>Consult dedicated expected-failure persistence case</td></tr>
+<tr><td>Cleanup error hides test failure</td><td>User variable assigned? Email changed? Delete response?</td><td>Preserve original failure and clean owned resources explicitly</td></tr>
+<tr><td>Unexpected data after full run</td><td>Legacy project tools override; explicit persistent seeds</td><td>Inspect collection and manifests before broad rerun</td></tr>
+<tr><td>CI differs from laptop</td><td>Workflow variables/command/project/Node/browser dependencies</td><td>Compare <a href="reference/ci-index.html">CI index</a>, not just <code>.env</code></td></tr>
+</table></div>
+<h2 id="evidence-for-a-useful-bug-or-automation-report">Evidence for a useful bug or automation report</h2>
+<p>Record commit, exact command/project, deployment, test/TC name, sanitized setup/data source, expected vs actual result, first failing action/assertion, and relevant screenshot/trace/API status. State whether retries occurred, a mock or workaround ran, and cleanup succeeded. Keep live credentials and tokens out of shared evidence; the current UserApi logger makes log review especially important.</p></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

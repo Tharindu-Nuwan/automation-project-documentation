@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="glossary.html">
+<title>Words used in this guide · QA reference</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script defer src="assets/search-index.js"></script><script defer src="assets/app.js"></script>
+</head><body data-root-prefix="">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="index.html">Start here</a>
+<a href="00-qa-quick-start.html">Your first check</a>
+<a href="02-accounts-and-credentials.html">Accounts and login</a>
+<a href="03-qr-creation.html">QR types and creation</a>
+<a href="04-data-and-inputs.html">What to enter and upload</a>
+<a href="05-other-flows.html">Other product flows</a>
+<a href="07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="glossary.html" class="active" aria-current="page">Words used in this guide</a><details class="reference-nav"><summary>Technical reference (optional)</summary><a href="01-architecture-and-running.html">Automation setup and execution</a>
+<a href="06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="reference/index.html">Reference overview</a>
+<a href="reference/spec-index.html">Complete spec map</a>
+<a href="reference/code-index.html">Shared helpers and locators</a>
+<a href="reference/field-inputs.html">Field inputs and defaults</a>
+<a href="reference/data-index.html">Data sources and consumers</a>
+<a href="reference/environment-index.html">Environment variables</a>
+<a href="reference/assets.html">Upload asset inventory</a>
+<a href="reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Practical QA guide · reviewed 19 October 2026</div>
+
+<details class="toc"><summary>Jump to a section (1)</summary><a href="#terms">Terms and meanings</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="words-used-in-this-guide">Words used in this guide</h1><p class="lead">Plain-language meanings for the product and automation terms you may encounter.</p><p>You do not need to memorise these terms. Return here when a reference page uses an unfamiliar word. Start a practical task with <a href="00-qa-quick-start.html">Your first check</a>.</p><h2 id="terms">Terms and meanings</h2><dl><dt>Product</dt><dd>The application being checked. This suite uses OQG, QCI, QGA, and QGC as product identifiers. Features implemented in the tests differ between them.</dd>
+<dt>Environment / deployment</dt><dd>A particular running copy of the product, reached by a website address. Confirm the exact address for your check. A product name or browser choice does not select the environment by itself.</dd>
+<dt>Credentials</dt><dd>The sign-in details for an account, usually an email and password. Obtain the actual values through the team&#x2019;s approved access process.</dd>
+<dt>Existing account / fresh account</dt><dd>An existing account has already been registered and may contain data or a subscription. A fresh account is newly registered for a check. Inventing an email address does not create an account.</dd>
+<dt>Guest / logged out</dt><dd>A browser session that is not signed in. Guest flows can behave differently from signed-in flows.</dd>
+<dt>Test case / scenario</dt><dd>A starting situation, a sequence of actions, and a result to check. A scenario may test a normal action or an intentionally invalid input.</dd>
+<dt>Test data / input</dt><dd>Values or files used for a check: names, addresses, dates, account details, upload files, or prepared product records.</dd>
+<dt>Required / optional field</dt><dd>A required field must be completed for the relevant action to succeed. An optional field can be left empty in that case. The exact requirements depend on the QR type and test.</dd>
+<dt>Validation / boundary check</dt><dd>Validation is how the form accepts or rejects an input. A boundary check uses an exact limit, or a value just beyond it, such as text length or file size.</dd>
+<dt>Expected result / actual result</dt><dd>Expected is what the case says should happen. Actual is what you observed. Record the difference precisely when they do not match.</dd>
+<dt>Preview / save / scan</dt><dd>Preview shows how content may look during creation. Saving creates or updates a stored QR. Scanning opens the result reached from the QR. A successful preview does not establish that saving or scanning works.</dd>
+<dt>Internal QR name</dt><dd>The name used to identify a QR in the account. It is different from the destination URL or the content visible after scanning.</dd>
+<dt>QR password / account password</dt><dd>A QR password can restrict access to scanned content. An account password signs you in. They are separate inputs.</dd>
+<dt>Default / override</dt><dd>A default is a value an automation helper uses when no replacement is supplied. An override is the replacement passed by a particular test. The test&#x2019;s override takes priority.</dd>
+<dt>Generated value / Faker</dt><dd>A value made by code for a run, often a name, email, or paragraph. Faker is a library used for this. Generated values can change between runs and may not have an exact requested length.</dd>
+<dt>Automation / Playwright</dt><dd>Automation is code performing actions and checking results. Playwright is the tool this repository uses to drive browsers and run tests.</dd>
+<dt>Spec / test declaration</dt><dd>A spec is a file containing automated test cases and their setup. A declaration is a test definition in the code; loops and browser choices can make that definition run more than once.</dd>
+<dt>Helper / method / Page Object</dt><dd>A helper or method is a reusable action or sequence. A Page Object groups actions for a screen. A method with Create in its name may only fill a form; its exact behavior is described in the reference.</dd>
+<dt>Locator / selector</dt><dd>The rule automation uses to find an on-screen field, button, or other element. It is not a value to enter into the form.</dd>
+<dt>Fixture</dt><dd>In automation setup, a fixture provides tools or prepared context to a test. An upload fixture is a prepared file. Neither term by itself means a user has already been registered or signed in.</dd>
+<dt>Setup / hook / cleanup</dt><dd>Setup establishes the starting state. A hook is code that runs before or after selected tests. Cleanup removes or resets specified test data afterward; it varies by test.</dd>
+<dt>API / database (DB)</dt><dd>An API lets code communicate with a service directly. A database stores records. Some tests read or change these records without clicking the product interface; those technical details are optional for manual testing.</dd>
+<dt>Environment variable / .env</dt><dd>A named configuration setting and a local file that can supply settings to automation. For example, DEFAULT_USER_LOGIN is the setting name, not the actual login address.</dd>
+<dt>Mailpit / Mailtrap</dt><dd>Mailpit is the test email service used by the current mail helper. The repository still has a Mailtrap-named compatibility helper; its name alone does not identify a separate working inbox.</dd>
+<dt>Stripe / subscription / plan</dt><dd>Stripe is used for payment integration. A plan describes an offering; a subscription is an account&#x2019;s recurring billing arrangement. Billing checks need the case&#x2019;s prepared account and payment setup.</dd>
+<dt>Assertion / pass / fail / skipped</dt><dd>An assertion is an automated comparison with an expected result. Pass means the executed checks succeeded. Fail means a check or required action failed. Skipped means the test was not executed; it is not a pass.</dd>
+<dt>Retry / timeout / polling</dt><dd>A retry repeats a failed action or test. A timeout limits how long it may wait. Polling repeatedly checks whether an expected change has appeared.</dd>
+<dt>CI / report / artifact</dt><dd>CI is an automated job that can run the suite. A report lists run results. Artifacts are evidence such as screenshots, videos, or downloaded files; which ones exist depends on the run settings.</dd>
+<dt>Source snapshot / line link</dt><dd>A readable copy of code bundled with this guide. A line link opens a particular line in that copy. It is documentation, not a running test or proof that the current product behaves that way.</dd></dl></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

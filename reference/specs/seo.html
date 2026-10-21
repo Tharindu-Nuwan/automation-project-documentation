@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/specs/seo.html">
+<title>seo · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (3)</summary><a href="#tests-seo-event-qr-landing-seo-automations-spec-ts">tests/seo/event-qr-landing-seo-automations.spec.ts</a>
+<a href="#tests-seo-seo-audit-page-matrix-spec-ts">tests/seo/seo-audit-page-matrix.spec.ts</a>
+<a href="#tests-seo-technical-seo-audit-spec-ts">tests/seo/technical-seo-audit.spec.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="seo">seo</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="tests-seo-event-qr-landing-seo-automations-spec-ts">tests/seo/event-qr-landing-seo-automations.spec.ts</h2>
+<p><a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L1">tests/seo/event-qr-landing-seo-automations.spec.ts:1</a></p>
+<h3 id="imports-follow-these-to-find-data-and-setup">Imports: follow these to find data and setup</h3>
+<ul>
+<li><code>{ expect }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ qase }</code> &#x2190; <code>playwright-qase-reporter</code></li>
+<li><code>{ test }</code> &#x2190; <a data-source="fixtures/baseFixture.ts" href="../../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></li>
+<li><code>{ openEventStep2 }</code> &#x2190; <a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L1">tests/helpers/eventLocalSetup.ts:1</a></li>
+<li><code>{ auditCurrentPage, auditUrl, attachReport, describeReport, }</code> &#x2190; <a data-source="tests/helpers/seoAudit.ts" href="../../sources/tests/helpers/seoAudit.ts.html#L1">tests/helpers/seoAudit.ts:1</a></li>
+</ul>
+<h3 id="setup-cleanup-and-execution-options">Setup, cleanup, and execution options</h3>
+<p>No direct hook declaration in this file; inspect imported helpers and fixtures.</p>
+<h3 id="local-data-and-generated-values">Local data and generated values</h3>
+<ul>
+<li><code>SUITE</code> &#x2190; <code>&apos;SEO audit &#x2014; Event QR&apos;</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L34">tests/seo/event-qr-landing-seo-automations.spec.ts:34</a></li>
+<li><code>report</code> &#x2190; <code>await auditCurrentPage(page)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L55">tests/seo/event-qr-landing-seo-automations.spec.ts:55</a></li>
+<li><code>userData</code> &#x2190; <code>await pageManager.registerPage.authorizeUser()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L77">tests/seo/event-qr-landing-seo-automations.spec.ts:77</a></li>
+<li><code>eventCard</code> &#x2190; <code>pageManager.step1Page.locator.eventQrType</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L84">tests/seo/event-qr-landing-seo-automations.spec.ts:84</a></li>
+<li><code>reached</code> &#x2190; <code>await page .waitForURL(/step=2/, { timeout: 15_000 }) .then(() =&gt; true) .catch(() =&gt; false)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L87">tests/seo/event-qr-landing-seo-automations.spec.ts:87</a></li>
+<li><code>title</code> &#x2190; <code>&#x2032;SEO Event &#x24;{Date.now()}&#x2032;</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L97">tests/seo/event-qr-landing-seo-automations.spec.ts:97</a></li>
+<li><code>scanLink</code> &#x2190; <code>page .locator(&apos;a:has(span.overflow-link)&apos;) .first()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L109">tests/seo/event-qr-landing-seo-automations.spec.ts:109</a></li>
+<li><code>landingUrl</code> &#x2190; <code>await scanLink.getAttribute(&apos;href&apos;)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L113">tests/seo/event-qr-landing-seo-automations.spec.ts:113</a></li>
+<li><code>browser</code> &#x2190; <code>page.context().browser()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L128">tests/seo/event-qr-landing-seo-automations.spec.ts:128</a></li>
+<li><code>anonContext</code> &#x2190; <code>await browser!.newContext()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L129">tests/seo/event-qr-landing-seo-automations.spec.ts:129</a></li>
+<li><code>anonPage</code> &#x2190; <code>await anonContext.newPage()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L131">tests/seo/event-qr-landing-seo-automations.spec.ts:131</a></li>
+<li><code>report</code> &#x2190; <code>await auditUrl( anonPage, landingUrl as string )</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L132">tests/seo/event-qr-landing-seo-automations.spec.ts:132</a></li>
+</ul>
+<h3 id="test-declarations-and-actions">Test declarations and actions</h3>
+<p>Loops may expand one declaration into many runnable cases. Calls below are in source order, including conditional branches; they are not a runtime trace. Hooks above also apply according to their enclosing describe block.</p>
+<h4 id="event-qr-wizard-step-2-passes-the-seo-html-audit">&apos;Event QR wizard Step 2 passes the SEO/HTML audit&apos;</h4>
+<p><a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L42">tests/seo/event-qr-landing-seo-automations.spec.ts:42</a></p>
+<p>Metadata: <code>{ tag: [&apos;@SEO&apos;, &apos;@Regression&apos;, &apos;@High&apos;], annotation: [{ type: &apos;testId&apos;, description: &apos;EVQR-SEO-01&apos; }], }</code></p>
+<ul>
+<li><code>qase.id(0)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L49">tests/seo/event-qr-landing-seo-automations.spec.ts:49</a></li>
+<li><code>qase.title(&apos;Event QR wizard Step 2 passes the SEO/HTML audit&apos;)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L50">tests/seo/event-qr-landing-seo-automations.spec.ts:50</a></li>
+<li><code>qase.suite(SUITE)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L51">tests/seo/event-qr-landing-seo-automations.spec.ts:51</a></li>
+<li><code>expect(report.criticalFailures, describeReport(report)).toEqual([])</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L57">tests/seo/event-qr-landing-seo-automations.spec.ts:57</a></li>
+</ul>
+<h4 id="published-event-qr-landing-page-passes-the-seo-html-audit">&apos;published Event QR landing page passes the SEO/HTML audit&apos;</h4>
+<p><a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L64">tests/seo/event-qr-landing-seo-automations.spec.ts:64</a></p>
+<p>Metadata: <code>{ tag: [&apos;@SEO&apos;, &apos;@Regression&apos;, &apos;@High&apos;], annotation: [{ type: &apos;testId&apos;, description: &apos;EVQR-SEO-02&apos; }], }</code></p>
+<ul>
+<li><code>qase.id(0)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L71">tests/seo/event-qr-landing-seo-automations.spec.ts:71</a></li>
+<li><code>qase.title(&apos;published Event QR landing page passes the SEO/HTML audit&apos;)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L72">tests/seo/event-qr-landing-seo-automations.spec.ts:72</a></li>
+<li><code>qase.suite(SUITE)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L75">tests/seo/event-qr-landing-seo-automations.spec.ts:75</a></li>
+<li><code>pageManager.registerPage.authorizeUser()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L77">tests/seo/event-qr-landing-seo-automations.spec.ts:77</a></li>
+<li><code>page.goto(&apos;/qr-codes&apos;)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L79">tests/seo/event-qr-landing-seo-automations.spec.ts:79</a></li>
+<li><code>pageManager.menuPage.goToCreateQrCode()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L80">tests/seo/event-qr-landing-seo-automations.spec.ts:80</a></li>
+<li><code>eventCard.click()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L86">tests/seo/event-qr-landing-seo-automations.spec.ts:86</a></li>
+<li><code>page .waitForURL(/step=2/, { timeout: 15_000 })</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L87">tests/seo/event-qr-landing-seo-automations.spec.ts:87</a></li>
+<li><code>eventCard.click()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L92">tests/seo/event-qr-landing-seo-automations.spec.ts:92</a></li>
+<li><code>expect(page).toHaveURL(/step=2/)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L93">tests/seo/event-qr-landing-seo-automations.spec.ts:93</a></li>
+<li><code>pageManager.step2Page.ensureHelpClosedBeforeUpload()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L95">tests/seo/event-qr-landing-seo-automations.spec.ts:95</a></li>
+<li><code>pageManager.step2Page.fillEventRequiredFields(title)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L98">tests/seo/event-qr-landing-seo-automations.spec.ts:98</a></li>
+<li><code>pageManager.qrCreationPage.clickStep2NextButton()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L99">tests/seo/event-qr-landing-seo-automations.spec.ts:99</a></li>
+<li><code>page.waitForURL(&apos;**step=3**&apos;, { timeout: 60_000 })</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L100">tests/seo/event-qr-landing-seo-automations.spec.ts:100</a></li>
+<li><code>pageManager.qrCreationPage.clickStep3CreateButton()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L101">tests/seo/event-qr-landing-seo-automations.spec.ts:101</a></li>
+<li><code>pageManager.qrCreationPage.closeDownloadModalIfPresent()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L102">tests/seo/event-qr-landing-seo-automations.spec.ts:102</a></li>
+<li><code>pageManager.myQrCodesPage.goToRootMyQrCodes()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L108">tests/seo/event-qr-landing-seo-automations.spec.ts:108</a></li>
+<li><code>expect(scanLink).toBeVisible({ timeout: 15_000 })</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L112">tests/seo/event-qr-landing-seo-automations.spec.ts:112</a></li>
+<li><code>expect( landingUrl, &apos;the published Event QR must expose a public landing link&apos; ).toBeTruthy()</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L114">tests/seo/event-qr-landing-seo-automations.spec.ts:114</a></li>
+<li><code>expect( landingUrl, &#x2032;published Event QR resolved to a placeholder page (&#x24;{landingUrl}) instead of its Event landing page&#x2032; ).not.toMatch(/\/(no-data|not-found|404)\b/)</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L122">tests/seo/event-qr-landing-seo-automations.spec.ts:122</a></li>
+<li><code>expect( report.criticalFailures, describeReport(report) ).toEqual([])</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L137">tests/seo/event-qr-landing-seo-automations.spec.ts:137</a></li>
+<li><code>apiManager.userApi .deleteUser([userData.email]) .catch([callback: see source])</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L145">tests/seo/event-qr-landing-seo-automations.spec.ts:145</a></li>
+<li><code>apiManager.userApi .deleteUser([userData.email])</code> &#x2014; <a data-source="tests/seo/event-qr-landing-seo-automations.spec.ts" href="../../sources/tests/seo/event-qr-landing-seo-automations.spec.ts.html#L145">tests/seo/event-qr-landing-seo-automations.spec.ts:145</a></li>
+</ul>
+<h2 id="tests-seo-seo-audit-page-matrix-spec-ts">tests/seo/seo-audit-page-matrix.spec.ts</h2>
+<p><a data-source="tests/seo/seo-audit-page-matrix.spec.ts" href="../../sources/tests/seo/seo-audit-page-matrix.spec.ts.html#L1">tests/seo/seo-audit-page-matrix.spec.ts:1</a></p>
+<h3 id="imports-follow-these-to-find-data-and-setup-1">Imports: follow these to find data and setup</h3>
+<ul>
+<li><code>{ expect }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ qase }</code> &#x2190; <code>playwright-qase-reporter</code></li>
+<li><code>{ test }</code> &#x2190; <a data-source="fixtures/baseFixture.ts" href="../../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></li>
+<li><code>{ auditUrl, attachReport, describeReport }</code> &#x2190; <a data-source="tests/helpers/seoAudit.ts" href="../../sources/tests/helpers/seoAudit.ts.html#L1">tests/helpers/seoAudit.ts:1</a></li>
+</ul>
+<h3 id="setup-cleanup-and-execution-options-1">Setup, cleanup, and execution options</h3>
+<p>No direct hook declaration in this file; inspect imported helpers and fixtures.</p>
+<h3 id="local-data-and-generated-values-1">Local data and generated values</h3>
+<ul>
+<li><code>PAGES</code> &#x2190; <code>[ { name: &apos;home&apos;, path: &apos;/en/&apos;, qaseId: 9230 }, { name: &apos;create (QR type selection)&apos;, path: &apos;/en/create&apos;, qaseId: 9231 }, { name: &apos;plans and prices&apos;, path: &apos;/en/plans-and-prices&apos;, qaseId: 9232 }, { name: &apos;faq&apos;, path: &apos;/e &#x2026; [see source]</code> &#x2014; <a data-source="tests/seo/seo-audit-page-matrix.spec.ts" href="../../sources/tests/seo/seo-audit-page-matrix.spec.ts.html#L24">tests/seo/seo-audit-page-matrix.spec.ts:24</a></li>
+<li><code>report</code> &#x2190; <code>await auditUrl(page, p.path)</code> &#x2014; <a data-source="tests/seo/seo-audit-page-matrix.spec.ts" href="../../sources/tests/seo/seo-audit-page-matrix.spec.ts.html#L49">tests/seo/seo-audit-page-matrix.spec.ts:49</a></li>
+</ul>
+<h3 id="test-declarations-and-actions-1">Test declarations and actions</h3>
+<p>Loops may expand one declaration into many runnable cases. Calls below are in source order, including conditional branches; they are not a runtime trace. Hooks above also apply according to their enclosing describe block.</p>
+<h4 id="seo-audit-p-name"><code>SEO audit: &#x24;{p.name}</code></h4>
+<p><a data-source="tests/seo/seo-audit-page-matrix.spec.ts" href="../../sources/tests/seo/seo-audit-page-matrix.spec.ts.html#L42">tests/seo/seo-audit-page-matrix.spec.ts:42</a></p>
+<p>Metadata: <code>{ tag: [&apos;@SEO&apos;, &apos;@Regression&apos;] }</code></p>
+<ul>
+<li><code>qase.id(p.qaseId)</code> &#x2014; <a data-source="tests/seo/seo-audit-page-matrix.spec.ts" href="../../sources/tests/seo/seo-audit-page-matrix.spec.ts.html#L46">tests/seo/seo-audit-page-matrix.spec.ts:46</a></li>
+<li><code>qase.title(&#x2032;SEO audit: &#x24;{p.name}&#x2032;)</code> &#x2014; <a data-source="tests/seo/seo-audit-page-matrix.spec.ts" href="../../sources/tests/seo/seo-audit-page-matrix.spec.ts.html#L47">tests/seo/seo-audit-page-matrix.spec.ts:47</a></li>
+<li><code>qase.suite(&apos;SEO&apos;)</code> &#x2014; <a data-source="tests/seo/seo-audit-page-matrix.spec.ts" href="../../sources/tests/seo/seo-audit-page-matrix.spec.ts.html#L48">tests/seo/seo-audit-page-matrix.spec.ts:48</a></li>
+<li><code>expect(report.criticalFailures, describeReport(report)).toEqual([])</code> &#x2014; <a data-source="tests/seo/seo-audit-page-matrix.spec.ts" href="../../sources/tests/seo/seo-audit-page-matrix.spec.ts.html#L51">tests/seo/seo-audit-page-matrix.spec.ts:51</a></li>
+</ul>
+<h2 id="tests-seo-technical-seo-audit-spec-ts">tests/seo/technical-seo-audit.spec.ts</h2>
+<p><a data-source="tests/seo/technical-seo-audit.spec.ts" href="../../sources/tests/seo/technical-seo-audit.spec.ts.html#L1">tests/seo/technical-seo-audit.spec.ts:1</a></p>
+<h3 id="imports-follow-these-to-find-data-and-setup-2">Imports: follow these to find data and setup</h3>
+<ul>
+<li><code>{ expect }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ qase }</code> &#x2190; <code>playwright-qase-reporter</code></li>
+<li><code>{ test }</code> &#x2190; <a data-source="fixtures/baseFixture.ts" href="../../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></li>
+<li><code>{ auditUrl, attachReport, describeReport }</code> &#x2190; <a data-source="tests/helpers/seoAudit.ts" href="../../sources/tests/helpers/seoAudit.ts.html#L1">tests/helpers/seoAudit.ts:1</a></li>
+</ul>
+<h3 id="setup-cleanup-and-execution-options-2">Setup, cleanup, and execution options</h3>
+<p>No direct hook declaration in this file; inspect imported helpers and fixtures.</p>
+<h3 id="local-data-and-generated-values-2">Local data and generated values</h3>
+<ul>
+<li><code>TEST_URL</code> &#x2190; <code>process.env.TEST_URL</code> &#x2014; <a data-source="tests/seo/technical-seo-audit.spec.ts" href="../../sources/tests/seo/technical-seo-audit.spec.ts.html#L16">tests/seo/technical-seo-audit.spec.ts:16</a></li>
+<li><code>report</code> &#x2190; <code>await auditUrl(page, TEST_URL as string)</code> &#x2014; <a data-source="tests/seo/technical-seo-audit.spec.ts" href="../../sources/tests/seo/technical-seo-audit.spec.ts.html#L30">tests/seo/technical-seo-audit.spec.ts:30</a></li>
+</ul>
+<h3 id="test-declarations-and-actions-2">Test declarations and actions</h3>
+<p>Loops may expand one declaration into many runnable cases. Calls below are in source order, including conditional branches; they are not a runtime trace. Hooks above also apply according to their enclosing describe block.</p>
+<h4 id="audits-test-url-against-the-seo-html-accessibility-rule-set">&apos;audits TEST_URL against the SEO / HTML / accessibility rule set&apos;</h4>
+<p><a data-source="tests/seo/technical-seo-audit.spec.ts" href="../../sources/tests/seo/technical-seo-audit.spec.ts.html#L21">tests/seo/technical-seo-audit.spec.ts:21</a></p>
+<p>Metadata: <code>{ tag: [&apos;@SEO&apos;, &apos;@Regression&apos;] }</code></p>
+<ul>
+<li><code>qase.id(9229)</code> &#x2014; <a data-source="tests/seo/technical-seo-audit.spec.ts" href="../../sources/tests/seo/technical-seo-audit.spec.ts.html#L25">tests/seo/technical-seo-audit.spec.ts:25</a></li>
+<li><code>qase.title(&apos;audits TEST_URL against the SEO / HTML / accessibility rule set&apos;)</code> &#x2014; <a data-source="tests/seo/technical-seo-audit.spec.ts" href="../../sources/tests/seo/technical-seo-audit.spec.ts.html#L26">tests/seo/technical-seo-audit.spec.ts:26</a></li>
+<li><code>qase.suite(&apos;SEO&apos;)</code> &#x2014; <a data-source="tests/seo/technical-seo-audit.spec.ts" href="../../sources/tests/seo/technical-seo-audit.spec.ts.html#L29">tests/seo/technical-seo-audit.spec.ts:29</a></li>
+<li><code>expect(report.criticalFailures, describeReport(report)).toEqual([])</code> &#x2014; <a data-source="tests/seo/technical-seo-audit.spec.ts" href="../../sources/tests/seo/technical-seo-audit.spec.ts.html#L32">tests/seo/technical-seo-audit.spec.ts:32</a></li>
+</ul>
+<h3 id="status-gates-expected-failures">Status gates / expected failures</h3>
+<ul>
+<li><code>test.skip(!TEST_URL, &apos;https://oqg.dev.test-qr.com/create&apos;)</code> &#x2014; <a data-source="tests/seo/technical-seo-audit.spec.ts" href="../../sources/tests/seo/technical-seo-audit.spec.ts.html#L19">tests/seo/technical-seo-audit.spec.ts:19</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

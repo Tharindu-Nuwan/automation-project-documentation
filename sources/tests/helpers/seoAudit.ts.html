@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>tests/helpers/seoAudit.ts · QA reference</title>
+<link rel="stylesheet" href="../../../assets/styles.css">
+<script defer src="../../../assets/search-index.js"></script><script defer src="../../../assets/app.js"></script>
+</head><body data-root-prefix="../../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../../index.html">Start here</a>
+<a href="../../../00-qa-quick-start.html">Your first check</a>
+<a href="../../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../../03-qr-creation.html">QR types and creation</a>
+<a href="../../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../../05-other-flows.html">Other product flows</a>
+<a href="../../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../../reference/index.html">Reference overview</a>
+<a href="../../../reference/spec-index.html">Complete spec map</a>
+<a href="../../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../../reference/environment-index.html">Environment variables</a>
+<a href="../../../reference/assets.html">Upload asset inventory</a>
+<a href="../../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical detail · bundled source snapshot · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../../glossary.html">glossary</a>.</p>
+
+<article id="doc-content" tabindex="-1"><h1>tests/helpers/seoAudit.ts</h1><p class="source-note">Bundled source snapshot. Credential-like literals are omitted. Line numbers correspond to the audited repository file; this page is for reading and is not executable test code.</p><pre class="source-code"><code><span class="source-line" id="L1"><a class="line-number" href="#L1" aria-label="Line 1">1</a> import type { Page, TestInfo } from &#39;@playwright/test&#39;</span>
+<span class="source-line" id="L2"><a class="line-number" href="#L2" aria-label="Line 2">2</a> import {</span>
+<span class="source-line" id="L3"><a class="line-number" href="#L3" aria-label="Line 3">3</a>     DEFAULT_SEO_CONFIG,</span>
+<span class="source-line" id="L4"><a class="line-number" href="#L4" aria-label="Line 4">4</a>     SEO_RULES,</span>
+<span class="source-line" id="L5"><a class="line-number" href="#L5" aria-label="Line 5">5</a>     SeoAuditConfig,</span>
+<span class="source-line" id="L6"><a class="line-number" href="#L6" aria-label="Line 6">6</a> } from &#39;../data/seoAuditConfig.data&#39;</span>
+<span class="source-line" id="L7"><a class="line-number" href="#L7" aria-label="Line 7">7</a> </span>
+<span class="source-line" id="L8"><a class="line-number" href="#L8" aria-label="Line 8">8</a> /**</span>
+<span class="source-line" id="L9"><a class="line-number" href="#L9" aria-label="Line 9">9</a>  * Technical-SEO / HTML-structure / accessibility auditor.</span>
+<span class="source-line" id="L10"><a class="line-number" href="#L10" aria-label="Line 10">10</a>  *</span>
+<span class="source-line" id="L11"><a class="line-number" href="#L11" aria-label="Line 11">11</a>  * Extracts the DOM facts once in the browser, then evaluates the rule set in</span>
+<span class="source-line" id="L12"><a class="line-number" href="#L12" aria-label="Line 12">12</a>  * Node and returns a structured, CI-friendly report. Broken-link checks use</span>
+<span class="source-line" id="L13"><a class="line-number" href="#L13" aria-label="Line 13">13</a>  * Playwright&#39;s request context (per CLAUDE.md §17 — never axios/fetch).</span>
+<span class="source-line" id="L14"><a class="line-number" href="#L14" aria-label="Line 14">14</a>  *</span>
+<span class="source-line" id="L15"><a class="line-number" href="#L15" aria-label="Line 15">15</a>  * A critical failure = a real SEO/a11y defect. Per CLAUDE.md §11 these are</span>
+<span class="source-line" id="L16"><a class="line-number" href="#L16" aria-label="Line 16">16</a>  * product bugs to document and quarantine, not assertions to weaken.</span>
+<span class="source-line" id="L17"><a class="line-number" href="#L17" aria-label="Line 17">17</a>  */</span>
+<span class="source-line" id="L18"><a class="line-number" href="#L18" aria-label="Line 18">18</a> </span>
+<span class="source-line" id="L19"><a class="line-number" href="#L19" aria-label="Line 19">19</a> export interface SeoFinding {</span>
+<span class="source-line" id="L20"><a class="line-number" href="#L20" aria-label="Line 20">20</a>     rule: string</span>
+<span class="source-line" id="L21"><a class="line-number" href="#L21" aria-label="Line 21">21</a>     selector: string</span>
+<span class="source-line" id="L22"><a class="line-number" href="#L22" aria-label="Line 22">22</a>     message: string</span>
+<span class="source-line" id="L23"><a class="line-number" href="#L23" aria-label="Line 23">23</a> }</span>
+<span class="source-line" id="L24"><a class="line-number" href="#L24" aria-label="Line 24">24</a> </span>
+<span class="source-line" id="L25"><a class="line-number" href="#L25" aria-label="Line 25">25</a> export interface SeoReport {</span>
+<span class="source-line" id="L26"><a class="line-number" href="#L26" aria-label="Line 26">26</a>     url: string</span>
+<span class="source-line" id="L27"><a class="line-number" href="#L27" aria-label="Line 27">27</a>     passed: boolean</span>
+<span class="source-line" id="L28"><a class="line-number" href="#L28" aria-label="Line 28">28</a>     criticalFailures: SeoFinding[]</span>
+<span class="source-line" id="L29"><a class="line-number" href="#L29" aria-label="Line 29">29</a>     warnings: SeoFinding[]</span>
+<span class="source-line" id="L30"><a class="line-number" href="#L30" aria-label="Line 30">30</a>     summary: {</span>
+<span class="source-line" id="L31"><a class="line-number" href="#L31" aria-label="Line 31">31</a>         rulesChecked: number</span>
+<span class="source-line" id="L32"><a class="line-number" href="#L32" aria-label="Line 32">32</a>         passed: number</span>
+<span class="source-line" id="L33"><a class="line-number" href="#L33" aria-label="Line 33">33</a>         failed: number</span>
+<span class="source-line" id="L34"><a class="line-number" href="#L34" aria-label="Line 34">34</a>         warnings: number</span>
+<span class="source-line" id="L35"><a class="line-number" href="#L35" aria-label="Line 35">35</a>     }</span>
+<span class="source-line" id="L36"><a class="line-number" href="#L36" aria-label="Line 36">36</a> }</span>
+<span class="source-line" id="L37"><a class="line-number" href="#L37" aria-label="Line 37">37</a> </span>
+<span class="source-line" id="L38"><a class="line-number" href="#L38" aria-label="Line 38">38</a> interface DomFacts {</span>
+<span class="source-line" id="L39"><a class="line-number" href="#L39" aria-label="Line 39">39</a>     title: string | null</span>
+<span class="source-line" id="L40"><a class="line-number" href="#L40" aria-label="Line 40">40</a>     metaDescription: string | null</span>
+<span class="source-line" id="L41"><a class="line-number" href="#L41" aria-label="Line 41">41</a>     htmlLang: string | null</span>
+<span class="source-line" id="L42"><a class="line-number" href="#L42" aria-label="Line 42">42</a>     viewport: string | null</span>
+<span class="source-line" id="L43"><a class="line-number" href="#L43" aria-label="Line 43">43</a>     canonical: string | null</span>
+<span class="source-line" id="L44"><a class="line-number" href="#L44" aria-label="Line 44">44</a>     headings: Array&lt;{ level: number; text: string; length: number }&gt;</span>
+<span class="source-line" id="L45"><a class="line-number" href="#L45" aria-label="Line 45">45</a>     mainCount: number</span>
+<span class="source-line" id="L46"><a class="line-number" href="#L46" aria-label="Line 46">46</a>     divRoleMainCount: number</span>
+<span class="source-line" id="L47"><a class="line-number" href="#L47" aria-label="Line 47">47</a>     headerCount: number</span>
+<span class="source-line" id="L48"><a class="line-number" href="#L48" aria-label="Line 48">48</a>     footerCount: number</span>
+<span class="source-line" id="L49"><a class="line-number" href="#L49" aria-label="Line 49">49</a>     navCount: number</span>
+<span class="source-line" id="L50"><a class="line-number" href="#L50" aria-label="Line 50">50</a>     divCount: number</span>
+<span class="source-line" id="L51"><a class="line-number" href="#L51" aria-label="Line 51">51</a>     semanticCount: number</span>
+<span class="source-line" id="L52"><a class="line-number" href="#L52" aria-label="Line 52">52</a>     images: Array&lt;{</span>
+<span class="source-line" id="L53"><a class="line-number" href="#L53" aria-label="Line 53">53</a>         altMissing: boolean</span>
+<span class="source-line" id="L54"><a class="line-number" href="#L54" aria-label="Line 54">54</a>         hasWidth: boolean</span>
+<span class="source-line" id="L55"><a class="line-number" href="#L55" aria-label="Line 55">55</a>         hasHeight: boolean</span>
+<span class="source-line" id="L56"><a class="line-number" href="#L56" aria-label="Line 56">56</a>         src: string</span>
+<span class="source-line" id="L57"><a class="line-number" href="#L57" aria-label="Line 57">57</a>     }&gt;</span>
+<span class="source-line" id="L58"><a class="line-number" href="#L58" aria-label="Line 58">58</a>     anchors: Array&lt;{ href: string; text: string }&gt;</span>
+<span class="source-line" id="L59"><a class="line-number" href="#L59" aria-label="Line 59">59</a>     jsonLd: string[]</span>
+<span class="source-line" id="L60"><a class="line-number" href="#L60" aria-label="Line 60">60</a>     inlineStyleBytes: number[]</span>
+<span class="source-line" id="L61"><a class="line-number" href="#L61" aria-label="Line 61">61</a>     origin: string</span>
+<span class="source-line" id="L62"><a class="line-number" href="#L62" aria-label="Line 62">62</a> }</span>
+<span class="source-line" id="L63"><a class="line-number" href="#L63" aria-label="Line 63">63</a> </span>
+<span class="source-line" id="L64"><a class="line-number" href="#L64" aria-label="Line 64">64</a> async function collectDomFacts(page: Page): Promise&lt;DomFacts&gt; {</span>
+<span class="source-line" id="L65"><a class="line-number" href="#L65" aria-label="Line 65">65</a>     return page.evaluate(() =&gt; {</span>
+<span class="source-line" id="L66"><a class="line-number" href="#L66" aria-label="Line 66">66</a>         const q = (sel: string) =&gt; Array.from(document.querySelectorAll(sel))</span>
+<span class="source-line" id="L67"><a class="line-number" href="#L67" aria-label="Line 67">67</a>         const attr = (sel: string, name: string) =&gt;</span>
+<span class="source-line" id="L68"><a class="line-number" href="#L68" aria-label="Line 68">68</a>             document.querySelector(sel)?.getAttribute(name) ?? null</span>
+<span class="source-line" id="L69"><a class="line-number" href="#L69" aria-label="Line 69">69</a>         return {</span>
+<span class="source-line" id="L70"><a class="line-number" href="#L70" aria-label="Line 70">70</a>             title: document.querySelector(&#39;title&#39;)?.textContent?.trim() ?? null,</span>
+<span class="source-line" id="L71"><a class="line-number" href="#L71" aria-label="Line 71">71</a>             metaDescription: attr(&#39;meta[name=&quot;description&quot;]&#39;, &#39;content&#39;),</span>
+<span class="source-line" id="L72"><a class="line-number" href="#L72" aria-label="Line 72">72</a>             htmlLang: document.documentElement.getAttribute(&#39;lang&#39;),</span>
+<span class="source-line" id="L73"><a class="line-number" href="#L73" aria-label="Line 73">73</a>             viewport: attr(&#39;meta[name=&quot;viewport&quot;]&#39;, &#39;content&#39;),</span>
+<span class="source-line" id="L74"><a class="line-number" href="#L74" aria-label="Line 74">74</a>             canonical: attr(&#39;link[rel=&quot;canonical&quot;]&#39;, &#39;href&#39;),</span>
+<span class="source-line" id="L75"><a class="line-number" href="#L75" aria-label="Line 75">75</a>             headings: q(&#39;h1,h2,h3,h4,h5,h6&#39;).map((h) =&gt; {</span>
+<span class="source-line" id="L76"><a class="line-number" href="#L76" aria-label="Line 76">76</a>                 const text = (h.textContent || &#39;&#39;).trim()</span>
+<span class="source-line" id="L77"><a class="line-number" href="#L77" aria-label="Line 77">77</a>                 return {</span>
+<span class="source-line" id="L78"><a class="line-number" href="#L78" aria-label="Line 78">78</a>                     level: Number(h.tagName.substring(1)),</span>
+<span class="source-line" id="L79"><a class="line-number" href="#L79" aria-label="Line 79">79</a>                     text: text.slice(0, 130),</span>
+<span class="source-line" id="L80"><a class="line-number" href="#L80" aria-label="Line 80">80</a>                     length: text.length,</span>
+<span class="source-line" id="L81"><a class="line-number" href="#L81" aria-label="Line 81">81</a>                 }</span>
+<span class="source-line" id="L82"><a class="line-number" href="#L82" aria-label="Line 82">82</a>             }),</span>
+<span class="source-line" id="L83"><a class="line-number" href="#L83" aria-label="Line 83">83</a>             mainCount: q(&#39;main&#39;).length,</span>
+<span class="source-line" id="L84"><a class="line-number" href="#L84" aria-label="Line 84">84</a>             divRoleMainCount: q(&#39;div[role=&quot;main&quot;]&#39;).length,</span>
+<span class="source-line" id="L85"><a class="line-number" href="#L85" aria-label="Line 85">85</a>             headerCount: q(&#39;header&#39;).length,</span>
+<span class="source-line" id="L86"><a class="line-number" href="#L86" aria-label="Line 86">86</a>             footerCount: q(&#39;footer&#39;).length,</span>
+<span class="source-line" id="L87"><a class="line-number" href="#L87" aria-label="Line 87">87</a>             navCount: q(&#39;nav&#39;).length,</span>
+<span class="source-line" id="L88"><a class="line-number" href="#L88" aria-label="Line 88">88</a>             divCount: q(&#39;div&#39;).length,</span>
+<span class="source-line" id="L89"><a class="line-number" href="#L89" aria-label="Line 89">89</a>             semanticCount: q(&#39;main,nav,header,footer,article,section,aside&#39;)</span>
+<span class="source-line" id="L90"><a class="line-number" href="#L90" aria-label="Line 90">90</a>                 .length,</span>
+<span class="source-line" id="L91"><a class="line-number" href="#L91" aria-label="Line 91">91</a>             images: q(&#39;img&#39;).map((im) =&gt; ({</span>
+<span class="source-line" id="L92"><a class="line-number" href="#L92" aria-label="Line 92">92</a>                 altMissing: !im.hasAttribute(&#39;alt&#39;),</span>
+<span class="source-line" id="L93"><a class="line-number" href="#L93" aria-label="Line 93">93</a>                 hasWidth: im.hasAttribute(&#39;width&#39;),</span>
+<span class="source-line" id="L94"><a class="line-number" href="#L94" aria-label="Line 94">94</a>                 hasHeight: im.hasAttribute(&#39;height&#39;),</span>
+<span class="source-line" id="L95"><a class="line-number" href="#L95" aria-label="Line 95">95</a>                 src: (im.getAttribute(&#39;src&#39;) || &#39;&#39;).slice(0, 60),</span>
+<span class="source-line" id="L96"><a class="line-number" href="#L96" aria-label="Line 96">96</a>             })),</span>
+<span class="source-line" id="L97"><a class="line-number" href="#L97" aria-label="Line 97">97</a>             anchors: q(&#39;a&#39;).map((a) =&gt; ({</span>
+<span class="source-line" id="L98"><a class="line-number" href="#L98" aria-label="Line 98">98</a>                 href: a.getAttribute(&#39;href&#39;) || &#39;&#39;,</span>
+<span class="source-line" id="L99"><a class="line-number" href="#L99" aria-label="Line 99">99</a>                 text: (a.textContent || &#39;&#39;).trim().toLowerCase(),</span>
+<span class="source-line" id="L100"><a class="line-number" href="#L100" aria-label="Line 100">100</a>             })),</span>
+<span class="source-line" id="L101"><a class="line-number" href="#L101" aria-label="Line 101">101</a>             jsonLd: q(&#39;script[type=&quot;application/ld+json&quot;]&#39;).map(</span>
+<span class="source-line" id="L102"><a class="line-number" href="#L102" aria-label="Line 102">102</a>                 (s) =&gt; s.textContent || &#39;&#39;</span>
+<span class="source-line" id="L103"><a class="line-number" href="#L103" aria-label="Line 103">103</a>             ),</span>
+<span class="source-line" id="L104"><a class="line-number" href="#L104" aria-label="Line 104">104</a>             inlineStyleBytes: q(&#39;style&#39;).map(</span>
+<span class="source-line" id="L105"><a class="line-number" href="#L105" aria-label="Line 105">105</a>                 (s) =&gt; (s.textContent || &#39;&#39;).length</span>
+<span class="source-line" id="L106"><a class="line-number" href="#L106" aria-label="Line 106">106</a>             ),</span>
+<span class="source-line" id="L107"><a class="line-number" href="#L107" aria-label="Line 107">107</a>             origin: location.origin,</span>
+<span class="source-line" id="L108"><a class="line-number" href="#L108" aria-label="Line 108">108</a>         }</span>
+<span class="source-line" id="L109"><a class="line-number" href="#L109" aria-label="Line 109">109</a>     })</span>
+<span class="source-line" id="L110"><a class="line-number" href="#L110" aria-label="Line 110">110</a> }</span>
+<span class="source-line" id="L111"><a class="line-number" href="#L111" aria-label="Line 111">111</a> </span>
+<span class="source-line" id="L112"><a class="line-number" href="#L112" aria-label="Line 112">112</a> /** Audits the page currently loaded in `page`. Assumes navigation + networkidle done. */</span>
+<span class="source-line" id="L113"><a class="line-number" href="#L113" aria-label="Line 113">113</a> export async function auditCurrentPage(</span>
+<span class="source-line" id="L114"><a class="line-number" href="#L114" aria-label="Line 114">114</a>     page: Page,</span>
+<span class="source-line" id="L115"><a class="line-number" href="#L115" aria-label="Line 115">115</a>     overrides: Partial&lt;SeoAuditConfig&gt; = {}</span>
+<span class="source-line" id="L116"><a class="line-number" href="#L116" aria-label="Line 116">116</a> ): Promise&lt;SeoReport&gt; {</span>
+<span class="source-line" id="L117"><a class="line-number" href="#L117" aria-label="Line 117">117</a>     const cfg: SeoAuditConfig = { ...DEFAULT_SEO_CONFIG, ...overrides }</span>
+<span class="source-line" id="L118"><a class="line-number" href="#L118" aria-label="Line 118">118</a>     const facts = await collectDomFacts(page)</span>
+<span class="source-line" id="L119"><a class="line-number" href="#L119" aria-label="Line 119">119</a>     const url = page.url()</span>
+<span class="source-line" id="L120"><a class="line-number" href="#L120" aria-label="Line 120">120</a> </span>
+<span class="source-line" id="L121"><a class="line-number" href="#L121" aria-label="Line 121">121</a>     const criticalFailures: SeoFinding[] = []</span>
+<span class="source-line" id="L122"><a class="line-number" href="#L122" aria-label="Line 122">122</a>     const warnings: SeoFinding[] = []</span>
+<span class="source-line" id="L123"><a class="line-number" href="#L123" aria-label="Line 123">123</a>     const failedRules = new Set&lt;string&gt;()</span>
+<span class="source-line" id="L124"><a class="line-number" href="#L124" aria-label="Line 124">124</a>     const checkedRules = new Set&lt;string&gt;()</span>
+<span class="source-line" id="L125"><a class="line-number" href="#L125" aria-label="Line 125">125</a>     const ignored = (r: string) =&gt; cfg.ignoreRules.includes(r)</span>
+<span class="source-line" id="L126"><a class="line-number" href="#L126" aria-label="Line 126">126</a>     const check = (r: string) =&gt; {</span>
+<span class="source-line" id="L127"><a class="line-number" href="#L127" aria-label="Line 127">127</a>         if (!ignored(r)) checkedRules.add(r)</span>
+<span class="source-line" id="L128"><a class="line-number" href="#L128" aria-label="Line 128">128</a>     }</span>
+<span class="source-line" id="L129"><a class="line-number" href="#L129" aria-label="Line 129">129</a>     const fail = (rule: string, selector: string, message: string) =&gt; {</span>
+<span class="source-line" id="L130"><a class="line-number" href="#L130" aria-label="Line 130">130</a>         if (ignored(rule)) return</span>
+<span class="source-line" id="L131"><a class="line-number" href="#L131" aria-label="Line 131">131</a>         criticalFailures.push({ rule, selector, message })</span>
+<span class="source-line" id="L132"><a class="line-number" href="#L132" aria-label="Line 132">132</a>         failedRules.add(rule)</span>
+<span class="source-line" id="L133"><a class="line-number" href="#L133" aria-label="Line 133">133</a>     }</span>
+<span class="source-line" id="L134"><a class="line-number" href="#L134" aria-label="Line 134">134</a>     const warn = (rule: string, selector: string, message: string) =&gt; {</span>
+<span class="source-line" id="L135"><a class="line-number" href="#L135" aria-label="Line 135">135</a>         if (ignored(rule)) return</span>
+<span class="source-line" id="L136"><a class="line-number" href="#L136" aria-label="Line 136">136</a>         warnings.push({ rule, selector, message })</span>
+<span class="source-line" id="L137"><a class="line-number" href="#L137" aria-label="Line 137">137</a>     }</span>
+<span class="source-line" id="L138"><a class="line-number" href="#L138" aria-label="Line 138">138</a> </span>
+<span class="source-line" id="L139"><a class="line-number" href="#L139" aria-label="Line 139">139</a>     // ---- 1. Heading hierarchy ----</span>
+<span class="source-line" id="L140"><a class="line-number" href="#L140" aria-label="Line 140">140</a>     check(SEO_RULES.H1_COUNT)</span>
+<span class="source-line" id="L141"><a class="line-number" href="#L141" aria-label="Line 141">141</a>     const h1s = facts.headings.filter((h) =&gt; h.level === 1)</span>
+<span class="source-line" id="L142"><a class="line-number" href="#L142" aria-label="Line 142">142</a>     if (h1s.length !== 1) {</span>
+<span class="source-line" id="L143"><a class="line-number" href="#L143" aria-label="Line 143">143</a>         fail(</span>
+<span class="source-line" id="L144"><a class="line-number" href="#L144" aria-label="Line 144">144</a>             SEO_RULES.H1_COUNT,</span>
+<span class="source-line" id="L145"><a class="line-number" href="#L145" aria-label="Line 145">145</a>             &#39;h1&#39;,</span>
+<span class="source-line" id="L146"><a class="line-number" href="#L146" aria-label="Line 146">146</a>             `Expected exactly 1 &lt;h1&gt;, found ${h1s.length}` +</span>
+<span class="source-line" id="L147"><a class="line-number" href="#L147" aria-label="Line 147">147</a>                 (h1s.length &gt; 1</span>
+<span class="source-line" id="L148"><a class="line-number" href="#L148" aria-label="Line 148">148</a>                     ? `: ${h1s.map((h) =&gt; `&quot;${h.text.slice(0, 25)}&quot;`).join(&#39;, &#39;)}`</span>
+<span class="source-line" id="L149"><a class="line-number" href="#L149" aria-label="Line 149">149</a>                     : &#39;&#39;)</span>
+<span class="source-line" id="L150"><a class="line-number" href="#L150" aria-label="Line 150">150</a>         )</span>
+<span class="source-line" id="L151"><a class="line-number" href="#L151" aria-label="Line 151">151</a>     }</span>
+<span class="source-line" id="L152"><a class="line-number" href="#L152" aria-label="Line 152">152</a> </span>
+<span class="source-line" id="L153"><a class="line-number" href="#L153" aria-label="Line 153">153</a>     check(SEO_RULES.HEADING_ORDER)</span>
+<span class="source-line" id="L154"><a class="line-number" href="#L154" aria-label="Line 154">154</a>     const seenLevels = new Set&lt;number&gt;()</span>
+<span class="source-line" id="L155"><a class="line-number" href="#L155" aria-label="Line 155">155</a>     for (const h of facts.headings) {</span>
+<span class="source-line" id="L156"><a class="line-number" href="#L156" aria-label="Line 156">156</a>         if (h.level &gt; 1 &amp;&amp; !seenLevels.has(h.level - 1)) {</span>
+<span class="source-line" id="L157"><a class="line-number" href="#L157" aria-label="Line 157">157</a>             fail(</span>
+<span class="source-line" id="L158"><a class="line-number" href="#L158" aria-label="Line 158">158</a>                 SEO_RULES.HEADING_ORDER,</span>
+<span class="source-line" id="L159"><a class="line-number" href="#L159" aria-label="Line 159">159</a>                 `h${h.level}`,</span>
+<span class="source-line" id="L160"><a class="line-number" href="#L160" aria-label="Line 160">160</a>                 `Skipped level: &lt;h${h.level}&gt; (&quot;${h.text.slice(0, 25)}&quot;) appears before any &lt;h${h.level - 1}&gt;`</span>
+<span class="source-line" id="L161"><a class="line-number" href="#L161" aria-label="Line 161">161</a>             )</span>
+<span class="source-line" id="L162"><a class="line-number" href="#L162" aria-label="Line 162">162</a>         }</span>
+<span class="source-line" id="L163"><a class="line-number" href="#L163" aria-label="Line 163">163</a>         seenLevels.add(h.level)</span>
+<span class="source-line" id="L164"><a class="line-number" href="#L164" aria-label="Line 164">164</a>     }</span>
+<span class="source-line" id="L165"><a class="line-number" href="#L165" aria-label="Line 165">165</a> </span>
+<span class="source-line" id="L166"><a class="line-number" href="#L166" aria-label="Line 166">166</a>     check(SEO_RULES.HEADING_LENGTH)</span>
+<span class="source-line" id="L167"><a class="line-number" href="#L167" aria-label="Line 167">167</a>     check(SEO_RULES.HEADING_EMPTY)</span>
+<span class="source-line" id="L168"><a class="line-number" href="#L168" aria-label="Line 168">168</a>     for (const h of facts.headings) {</span>
+<span class="source-line" id="L169"><a class="line-number" href="#L169" aria-label="Line 169">169</a>         if (h.length &gt; cfg.headingMaxLength) {</span>
+<span class="source-line" id="L170"><a class="line-number" href="#L170" aria-label="Line 170">170</a>             fail(</span>
+<span class="source-line" id="L171"><a class="line-number" href="#L171" aria-label="Line 171">171</a>                 SEO_RULES.HEADING_LENGTH,</span>
+<span class="source-line" id="L172"><a class="line-number" href="#L172" aria-label="Line 172">172</a>                 `h${h.level}`,</span>
+<span class="source-line" id="L173"><a class="line-number" href="#L173" aria-label="Line 173">173</a>                 `Heading exceeds ${cfg.headingMaxLength} chars (${h.length}): &quot;${h.text.slice(0, 30)}…&quot;`</span>
+<span class="source-line" id="L174"><a class="line-number" href="#L174" aria-label="Line 174">174</a>             )</span>
+<span class="source-line" id="L175"><a class="line-number" href="#L175" aria-label="Line 175">175</a>         }</span>
+<span class="source-line" id="L176"><a class="line-number" href="#L176" aria-label="Line 176">176</a>         if (h.text.replace(/[\s\u200B-\u200D\uFEFF]+/g, &#39;&#39;).length === 0) {</span>
+<span class="source-line" id="L177"><a class="line-number" href="#L177" aria-label="Line 177">177</a>             fail(SEO_RULES.HEADING_EMPTY, `h${h.level}`, &#39;Empty heading tag&#39;)</span>
+<span class="source-line" id="L178"><a class="line-number" href="#L178" aria-label="Line 178">178</a>         }</span>
+<span class="source-line" id="L179"><a class="line-number" href="#L179" aria-label="Line 179">179</a>     }</span>
+<span class="source-line" id="L180"><a class="line-number" href="#L180" aria-label="Line 180">180</a> </span>
+<span class="source-line" id="L181"><a class="line-number" href="#L181" aria-label="Line 181">181</a>     // ---- 2. Meta / document ----</span>
+<span class="source-line" id="L182"><a class="line-number" href="#L182" aria-label="Line 182">182</a>     check(SEO_RULES.TITLE)</span>
+<span class="source-line" id="L183"><a class="line-number" href="#L183" aria-label="Line 183">183</a>     const title = facts.title || &#39;&#39;</span>
+<span class="source-line" id="L184"><a class="line-number" href="#L184" aria-label="Line 184">184</a>     if (!title) {</span>
+<span class="source-line" id="L185"><a class="line-number" href="#L185" aria-label="Line 185">185</a>         fail(SEO_RULES.TITLE, &#39;title&#39;, &#39;Missing &lt;title&gt;&#39;)</span>
+<span class="source-line" id="L186"><a class="line-number" href="#L186" aria-label="Line 186">186</a>     } else {</span>
+<span class="source-line" id="L187"><a class="line-number" href="#L187" aria-label="Line 187">187</a>         if (title.length &lt; cfg.title.min || title.length &gt; cfg.title.max) {</span>
+<span class="source-line" id="L188"><a class="line-number" href="#L188" aria-label="Line 188">188</a>             fail(</span>
+<span class="source-line" id="L189"><a class="line-number" href="#L189" aria-label="Line 189">189</a>                 SEO_RULES.TITLE,</span>
+<span class="source-line" id="L190"><a class="line-number" href="#L190" aria-label="Line 190">190</a>                 &#39;title&#39;,</span>
+<span class="source-line" id="L191"><a class="line-number" href="#L191" aria-label="Line 191">191</a>                 `Title length ${title.length} is outside ${cfg.title.min}-${cfg.title.max}`</span>
+<span class="source-line" id="L192"><a class="line-number" href="#L192" aria-label="Line 192">192</a>             )</span>
+<span class="source-line" id="L193"><a class="line-number" href="#L193" aria-label="Line 193">193</a>         }</span>
+<span class="source-line" id="L194"><a class="line-number" href="#L194" aria-label="Line 194">194</a>         for (const brand of cfg.brandTerms) {</span>
+<span class="source-line" id="L195"><a class="line-number" href="#L195" aria-label="Line 195">195</a>             const count = title.split(brand).length - 1</span>
+<span class="source-line" id="L196"><a class="line-number" href="#L196" aria-label="Line 196">196</a>             if (count &gt; 1) {</span>
+<span class="source-line" id="L197"><a class="line-number" href="#L197" aria-label="Line 197">197</a>                 fail(</span>
+<span class="source-line" id="L198"><a class="line-number" href="#L198" aria-label="Line 198">198</a>                     SEO_RULES.TITLE,</span>
+<span class="source-line" id="L199"><a class="line-number" href="#L199" aria-label="Line 199">199</a>                     &#39;title&#39;,</span>
+<span class="source-line" id="L200"><a class="line-number" href="#L200" aria-label="Line 200">200</a>                     `Brand term &quot;${brand}&quot; repeated ${count}x in title (keyword stuffing)`</span>
+<span class="source-line" id="L201"><a class="line-number" href="#L201" aria-label="Line 201">201</a>                 )</span>
+<span class="source-line" id="L202"><a class="line-number" href="#L202" aria-label="Line 202">202</a>             }</span>
+<span class="source-line" id="L203"><a class="line-number" href="#L203" aria-label="Line 203">203</a>         }</span>
+<span class="source-line" id="L204"><a class="line-number" href="#L204" aria-label="Line 204">204</a>     }</span>
+<span class="source-line" id="L205"><a class="line-number" href="#L205" aria-label="Line 205">205</a> </span>
+<span class="source-line" id="L206"><a class="line-number" href="#L206" aria-label="Line 206">206</a>     check(SEO_RULES.META_DESCRIPTION)</span>
+<span class="source-line" id="L207"><a class="line-number" href="#L207" aria-label="Line 207">207</a>     const desc = facts.metaDescription</span>
+<span class="source-line" id="L208"><a class="line-number" href="#L208" aria-label="Line 208">208</a>     if (!desc) {</span>
+<span class="source-line" id="L209"><a class="line-number" href="#L209" aria-label="Line 209">209</a>         fail(</span>
+<span class="source-line" id="L210"><a class="line-number" href="#L210" aria-label="Line 210">210</a>             SEO_RULES.META_DESCRIPTION,</span>
+<span class="source-line" id="L211"><a class="line-number" href="#L211" aria-label="Line 211">211</a>             &#39;meta[name=description]&#39;,</span>
+<span class="source-line" id="L212"><a class="line-number" href="#L212" aria-label="Line 212">212</a>             &#39;Missing meta description&#39;</span>
+<span class="source-line" id="L213"><a class="line-number" href="#L213" aria-label="Line 213">213</a>         )</span>
+<span class="source-line" id="L214"><a class="line-number" href="#L214" aria-label="Line 214">214</a>     } else {</span>
+<span class="source-line" id="L215"><a class="line-number" href="#L215" aria-label="Line 215">215</a>         if (</span>
+<span class="source-line" id="L216"><a class="line-number" href="#L216" aria-label="Line 216">216</a>             desc.length &lt; cfg.metaDescription.min ||</span>
+<span class="source-line" id="L217"><a class="line-number" href="#L217" aria-label="Line 217">217</a>             desc.length &gt; cfg.metaDescription.max</span>
+<span class="source-line" id="L218"><a class="line-number" href="#L218" aria-label="Line 218">218</a>         ) {</span>
+<span class="source-line" id="L219"><a class="line-number" href="#L219" aria-label="Line 219">219</a>             fail(</span>
+<span class="source-line" id="L220"><a class="line-number" href="#L220" aria-label="Line 220">220</a>                 SEO_RULES.META_DESCRIPTION,</span>
+<span class="source-line" id="L221"><a class="line-number" href="#L221" aria-label="Line 221">221</a>                 &#39;meta[name=description]&#39;,</span>
+<span class="source-line" id="L222"><a class="line-number" href="#L222" aria-label="Line 222">222</a>                 `Meta description length ${desc.length} is outside ${cfg.metaDescription.min}-${cfg.metaDescription.max}`</span>
+<span class="source-line" id="L223"><a class="line-number" href="#L223" aria-label="Line 223">223</a>             )</span>
+<span class="source-line" id="L224"><a class="line-number" href="#L224" aria-label="Line 224">224</a>         }</span>
+<span class="source-line" id="L225"><a class="line-number" href="#L225" aria-label="Line 225">225</a>         if (desc.trim() === title.trim()) {</span>
+<span class="source-line" id="L226"><a class="line-number" href="#L226" aria-label="Line 226">226</a>             fail(</span>
+<span class="source-line" id="L227"><a class="line-number" href="#L227" aria-label="Line 227">227</a>                 SEO_RULES.META_DESCRIPTION,</span>
+<span class="source-line" id="L228"><a class="line-number" href="#L228" aria-label="Line 228">228</a>                 &#39;meta[name=description]&#39;,</span>
+<span class="source-line" id="L229"><a class="line-number" href="#L229" aria-label="Line 229">229</a>                 &#39;Meta description is identical to the title&#39;</span>
+<span class="source-line" id="L230"><a class="line-number" href="#L230" aria-label="Line 230">230</a>             )</span>
+<span class="source-line" id="L231"><a class="line-number" href="#L231" aria-label="Line 231">231</a>         }</span>
+<span class="source-line" id="L232"><a class="line-number" href="#L232" aria-label="Line 232">232</a>     }</span>
+<span class="source-line" id="L233"><a class="line-number" href="#L233" aria-label="Line 233">233</a> </span>
+<span class="source-line" id="L234"><a class="line-number" href="#L234" aria-label="Line 234">234</a>     check(SEO_RULES.LANG)</span>
+<span class="source-line" id="L235"><a class="line-number" href="#L235" aria-label="Line 235">235</a>     const lang = facts.htmlLang</span>
+<span class="source-line" id="L236"><a class="line-number" href="#L236" aria-label="Line 236">236</a>     if (!lang) {</span>
+<span class="source-line" id="L237"><a class="line-number" href="#L237" aria-label="Line 237">237</a>         fail(SEO_RULES.LANG, &#39;html&#39;, &#39;Missing &lt;html lang&gt; attribute&#39;)</span>
+<span class="source-line" id="L238"><a class="line-number" href="#L238" aria-label="Line 238">238</a>     } else if (</span>
+<span class="source-line" id="L239"><a class="line-number" href="#L239" aria-label="Line 239">239</a>         !cfg.validLangPrefixes.includes(lang.split(&#39;-&#39;)[0].toLowerCase())</span>
+<span class="source-line" id="L240"><a class="line-number" href="#L240" aria-label="Line 240">240</a>     ) {</span>
+<span class="source-line" id="L241"><a class="line-number" href="#L241" aria-label="Line 241">241</a>         fail(SEO_RULES.LANG, &#39;html&#39;, `Unrecognised lang=&quot;${lang}&quot;`)</span>
+<span class="source-line" id="L242"><a class="line-number" href="#L242" aria-label="Line 242">242</a>     }</span>
+<span class="source-line" id="L243"><a class="line-number" href="#L243" aria-label="Line 243">243</a> </span>
+<span class="source-line" id="L244"><a class="line-number" href="#L244" aria-label="Line 244">244</a>     check(SEO_RULES.VIEWPORT)</span>
+<span class="source-line" id="L245"><a class="line-number" href="#L245" aria-label="Line 245">245</a>     const vp = facts.viewport || &#39;&#39;</span>
+<span class="source-line" id="L246"><a class="line-number" href="#L246" aria-label="Line 246">246</a>     if (!vp) {</span>
+<span class="source-line" id="L247"><a class="line-number" href="#L247" aria-label="Line 247">247</a>         fail(SEO_RULES.VIEWPORT, &#39;meta[name=viewport]&#39;, &#39;Missing viewport meta&#39;)</span>
+<span class="source-line" id="L248"><a class="line-number" href="#L248" aria-label="Line 248">248</a>     } else if (</span>
+<span class="source-line" id="L249"><a class="line-number" href="#L249" aria-label="Line 249">249</a>         !/width=device-width/.test(vp) ||</span>
+<span class="source-line" id="L250"><a class="line-number" href="#L250" aria-label="Line 250">250</a>         !/initial-scale=1(\.0)?/.test(vp)</span>
+<span class="source-line" id="L251"><a class="line-number" href="#L251" aria-label="Line 251">251</a>     ) {</span>
+<span class="source-line" id="L252"><a class="line-number" href="#L252" aria-label="Line 252">252</a>         fail(</span>
+<span class="source-line" id="L253"><a class="line-number" href="#L253" aria-label="Line 253">253</a>             SEO_RULES.VIEWPORT,</span>
+<span class="source-line" id="L254"><a class="line-number" href="#L254" aria-label="Line 254">254</a>             &#39;meta[name=viewport]&#39;,</span>
+<span class="source-line" id="L255"><a class="line-number" href="#L255" aria-label="Line 255">255</a>             `Viewport must contain width=device-width and initial-scale=1.0 (got &quot;${vp}&quot;)`</span>
+<span class="source-line" id="L256"><a class="line-number" href="#L256" aria-label="Line 256">256</a>         )</span>
+<span class="source-line" id="L257"><a class="line-number" href="#L257" aria-label="Line 257">257</a>     }</span>
+<span class="source-line" id="L258"><a class="line-number" href="#L258" aria-label="Line 258">258</a> </span>
+<span class="source-line" id="L259"><a class="line-number" href="#L259" aria-label="Line 259">259</a>     check(SEO_RULES.CANONICAL)</span>
+<span class="source-line" id="L260"><a class="line-number" href="#L260" aria-label="Line 260">260</a>     const canonical = facts.canonical</span>
+<span class="source-line" id="L261"><a class="line-number" href="#L261" aria-label="Line 261">261</a>     if (!canonical) {</span>
+<span class="source-line" id="L262"><a class="line-number" href="#L262" aria-label="Line 262">262</a>         fail(</span>
+<span class="source-line" id="L263"><a class="line-number" href="#L263" aria-label="Line 263">263</a>             SEO_RULES.CANONICAL,</span>
+<span class="source-line" id="L264"><a class="line-number" href="#L264" aria-label="Line 264">264</a>             &#39;link[rel=canonical]&#39;,</span>
+<span class="source-line" id="L265"><a class="line-number" href="#L265" aria-label="Line 265">265</a>             &#39;Missing canonical link&#39;</span>
+<span class="source-line" id="L266"><a class="line-number" href="#L266" aria-label="Line 266">266</a>         )</span>
+<span class="source-line" id="L267"><a class="line-number" href="#L267" aria-label="Line 267">267</a>     } else if (!/^https?:\/\/.+/.test(canonical)) {</span>
+<span class="source-line" id="L268"><a class="line-number" href="#L268" aria-label="Line 268">268</a>         fail(</span>
+<span class="source-line" id="L269"><a class="line-number" href="#L269" aria-label="Line 269">269</a>             SEO_RULES.CANONICAL,</span>
+<span class="source-line" id="L270"><a class="line-number" href="#L270" aria-label="Line 270">270</a>             &#39;link[rel=canonical]&#39;,</span>
+<span class="source-line" id="L271"><a class="line-number" href="#L271" aria-label="Line 271">271</a>             `Canonical must be an absolute URL (got &quot;${canonical}&quot;)`</span>
+<span class="source-line" id="L272"><a class="line-number" href="#L272" aria-label="Line 272">272</a>         )</span>
+<span class="source-line" id="L273"><a class="line-number" href="#L273" aria-label="Line 273">273</a>     }</span>
+<span class="source-line" id="L274"><a class="line-number" href="#L274" aria-label="Line 274">274</a> </span>
+<span class="source-line" id="L275"><a class="line-number" href="#L275" aria-label="Line 275">275</a>     // ---- 3. Semantic HTML ----</span>
+<span class="source-line" id="L276"><a class="line-number" href="#L276" aria-label="Line 276">276</a>     check(SEO_RULES.MAIN_LANDMARK)</span>
+<span class="source-line" id="L277"><a class="line-number" href="#L277" aria-label="Line 277">277</a>     if (facts.mainCount !== 1) {</span>
+<span class="source-line" id="L278"><a class="line-number" href="#L278" aria-label="Line 278">278</a>         fail(</span>
+<span class="source-line" id="L279"><a class="line-number" href="#L279" aria-label="Line 279">279</a>             SEO_RULES.MAIN_LANDMARK,</span>
+<span class="source-line" id="L280"><a class="line-number" href="#L280" aria-label="Line 280">280</a>             &#39;main&#39;,</span>
+<span class="source-line" id="L281"><a class="line-number" href="#L281" aria-label="Line 281">281</a>             `Expected exactly 1 &lt;main&gt;, found ${facts.mainCount}`</span>
+<span class="source-line" id="L282"><a class="line-number" href="#L282" aria-label="Line 282">282</a>         )</span>
+<span class="source-line" id="L283"><a class="line-number" href="#L283" aria-label="Line 283">283</a>     }</span>
+<span class="source-line" id="L284"><a class="line-number" href="#L284" aria-label="Line 284">284</a> </span>
+<span class="source-line" id="L285"><a class="line-number" href="#L285" aria-label="Line 285">285</a>     check(SEO_RULES.SEMANTIC)</span>
+<span class="source-line" id="L286"><a class="line-number" href="#L286" aria-label="Line 286">286</a>     if (facts.divRoleMainCount &gt; 0 &amp;&amp; facts.mainCount === 0) {</span>
+<span class="source-line" id="L287"><a class="line-number" href="#L287" aria-label="Line 287">287</a>         fail(</span>
+<span class="source-line" id="L288"><a class="line-number" href="#L288" aria-label="Line 288">288</a>             SEO_RULES.SEMANTIC,</span>
+<span class="source-line" id="L289"><a class="line-number" href="#L289" aria-label="Line 289">289</a>             &#39;div[role=main]&#39;,</span>
+<span class="source-line" id="L290"><a class="line-number" href="#L290" aria-label="Line 290">290</a>             &#39;Uses &lt;div role=&quot;main&quot;&gt; instead of a &lt;main&gt; element&#39;</span>
+<span class="source-line" id="L291"><a class="line-number" href="#L291" aria-label="Line 291">291</a>         )</span>
+<span class="source-line" id="L292"><a class="line-number" href="#L292" aria-label="Line 292">292</a>     }</span>
+<span class="source-line" id="L293"><a class="line-number" href="#L293" aria-label="Line 293">293</a>     if (facts.semanticCount &gt; 0 &amp;&amp; facts.divCount / facts.semanticCount &gt; 30) {</span>
+<span class="source-line" id="L294"><a class="line-number" href="#L294" aria-label="Line 294">294</a>         warn(</span>
+<span class="source-line" id="L295"><a class="line-number" href="#L295" aria-label="Line 295">295</a>             SEO_RULES.SEMANTIC,</span>
+<span class="source-line" id="L296"><a class="line-number" href="#L296" aria-label="Line 296">296</a>             &#39;div&#39;,</span>
+<span class="source-line" id="L297"><a class="line-number" href="#L297" aria-label="Line 297">297</a>             `${facts.divCount} &lt;div&gt;s vs ${facts.semanticCount} semantic elements — consider article/section`</span>
+<span class="source-line" id="L298"><a class="line-number" href="#L298" aria-label="Line 298">298</a>         )</span>
+<span class="source-line" id="L299"><a class="line-number" href="#L299" aria-label="Line 299">299</a>     }</span>
+<span class="source-line" id="L300"><a class="line-number" href="#L300" aria-label="Line 300">300</a> </span>
+<span class="source-line" id="L301"><a class="line-number" href="#L301" aria-label="Line 301">301</a>     check(SEO_RULES.HEADER_FOOTER)</span>
+<span class="source-line" id="L302"><a class="line-number" href="#L302" aria-label="Line 302">302</a>     if (facts.headerCount === 0 &amp;&amp; facts.footerCount === 0) {</span>
+<span class="source-line" id="L303"><a class="line-number" href="#L303" aria-label="Line 303">303</a>         warn(</span>
+<span class="source-line" id="L304"><a class="line-number" href="#L304" aria-label="Line 304">304</a>             SEO_RULES.HEADER_FOOTER,</span>
+<span class="source-line" id="L305"><a class="line-number" href="#L305" aria-label="Line 305">305</a>             &#39;header,footer&#39;,</span>
+<span class="source-line" id="L306"><a class="line-number" href="#L306" aria-label="Line 306">306</a>             &#39;No &lt;header&gt; or &lt;footer&gt; landmark found&#39;</span>
+<span class="source-line" id="L307"><a class="line-number" href="#L307" aria-label="Line 307">307</a>         )</span>
+<span class="source-line" id="L308"><a class="line-number" href="#L308" aria-label="Line 308">308</a>     }</span>
+<span class="source-line" id="L309"><a class="line-number" href="#L309" aria-label="Line 309">309</a> </span>
+<span class="source-line" id="L310"><a class="line-number" href="#L310" aria-label="Line 310">310</a>     check(SEO_RULES.NAV)</span>
+<span class="source-line" id="L311"><a class="line-number" href="#L311" aria-label="Line 311">311</a>     if (facts.navCount === 0 &amp;&amp; facts.anchors.length &gt; 5) {</span>
+<span class="source-line" id="L312"><a class="line-number" href="#L312" aria-label="Line 312">312</a>         warn(SEO_RULES.NAV, &#39;nav&#39;, &#39;Page has links but no &lt;nav&gt; landmark&#39;)</span>
+<span class="source-line" id="L313"><a class="line-number" href="#L313" aria-label="Line 313">313</a>     }</span>
+<span class="source-line" id="L314"><a class="line-number" href="#L314" aria-label="Line 314">314</a> </span>
+<span class="source-line" id="L315"><a class="line-number" href="#L315" aria-label="Line 315">315</a>     // ---- 4. Images ----</span>
+<span class="source-line" id="L316"><a class="line-number" href="#L316" aria-label="Line 316">316</a>     check(SEO_RULES.IMG_ALT)</span>
+<span class="source-line" id="L317"><a class="line-number" href="#L317" aria-label="Line 317">317</a>     check(SEO_RULES.IMG_DIMENSIONS)</span>
+<span class="source-line" id="L318"><a class="line-number" href="#L318" aria-label="Line 318">318</a>     facts.images.forEach((im, i) =&gt; {</span>
+<span class="source-line" id="L319"><a class="line-number" href="#L319" aria-label="Line 319">319</a>         if (im.altMissing) {</span>
+<span class="source-line" id="L320"><a class="line-number" href="#L320" aria-label="Line 320">320</a>             fail(</span>
+<span class="source-line" id="L321"><a class="line-number" href="#L321" aria-label="Line 321">321</a>                 SEO_RULES.IMG_ALT,</span>
+<span class="source-line" id="L322"><a class="line-number" href="#L322" aria-label="Line 322">322</a>                 `img[src=&quot;${im.src}&quot;]`,</span>
+<span class="source-line" id="L323"><a class="line-number" href="#L323" aria-label="Line 323">323</a>                 `Image #${i} missing alt attribute`</span>
+<span class="source-line" id="L324"><a class="line-number" href="#L324" aria-label="Line 324">324</a>             )</span>
+<span class="source-line" id="L325"><a class="line-number" href="#L325" aria-label="Line 325">325</a>         }</span>
+<span class="source-line" id="L326"><a class="line-number" href="#L326" aria-label="Line 326">326</a>         if (!im.hasWidth || !im.hasHeight) {</span>
+<span class="source-line" id="L327"><a class="line-number" href="#L327" aria-label="Line 327">327</a>             warn(</span>
+<span class="source-line" id="L328"><a class="line-number" href="#L328" aria-label="Line 328">328</a>                 SEO_RULES.IMG_DIMENSIONS,</span>
+<span class="source-line" id="L329"><a class="line-number" href="#L329" aria-label="Line 329">329</a>                 `img[src=&quot;${im.src}&quot;]`,</span>
+<span class="source-line" id="L330"><a class="line-number" href="#L330" aria-label="Line 330">330</a>                 `Image #${i} missing width/height (CLS risk)`</span>
+<span class="source-line" id="L331"><a class="line-number" href="#L331" aria-label="Line 331">331</a>             )</span>
+<span class="source-line" id="L332"><a class="line-number" href="#L332" aria-label="Line 332">332</a>         }</span>
+<span class="source-line" id="L333"><a class="line-number" href="#L333" aria-label="Line 333">333</a>     })</span>
+<span class="source-line" id="L334"><a class="line-number" href="#L334" aria-label="Line 334">334</a> </span>
+<span class="source-line" id="L335"><a class="line-number" href="#L335" aria-label="Line 335">335</a>     // ---- 5. Links ----</span>
+<span class="source-line" id="L336"><a class="line-number" href="#L336" aria-label="Line 336">336</a>     check(SEO_RULES.EMPTY_HREF)</span>
+<span class="source-line" id="L337"><a class="line-number" href="#L337" aria-label="Line 337">337</a>     check(SEO_RULES.GENERIC_ANCHOR)</span>
+<span class="source-line" id="L338"><a class="line-number" href="#L338" aria-label="Line 338">338</a>     for (const a of facts.anchors) {</span>
+<span class="source-line" id="L339"><a class="line-number" href="#L339" aria-label="Line 339">339</a>         const href = a.href.trim()</span>
+<span class="source-line" id="L340"><a class="line-number" href="#L340" aria-label="Line 340">340</a>         if (href === &#39;#&#39; || /^javascript:\s*void/i.test(href)) {</span>
+<span class="source-line" id="L341"><a class="line-number" href="#L341" aria-label="Line 341">341</a>             fail(</span>
+<span class="source-line" id="L342"><a class="line-number" href="#L342" aria-label="Line 342">342</a>                 SEO_RULES.EMPTY_HREF,</span>
+<span class="source-line" id="L343"><a class="line-number" href="#L343" aria-label="Line 343">343</a>                 `a[href=&quot;${href}&quot;]`,</span>
+<span class="source-line" id="L344"><a class="line-number" href="#L344" aria-label="Line 344">344</a>                 `Non-navigable href &quot;${href}&quot;`</span>
+<span class="source-line" id="L345"><a class="line-number" href="#L345" aria-label="Line 345">345</a>             )</span>
+<span class="source-line" id="L346"><a class="line-number" href="#L346" aria-label="Line 346">346</a>         }</span>
+<span class="source-line" id="L347"><a class="line-number" href="#L347" aria-label="Line 347">347</a>         if (a.text &amp;&amp; cfg.genericAnchorTexts.includes(a.text)) {</span>
+<span class="source-line" id="L348"><a class="line-number" href="#L348" aria-label="Line 348">348</a>             warn(</span>
+<span class="source-line" id="L349"><a class="line-number" href="#L349" aria-label="Line 349">349</a>                 SEO_RULES.GENERIC_ANCHOR,</span>
+<span class="source-line" id="L350"><a class="line-number" href="#L350" aria-label="Line 350">350</a>                 &#39;a&#39;,</span>
+<span class="source-line" id="L351"><a class="line-number" href="#L351" aria-label="Line 351">351</a>                 `Non-descriptive anchor text &quot;${a.text}&quot;`</span>
+<span class="source-line" id="L352"><a class="line-number" href="#L352" aria-label="Line 352">352</a>             )</span>
+<span class="source-line" id="L353"><a class="line-number" href="#L353" aria-label="Line 353">353</a>         }</span>
+<span class="source-line" id="L354"><a class="line-number" href="#L354" aria-label="Line 354">354</a>     }</span>
+<span class="source-line" id="L355"><a class="line-number" href="#L355" aria-label="Line 355">355</a> </span>
+<span class="source-line" id="L356"><a class="line-number" href="#L356" aria-label="Line 356">356</a>     check(SEO_RULES.BROKEN_LINKS)</span>
+<span class="source-line" id="L357"><a class="line-number" href="#L357" aria-label="Line 357">357</a>     const internal = [</span>
+<span class="source-line" id="L358"><a class="line-number" href="#L358" aria-label="Line 358">358</a>         ...new Set(</span>
+<span class="source-line" id="L359"><a class="line-number" href="#L359" aria-label="Line 359">359</a>             facts.anchors</span>
+<span class="source-line" id="L360"><a class="line-number" href="#L360" aria-label="Line 360">360</a>                 .map((a) =&gt; a.href.trim())</span>
+<span class="source-line" id="L361"><a class="line-number" href="#L361" aria-label="Line 361">361</a>                 .filter((h) =&gt; h &amp;&amp; !/^(#|mailto:|tel:|javascript:)/i.test(h))</span>
+<span class="source-line" id="L362"><a class="line-number" href="#L362" aria-label="Line 362">362</a>                 .map((h) =&gt; {</span>
+<span class="source-line" id="L363"><a class="line-number" href="#L363" aria-label="Line 363">363</a>                     try {</span>
+<span class="source-line" id="L364"><a class="line-number" href="#L364" aria-label="Line 364">364</a>                         return new URL(h, facts.origin).href</span>
+<span class="source-line" id="L365"><a class="line-number" href="#L365" aria-label="Line 365">365</a>                     } catch {</span>
+<span class="source-line" id="L366"><a class="line-number" href="#L366" aria-label="Line 366">366</a>                         return &#39;&#39;</span>
+<span class="source-line" id="L367"><a class="line-number" href="#L367" aria-label="Line 367">367</a>                     }</span>
+<span class="source-line" id="L368"><a class="line-number" href="#L368" aria-label="Line 368">368</a>                 })</span>
+<span class="source-line" id="L369"><a class="line-number" href="#L369" aria-label="Line 369">369</a>                 .filter((h) =&gt; h.startsWith(facts.origin))</span>
+<span class="source-line" id="L370"><a class="line-number" href="#L370" aria-label="Line 370">370</a>         ),</span>
+<span class="source-line" id="L371"><a class="line-number" href="#L371" aria-label="Line 371">371</a>     ].slice(0, 25) // cap to keep runtime bounded</span>
+<span class="source-line" id="L372"><a class="line-number" href="#L372" aria-label="Line 372">372</a>     for (const link of internal) {</span>
+<span class="source-line" id="L373"><a class="line-number" href="#L373" aria-label="Line 373">373</a>         try {</span>
+<span class="source-line" id="L374"><a class="line-number" href="#L374" aria-label="Line 374">374</a>             const res = await page.request.head(link, {</span>
+<span class="source-line" id="L375"><a class="line-number" href="#L375" aria-label="Line 375">375</a>                 timeout: cfg.linkCheckTimeoutMs,</span>
+<span class="source-line" id="L376"><a class="line-number" href="#L376" aria-label="Line 376">376</a>                 maxRedirects: 5,</span>
+<span class="source-line" id="L377"><a class="line-number" href="#L377" aria-label="Line 377">377</a>             })</span>
+<span class="source-line" id="L378"><a class="line-number" href="#L378" aria-label="Line 378">378</a>             const st = res.status()</span>
+<span class="source-line" id="L379"><a class="line-number" href="#L379" aria-label="Line 379">379</a>             // Only 404/410/5xx are truly broken. 401/403/405/429 mean the URL</span>
+<span class="source-line" id="L380"><a class="line-number" href="#L380" aria-label="Line 380">380</a>             // exists but rejects an unauthenticated HEAD — reachable, not broken.</span>
+<span class="source-line" id="L381"><a class="line-number" href="#L381" aria-label="Line 381">381</a>             if (st === 404 || st === 410 || st &gt;= 500) {</span>
+<span class="source-line" id="L382"><a class="line-number" href="#L382" aria-label="Line 382">382</a>                 fail(</span>
+<span class="source-line" id="L383"><a class="line-number" href="#L383" aria-label="Line 383">383</a>                     SEO_RULES.BROKEN_LINKS,</span>
+<span class="source-line" id="L384"><a class="line-number" href="#L384" aria-label="Line 384">384</a>                     `a[href=&quot;${link}&quot;]`,</span>
+<span class="source-line" id="L385"><a class="line-number" href="#L385" aria-label="Line 385">385</a>                     `Internal link returned ${st}`</span>
+<span class="source-line" id="L386"><a class="line-number" href="#L386" aria-label="Line 386">386</a>                 )</span>
+<span class="source-line" id="L387"><a class="line-number" href="#L387" aria-label="Line 387">387</a>             } else if (st &gt;= 400) {</span>
+<span class="source-line" id="L388"><a class="line-number" href="#L388" aria-label="Line 388">388</a>                 warn(</span>
+<span class="source-line" id="L389"><a class="line-number" href="#L389" aria-label="Line 389">389</a>                     SEO_RULES.BROKEN_LINKS,</span>
+<span class="source-line" id="L390"><a class="line-number" href="#L390" aria-label="Line 390">390</a>                     `a[href=&quot;${link}&quot;]`,</span>
+<span class="source-line" id="L391"><a class="line-number" href="#L391" aria-label="Line 391">391</a>                     `Internal link returned ${st} (method/auth restricted, not broken)`</span>
+<span class="source-line" id="L392"><a class="line-number" href="#L392" aria-label="Line 392">392</a>                 )</span>
+<span class="source-line" id="L393"><a class="line-number" href="#L393" aria-label="Line 393">393</a>             }</span>
+<span class="source-line" id="L394"><a class="line-number" href="#L394" aria-label="Line 394">394</a>         } catch {</span>
+<span class="source-line" id="L395"><a class="line-number" href="#L395" aria-label="Line 395">395</a>             // Timeout / network error — surface as a warning, not a hard fail,</span>
+<span class="source-line" id="L396"><a class="line-number" href="#L396" aria-label="Line 396">396</a>             // since a HEAD may be blocked while the page itself is fine.</span>
+<span class="source-line" id="L397"><a class="line-number" href="#L397" aria-label="Line 397">397</a>             warn(</span>
+<span class="source-line" id="L398"><a class="line-number" href="#L398" aria-label="Line 398">398</a>                 SEO_RULES.BROKEN_LINKS,</span>
+<span class="source-line" id="L399"><a class="line-number" href="#L399" aria-label="Line 399">399</a>                 `a[href=&quot;${link}&quot;]`,</span>
+<span class="source-line" id="L400"><a class="line-number" href="#L400" aria-label="Line 400">400</a>                 &#39;HEAD request failed/timed out&#39;</span>
+<span class="source-line" id="L401"><a class="line-number" href="#L401" aria-label="Line 401">401</a>             )</span>
+<span class="source-line" id="L402"><a class="line-number" href="#L402" aria-label="Line 402">402</a>         }</span>
+<span class="source-line" id="L403"><a class="line-number" href="#L403" aria-label="Line 403">403</a>     }</span>
+<span class="source-line" id="L404"><a class="line-number" href="#L404" aria-label="Line 404">404</a> </span>
+<span class="source-line" id="L405"><a class="line-number" href="#L405" aria-label="Line 405">405</a>     // ---- 6. JSON-LD ----</span>
+<span class="source-line" id="L406"><a class="line-number" href="#L406" aria-label="Line 406">406</a>     check(SEO_RULES.JSON_LD)</span>
+<span class="source-line" id="L407"><a class="line-number" href="#L407" aria-label="Line 407">407</a>     if (facts.jsonLd.length === 0) {</span>
+<span class="source-line" id="L408"><a class="line-number" href="#L408" aria-label="Line 408">408</a>         warn(</span>
+<span class="source-line" id="L409"><a class="line-number" href="#L409" aria-label="Line 409">409</a>             SEO_RULES.JSON_LD,</span>
+<span class="source-line" id="L410"><a class="line-number" href="#L410" aria-label="Line 410">410</a>             &#39;script[type=ld+json]&#39;,</span>
+<span class="source-line" id="L411"><a class="line-number" href="#L411" aria-label="Line 411">411</a>             &#39;No JSON-LD structured data present&#39;</span>
+<span class="source-line" id="L412"><a class="line-number" href="#L412" aria-label="Line 412">412</a>         )</span>
+<span class="source-line" id="L413"><a class="line-number" href="#L413" aria-label="Line 413">413</a>     } else {</span>
+<span class="source-line" id="L414"><a class="line-number" href="#L414" aria-label="Line 414">414</a>         facts.jsonLd.forEach((raw, i) =&gt; {</span>
+<span class="source-line" id="L415"><a class="line-number" href="#L415" aria-label="Line 415">415</a>             try {</span>
+<span class="source-line" id="L416"><a class="line-number" href="#L416" aria-label="Line 416">416</a>                 JSON.parse(raw)</span>
+<span class="source-line" id="L417"><a class="line-number" href="#L417" aria-label="Line 417">417</a>             } catch {</span>
+<span class="source-line" id="L418"><a class="line-number" href="#L418" aria-label="Line 418">418</a>                 fail(</span>
+<span class="source-line" id="L419"><a class="line-number" href="#L419" aria-label="Line 419">419</a>                     SEO_RULES.JSON_LD,</span>
+<span class="source-line" id="L420"><a class="line-number" href="#L420" aria-label="Line 420">420</a>                     `script[type=ld+json]:nth(${i})`,</span>
+<span class="source-line" id="L421"><a class="line-number" href="#L421" aria-label="Line 421">421</a>                     &#39;Malformed JSON-LD (not parseable)&#39;</span>
+<span class="source-line" id="L422"><a class="line-number" href="#L422" aria-label="Line 422">422</a>                 )</span>
+<span class="source-line" id="L423"><a class="line-number" href="#L423" aria-label="Line 423">423</a>             }</span>
+<span class="source-line" id="L424"><a class="line-number" href="#L424" aria-label="Line 424">424</a>         })</span>
+<span class="source-line" id="L425"><a class="line-number" href="#L425" aria-label="Line 425">425</a>     }</span>
+<span class="source-line" id="L426"><a class="line-number" href="#L426" aria-label="Line 426">426</a> </span>
+<span class="source-line" id="L427"><a class="line-number" href="#L427" aria-label="Line 427">427</a>     // ---- 7. Inline style bloat ----</span>
+<span class="source-line" id="L428"><a class="line-number" href="#L428" aria-label="Line 428">428</a>     check(SEO_RULES.INLINE_STYLE)</span>
+<span class="source-line" id="L429"><a class="line-number" href="#L429" aria-label="Line 429">429</a>     facts.inlineStyleBytes.forEach((bytes, i) =&gt; {</span>
+<span class="source-line" id="L430"><a class="line-number" href="#L430" aria-label="Line 430">430</a>         if (bytes &gt; cfg.inlineStyleWarnBytes) {</span>
+<span class="source-line" id="L431"><a class="line-number" href="#L431" aria-label="Line 431">431</a>             warn(</span>
+<span class="source-line" id="L432"><a class="line-number" href="#L432" aria-label="Line 432">432</a>                 SEO_RULES.INLINE_STYLE,</span>
+<span class="source-line" id="L433"><a class="line-number" href="#L433" aria-label="Line 433">433</a>                 `style:nth(${i})`,</span>
+<span class="source-line" id="L434"><a class="line-number" href="#L434" aria-label="Line 434">434</a>                 `Inline &lt;style&gt; is ${(bytes / 1024).toFixed(1)}KB (&gt; ${cfg.inlineStyleWarnBytes / 1024}KB)`</span>
+<span class="source-line" id="L435"><a class="line-number" href="#L435" aria-label="Line 435">435</a>             )</span>
+<span class="source-line" id="L436"><a class="line-number" href="#L436" aria-label="Line 436">436</a>         }</span>
+<span class="source-line" id="L437"><a class="line-number" href="#L437" aria-label="Line 437">437</a>     })</span>
+<span class="source-line" id="L438"><a class="line-number" href="#L438" aria-label="Line 438">438</a> </span>
+<span class="source-line" id="L439"><a class="line-number" href="#L439" aria-label="Line 439">439</a>     const rulesChecked = checkedRules.size</span>
+<span class="source-line" id="L440"><a class="line-number" href="#L440" aria-label="Line 440">440</a>     return {</span>
+<span class="source-line" id="L441"><a class="line-number" href="#L441" aria-label="Line 441">441</a>         url,</span>
+<span class="source-line" id="L442"><a class="line-number" href="#L442" aria-label="Line 442">442</a>         passed: criticalFailures.length === 0,</span>
+<span class="source-line" id="L443"><a class="line-number" href="#L443" aria-label="Line 443">443</a>         criticalFailures,</span>
+<span class="source-line" id="L444"><a class="line-number" href="#L444" aria-label="Line 444">444</a>         warnings,</span>
+<span class="source-line" id="L445"><a class="line-number" href="#L445" aria-label="Line 445">445</a>         summary: {</span>
+<span class="source-line" id="L446"><a class="line-number" href="#L446" aria-label="Line 446">446</a>             rulesChecked,</span>
+<span class="source-line" id="L447"><a class="line-number" href="#L447" aria-label="Line 447">447</a>             passed: rulesChecked - failedRules.size,</span>
+<span class="source-line" id="L448"><a class="line-number" href="#L448" aria-label="Line 448">448</a>             failed: failedRules.size,</span>
+<span class="source-line" id="L449"><a class="line-number" href="#L449" aria-label="Line 449">449</a>             warnings: warnings.length,</span>
+<span class="source-line" id="L450"><a class="line-number" href="#L450" aria-label="Line 450">450</a>         },</span>
+<span class="source-line" id="L451"><a class="line-number" href="#L451" aria-label="Line 451">451</a>     }</span>
+<span class="source-line" id="L452"><a class="line-number" href="#L452" aria-label="Line 452">452</a> }</span>
+<span class="source-line" id="L453"><a class="line-number" href="#L453" aria-label="Line 453">453</a> </span>
+<span class="source-line" id="L454"><a class="line-number" href="#L454" aria-label="Line 454">454</a> /** Navigates to `url`, waits for network idle, then audits it. */</span>
+<span class="source-line" id="L455"><a class="line-number" href="#L455" aria-label="Line 455">455</a> export async function auditUrl(</span>
+<span class="source-line" id="L456"><a class="line-number" href="#L456" aria-label="Line 456">456</a>     page: Page,</span>
+<span class="source-line" id="L457"><a class="line-number" href="#L457" aria-label="Line 457">457</a>     url: string,</span>
+<span class="source-line" id="L458"><a class="line-number" href="#L458" aria-label="Line 458">458</a>     overrides: Partial&lt;SeoAuditConfig&gt; = {}</span>
+<span class="source-line" id="L459"><a class="line-number" href="#L459" aria-label="Line 459">459</a> ): Promise&lt;SeoReport&gt; {</span>
+<span class="source-line" id="L460"><a class="line-number" href="#L460" aria-label="Line 460">460</a>     await page.goto(url, { waitUntil: &#39;domcontentloaded&#39; })</span>
+<span class="source-line" id="L461"><a class="line-number" href="#L461" aria-label="Line 461">461</a>     await page.waitForLoadState(&#39;networkidle&#39;).catch(() =&gt; {})</span>
+<span class="source-line" id="L462"><a class="line-number" href="#L462" aria-label="Line 462">462</a>     return auditCurrentPage(page, overrides)</span>
+<span class="source-line" id="L463"><a class="line-number" href="#L463" aria-label="Line 463">463</a> }</span>
+<span class="source-line" id="L464"><a class="line-number" href="#L464" aria-label="Line 464">464</a> </span>
+<span class="source-line" id="L465"><a class="line-number" href="#L465" aria-label="Line 465">465</a> /** Human-readable failure list for assertion messages / CI logs. */</span>
+<span class="source-line" id="L466"><a class="line-number" href="#L466" aria-label="Line 466">466</a> export function describeReport(report: SeoReport): string {</span>
+<span class="source-line" id="L467"><a class="line-number" href="#L467" aria-label="Line 467">467</a>     const s = report.summary</span>
+<span class="source-line" id="L468"><a class="line-number" href="#L468" aria-label="Line 468">468</a>     return [</span>
+<span class="source-line" id="L469"><a class="line-number" href="#L469" aria-label="Line 469">469</a>         `SEO audit: ${report.url}`,</span>
+<span class="source-line" id="L470"><a class="line-number" href="#L470" aria-label="Line 470">470</a>         `rules ${s.passed}/${s.rulesChecked} passed, ${s.failed} failed, ${s.warnings} warnings`,</span>
+<span class="source-line" id="L471"><a class="line-number" href="#L471" aria-label="Line 471">471</a>         ...report.criticalFailures.map(</span>
+<span class="source-line" id="L472"><a class="line-number" href="#L472" aria-label="Line 472">472</a>             (f) =&gt; `  ✗ [${f.rule}] ${f.selector} — ${f.message}`</span>
+<span class="source-line" id="L473"><a class="line-number" href="#L473" aria-label="Line 473">473</a>         ),</span>
+<span class="source-line" id="L474"><a class="line-number" href="#L474" aria-label="Line 474">474</a>     ].join(&#39;\n&#39;)</span>
+<span class="source-line" id="L475"><a class="line-number" href="#L475" aria-label="Line 475">475</a> }</span>
+<span class="source-line" id="L476"><a class="line-number" href="#L476" aria-label="Line 476">476</a> </span>
+<span class="source-line" id="L477"><a class="line-number" href="#L477" aria-label="Line 477">477</a> /** Attaches the structured report to the test as seo-report.json for CI. */</span>
+<span class="source-line" id="L478"><a class="line-number" href="#L478" aria-label="Line 478">478</a> export async function attachReport(</span>
+<span class="source-line" id="L479"><a class="line-number" href="#L479" aria-label="Line 479">479</a>     testInfo: TestInfo,</span>
+<span class="source-line" id="L480"><a class="line-number" href="#L480" aria-label="Line 480">480</a>     report: SeoReport</span>
+<span class="source-line" id="L481"><a class="line-number" href="#L481" aria-label="Line 481">481</a> ): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L482"><a class="line-number" href="#L482" aria-label="Line 482">482</a>     await testInfo.attach(&#39;seo-report.json&#39;, {</span>
+<span class="source-line" id="L483"><a class="line-number" href="#L483" aria-label="Line 483">483</a>         body: JSON.stringify(report, null, 2),</span>
+<span class="source-line" id="L484"><a class="line-number" href="#L484" aria-label="Line 484">484</a>         contentType: &#39;application/json&#39;,</span>
+<span class="source-line" id="L485"><a class="line-number" href="#L485" aria-label="Line 485">485</a>     })</span>
+<span class="source-line" id="L486"><a class="line-number" href="#L486" aria-label="Line 486">486</a> }</span>
+<span class="source-line" id="L487"><a class="line-number" href="#L487" aria-label="Line 487">487</a> </span></code></pre></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

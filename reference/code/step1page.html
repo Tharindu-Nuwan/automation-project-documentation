@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/step1page.html">
+<title>Step1Page · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-step1page-step1page-ts">pages/Step1Page/Step1Page.ts</a>
+<a href="#pages-step1page-step1pagelocators-ts">pages/Step1Page/Step1PageLocators.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="step1page">Step1Page</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-step1page-step1page-ts">pages/Step1Page/Step1Page.ts</h2>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L1">pages/Step1Page/Step1Page.ts:1</a></p>
+<ul>
+<li><code>{ Locator, Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>type { Product }</code> &#x2190; <a data-source="base/Product.ts" href="../../sources/base/Product.ts.html#L1">base/Product.ts:1</a></li>
+<li><code>{ Step1PageLocators }</code> &#x2190; <a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L1">pages/Step1Page/Step1PageLocators.ts:1</a></li>
+<li><code>{ INSTANT_PREVIEW_TIMEOUT_MS, LOCALE_PREVIEW_TIMEOUT_MS, MIN_PARTIAL_TEXT_MATCH_LENGTH, STATIC_PREVIEW_TO_STEP1_KEY, STEP1_CREATE_PATH, STEP1_QR_PREVIEW_TYPES, getStep1QrTypeByKey, type Step1QrPreviewType, }</code> &#x2190; <a data-source="tests/data/constants/qr-preview-preload.data.ts" href="../../sources/tests/data/constants/qr-preview-preload.data.ts.html#L1">tests/data/constants/qr-preview-preload.data.ts:1</a></li>
+<li><code>{ getStaticPreviewTexts, type StaticPreviewLocale, type StaticPreviewQrType, }</code> &#x2190; <a data-source="tests/data/static-preview-translations" href="../../sources/tests/data/static-preview-translations.html#L1">tests/data/static-preview-translations:1</a></li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page, product: Product = &apos;oqg&apos;)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L26">pages/Step1Page/Step1Page.ts:26</a></p>
+<h3 id="opencreatestep1forlocale">openCreateStep1ForLocale</h3>
+<p><code>openCreateStep1ForLocale(localeCode: string)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L35">pages/Step1Page/Step1Page.ts:35</a></p>
+<p>Opens guest Step 1 under a locale path (e.g. /de/create?step=1).</p>
+<ul>
+<li><code>this.openPage(&#x2032;/&#x24;{localeCode}/create?step=1&#x2032;)</code> &#x2014; line 36</li>
+<li><code>this.locator.websiteQrType.waitFor({ state: &apos;visible&apos; })</code> &#x2014; line 37</li>
+<li><code>this.page.waitForLoadState(&apos;networkidle&apos;)</code> &#x2014; line 38</li>
+</ul>
+<h3 id="expectlocaleactive">expectLocaleActive</h3>
+<p><code>expectLocaleActive(localeCode: string)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L44">pages/Step1Page/Step1Page.ts:44</a></p>
+<p>Asserts the document is serving the expected locale.</p>
+<ul>
+<li><code>this.expect(this.page).toHaveURL(new RegExp(&#x2032;/&#x24;{localeCode}(/|&#x24;)&#x2032;))</code> &#x2014; line 45</li>
+<li><code>this.page.locator(&apos;html&apos;).getAttribute(&apos;lang&apos;)</code> &#x2014; line 48</li>
+<li><code>this.page.locator(&apos;html&apos;)</code> &#x2014; line 48</li>
+<li><code>this.expect(lang?.toLowerCase() ?? &apos;&apos;).toMatch(new RegExp(&#x2032;^&#x24;{prefix}&#x2032;, &apos;i&apos;))</code> &#x2014; line 50</li>
+<li><code>lang?.toLowerCase()</code> &#x2014; line 50</li>
+</ul>
+<h3 id="expectstaticpreviewtranslations">expectStaticPreviewTranslations</h3>
+<p><code>expectStaticPreviewTranslations(qrType: StaticPreviewQrType, locale: StaticPreviewLocale)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L59">pages/Step1Page/Step1Page.ts:59</a></p>
+<p>Asserts expected static preview strings (shared + locale translations) are present in the visible phone-mockup section with the right counts.</p>
+<ul>
+<li><code>this.locator.phoneMockupContainer.locator(&#x2032;.content-wrapper[data-preview-type=&quot;&#x24;{dataPreviewType}&quot;]&#x2032;)</code> &#x2014; line 70</li>
+<li><code>this.expect(previewSection).toBeVisible()</code> &#x2014; line 73</li>
+<li><code>this.countVisibleTextMatches(previewSection, text)</code> &#x2014; line 79</li>
+<li><code>this.expect( allowPartial ? exact + partial : exact, &#x2032;Preview text missing or wrong count for [&#x24;{qrType}/&#x24;{locale}]: &quot;&#x24;{text}&quot; &#x2032; + &#x2032;(expected &#x24;{count}, exact text nodes &#x24;{exact}, embedded &#x24;{partial})&#x2032; ).toBe(count)</code> &#x2014; line 96</li>
+</ul>
+<h3 id="countvisibletextmatches">countVisibleTextMatches</h3>
+<p><code>countVisibleTextMatches(section: Locator, needle: string)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L115">pages/Step1Page/Step1Page.ts:115</a></p>
+<p>Counts a string in the visible content of a preview section.</p>
+<p><code>exact</code> counts whole-label matches from two sources that never overlap: the smallest elements whose full text equals the string (covers copy split across inline children, e.g. the WiFi header wraps &quot;Wi-Fi&quot; in its own span), plus standalone text nodes not already covered by such an element (covers labels rendered between sibling spans).</p>
+<p><code>partial</code> counts occurrences embedded in a longer text node.</p>
+<h3 id="expectallpreviewtranslationsforlocale">expectAllPreviewTranslationsForLocale</h3>
+<p><code>expectAllPreviewTranslationsForLocale(locale: StaticPreviewLocale, timeoutMs: number = LOCALE_PREVIEW_TIMEOUT_MS)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L184">pages/Step1Page/Step1Page.ts:184</a></p>
+<p>For one locale: assert default preview copy, then hover every QR type and verify phone-mockup translations from the active domain&apos;s data file.</p>
+<ul>
+<li><code>this.page.mouse.move(0, 0)</code> &#x2014; line 188</li>
+<li><code>this.expect(this.locator.previewContentWrapper).toHaveAttribute(&apos;data-preview-type&apos;, &apos;default&apos;, { timeout: timeoutMs })</code> &#x2014; line 189</li>
+<li><code>this.expectStaticPreviewTranslations(&apos;default&apos;, locale)</code> &#x2014; line 194</li>
+<li><code>getStep1QrTypeByKey(step1Key)</code> &#x2014; line 199</li>
+<li><code>this.hoverAndExpectInstantPreview(step1Type, timeoutMs)</code> &#x2014; line 202</li>
+<li><code>this.expectStaticPreviewTranslations(qrType as StaticPreviewQrType, locale)</code> &#x2014; line 203</li>
+<li><code>this.page.mouse.move(0, 0)</code> &#x2014; line 207</li>
+</ul>
+<h3 id="opencreatestep1">openCreateStep1</h3>
+<p><code>openCreateStep1()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L214">pages/Step1Page/Step1Page.ts:214</a></p>
+<p>Opens the guest Step 1 create flow where QR type hover previews are shown.</p>
+<ul>
+<li><code>this.openPage(STEP1_CREATE_PATH)</code> &#x2014; line 215</li>
+<li><code>this.locator.websiteQrType.waitFor({ state: &apos;visible&apos; })</code> &#x2014; line 216</li>
+<li><code>this.page.waitForLoadState(&apos;networkidle&apos;)</code> &#x2014; line 217</li>
+</ul>
+<h3 id="reloadandmeasurestep1load">reloadAndMeasureStep1Load</h3>
+<p><code>reloadAndMeasureStep1Load()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L225">pages/Step1Page/Step1Page.ts:225</a></p>
+<p>Reloads Step 1 and returns how long the ready state took, so the load budget is measured on the attempt that actually completed (a retried connection drop does not inflate the timing).</p>
+<ul>
+<li><code>this.retryOnNetworkDrop([callback: see source])</code> &#x2014; line 226</li>
+<li><code>this.page.reload({ waitUntil: &apos;domcontentloaded&apos; })</code> &#x2014; line 228</li>
+<li><code>this.waitForStep1PreviewReady()</code> &#x2014; line 229</li>
+</ul>
+<h3 id="reloadstep1">reloadStep1</h3>
+<p><code>reloadStep1()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L237">pages/Step1Page/Step1Page.ts:237</a></p>
+<p>Reloads Step 1 and waits until hover previews can be exercised again.</p>
+<ul>
+<li><code>this.retryOnNetworkDrop([callback: see source])</code> &#x2014; line 238</li>
+<li><code>this.page.reload({ waitUntil: &apos;domcontentloaded&apos; })</code> &#x2014; line 239</li>
+<li><code>this.waitForStep1PreviewReady()</code> &#x2014; line 240</li>
+</ul>
+<h3 id="navigateawayandbacktostep1">navigateAwayAndBackToStep1</h3>
+<p><code>navigateAwayAndBackToStep1(awayPath: string)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L247">pages/Step1Page/Step1Page.ts:247</a></p>
+<p>Navigates away and back so cached previews can be re-checked.</p>
+<ul>
+<li><code>this.retryOnNetworkDrop([callback: see source])</code> &#x2014; line 248</li>
+<li><code>this.page.goto(awayPath)</code> &#x2014; line 249</li>
+<li><code>this.page.goBack()</code> &#x2014; line 250</li>
+<li><code>this.waitForStep1PreviewReady()</code> &#x2014; line 251</li>
+</ul>
+<h3 id="waitforstep1previewready">waitForStep1PreviewReady</h3>
+<p><code>waitForStep1PreviewReady()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L255">pages/Step1Page/Step1Page.ts:255</a></p>
+<ul>
+<li><code>this.locator.websiteQrType.waitFor({ state: &apos;visible&apos; })</code> &#x2014; line 256</li>
+<li><code>this.expectPhoneMockupVisible()</code> &#x2014; line 257</li>
+</ul>
+<h3 id="expectphonemockupvisible">expectPhoneMockupVisible</h3>
+<p><code>expectPhoneMockupVisible()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L263">pages/Step1Page/Step1Page.ts:263</a></p>
+<p>Waits until the desktop phone mockup is ready for hover preview checks.</p>
+<ul>
+<li><code>this.expect(this.locator.phoneMockupContainer).toBeVisible()</code> &#x2014; line 264</li>
+</ul>
+<h3 id="expectphonemockuphidden">expectPhoneMockupHidden</h3>
+<p><code>expectPhoneMockupHidden()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L270">pages/Step1Page/Step1Page.ts:270</a></p>
+<p>Asserts the Step 1 phone mockup is not shown (mobile / &#x2264;1199px).</p>
+<ul>
+<li><code>this.expect(this.locator.phoneMockupContainer).toBeHidden()</code> &#x2014; line 271</li>
+</ul>
+<h3 id="getqrtypecard">getQrTypeCard</h3>
+<p><code>getQrTypeCard(qrType: Step1QrPreviewType)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L274">pages/Step1Page/Step1Page.ts:274</a></p>
+<h3 id="getpreviewmarker">getPreviewMarker</h3>
+<p><code>getPreviewMarker(qrType: Step1QrPreviewType)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L278">pages/Step1Page/Step1Page.ts:278</a></p>
+<ul>
+<li><code>this.locator.phoneMockupContainer.locator(qrType.previewMarker)</code> &#x2014; line 279</li>
+</ul>
+<h3 id="hoverandexpectinstantpreview">hoverAndExpectInstantPreview</h3>
+<p><code>hoverAndExpectInstantPreview(qrType: Step1QrPreviewType, timeoutMs: number = INSTANT_PREVIEW_TIMEOUT_MS)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L286">pages/Step1Page/Step1Page.ts:286</a></p>
+<p>Hovers a QR type card and asserts its preview appears instantly (no DefaultPreview / loader flash).</p>
+<ul>
+<li><code>this.getQrTypeCard(qrType)</code> &#x2014; line 290</li>
+<li><code>this.expect(this.locator.previewContentWrapper).toHaveAttribute(&apos;data-preview-type&apos;, qrType.key, { timeout: timeoutMs })</code> &#x2014; line 294</li>
+<li><code>this.getPreviewMarker(qrType)</code> &#x2014; line 300</li>
+<li><code>this.expect(marker.first()).toBeVisible({ timeout: timeoutMs, })</code> &#x2014; line 301</li>
+<li><code>this.locator.defaultPreviewText.filter({ visible: true, })</code> &#x2014; line 306</li>
+<li><code>this.expect(visibleDefault).toHaveCount(0, { timeout: timeoutMs })</code> &#x2014; line 309</li>
+</ul>
+<h3 id="expectalltypepreviewsinstantonhover">expectAllTypePreviewsInstantOnHover</h3>
+<p><code>expectAllTypePreviewsInstantOnHover(types: readonly Step1QrPreviewType[] = STEP1_QR_PREVIEW_TYPES, timeoutMs: number = INSTANT_PREVIEW_TIMEOUT_MS)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L315">pages/Step1Page/Step1Page.ts:315</a></p>
+<p>Hovers every Step 1 QR type and asserts each preview is preloaded.</p>
+<ul>
+<li><code>this.hoverAndExpectInstantPreview(qrType, timeoutMs)</code> &#x2014; line 320</li>
+</ul>
+<h3 id="expectquickhovershowscorrectpreviews">expectQuickHoverShowsCorrectPreviews</h3>
+<p><code>expectQuickHoverShowsCorrectPreviews(types: readonly Step1QrPreviewType[] = STEP1_QR_PREVIEW_TYPES)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L327">pages/Step1Page/Step1Page.ts:327</a></p>
+<p>Quickly hovers across types and asserts each correct preview.</p>
+<ul>
+<li><code>this.getQrTypeCard(qrType).hover({ force: true })</code> &#x2014; line 331</li>
+<li><code>this.getQrTypeCard(qrType)</code> &#x2014; line 331</li>
+<li><code>this.expect( this.getPreviewMarker(qrType).first() ).toBeVisible({ timeout: INSTANT_PREVIEW_TIMEOUT_MS, })</code> &#x2014; line 332</li>
+<li><code>this.getPreviewMarker(qrType).first()</code> &#x2014; line 333</li>
+<li><code>this.getPreviewMarker(qrType)</code> &#x2014; line 333</li>
+</ul>
+<h3 id="expectnolayoutshiftonhover">expectNoLayoutShiftOnHover</h3>
+<p><code>expectNoLayoutShiftOnHover(qrType: Step1QrPreviewType = STEP1_QR_PREVIEW_TYPES[0])</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L343">pages/Step1Page/Step1Page.ts:343</a></p>
+<p>Asserts preview container box is stable across hover (no layout shift).</p>
+<ul>
+<li><code>this.expectPhoneMockupVisible()</code> &#x2014; line 346</li>
+<li><code>this.getQrTypeCard(qrType).scrollIntoViewIfNeeded()</code> &#x2014; line 349</li>
+<li><code>this.getQrTypeCard(qrType)</code> &#x2014; line 349</li>
+<li><code>this.locator.phoneMockupContainer.boundingBox()</code> &#x2014; line 350</li>
+<li><code>this.hoverAndExpectInstantPreview(qrType)</code> &#x2014; line 351</li>
+<li><code>this.locator.phoneMockupContainer.boundingBox()</code> &#x2014; line 352</li>
+<li><code>this.expect(before).not.toBeNull()</code> &#x2014; line 354</li>
+<li><code>this.expect(after).not.toBeNull()</code> &#x2014; line 355</li>
+<li><code>this.expect(before!.width).toBe(after!.width)</code> &#x2014; line 356</li>
+<li><code>this.expect(before!.height).toBe(after!.height)</code> &#x2014; line 357</li>
+<li><code>this.expect(Math.abs(before!.x - after!.x)).toBeLessThanOrEqual(1)</code> &#x2014; line 358</li>
+<li><code>this.expect(Math.abs(before!.y - after!.y)).toBeLessThanOrEqual(1)</code> &#x2014; line 359</li>
+</ul>
+<h3 id="expectpreviewcontainerpresized">expectPreviewContainerPreSized</h3>
+<p><code>expectPreviewContainerPreSized()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L365">pages/Step1Page/Step1Page.ts:365</a></p>
+<p>Asserts preview container is pre-sized (non-zero box before hover).</p>
+<ul>
+<li><code>this.expectPhoneMockupVisible()</code> &#x2014; line 366</li>
+<li><code>this.locator.phoneMockupContainer.boundingBox()</code> &#x2014; line 367</li>
+<li><code>this.expect(box).not.toBeNull()</code> &#x2014; line 368</li>
+<li><code>this.expect(box!.width).toBeGreaterThan(100)</code> &#x2014; line 369</li>
+<li><code>this.expect(box!.height).toBeGreaterThan(100)</code> &#x2014; line 370</li>
+</ul>
+<h3 id="expectalltypepreviewimagesloadedandhavealt">expectAllTypePreviewImagesLoadedAndHaveAlt</h3>
+<p><code>expectAllTypePreviewImagesLoadedAndHaveAlt(types: readonly Step1QrPreviewType[] = STEP1_QR_PREVIEW_TYPES)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L377">pages/Step1Page/Step1Page.ts:377</a></p>
+<p>Hovers every QR type and validates all images visible in each preview. Types with SVG/CSS-only previews legitimately have no <code>&lt;img&gt;</code> elements.</p>
+<ul>
+<li><code>this.hoverAndExpectInstantPreview(qrType)</code> &#x2014; line 381</li>
+<li><code>this.locator.phoneMockupContainer .locator(&apos;img&apos;) .filter({ visible: true })</code> &#x2014; line 383</li>
+<li><code>this.locator.phoneMockupContainer .locator(&apos;img&apos;)</code> &#x2014; line 383</li>
+<li><code>this.expect .poll( () =&gt; image.evaluate( (element: HTMLImageElement) =&gt; element.naturalWidth ), { message: &#x2032;[&#x24;{qrType.key}] Visible preview image is broken or missing&#x2032;, timeout: INSTANT_PREVIEW_TIMEOUT_MS, } ) .toBeGreaterThan(0)</code> &#x2014; line 390</li>
+<li><code>this.expect .poll([callback: see source], { message: &#x2032;[&#x24;{qrType.key}] Visible preview image is broken or missing&#x2032;, timeout: INSTANT_PREVIEW_TIMEOUT_MS, })</code> &#x2014; line 390</li>
+<li><code>this.expect( alt, &#x2032;[&#x24;{qrType.key}] Visible preview image has no alt attribute&#x2032; ).not.toBeNull()</code> &#x2014; line 405</li>
+</ul>
+<h3 id="expectloadtimeacceptable">expectLoadTimeAcceptable</h3>
+<p><code>expectLoadTimeAcceptable(elapsedMs: number, maxMs: number)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L416">pages/Step1Page/Step1Page.ts:416</a></p>
+<p>Asserts Step 1 load duration stayed within an acceptable bound.</p>
+<ul>
+<li><code>this.expect(elapsedMs).toBeLessThan(maxMs)</code> &#x2014; line 420</li>
+</ul>
+<h3 id="expectgracefulimagefailureonhover">expectGracefulImageFailureOnHover</h3>
+<p><code>expectGracefulImageFailureOnHover(qrType: Step1QrPreviewType)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L427">pages/Step1Page/Step1Page.ts:427</a></p>
+<p>Asserts a blocked/missing preview image does not leave a broken-image icon as the only UI &#x2014; either a fallback preview or empty naturalWidth is handled.</p>
+<ul>
+<li><code>this.getQrTypeCard(qrType).hover()</code> &#x2014; line 430</li>
+<li><code>this.getQrTypeCard(qrType)</code> &#x2014; line 430</li>
+<li><code>this.expect(this.locator.previewContentWrapper).toHaveAttribute(&apos;data-preview-type&apos;, qrType.key)</code> &#x2014; line 431</li>
+<li><code>this.expectPhoneMockupVisible()</code> &#x2014; line 436</li>
+</ul>
+<h3 id="focusandexpectinstantpreview">focusAndExpectInstantPreview</h3>
+<p><code>focusAndExpectInstantPreview(qrType: Step1QrPreviewType)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L443">pages/Step1Page/Step1Page.ts:443</a></p>
+<p>Focuses a QR type card via keyboard then hover (mouseenter drives preview) and asserts the preloaded preview shows without a loader.</p>
+<ul>
+<li><code>this.getQrTypeCard(qrType)</code> &#x2014; line 446</li>
+<li><code>this.hoverAndExpectInstantPreview(qrType)</code> &#x2014; line 448</li>
+</ul>
+<h3 id="expectrepeatedhoverinstant">expectRepeatedHoverInstant</h3>
+<p><code>expectRepeatedHoverInstant(types: readonly Step1QrPreviewType[] = STEP1_QR_PREVIEW_TYPES)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L454">pages/Step1Page/Step1Page.ts:454</a></p>
+<p>Repeats hover on every type and asserts each preview stays instant (cached).</p>
+<ul>
+<li><code>this.hoverAndExpectInstantPreview(qrType)</code> &#x2014; line 459</li>
+<li><code>this.page.mouse.move(0, 0)</code> &#x2014; line 460</li>
+</ul>
+<h3 id="expectpreviewimagespreloadednotonhover">expectPreviewImagesPreloadedNotOnHover</h3>
+<p><code>expectPreviewImagesPreloadedNotOnHover(urlsBeforeHover: number, newUrlsAfterHover: string[], maxNewUrls: number = 0)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L470">pages/Step1Page/Step1Page.ts:470</a></p>
+<p>Asserts preview asset requests already happened before hover, and hovering QR types does not trigger a burst of new preview image downloads.</p>
+<ul>
+<li><code>this.expect(urlsBeforeHover).toBeGreaterThanOrEqual(0)</code> &#x2014; line 475</li>
+<li><code>this.expect( newUrlsAfterHover.length, &#x2032;Unexpected preview image requests on hover:\n&#x24;{newUrlsAfterHover.join(&apos;\n&apos;)}&#x2032; ).toBeLessThanOrEqual(maxNewUrls)</code> &#x2014; line 476</li>
+</ul>
+<h3 id="closecarouselifonboardingactive">closeCarouselIfOnboardingActive</h3>
+<p><code>closeCarouselIfOnboardingActive()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L487">pages/Step1Page/Step1Page.ts:487</a></p>
+<p>Closes the Step 2 onboarding help popup (&quot;carousel&quot;) when it appears. Entering Step 2 can render a help popup that intercepts the first clicks; QR types that never show it fall through as a no-op.</p>
+<ul>
+<li><code>this.page.getByTestId(&apos;help-popup-step-2&apos;)</code> &#x2014; line 497</li>
+<li><code>closeIcon.click({ timeout: 5_000 })</code> &#x2014; line 507</li>
+<li><code>this.page.keyboard.press(&apos;Escape&apos;).catch([callback: see source])</code> &#x2014; line 508</li>
+<li><code>this.page.keyboard.press(&apos;Escape&apos;)</code> &#x2014; line 508</li>
+<li><code>this.expect(popup).toBeHidden()</code> &#x2014; line 516</li>
+</ul>
+<h3 id="selectqrtypeandopenstep2">selectQrTypeAndOpenStep2</h3>
+<p><code>selectQrTypeAndOpenStep2(typeCard: Locator, menuOption?: Locator)</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L530">pages/Step1Page/Step1Page.ts:530</a></p>
+<p>Selects a Step 1 QR type card and waits until the funnel reaches Step 2. On mobile viewports the first tap only highlights the card; a second tap opens Step 2. Do not use <code>selectVcardQrType()</code> here &#x2014; that method waits for the Step 2 help popup before navigation has happened.</p>
+<p>Pass <code>menuOption</code> for Menu subtypes (Digital / PDF / Website Menu). The 15s URL wait is a probe for the first tap, not a swallowed failure: if Step 2 is not reached, the card (or menu option) is clicked again and the second wait has no timeout override.</p>
+<ul>
+<li><code>typeCard.click()</code> &#x2014; line 535</li>
+<li><code>typeCard.click()</code> &#x2014; line 542</li>
+<li><code>menuOption.click()</code> &#x2014; line 545</li>
+<li><code>this.page .waitForURL(&apos;**step=2**&apos;, { timeout: 15_000 }) .then(() =&gt; true) .catch([callback: see source])</code> &#x2014; line 547</li>
+<li><code>this.page .waitForURL(&apos;**step=2**&apos;, { timeout: 15_000 }) .then([callback: see source])</code> &#x2014; line 547</li>
+<li><code>this.page .waitForURL(&apos;**step=2**&apos;, { timeout: 15_000 })</code> &#x2014; line 547</li>
+<li><code>menuOption.click()</code> &#x2014; line 553</li>
+<li><code>typeCard.click()</code> &#x2014; line 555</li>
+<li><code>menuOption.click()</code> &#x2014; line 558</li>
+<li><code>this.page.waitForURL(&apos;**step=2**&apos;)</code> &#x2014; line 561</li>
+</ul>
+<h3 id="selectwebsiteqrtype">selectWebsiteQrType</h3>
+<p><code>selectWebsiteQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L565">pages/Step1Page/Step1Page.ts:565</a></p>
+<ul>
+<li><code>this.locator.websiteQrType.hover()</code> &#x2014; line 566</li>
+<li><code>this.page.waitForLoadState(&apos;networkidle&apos;)</code> &#x2014; line 567</li>
+<li><code>this.locator.websiteQrType.click()</code> &#x2014; line 568</li>
+</ul>
+<h3 id="selectpdfqrtype">selectPdfQrType</h3>
+<p><code>selectPdfQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L571">pages/Step1Page/Step1Page.ts:571</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 572</li>
+<li><code>this.locator.pdfQrType.click()</code> &#x2014; line 573</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 574</li>
+</ul>
+<h3 id="selectlinksqrtype">selectLinksQrType</h3>
+<p><code>selectLinksQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L577">pages/Step1Page/Step1Page.ts:577</a></p>
+<ul>
+<li><code>this.locator.linksQrType.waitFor({ state: &apos;visible&apos; })</code> &#x2014; line 578</li>
+<li><code>this.locator.linksQrType.click()</code> &#x2014; line 579</li>
+<li><code>this.page.waitForURL(&apos;**step=2**&apos;)</code> &#x2014; line 580</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 581</li>
+</ul>
+<h3 id="selectvcardqrtype">selectVcardQrType</h3>
+<p><code>selectVcardQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L584">pages/Step1Page/Step1Page.ts:584</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 585</li>
+<li><code>this.locator.vcardQrType.click()</code> &#x2014; line 586</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 587</li>
+</ul>
+<h3 id="selectbusinessqrtype">selectBusinessQrType</h3>
+<p><code>selectBusinessQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L590">pages/Step1Page/Step1Page.ts:590</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 591</li>
+<li><code>this.locator.businessQrType.click()</code> &#x2014; line 592</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 593</li>
+</ul>
+<h3 id="selectimagesqrtype">selectImagesQrType</h3>
+<p><code>selectImagesQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L596">pages/Step1Page/Step1Page.ts:596</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 597</li>
+<li><code>this.locator.imagesQrType.click()</code> &#x2014; line 598</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 599</li>
+</ul>
+<h3 id="selectvideoqrtype">selectVideoQrType</h3>
+<p><code>selectVideoQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L602">pages/Step1Page/Step1Page.ts:602</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 603</li>
+<li><code>this.locator.videoQrType.click()</code> &#x2014; line 604</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 605</li>
+</ul>
+<h3 id="selectappsqrtype">selectAppsQrType</h3>
+<p><code>selectAppsQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L608">pages/Step1Page/Step1Page.ts:608</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 609</li>
+<li><code>this.locator.appsQrType.click()</code> &#x2014; line 610</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 611</li>
+</ul>
+<h3 id="selectcouponqrtype">selectCouponQrType</h3>
+<p><code>selectCouponQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L614">pages/Step1Page/Step1Page.ts:614</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 615</li>
+<li><code>this.locator.couponQrType.click()</code> &#x2014; line 616</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 617</li>
+</ul>
+<h3 id="selectmp3qrtype">selectMp3QrType</h3>
+<p><code>selectMp3QrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L620">pages/Step1Page/Step1Page.ts:620</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 621</li>
+<li><code>this.locator.mp3QrType.click()</code> &#x2014; line 622</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 623</li>
+</ul>
+<h3 id="selectmenuqrtype">selectMenuQrType</h3>
+<p><code>selectMenuQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L626">pages/Step1Page/Step1Page.ts:626</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 627</li>
+<li><code>this.locator.menuQrType.click()</code> &#x2014; line 628</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 629</li>
+</ul>
+<h3 id="selectwifiqrtype">selectWifiQrType</h3>
+<p><code>selectWifiQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L632">pages/Step1Page/Step1Page.ts:632</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 633</li>
+<li><code>this.locator.wifiQrType.click()</code> &#x2014; line 634</li>
+</ul>
+<h3 id="selectfacebookqrtype">selectFacebookQrType</h3>
+<p><code>selectFacebookQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L637">pages/Step1Page/Step1Page.ts:637</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 638</li>
+<li><code>this.locator.facebookQrType.click()</code> &#x2014; line 639</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 640</li>
+</ul>
+<h3 id="selectinstagramqrtype">selectInstagramQrType</h3>
+<p><code>selectInstagramQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L643">pages/Step1Page/Step1Page.ts:643</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 644</li>
+<li><code>this.locator.instagramQrType.click()</code> &#x2014; line 645</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 646</li>
+</ul>
+<h3 id="selectsocialmediaqrtype">selectSocialMediaQrType</h3>
+<p><code>selectSocialMediaQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L649">pages/Step1Page/Step1Page.ts:649</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 650</li>
+<li><code>this.locator.socialMediaQrType.click()</code> &#x2014; line 651</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 652</li>
+</ul>
+<h3 id="selectwhatsappqrtype">selectWhatsappQrType</h3>
+<p><code>selectWhatsappQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L655">pages/Step1Page/Step1Page.ts:655</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 656</li>
+<li><code>this.locator.whatsappQrType.click()</code> &#x2014; line 657</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 658</li>
+</ul>
+<h3 id="selectmenudigitalqrtype">selectMenuDigitalQrType</h3>
+<p><code>selectMenuDigitalQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L661">pages/Step1Page/Step1Page.ts:661</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 662</li>
+<li><code>this.locator.menuQrType.click()</code> &#x2014; line 663</li>
+<li><code>this.locator.digitalMenuQrType.click()</code> &#x2014; line 664</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 665</li>
+</ul>
+<h3 id="selectpdfmenuqrtype">selectPdfMenuQrType</h3>
+<p><code>selectPdfMenuQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L668">pages/Step1Page/Step1Page.ts:668</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 669</li>
+<li><code>this.locator.menuQrType.click()</code> &#x2014; line 670</li>
+<li><code>this.locator.pdfMenuQrType.click()</code> &#x2014; line 671</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 672</li>
+</ul>
+<h3 id="selectwebsitemenuqrtype">selectWebsiteMenuQrType</h3>
+<p><code>selectWebsiteMenuQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L675">pages/Step1Page/Step1Page.ts:675</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 676</li>
+<li><code>this.locator.menuQrType.click()</code> &#x2014; line 677</li>
+<li><code>this.locator.websiteMenuQrType.click()</code> &#x2014; line 678</li>
+</ul>
+<h3 id="selecteventqrtype">selectEventQrType</h3>
+<p><code>selectEventQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L681">pages/Step1Page/Step1Page.ts:681</a></p>
+<ul>
+<li><code>this.page.waitForTimeout(1_500)</code> &#x2014; line 682</li>
+<li><code>this.locator.eventQrType.click()</code> &#x2014; line 683</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 684</li>
+</ul>
+<h3 id="selectemailqrtype">selectEmailQrType</h3>
+<p><code>selectEmailQrType()</code></p>
+<p><a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L690">pages/Step1Page/Step1Page.ts:690</a></p>
+<p>Opens Email QR Step 2 from the Step 1 type grid.</p>
+<ul>
+<li><code>this.locator.emailQrType.waitFor({ state: &apos;visible&apos; })</code> &#x2014; line 691</li>
+<li><code>this.locator.emailQrType.click()</code> &#x2014; line 692</li>
+<li><code>this.page.waitForURL(&apos;**step=2**&apos;)</code> &#x2014; line 693</li>
+<li><code>this.selectQrTypeAndOpenStep2(this.locator.emailQrType)</code> &#x2014; line 694</li>
+<li><code>this.closeCarouselIfOnboardingActive()</code> &#x2014; line 695</li>
+</ul>
+<h2 id="pages-step1page-step1pagelocators-ts">pages/Step1Page/Step1PageLocators.ts</h2>
+<p><a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L1">pages/Step1Page/Step1PageLocators.ts:1</a></p>
+<ul>
+<li><code>{ Page, Locator }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseLocators }</code> &#x2190; <a data-source="pages/BaseLocators.ts" href="../../sources/pages/BaseLocators.ts.html#L1">pages/BaseLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L22">pages/Step1Page/Step1PageLocators.ts:22</a></p>
+<ul>
+<li><code>this.phoneMockupContainer.locator(&apos;.qr-default-preview-text&apos;)</code> &#x2014; line 41</li>
+<li><code>this.phoneMockupContainer.locator(&apos;.content-wrapper&apos;)</code> &#x2014; line 45</li>
+</ul>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.digitalMenuQrType</code> &#x2190; <code>page.getByTestId( &apos;menu-create-option-menu-button&apos; )</code> &#x2014; <a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L24">pages/Step1Page/Step1PageLocators.ts:24</a></li>
+<li><code>this.pdfMenuQrType</code> &#x2190; <code>page.getByTestId(&apos;menu-create-option-pdf-button&apos;)</code> &#x2014; <a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L27">pages/Step1Page/Step1PageLocators.ts:27</a></li>
+<li><code>this.websiteMenuQrType</code> &#x2190; <code>page.getByTestId( &apos;menu-create-option-website-button&apos; )</code> &#x2014; <a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L28">pages/Step1Page/Step1PageLocators.ts:28</a></li>
+<li><code>this.iframeMobileView</code> &#x2190; <code>page.locator(&apos;#iframe-static&apos;)</code> &#x2014; <a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L31">pages/Step1Page/Step1PageLocators.ts:31</a></li>
+<li><code>this.pageTitle</code> &#x2190; <code>page.locator(&apos;label#step-id-label&apos;)</code> &#x2014; <a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L32">pages/Step1Page/Step1PageLocators.ts:32</a></li>
+<li><code>this.closeCarouselButtonSt2</code> &#x2190; <code>page.getByTestId( &apos;help-popup-step-2-close-icon-button&apos; )</code> &#x2014; <a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L33">pages/Step1Page/Step1PageLocators.ts:33</a></li>
+<li><code>this.qrCodeTypes</code> &#x2190; <code>page.getByRole(&apos;heading&apos;, { name: &apos;1. Select a type of QR code&apos;, })</code> &#x2014; <a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L37">pages/Step1Page/Step1PageLocators.ts:37</a></li>
+<li><code>this.phoneMockupContainer</code> &#x2190; <code>page.getByTestId(&apos;phone-mockup-container&apos;)</code> &#x2014; <a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L40">pages/Step1Page/Step1PageLocators.ts:40</a></li>
+<li><code>this.defaultPreviewText</code> &#x2190; <code>this.phoneMockupContainer.locator( &apos;.qr-default-preview-text&apos; )</code> &#x2014; <a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L41">pages/Step1Page/Step1PageLocators.ts:41</a></li>
+<li><code>this.previewContentWrapper</code> &#x2190; <code>this.phoneMockupContainer.locator(&apos;.content-wrapper&apos;)</code> &#x2014; <a data-source="pages/Step1Page/Step1PageLocators.ts" href="../../sources/pages/Step1Page/Step1PageLocators.ts.html#L44">pages/Step1Page/Step1PageLocators.ts:44</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

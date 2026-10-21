@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/step3page.html">
+<title>Step3Page · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-step3page-step3page-ts">pages/Step3Page/Step3Page.ts</a>
+<a href="#pages-step3page-step3pagelocators-ts">pages/Step3Page/Step3PageLocators.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="step3page">Step3Page</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-step3page-step3page-ts">pages/Step3Page/Step3Page.ts</h2>
+<p><a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L1">pages/Step3Page/Step3Page.ts:1</a></p>
+<ul>
+<li><code>{ Locator, Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>{ Step3PageLocators }</code> &#x2190; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L1">pages/Step3Page/Step3PageLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L8">pages/Step3Page/Step3Page.ts:8</a></p>
+<h3 id="closehelpmodal">closeHelpModal</h3>
+<p><code>closeHelpModal()</code></p>
+<p><a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L13">pages/Step3Page/Step3Page.ts:13</a></p>
+<ul>
+<li><code>this.locator.helpModalCloseButton.click()</code> &#x2014; line 14</li>
+</ul>
+<h3 id="dismisshelpifopen">dismissHelpIfOpen</h3>
+<p><code>dismissHelpIfOpen()</code></p>
+<p><a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L21">pages/Step3Page/Step3Page.ts:21</a></p>
+<p>Dismisses the Step 3 help popup when present so it cannot intercept design or preview controls.</p>
+<ul>
+<li><code>this.locator.helpPopup.waitFor({ state: &apos;visible&apos;, timeout: 15_000, })</code> &#x2014; line 24</li>
+<li><code>this.locator.helpCloseIconButton.click()</code> &#x2014; line 35</li>
+<li><code>this.expect(this.locator.helpPopup).toBeHidden()</code> &#x2014; line 36</li>
+<li><code>this.expect(this.locator.dialogOverlay).toBeHidden()</code> &#x2014; line 37</li>
+</ul>
+<h3 id="clickcreatebuttonstep3">clickCreateButtonStep3</h3>
+<p><code>clickCreateButtonStep3()</code></p>
+<p><a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L40">pages/Step3Page/Step3Page.ts:40</a></p>
+<ul>
+<li><code>this.locator.createButton.click()</code> &#x2014; line 41</li>
+</ul>
+<h3 id="showqrcodepreview">showQrCodePreview</h3>
+<p><code>showQrCodePreview()</code></p>
+<p><a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L45">pages/Step3Page/Step3Page.ts:45</a></p>
+<p>Displays the generated QR itself instead of the landing-page preview.</p>
+<ul>
+<li><code>this.locator.qrCodePreviewTabButton.click()</code> &#x2014; line 46</li>
+<li><code>this.expect(this.locator.step3PhoneQrCodeWrapper).toBeVisible()</code> &#x2014; line 47</li>
+</ul>
+<h3 id="expectqrlogocentered">expectQrLogoCentered</h3>
+<p><code>expectQrLogoCentered()</code></p>
+<p><a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L51">pages/Step3Page/Step3Page.ts:51</a></p>
+<p>Asserts the uploaded logo is rendered and centered on the QR surface.</p>
+<ul>
+<li><code>this.expect(logo).toBeVisible()</code> &#x2014; line 54</li>
+<li><code>this.expect(surfaceBox).not.toBeNull()</code> &#x2014; line 59</li>
+<li><code>this.expect(logoBox).not.toBeNull()</code> &#x2014; line 60</li>
+<li><code>this.expect( Math.abs( logoBox!.x + logoBox!.width / 2 - (surfaceBox!.x + surfaceBox!.width / 2) ) ).toBeLessThanOrEqual(1)</code> &#x2014; line 61</li>
+<li><code>this.expect( Math.abs( logoBox!.y + logoBox!.height / 2 - (surfaceBox!.y + surfaceBox!.height / 2) ) ).toBeLessThanOrEqual(1)</code> &#x2014; line 68</li>
+</ul>
+<h3 id="expectqrlogoabsent">expectQrLogoAbsent</h3>
+<p><code>expectQrLogoAbsent()</code></p>
+<p><a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L78">pages/Step3Page/Step3Page.ts:78</a></p>
+<p>Asserts no uploaded logo is rendered on the QR surface.</p>
+<ul>
+<li><code>this.expect(this.locator.qrLogoImage).toHaveCount(0)</code> &#x2014; line 79</li>
+</ul>
+<h3 id="expandaccordion">expandAccordion</h3>
+<p><code>expandAccordion(trigger: Locator)</code></p>
+<p><a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L83">pages/Step3Page/Step3Page.ts:83</a></p>
+<p>Expands a Step 3 design accordion only when it is currently closed.</p>
+<ul>
+<li><code>trigger.click()</code> &#x2014; line 85</li>
+<li><code>this.expect(trigger).toHaveAttribute(&apos;aria-expanded&apos;, &apos;true&apos;)</code> &#x2014; line 87</li>
+</ul>
+<h3 id="setpatterncolors">setPatternColors</h3>
+<p><code>setPatternColors(foreground: string, background: string)</code></p>
+<p><a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L91">pages/Step3Page/Step3Page.ts:91</a></p>
+<p>Applies solid foreground and background colors to the QR pattern.</p>
+<ul>
+<li><code>this.expandAccordion(this.locator.patternAccordionTrigger)</code> &#x2014; line 95</li>
+<li><code>this.locator.patternForegroundHexInput.fill(foreground)</code> &#x2014; line 96</li>
+<li><code>this.locator.patternForegroundHexInput.press(&apos;Tab&apos;)</code> &#x2014; line 97</li>
+<li><code>this.locator.patternBackgroundHexInput.fill(background)</code> &#x2014; line 98</li>
+<li><code>this.locator.patternBackgroundHexInput.press(&apos;Tab&apos;)</code> &#x2014; line 99</li>
+<li><code>this.expect(this.locator.patternForegroundHexInput).toHaveValue(foreground)</code> &#x2014; line 100</li>
+<li><code>this.expect(this.locator.patternBackgroundHexInput).toHaveValue(background)</code> &#x2014; line 103</li>
+</ul>
+<h3 id="expectdefaultdesignselected">expectDefaultDesignSelected</h3>
+<p><code>expectDefaultDesignSelected()</code></p>
+<p><a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L109">pages/Step3Page/Step3Page.ts:109</a></p>
+<p>Asserts the sensible design defaults shown on first Step 3 entry.</p>
+<ul>
+<li><code>this.expandAccordion(this.locator.frameAccordionTrigger)</code> &#x2014; line 110</li>
+<li><code>this.expect(this.locator.frameOption0Button).toHaveAttribute(&apos;aria-pressed&apos;, &apos;true&apos;)</code> &#x2014; line 111</li>
+<li><code>this.expandAccordion(this.locator.patternAccordionTrigger)</code> &#x2014; line 116</li>
+<li><code>this.expect( this.locator.patternSquareButton.locator(&apos;div&apos;).first() ).toHaveClass(/border-primary/)</code> &#x2014; line 117</li>
+<li><code>this.locator.patternSquareButton.locator(&apos;div&apos;).first()</code> &#x2014; line 118</li>
+<li><code>this.locator.patternSquareButton.locator(&apos;div&apos;)</code> &#x2014; line 118</li>
+<li><code>this.expect(this.locator.patternForegroundHexInput).toHaveValue(&apos;#000000&apos;)</code> &#x2014; line 120</li>
+<li><code>this.expect(this.locator.patternBackgroundHexInput).toHaveValue(&apos;#FFFFFF&apos;)</code> &#x2014; line 123</li>
+<li><code>this.expandAccordion(this.locator.cornersAccordionTrigger)</code> &#x2014; line 127</li>
+<li><code>this.expect(this.locator.cornersOuterNoneButton).toHaveAttribute(&apos;aria-pressed&apos;, &apos;true&apos;)</code> &#x2014; line 128</li>
+<li><code>this.expect(this.locator.cornersInnerNoneButton).toHaveAttribute(&apos;aria-pressed&apos;, &apos;true&apos;)</code> &#x2014; line 132</li>
+</ul>
+<h3 id="getqrmockupmarkup">getQrMockupMarkup</h3>
+<p><code>getQrMockupMarkup()</code></p>
+<p><a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L142">pages/Step3Page/Step3Page.ts:142</a></p>
+<p>Returns the rendered QR surface markup used to detect a completed visual update after a frame, pattern, corner, color, or logo change.</p>
+<ul>
+<li><code>this.expect(this.locator.step3PhoneQrCodeWrapper).toBeVisible()</code> &#x2014; line 143</li>
+<li><code>this.locator.step3PhoneQrCodeWrapper.innerHTML()</code> &#x2014; line 144</li>
+</ul>
+<h2 id="pages-step3page-step3pagelocators-ts">pages/Step3Page/Step3PageLocators.ts</h2>
+<p><a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L1">pages/Step3Page/Step3PageLocators.ts:1</a></p>
+<ul>
+<li><code>{ Page, Locator }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseLocators }</code> &#x2190; <a data-source="pages/BaseLocators.ts" href="../../sources/pages/BaseLocators.ts.html#L1">pages/BaseLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L38">pages/Step3Page/Step3PageLocators.ts:38</a></p>
+<ul>
+<li><code>this.step3PhoneQrCodeWrapper.locator(&apos;image&apos;)</code> &#x2014; line 50</li>
+<li><code>this.logoUploadButton.locator(&apos;xpath=following-sibling::input&apos;)</code> &#x2014; line 96</li>
+</ul>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.demoLocator</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;surname&apos;]&quot;)</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L40">pages/Step3Page/Step3PageLocators.ts:40</a></li>
+<li><code>this.step3PhoneQrCodeWrapper</code> &#x2190; <code>page.locator(&apos;#qr-code-wrap&apos;).or( page.locator(&apos;svg&apos;).filter({ has: page.locator(&apos;[id^=&quot;qr-clip-path-background-color-&quot;]&apos;), }) )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L41">pages/Step3Page/Step3PageLocators.ts:41</a></li>
+<li><code>this.step3OverlayLoader</code> &#x2190; <code>page.locator(&apos;img#overlay_img&apos;)</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L46">pages/Step3Page/Step3PageLocators.ts:46</a></li>
+<li><code>this.qrCodePreviewTabButton</code> &#x2190; <code>page.getByTestId( &apos;preview-mode-toggle-qrcode-button&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L47">pages/Step3Page/Step3PageLocators.ts:47</a></li>
+<li><code>this.qrLogoImage</code> &#x2190; <code>this.step3PhoneQrCodeWrapper.locator(&apos;image&apos;)</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L50">pages/Step3Page/Step3PageLocators.ts:50</a></li>
+<li><code>this.qrMockupContainer</code> &#x2190; <code>page.getByTestId(&apos;phone-mockup-container&apos;)</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L51">pages/Step3Page/Step3PageLocators.ts:51</a></li>
+<li><code>this.designSectionsAccordion</code> &#x2190; <code>page.getByTestId( &apos;step3-design-sections-accordion&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L52">pages/Step3Page/Step3PageLocators.ts:52</a></li>
+<li><code>this.frameAccordionTrigger</code> &#x2190; <code>page.getByTestId( &apos;step3-accordion-frame-accordion-trigger&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L55">pages/Step3Page/Step3PageLocators.ts:55</a></li>
+<li><code>this.frameOptions</code> &#x2190; <code>page.locator(&apos;[data-qa-id^=&quot;step3-frame-option-&quot;]&apos;)</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L58">pages/Step3Page/Step3PageLocators.ts:58</a></li>
+<li><code>this.frameOption0Button</code> &#x2190; <code>page.getByTestId(&apos;step3-frame-option-0&apos;)</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L59">pages/Step3Page/Step3PageLocators.ts:59</a></li>
+<li><code>this.frameOption5Button</code> &#x2190; <code>page.getByTestId(&apos;step3-frame-option-5&apos;)</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L60">pages/Step3Page/Step3PageLocators.ts:60</a></li>
+<li><code>this.patternAccordionTrigger</code> &#x2190; <code>page.getByTestId( &apos;step3-accordion-pattern-accordion-trigger&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L61">pages/Step3Page/Step3PageLocators.ts:61</a></li>
+<li><code>this.patternSquareButton</code> &#x2190; <code>page.getByTestId( &apos;step3-pattern-option-square&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L64">pages/Step3Page/Step3PageLocators.ts:64</a></li>
+<li><code>this.patternRoundButton</code> &#x2190; <code>page.getByTestId(&apos;step3-pattern-option-round&apos;)</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L67">pages/Step3Page/Step3PageLocators.ts:67</a></li>
+<li><code>this.patternDiamondButton</code> &#x2190; <code>page.getByTestId( &apos;step3-pattern-option-diamond&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L68">pages/Step3Page/Step3PageLocators.ts:68</a></li>
+<li><code>this.patternForegroundHexInput</code> &#x2190; <code>page.getByTestId( &apos;step3-pattern-color-foreground-solid-hex&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L71">pages/Step3Page/Step3PageLocators.ts:71</a></li>
+<li><code>this.patternBackgroundHexInput</code> &#x2190; <code>page.getByTestId( &apos;step3-pattern-color-background-solid-hex&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L74">pages/Step3Page/Step3PageLocators.ts:74</a></li>
+<li><code>this.cornersAccordionTrigger</code> &#x2190; <code>page.getByTestId( &apos;step3-accordion-corners-accordion-trigger&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L77">pages/Step3Page/Step3PageLocators.ts:77</a></li>
+<li><code>this.cornersOuterNoneButton</code> &#x2190; <code>page.getByTestId( &apos;step3-corners-outer-none&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L80">pages/Step3Page/Step3PageLocators.ts:80</a></li>
+<li><code>this.cornersOuterRoundedButton</code> &#x2190; <code>page.getByTestId( &apos;step3-corners-outer-rounded&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L83">pages/Step3Page/Step3PageLocators.ts:83</a></li>
+<li><code>this.cornersInnerNoneButton</code> &#x2190; <code>page.getByTestId( &apos;step3-corners-inner-none&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L86">pages/Step3Page/Step3PageLocators.ts:86</a></li>
+<li><code>this.cornersInnerDiamondButton</code> &#x2190; <code>page.getByTestId( &apos;step3-corners-inner-diamond&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L89">pages/Step3Page/Step3PageLocators.ts:89</a></li>
+<li><code>this.logoAccordionTrigger</code> &#x2190; <code>page.getByTestId( &apos;step3-accordion-logo-accordion-trigger&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L92">pages/Step3Page/Step3PageLocators.ts:92</a></li>
+<li><code>this.logoUploadButton</code> &#x2190; <code>page.getByTestId(&apos;step3-logo-image-input&apos;)</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L95">pages/Step3Page/Step3PageLocators.ts:95</a></li>
+<li><code>this.logoUploadInput</code> &#x2190; <code>this.logoUploadButton.locator( &apos;xpath=following-sibling::input&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L96">pages/Step3Page/Step3PageLocators.ts:96</a></li>
+<li><code>this.logoPreviewImage</code> &#x2190; <code>page .locator(&apos;#accordion-content-logo-section&apos;) .locator(&apos;img&apos;)</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L99">pages/Step3Page/Step3PageLocators.ts:99</a></li>
+<li><code>this.logoDeleteButton</code> &#x2190; <code>page.getByTestId( &apos;step3-logo-image-delete-button&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L102">pages/Step3Page/Step3PageLocators.ts:102</a></li>
+<li><code>this.logoValidationMessage</code> &#x2190; <code>page.getByTestId( &apos;step3-logo-image-validation-message&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L105">pages/Step3Page/Step3PageLocators.ts:105</a></li>
+<li><code>this.helpPopup</code> &#x2190; <code>page.getByTestId(&apos;help-popup-step-3&apos;)</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L108">pages/Step3Page/Step3PageLocators.ts:108</a></li>
+<li><code>this.helpCloseIconButton</code> &#x2190; <code>page.getByTestId( &apos;help-popup-step-3-close-icon-button&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L109">pages/Step3Page/Step3PageLocators.ts:109</a></li>
+<li><code>this.dialogOverlay</code> &#x2190; <code>page .locator(&apos;[data-slot=&quot;dialog-overlay&quot;]&apos;) .first()</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L112">pages/Step3Page/Step3PageLocators.ts:112</a></li>
+<li><code>this.scannabilityWarning</code> &#x2190; <code>page.getByTestId( &apos;step3-qr-scan-status-message&apos; )</code> &#x2014; <a data-source="pages/Step3Page/Step3PageLocators.ts" href="../../sources/pages/Step3Page/Step3PageLocators.ts.html#L115">pages/Step3Page/Step3PageLocators.ts:115</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

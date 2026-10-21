@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="00-qa-quick-start.html">
+<title>Your first check · QA reference</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script defer src="assets/search-index.js"></script><script defer src="assets/app.js"></script>
+</head><body data-root-prefix="">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="index.html">Start here</a>
+<a href="00-qa-quick-start.html" class="active" aria-current="page">Your first check</a>
+<a href="02-accounts-and-credentials.html">Accounts and login</a>
+<a href="03-qr-creation.html">QR types and creation</a>
+<a href="04-data-and-inputs.html">What to enter and upload</a>
+<a href="05-other-flows.html">Other product flows</a>
+<a href="07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="glossary.html">Words used in this guide</a><details class="reference-nav"><summary>Technical reference (optional)</summary><a href="01-architecture-and-running.html">Automation setup and execution</a>
+<a href="06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="reference/index.html">Reference overview</a>
+<a href="reference/spec-index.html">Complete spec map</a>
+<a href="reference/code-index.html">Shared helpers and locators</a>
+<a href="reference/field-inputs.html">Field inputs and defaults</a>
+<a href="reference/data-index.html">Data sources and consumers</a>
+<a href="reference/environment-index.html">Environment variables</a>
+<a href="reference/assets.html">Upload asset inventory</a>
+<a href="reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Practical QA guide · reviewed 19 October 2026</div>
+
+<details class="toc"><summary>Jump to a section (6)</summary><a href="#get-the-starting-details">1. Get the starting details</a>
+<a href="#choose-the-right-account">2. Choose the right account</a>
+<a href="#choose-values">3. Choose values from the right source</a>
+<a href="#website-example">4. Example: follow a Website QR through its stages</a>
+<a href="#record-the-result">5. Record the result clearly</a>
+<a href="#when-code-appears">When the guide shows code</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="your-first-check">Your first check</h1>
+<p class="lead">Use this page when you have a test case to carry out and need to know where to begin.</p>
+<p>A <strong>test case</strong> describes a starting situation, actions to take, and an expected result. A <strong>flow</strong> is a sequence such as logging in, creating a QR, or changing account details. Manual testing means you perform those actions in the browser; automation means a program performs selected actions and checks.</p>
+<h2 id="get-the-starting-details">1. Get the starting details</h2>
+<div class="table-wrap"><table><tr><th>You need</th><th>What to confirm</th><th>Where to get it</th></tr>
+<tr><td>Product and website address</td><td>The exact URL, intended environment, browser, and language. The suite uses the product names OQG, QCI, QGA, and QGC; support differs by flow.</td><td>Your assigned test case and QA lead or test maintainer.</td></tr>
+<tr><td>Account or guest state</td><td>Whether to stay logged out, sign in, or register. For an existing account, confirm its plan and any required history.</td><td>The approved test account shared through your team&#x2019;s access process; see <a href="02-accounts-and-credentials.html">Accounts and login</a>.</td></tr>
+<tr><td>Input values</td><td>Which fields to fill, which to leave empty, and whether a value must be exact or can be a fresh example.</td><td>The assigned case and <a href="04-data-and-inputs.html">What to enter and upload</a>.</td></tr>
+<tr><td>Files</td><td>The exact file, type, and size where the case specifies them.</td><td><a href="reference/assets.html">Upload file inventory</a>; obtain the real file from the repository or the test maintainer.</td></tr>
+<tr><td>Expected result</td><td>The visible result and stopping point. A validation message, preview, saved QR, and scan page are different results.</td><td>The assigned case and the relevant <a href="03-qr-creation.html">QR type</a> or <a href="05-other-flows.html">other flow</a>.</td></tr>
+<tr><td>Records to keep or remove</td><td>Whether this account or record is shared and whether later checks need it.</td><td>The case owner or test maintainer. A manual browser session does not automatically perform the automated test&#x2019;s cleanup.</td></tr>
+</table></div>
+<p class="callout"><strong>If something is missing:</strong> record exactly what you need and ask the QA lead or test maintainer. For example: &#x201c;I need an existing account on this test URL with a saved QR and scan history for the analytics check.&#x201d; You do not need database access to request the correct starting state.</p>
+<h2 id="choose-the-right-account">2. Choose the right account</h2>
+<p>For a login check, use the approved existing account. The usual automated login reads configuration entries named <code>DEFAULT_USER_LOGIN</code> and <code>DEFAULT_USER_PASSWORD</code>; these names are labels for stored settings, not values to type into the form. The actual password is intentionally absent from this guide.</p>
+<p>For a registration check, use a fresh address following the case instructions and complete registration before attempting login. Automation can generate an email and password, but generating these strings alone does not create an account. If the case checks an email message, obtain access to the team&#x2019;s test inbox as well.</p>
+<p>Some flows require a special existing account. Analytics needs history; billing may need a particular subscription. A newly created empty account is not an equivalent replacement. Details and exceptions are in <a href="02-accounts-and-credentials.html">Accounts and login</a>.</p>
+<h2 id="choose-values">3. Choose values from the right source</h2>
+<div class="table-wrap"><table><tr><th>The case says&#x2026;</th><th>What you do</th></tr>
+<tr><td>Use this exact value</td><td>Copy it as given, including spaces and punctuation. An invalid value may be intentional.</td></tr>
+<tr><td>Use a fresh name or email</td><td>Use a new example that meets the case&#x2019;s rules. Record it so you can find the same item again.</td></tr>
+<tr><td>Fill only required fields</td><td>Follow the case&#x2019;s field list and the form&#x2019;s required markers; leave optional fields empty. Do not fill extra fields just because examples are available.</td></tr>
+<tr><td>Check a length or file-size boundary</td><td>Obtain the exact prepared value or file. A random paragraph or a similar-looking file may test a different condition.</td></tr>
+<tr><td>Use an existing QR, referral, plan, or scan history</td><td>Get the prepared account or record. These values depend on stored product data and cannot be replaced with invented text.</td></tr>
+</table></div>
+<h2 id="website-example">4. Example: follow a Website QR through its stages</h2>
+<p>This example helps you understand the stages. If your assigned case specifies different values, actions, or expected results, follow that case. It is not a replacement for the full <a href="03-qr-creation.html">QR reference</a>.</p>
+<ol><li>Open the agreed test website in the required account state and begin creating a QR.</li><li><strong>Choose a type:</strong> select Website at the QR type step.</li><li><strong>Enter content:</strong> for an ordinary valid example, use a recognisable internal QR name such as <code>QA-Website-check-01</code> and a URL such as <code>https://example.com</code>. Use a different name if needed to distinguish this run. The internal name helps you find the QR later; the URL is its destination.</li><li><strong>Check the form:</strong> compare the accepted values, validation messages, and preview with the expected result. If this is only a validation case, stop at the specified point.</li><li><strong>Continue if the case requires saving:</strong> proceed to the design step and complete the create/save action in the selected flow. A filled form or preview alone is not proof the QR was saved.</li><li><strong>Check the saved record:</strong> locate your QR by its name. If scanning is part of the case, scan the saved QR and compare the opened destination with the URL you entered.</li><li>Record the result and remove only the test records that the case says to remove.</li></ol>
+<p>The suite has 18 top-level QR type choices. Menu has Digital, PDF, and Website variants, giving 20 paths when those are counted separately. Required fields differ by type; do not reuse the Website field list for Event, PDF, Email, or another type.</p>
+<h2 id="record-the-result">5. Record the result clearly</h2>
+<p>A useful result lets someone repeat your check. Capture the product and test URL, browser, account reference (without its password), starting state, exact input values or filenames, actions, expected result, actual result, time, and relevant screenshots. For a QR issue, include its name or identifier and whether the problem happened in the form, preview, saved record, or scan page.</p>
+<p>If access or required data is missing, report that as a setup blocker. If the product behaves differently from the expected result, describe the difference. See <a href="07-qa-workflow-and-troubleshooting.html">Check results and report problems</a> for a reporting template and automation result explanations.</p>
+<h2 id="when-code-appears">When the guide shows code</h2>
+<p>You can continue using the practical sections without reading it. Optional technical details let a test maintainer identify exactly which automated actions and values were used. A <code>helper</code> is a reusable group of actions; a <code>spec</code> is a test file; a <code>default</code> is a value used only when a test does not supply a different one. The <a href="glossary.html">glossary</a> explains the other terms.</p></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

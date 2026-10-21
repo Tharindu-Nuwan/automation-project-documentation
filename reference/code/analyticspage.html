@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/analyticspage.html">
+<title>AnalyticsPage · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-analyticspage-qranalyticspage-ts">pages/AnalyticsPage/QrAnalyticsPage.ts</a>
+<a href="#pages-analyticspage-qranalyticspagelocators-ts">pages/AnalyticsPage/QrAnalyticsPageLocators.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="analyticspage">AnalyticsPage</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-analyticspage-qranalyticspage-ts">pages/AnalyticsPage/QrAnalyticsPage.ts</h2>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPage.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPage.ts.html#L1">pages/AnalyticsPage/QrAnalyticsPage.ts:1</a></p>
+<ul>
+<li><code>{ Page, Locator }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>{ QrAnalyticsLocators }</code> &#x2190; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L1">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:1</a></li>
+<li><code>{ expect }</code> &#x2190; <code>@playwright/test</code></li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPage.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPage.ts.html#L10">pages/AnalyticsPage/QrAnalyticsPage.ts:10</a></p>
+<h3 id="downloadfile">downloadFile</h3>
+<p><code>downloadFile(buttonLocator: Locator, tmpPath: string)</code></p>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPage.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPage.ts.html#L15">pages/AnalyticsPage/QrAnalyticsPage.ts:15</a></p>
+<ul>
+<li><code>this.page.waitForEvent(&apos;download&apos;)</code> &#x2014; line 19</li>
+<li><code>buttonLocator.click()</code> &#x2014; line 20</li>
+</ul>
+<h3 id="closeanalyticspopup">closeAnalyticsPopUp</h3>
+<p><code>closeAnalyticsPopUp()</code></p>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPage.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPage.ts.html#L26">pages/AnalyticsPage/QrAnalyticsPage.ts:26</a></p>
+<ul>
+<li><code>this.page.locator(&apos;#demoPopupModal&apos;)</code> &#x2014; line 27</li>
+<li><code>expect(closeBtn).toBeVisible()</code> &#x2014; line 36</li>
+<li><code>expect(closeBtn).toBeEnabled()</code> &#x2014; line 37</li>
+<li><code>closeBtn.click({ force: true })</code> &#x2014; line 41</li>
+</ul>
+<h3 id="normalizeuidate">normalizeUiDate</h3>
+<p><code>normalizeUiDate(uiString: string)</code></p>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPage.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPage.ts.html#L48">pages/AnalyticsPage/QrAnalyticsPage.ts:48</a></p>
+<h3 id="clickday">clickDay</h3>
+<p><code>clickDay(targetDate: Date | string)</code></p>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPage.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPage.ts.html#L76">pages/AnalyticsPage/QrAnalyticsPage.ts:76</a></p>
+<ul>
+<li><code>targetDate.toLocaleString(&apos;en-US&apos;, { month: &apos;long&apos;, })</code> &#x2014; line 82</li>
+<li><code>this.page .locator(&apos;div.drp-calendar.left th.month&apos;) .innerText()</code> &#x2014; line 89</li>
+<li><code>this.page .locator(&apos;div.drp-calendar.left th.month&apos;)</code> &#x2014; line 89</li>
+<li><code>this.page .locator(&apos;div.drp-calendar.right th.month&apos;) .innerText()</code> &#x2014; line 94</li>
+<li><code>this.page .locator(&apos;div.drp-calendar.right th.month&apos;)</code> &#x2014; line 94</li>
+<li><code>this.page.locator(&#x2032;//div[contains(@class,&quot;drp-calendar &#x24;{calendarSide}&quot;)]&#x2032; + &#x2032;//td[contains(@class,&quot;available&quot;) and not(contains(@class,&quot;off&quot;)) and text()=&quot;&#x24;{targetDate.getDate()}&quot;]&#x2032;)</code> &#x2014; line 120</li>
+<li><code>dayLocator.click()</code> &#x2014; line 126</li>
+</ul>
+<h3 id="navigatetomonth">navigateToMonth</h3>
+<p><code>navigateToMonth(targetDate: Date)</code></p>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPage.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPage.ts.html#L129">pages/AnalyticsPage/QrAnalyticsPage.ts:129</a></p>
+<ul>
+<li><code>this.page .locator(&apos;div.drp-calendar.left th.month&apos;) .innerText()</code> &#x2014; line 133</li>
+<li><code>this.page .locator(&apos;div.drp-calendar.left th.month&apos;)</code> &#x2014; line 133</li>
+<li><code>this.page .locator(&apos;div.drp-calendar.right th.month&apos;) .innerText()</code> &#x2014; line 138</li>
+<li><code>this.page .locator(&apos;div.drp-calendar.right th.month&apos;)</code> &#x2014; line 138</li>
+<li><code>this.page.locator(&#x2032;div.drp-calendar.&#x24;{calendarSide} .prev&#x2032;)</code> &#x2014; line 174</li>
+<li><code>prevBtn.click()</code> &#x2014; line 179</li>
+<li><code>this.page.locator(&#x2032;div.drp-calendar.&#x24;{otherSide} .prev&#x2032;)</code> &#x2014; line 183</li>
+<li><code>fallbackPrev.click()</code> &#x2014; line 188</li>
+<li><code>this.page.locator(&#x2032;div.drp-calendar.&#x24;{calendarSide} .next&#x2032;)</code> &#x2014; line 193</li>
+<li><code>nextBtn.click()</code> &#x2014; line 198</li>
+<li><code>this.page.locator(&#x2032;div.drp-calendar.&#x24;{otherSide} .next&#x2032;)</code> &#x2014; line 202</li>
+<li><code>fallbackNext.click()</code> &#x2014; line 207</li>
+<li><code>this.page.waitForTimeout(200)</code> &#x2014; line 212</li>
+</ul>
+<h3 id="opencalendarifneeded">openCalendarIfNeeded</h3>
+<p><code>openCalendarIfNeeded(side: &apos;left&apos; | &apos;right&apos;)</code></p>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPage.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPage.ts.html#L218">pages/AnalyticsPage/QrAnalyticsPage.ts:218</a></p>
+<ul>
+<li><code>this.page.locator(&#x2032;.drp-calendar.&#x24;{side}&#x2032;)</code> &#x2014; line 219</li>
+<li><code>this.locator.daterangeDropdownBtn.click()</code> &#x2014; line 222</li>
+</ul>
+<h3 id="selectdaterange">selectDateRange</h3>
+<p><code>selectDateRange(startDate: Date, endDate: Date)</code></p>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPage.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPage.ts.html#L226">pages/AnalyticsPage/QrAnalyticsPage.ts:226</a></p>
+<ul>
+<li><code>this.openCalendarIfNeeded(startSide)</code> &#x2014; line 233</li>
+<li><code>this.navigateToMonth(startDate)</code> &#x2014; line 236</li>
+<li><code>this.clickDay(startDate)</code> &#x2014; line 238</li>
+<li><code>this.navigateToMonth(endDate)</code> &#x2014; line 241</li>
+<li><code>this.clickDay(endDate)</code> &#x2014; line 244</li>
+<li><code>this.page.waitForTimeout(800)</code> &#x2014; line 246</li>
+</ul>
+<h3 id="formatrange">formatRange</h3>
+<p><code>formatRange(start: Date, end: Date)</code></p>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPage.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPage.ts.html#L249">pages/AnalyticsPage/QrAnalyticsPage.ts:249</a></p>
+<h3 id="verifycustomdaterange">verifyCustomDateRange</h3>
+<p><code>verifyCustomDateRange(startDate: Date, endDate: Date)</code></p>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPage.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPage.ts.html#L259">pages/AnalyticsPage/QrAnalyticsPage.ts:259</a></p>
+<ul>
+<li><code>this.selectDateRange(startDate, endDate)</code> &#x2014; line 260</li>
+<li><code>this.formatRange(startDate, endDate)</code> &#x2014; line 262</li>
+<li><code>this.locator.selectedAnalyticsRangeBtn.innerText()</code> &#x2014; line 264</li>
+<li><code>this.normalizeUiDate(displayed)</code> &#x2014; line 266</li>
+<li><code>expect( normalized, &#x2032;&#x274c; Expected &apos;&#x24;{expectedRange}&apos;, but UI shows &apos;&#x24;{displayed}&apos;&#x2032; ).toBe(expectedRange)</code> &#x2014; line 268</li>
+</ul>
+<h3 id="verifycheckboxesstate">verifyCheckboxesState</h3>
+<p><code>verifyCheckboxesState(checkboxesLocator: Locator, uncheckedIndexes: number[])</code></p>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPage.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPage.ts.html#L274">pages/AnalyticsPage/QrAnalyticsPage.ts:274</a></p>
+<ul>
+<li><code>expect(total, &apos;No checkboxes found to check&apos;).toBeGreaterThan(0)</code> &#x2014; line 279</li>
+<li><code>expect(cb).not.toBeChecked()</code> &#x2014; line 284</li>
+<li><code>expect(cb).toBeChecked()</code> &#x2014; line 286</li>
+</ul>
+<h2 id="pages-analyticspage-qranalyticspagelocators-ts">pages/AnalyticsPage/QrAnalyticsPageLocators.ts</h2>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L1">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:1</a></p>
+<ul>
+<li><code>{ Page, Locator }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseLocators }</code> &#x2190; <a data-source="pages/BaseLocators.ts" href="../../sources/pages/BaseLocators.ts.html#L1">pages/BaseLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L44">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:44</a></p>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.analyticsPopupCloseBtn</code> &#x2190; <code>page.locator(&apos;div#demoPopupModal button&apos;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L47">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:47</a></li>
+<li><code>this.analyticsExportBtn</code> &#x2190; <code>page.locator(&apos;button#exportBtn&apos;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L48">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:48</a></li>
+<li><code>this.selectCsvForDownloadBtn</code> &#x2190; <code>page.locator(&apos;button[name=CSV]&apos;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L49">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:49</a></li>
+<li><code>this.selectXlsxForDownloadBtn</code> &#x2190; <code>page.locator(&apos;button[name=XLSX]&apos;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L50">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:50</a></li>
+<li><code>this.periodDropdownBtn</code> &#x2190; <code>page.locator( &apos;div.dateItem button[data-toggle=dropdown]&apos; )</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L51">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:51</a></li>
+<li><code>this.daterangeDropdownBtn</code> &#x2190; <code>page.locator(&apos;input#kt_daterangepicker_1&apos;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L54">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:54</a></li>
+<li><code>this.qrCodeAnalyticsDropdownBtn</code> &#x2190; <code>page.locator(&apos;select#qrCode + div&apos;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L55">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:55</a></li>
+<li><code>this.qrCodeAnalyticsOsDropdownBtn</code> &#x2190; <code>page.locator( &apos;select#osName + div span&apos; )</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L56">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:56</a></li>
+<li><code>this.qrCodeAnalyticsCountriesDropdownBtn</code> &#x2190; <code>page.locator( &apos;select#countryName+ div&apos; )</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L59">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:59</a></li>
+<li><code>this.qrCodeAnalyticsCitiesDropdownBtn</code> &#x2190; <code>page.locator( &apos;select#citiesList+ div&apos; )</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L62">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:62</a></li>
+<li><code>this.todayBtn</code> &#x2190; <code>page.locator(&quot;//label[text()=&apos; Today&apos;]&quot;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L66">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:66</a></li>
+<li><code>this.yesterdayBtn</code> &#x2190; <code>page.locator(&quot;//label[text()=&apos; Yesterday&apos;]&quot;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L67">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:67</a></li>
+<li><code>this.last7Btn</code> &#x2190; <code>page.locator(&quot;//label[text()=&apos; Last 7 days&apos;]&quot;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L68">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:68</a></li>
+<li><code>this.last30Btn</code> &#x2190; <code>page.locator(&quot;//label[text()=&apos; Last 30 days&apos;]&quot;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L69">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:69</a></li>
+<li><code>this.last90Btn</code> &#x2190; <code>page.locator(&quot;//label[text()=&apos; Last 90 days&apos;]&quot;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L70">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:70</a></li>
+<li><code>this.lifetimeBtn</code> &#x2190; <code>page.locator(&quot;//label[text()=&apos; Lifetime&apos;]&quot;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L71">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:71</a></li>
+<li><code>this.customBtn</code> &#x2190; <code>page.locator(&quot;//label[text()=&apos; Custom&apos;]&quot;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L72">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:72</a></li>
+<li><code>this.selectedAnalyticsRangeBtn</code> &#x2190; <code>page.locator(&apos;span#picked-range&apos;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L73">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:73</a></li>
+<li><code>this.calendarPreviousNavBtn</code> &#x2190; <code>page.locator(&apos;th.prev&apos;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L74">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:74</a></li>
+<li><code>this.calendarNextNavBtn</code> &#x2190; <code>page.locator(&apos;th.next&apos;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L75">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:75</a></li>
+<li><code>this.qrCodeCheckboxList</code> &#x2190; <code>page.locator(&apos;div.qr-code-filter ul li input&apos;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L78">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:78</a></li>
+<li><code>this.osSystemCheckboxList</code> &#x2190; <code>page.locator( &quot;div.filters-set-position ul input[type=&apos;checkbox&apos;]&quot; )</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L81">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:81</a></li>
+<li><code>this.countryCheckboxList</code> &#x2190; <code>page.locator( &quot;select#countryName+ div ul input[type=&apos;checkbox&apos;]&quot; )</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L86">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:86</a></li>
+<li><code>this.cityCheckboxList</code> &#x2190; <code>page.locator( &quot;select#citiesList+ div ul input[type=&apos;checkbox&apos;]&quot; )</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L91">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:91</a></li>
+<li><code>this.cityLegendTextList</code> &#x2190; <code>page.locator(&apos;div#cityLegend div.legend-text&apos;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L96">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:96</a></li>
+<li><code>this.countryLegendTextList</code> &#x2190; <code>page.locator( &apos;div#countryLegend div.legend-text&apos; )</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L97">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:97</a></li>
+<li><code>this.osLegendTextList</code> &#x2190; <code>page.locator(&apos;div#osLegend .legend-text&apos;)</code> &#x2014; <a data-source="pages/AnalyticsPage/QrAnalyticsPageLocators.ts" href="../../sources/pages/AnalyticsPage/QrAnalyticsPageLocators.ts.html#L100">pages/AnalyticsPage/QrAnalyticsPageLocators.ts:100</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

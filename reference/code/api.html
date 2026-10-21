@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/api.html">
+<title>api · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (5)</summary><a href="#api-apiclient-ts">api/ApiClient.ts</a>
+<a href="#api-dbapi-ts">api/DbApi.ts</a>
+<a href="#api-mailpit-ts">api/Mailpit.ts</a>
+<a href="#api-stripeapi-ts">api/StripeApi.ts</a>
+<a href="#api-userapi-ts">api/UserApi.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="api">api</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="api-apiclient-ts">api/ApiClient.ts</h2>
+<p><a data-source="api/ApiClient.ts" href="../../sources/api/ApiClient.ts.html#L1">api/ApiClient.ts:1</a></p>
+<ul>
+<li><code>{ APIRequestContext, APIResponse }</code> &#x2190; <code>@playwright/test</code></li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(request: APIRequestContext, baseURL?: string)</code></p>
+<p><a data-source="api/ApiClient.ts" href="../../sources/api/ApiClient.ts.html#L8">api/ApiClient.ts:8</a></p>
+<h3 id="get">get</h3>
+<p><code>get(endpoint: string, params?: Record&lt;string, any&gt;)</code></p>
+<p><a data-source="api/ApiClient.ts" href="../../sources/api/ApiClient.ts.html#L14">api/ApiClient.ts:14</a></p>
+<ul>
+<li><code>this.request.get(&#x2032;&#x24;{this.baseURL}&#x24;{endpoint}&#x2032;, { params, headers: await this.getHeaders(), })</code> &#x2014; line 18</li>
+<li><code>this.getHeaders()</code> &#x2014; line 20</li>
+</ul>
+<h3 id="post">post</h3>
+<p><code>post(endpoint: string, data?: any)</code></p>
+<p><a data-source="api/ApiClient.ts" href="../../sources/api/ApiClient.ts.html#L24">api/ApiClient.ts:24</a></p>
+<ul>
+<li><code>this.request.post(&#x2032;&#x24;{this.baseURL}&#x24;{endpoint}&#x2032;, { data, headers: await this.getHeaders(), })</code> &#x2014; line 25</li>
+<li><code>this.getHeaders()</code> &#x2014; line 27</li>
+</ul>
+<h3 id="postform">postForm</h3>
+<p><code>postForm(endpoint: string, form?: Record&lt;string, string | number | boolean&gt;, headers: Record&lt;string, string&gt; = {})</code></p>
+<p><a data-source="api/ApiClient.ts" href="../../sources/api/ApiClient.ts.html#L31">api/ApiClient.ts:31</a></p>
+<ul>
+<li><code>this.request.post(&#x2032;&#x24;{this.baseURL}&#x24;{endpoint}&#x2032;, { form, headers: { &apos;User-Agent&apos;: &apos;QR-Automation-Test&apos;, Accept: &apos;application/json&apos;, ...headers, }, })</code> &#x2014; line 36</li>
+</ul>
+<h3 id="put">put</h3>
+<p><code>put(endpoint: string, data?: any)</code></p>
+<p><a data-source="api/ApiClient.ts" href="../../sources/api/ApiClient.ts.html#L46">api/ApiClient.ts:46</a></p>
+<ul>
+<li><code>this.request.put(&#x2032;&#x24;{this.baseURL}&#x24;{endpoint}&#x2032;, { data, headers: await this.getHeaders(), })</code> &#x2014; line 47</li>
+<li><code>this.getHeaders()</code> &#x2014; line 49</li>
+</ul>
+<h3 id="patch">patch</h3>
+<p><code>patch(endpoint: string, data?: any)</code></p>
+<p><a data-source="api/ApiClient.ts" href="../../sources/api/ApiClient.ts.html#L53">api/ApiClient.ts:53</a></p>
+<ul>
+<li><code>this.request.patch(&#x2032;&#x24;{this.baseURL}&#x24;{endpoint}&#x2032;, { data, headers: await this.getHeaders(), })</code> &#x2014; line 54</li>
+<li><code>this.getHeaders()</code> &#x2014; line 56</li>
+</ul>
+<h3 id="delete">delete</h3>
+<p><code>delete(endpoint: string)</code></p>
+<p><a data-source="api/ApiClient.ts" href="../../sources/api/ApiClient.ts.html#L60">api/ApiClient.ts:60</a></p>
+<ul>
+<li><code>this.request.delete(&#x2032;&#x24;{this.baseURL}&#x24;{endpoint}&#x2032;, { headers: await this.getHeaders(), })</code> &#x2014; line 61</li>
+<li><code>this.getHeaders()</code> &#x2014; line 62</li>
+</ul>
+<h3 id="getheaders">getHeaders</h3>
+<p><code>getHeaders()</code></p>
+<p><a data-source="api/ApiClient.ts" href="../../sources/api/ApiClient.ts.html#L66">api/ApiClient.ts:66</a></p>
+<h3 id="validateresponse">validateResponse</h3>
+<p><code>validateResponse(response: APIResponse, expectedStatus: number = 200)</code></p>
+<p><a data-source="api/ApiClient.ts" href="../../sources/api/ApiClient.ts.html#L74">api/ApiClient.ts:74</a></p>
+<h2 id="api-dbapi-ts">api/DbApi.ts</h2>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L1">api/DbApi.ts:1</a></p>
+<ul>
+<li><code>mysql</code> &#x2190; <code>mysql2/promise</code></li>
+<li><code>type { Product }</code> &#x2190; <a data-source="base/Product.ts" href="../../sources/base/Product.ts.html#L1">base/Product.ts:1</a></li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(config: DbConfig)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L67">api/DbApi.ts:67</a></p>
+<h3 id="connect">connect</h3>
+<p><code>connect(target: DbTarget = &apos;plan&apos;)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L71">api/DbApi.ts:71</a></p>
+<ul>
+<li><code>this.requireConnection(target)</code> &#x2014; line 72</li>
+</ul>
+<h3 id="requireconnection">requireConnection</h3>
+<p><code>requireConnection(target: DbTarget)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L91">api/DbApi.ts:91</a></p>
+<ul>
+<li><code>this.config.product.toUpperCase()</code> &#x2014; line 100</li>
+</ul>
+<h3 id="getreferralkeys">getReferralKeys</h3>
+<p><code>getReferralKeys(emails: string[])</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L120">api/DbApi.ts:120</a></p>
+<p><code>referral_key</code> for each email (one shared connection) from <code>qr_plan.users</code>.</p>
+<ul>
+<li><code>this.connect()</code> &#x2014; line 123</li>
+</ul>
+<h3 id="getreferralkey">getReferralKey</h3>
+<p><code>getReferralKey(email: string)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L140">api/DbApi.ts:140</a></p>
+<p>The user&apos;s <code>referral_key</code> (the discount-link binding), or <code>null</code>.</p>
+<ul>
+<li><code>this.getReferralKeys([email])</code> &#x2014; line 141</li>
+</ul>
+<h3 id="getplanprices">getPlanPrices</h3>
+<p><code>getPlanPrices(planIds: number[] = [])</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L145">api/DbApi.ts:145</a></p>
+<p>All configured rows from <code>plan_prices</code>, optionally limited by plan id.</p>
+<ul>
+<li><code>this.connect()</code> &#x2014; line 146</li>
+<li><code>String(row.code).toLowerCase()</code> &#x2014; line 162</li>
+</ul>
+<h3 id="gettrialprices">getTrialPrices</h3>
+<p><code>getTrialPrices(planIds: number[] = [6, 7])</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L179">api/DbApi.ts:179</a></p>
+<p>All 14-day trial split-charge rows from the separate <code>trial_prices</code> table.</p>
+<ul>
+<li><code>this.connect()</code> &#x2014; line 180</li>
+<li><code>String(row.code).toLowerCase()</code> &#x2014; line 195</li>
+</ul>
+<h3 id="getuserrow">getUserRow</h3>
+<p><code>getUserRow(email: string)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L209">api/DbApi.ts:209</a></p>
+<ul>
+<li><code>this.connect()</code> &#x2014; line 210</li>
+</ul>
+<h3 id="waitforuserbyemail">waitForUserByEmail</h3>
+<p><code>waitForUserByEmail(email: string, timeoutMs = 30_000)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L223">api/DbApi.ts:223</a></p>
+<ul>
+<li><code>this.getUserRow(email)</code> &#x2014; line 229</li>
+</ul>
+<h3 id="updateusercurrency">updateUserCurrency</h3>
+<p><code>updateUserCurrency(email: string, currencyCode: string, paymentCurrency: string = currencyCode)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L238">api/DbApi.ts:238</a></p>
+<ul>
+<li><code>currencyCode.trim().toUpperCase()</code> &#x2014; line 243</li>
+<li><code>paymentCurrency.trim().toUpperCase()</code> &#x2014; line 244</li>
+<li><code>this.waitForUserByEmail(email)</code> &#x2014; line 245</li>
+<li><code>this.connect()</code> &#x2014; line 246</li>
+<li><code>this.waitUntilUserCurrency(email, currency, payment)</code> &#x2014; line 261</li>
+</ul>
+<h3 id="waituntilusercurrency">waitUntilUserCurrency</h3>
+<p><code>waitUntilUserCurrency(email: string, currencyCode: string, paymentCurrency: string)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L264">api/DbApi.ts:264</a></p>
+<ul>
+<li><code>this.getUserRow(email)</code> &#x2014; line 272</li>
+<li><code>userField(last, &apos;currency_code&apos;).toUpperCase()</code> &#x2014; line 275</li>
+<li><code>currencyCode.toUpperCase()</code> &#x2014; line 276</li>
+<li><code>userField(last, &apos;payment_currency&apos;).toUpperCase()</code> &#x2014; line 277</li>
+<li><code>paymentCurrency.toUpperCase()</code> &#x2014; line 278</li>
+</ul>
+<h3 id="getuserbilling">getUserBilling</h3>
+<p><code>getUserBilling(email: string)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L293">api/DbApi.ts:293</a></p>
+<ul>
+<li><code>this.connect()</code> &#x2014; line 294</li>
+</ul>
+<h3 id="getsubscriptionretrystate">getSubscriptionRetryState</h3>
+<p><code>getSubscriptionRetryState(email: string)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L312">api/DbApi.ts:312</a></p>
+<p>Best-effort mapping of subscription/retry fields for OQG3-1721 Scenario 7. Looks for common column names on <code>qr_plan.users</code>; returns nulls when a column is absent so specs can fail with a clear &quot;column missing&quot; message rather than a SQL error.</p>
+<ul>
+<li><code>this.getUserRow(email)</code> &#x2014; line 319</li>
+</ul>
+<h3 id="orphanqrforarchivedpricing">orphanQrForArchivedPricing</h3>
+<p><code>orphanQrForArchivedPricing(uid: string)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L382">api/DbApi.ts:382</a></p>
+<p>Orphan a QR (<code>user_id</code> null, datetime one month ago) before any scan.</p>
+<ul>
+<li><code>this.resolveQrTableShape()</code> &#x2014; line 383</li>
+<li><code>this.connect()</code> &#x2014; line 400</li>
+<li><code>this.waitUntilQrIsOrphaned(uid)</code> &#x2014; line 416</li>
+</ul>
+<h3 id="nullqruserid">nullQrUserId</h3>
+<p><code>nullQrUserId(uid: string)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L419">api/DbApi.ts:419</a></p>
+<ul>
+<li><code>this.orphanQrForArchivedPricing(uid)</code> &#x2014; line 420</li>
+</ul>
+<h3 id="getqruserid">getQrUserId</h3>
+<p><code>getQrUserId(uid: string)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L423">api/DbApi.ts:423</a></p>
+<ul>
+<li><code>this.getQrOrphanRow(uid)</code> &#x2014; line 424</li>
+</ul>
+<h3 id="getqrorphanrow">getQrOrphanRow</h3>
+<p><code>getQrOrphanRow(uid: string)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L427">api/DbApi.ts:427</a></p>
+<ul>
+<li><code>this.resolveQrTableShape()</code> &#x2014; line 428</li>
+<li><code>this.connect()</code> &#x2014; line 432</li>
+</ul>
+<h3 id="waituntilqrisorphaned">waitUntilQrIsOrphaned</h3>
+<p><code>waitUntilQrIsOrphaned(uid: string)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L446">api/DbApi.ts:446</a></p>
+<ul>
+<li><code>this.getQrOrphanRow(uid)</code> &#x2014; line 450</li>
+</ul>
+<h3 id="resolveqrtableshape">resolveQrTableShape</h3>
+<p><code>resolveQrTableShape()</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L465">api/DbApi.ts:465</a></p>
+<ul>
+<li><code>this.requireConnection(&apos;plan&apos;)</code> &#x2014; line 468</li>
+<li><code>this.connect()</code> &#x2014; line 469</li>
+<li><code>shape.table.toLowerCase()</code> &#x2014; line 521</li>
+</ul>
+<h3 id="userfield">userField</h3>
+<p><code>userField(row: Record&lt;string, unknown&gt; | null, column: string)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L536">api/DbApi.ts:536</a></p>
+<ul>
+<li><code>key.toLowerCase()</code> &#x2014; line 542</li>
+<li><code>column.toLowerCase()</code> &#x2014; line 544</li>
+</ul>
+<h3 id="findcolumn">findColumn</h3>
+<p><code>findColumn(columns: Set&lt;string&gt;, candidates: string[])</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L549">api/DbApi.ts:549</a></p>
+<ul>
+<li><code>name.toLowerCase()</code> &#x2014; line 554</li>
+<li><code>candidate.toLowerCase()</code> &#x2014; line 557</li>
+</ul>
+<h3 id="isatleastdaysago">isAtLeastDaysAgo</h3>
+<p><code>isAtLeastDaysAgo(value: Date | string | null, days: number)</code></p>
+<p><a data-source="api/DbApi.ts" href="../../sources/api/DbApi.ts.html#L563">api/DbApi.ts:563</a></p>
+<h2 id="api-mailpit-ts">api/Mailpit.ts</h2>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L1">api/Mailpit.ts:1</a></p>
+<ul>
+<li><code>{ request, APIRequestContext, expect }</code> &#x2190; <code>@playwright/test</code></li>
+</ul>
+<h3 id="constructor-2">constructor</h3>
+<p><code>constructor()</code></p>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L45">api/Mailpit.ts:45</a></p>
+<ul>
+<li><code>Buffer.from(&#x2032;&#x24;{user}:&#x24;{pass}&#x2032;).toString(&apos;base64&apos;)</code> &#x2014; line 59</li>
+</ul>
+<h3 id="searchbyrecipient">searchByRecipient</h3>
+<p><code>searchByRecipient(to: string)</code></p>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L64">api/Mailpit.ts:64</a></p>
+<ul>
+<li><code>to.toLowerCase()</code> &#x2014; line 66</li>
+<li><code>recipient.Address?.toLowerCase()</code> &#x2014; line 85</li>
+</ul>
+<h3 id="parsestamp">parseStamp</h3>
+<p><code>parseStamp(raw: string)</code></p>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L90">api/Mailpit.ts:90</a></p>
+<h3 id="matches">matches</h3>
+<p><code>matches(item: MailpitListItem, to: string, afterTimestamp: number, subjectIncludes?: string)</code></p>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L98">api/Mailpit.ts:98</a></p>
+<ul>
+<li><code>t.Address?.toLowerCase()</code> &#x2014; line 105</li>
+<li><code>to.toLowerCase()</code> &#x2014; line 105</li>
+<li><code>(item.Subject ?? &apos;&apos;) .toLowerCase()</code> &#x2014; line 119</li>
+<li><code>subjectIncludes.toLowerCase()</code> &#x2014; line 121</li>
+</ul>
+<h3 id="waitforemail">waitForEmail</h3>
+<p><code>waitForEmail(to: string, afterTimestamp: number, timeout = 60_000, interval = 5_000, subjectIncludes?: string)</code></p>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L124">api/Mailpit.ts:124</a></p>
+<ul>
+<li><code>expect .poll( async () =&gt; { const messages = await this.searchByRecipient(to) return messages.some((m) =&gt; MailpitApi.matches( m, to, afterTimestamp, subjectIncludes ) ) }, { timeout, intervals: [interval], message: &#x2032;Expected email to &#x24;{to}&#x24;{subjectHint} to be received within &#x24;{timeout}ms&#x2032;, } ) .toBeTruthy()</code> &#x2014; line 134</li>
+<li><code>this.searchByRecipient(to)</code> &#x2014; line 137</li>
+<li><code>this.searchByRecipient(to)</code> &#x2014; line 155</li>
+<li><code>expect( message, &#x2032;Email to &#x24;{to}&#x24;{subjectHint} was detected by poll, but not found on final fetch&#x2032; ).toBeTruthy()</code> &#x2014; line 160</li>
+<li><code>t.Address?.toLowerCase()</code> &#x2014; line 167</li>
+<li><code>to.toLowerCase()</code> &#x2014; line 167</li>
+</ul>
+<h3 id="getmessagehtml">getMessageHtml</h3>
+<p><code>getMessageHtml(messageId: string)</code></p>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L178">api/Mailpit.ts:178</a></p>
+<h3 id="getmessagetext">getMessageText</h3>
+<p><code>getMessageText(messageId: string)</code></p>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L186">api/Mailpit.ts:186</a></p>
+<p>Plain-text body (MIME text/plain or Mailpit&apos;s HTML&#x2192;text fallback).</p>
+<h3 id="getmessageraw">getMessageRaw</h3>
+<p><code>getMessageRaw(messageId: string)</code></p>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L193">api/Mailpit.ts:193</a></p>
+<h3 id="getmessagedetails">getMessageDetails</h3>
+<p><code>getMessageDetails(messageId: string)</code></p>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L202">api/Mailpit.ts:202</a></p>
+<p>Returns subject, recipients, and body for a Mailpit message.</p>
+<h3 id="countemails">countEmails</h3>
+<p><code>countEmails(to: string, afterTimestamp: number, subjectIncludes?: string)</code></p>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L225">api/Mailpit.ts:225</a></p>
+<p>Counts messages for a recipient received after <code>afterTimestamp</code>. Optionally filters by subject substring (case-insensitive).</p>
+<ul>
+<li><code>this.searchByRecipient(to)</code> &#x2014; line 230</li>
+</ul>
+<h3 id="expectnoemail">expectNoEmail</h3>
+<p><code>expectNoEmail(to: string, afterTimestamp: number, timeout = 15_000, subjectIncludes?: string)</code></p>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L244">api/Mailpit.ts:244</a></p>
+<p>Asserts no matching email arrives within <code>timeout</code> ms. Fails immediately if a matching message appears; otherwise waits the full window.</p>
+<ul>
+<li><code>expect .poll( async () =&gt; { const count = await this.countEmails( to, afterTimestamp, subjectIncludes ) if (count &gt; 0) return &apos;arrived&apos; return Date.now() - started &gt;= timeout ? &apos;absent&apos; : &apos;waiting&apos; }, { timeout: timeout + 5_000, intervals: [2_000], message: &#x2032;Expected no email to &#x24;{to}&#x24;{subjectHint} within &#x24;{timeout}ms&#x2032;, } ) .toBe(&apos;absent&apos;)</code> &#x2014; line 254</li>
+<li><code>this.countEmails(to, afterTimestamp, subjectIncludes)</code> &#x2014; line 257</li>
+</ul>
+<h3 id="extracttemplateidfromraw">extractTemplateIdFromRaw</h3>
+<p><code>extractTemplateIdFromRaw(raw: string)</code></p>
+<p><a data-source="api/Mailpit.ts" href="../../sources/api/Mailpit.ts.html#L279">api/Mailpit.ts:279</a></p>
+<h2 id="api-stripeapi-ts">api/StripeApi.ts</h2>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L1">api/StripeApi.ts:1</a></p>
+<ul>
+<li><code>{ APIResponse }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseAPI }</code> &#x2190; <a data-source="api/ApiClient.ts" href="../../sources/api/ApiClient.ts.html#L1">api/ApiClient.ts:1</a></li>
+</ul>
+<h3 id="escapestripesearchvalue">escapeStripeSearchValue</h3>
+<p><code>escapeStripeSearchValue(value: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L56">api/StripeApi.ts:56</a></p>
+<p>Stripe Search query string: wrap the value in single quotes and escape embedded quotes/backslashes. See https://docs.stripe.com/search.</p>
+<h3 id="getheaders-1">getHeaders</h3>
+<p><code>getHeaders()</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L60">api/StripeApi.ts:60</a></p>
+<h3 id="stripeget">stripeGet</h3>
+<p><code>stripeGet(endpoint: string, params?: Record&lt;string, string | number | boolean&gt;)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L75">api/StripeApi.ts:75</a></p>
+<ul>
+<li><code>this.request.get(&#x2032;&#x24;{this.baseURL}&#x24;{endpoint}&#x2032;, { params, headers: await this.getHeaders(), })</code> &#x2014; line 79</li>
+<li><code>this.getHeaders()</code> &#x2014; line 81</li>
+</ul>
+<h3 id="getactiveplanprices">getActivePlanPrices</h3>
+<p><code>getActivePlanPrices()</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L86">api/StripeApi.ts:86</a></p>
+<p>Lists active Stripe prices carrying numeric <code>plan_id</code> metadata.</p>
+<ul>
+<li><code>this.stripeGet(this.pricesEndpoint, { active: true, limit: 100, &apos;expand[]&apos;: &apos;data.currency_options&apos;, ...(startingAfter ? { starting_after: startingAfter } : {}), })</code> &#x2014; line 91</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 97</li>
+<li><code>currency.toLowerCase()</code> &#x2014; line 143</li>
+</ul>
+<h3 id="getcurrentplanprices">getCurrentPlanPrices</h3>
+<p><code>getCurrentPlanPrices(planIds: number[])</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L162">api/StripeApi.ts:162</a></p>
+<p>Returns the newest active product containing every requested recurring plan. This avoids silently validating an older still-active product.</p>
+<ul>
+<li><code>this.getActivePlanPrices()</code> &#x2014; line 166</li>
+</ul>
+<h3 id="getcoupon">getCoupon</h3>
+<p><code>getCoupon(couponId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L207">api/StripeApi.ts:207</a></p>
+<p>Retrieves a fixed-amount coupon with every configured currency expanded.</p>
+<ul>
+<li><code>this.stripeGet(&#x2032;&#x24;{this.couponsEndpoint}/&#x24;{encodeURIComponent(couponId)}&#x2032;, { &apos;expand[]&apos;: &apos;currency_options&apos; })</code> &#x2014; line 208</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 212</li>
+<li><code>currency.toLowerCase()</code> &#x2014; line 238</li>
+</ul>
+<h3 id="getcustomerbyemail">getCustomerByEmail</h3>
+<p><code>getCustomerByEmail(email: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L245">api/StripeApi.ts:245</a></p>
+<ul>
+<li><code>this.listCustomersByEmail(email)</code> &#x2014; line 246</li>
+</ul>
+<h3 id="waitforcustomerbyemail">waitForCustomerByEmail</h3>
+<p><code>waitForCustomerByEmail(email: string, timeoutMs = 60_000)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L260">api/StripeApi.ts:260</a></p>
+<p>Polls until the customer created during registration is visible in Stripe. Registration and its customer-created webhook are asynchronous.</p>
+<ul>
+<li><code>this.getCustomerByEmail(email)</code> &#x2014; line 269</li>
+</ul>
+<h3 id="listcustomersbyemail">listCustomersByEmail</h3>
+<p><code>listCustomersByEmail(email: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L282">api/StripeApi.ts:282</a></p>
+<ul>
+<li><code>this.stripeGet(this.customersEndpoint, { email, limit: 100, })</code> &#x2014; line 283</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 287</li>
+</ul>
+<h3 id="searchcustomersbymetadata">searchCustomersByMetadata</h3>
+<p><code>searchCustomersByMetadata(key: string, value: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L291">api/StripeApi.ts:291</a></p>
+<ul>
+<li><code>this.escapeStripeSearchValue(value)</code> &#x2014; line 295</li>
+<li><code>this.stripeGet(this.customerSearchEndpoint, { query, limit: 100, })</code> &#x2014; line 297</li>
+</ul>
+<h3 id="retrievecustomer">retrieveCustomer</h3>
+<p><code>retrieveCustomer(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L310">api/StripeApi.ts:310</a></p>
+<ul>
+<li><code>this.stripeGet(&#x2032;&#x24;{this.customersEndpoint}/&#x24;{customerId}&#x2032;)</code> &#x2014; line 311</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 314</li>
+</ul>
+<h3 id="isdeletedcustomer">isDeletedCustomer</h3>
+<p><code>isDeletedCustomer(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L317">api/StripeApi.ts:317</a></p>
+<ul>
+<li><code>this.stripeGet(&#x2032;&#x24;{this.customersEndpoint}/&#x24;{customerId}&#x2032;)</code> &#x2014; line 318</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 324</li>
+</ul>
+<h3 id="getcustomermetadata">getCustomerMetadata</h3>
+<p><code>getCustomerMetadata(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L330">api/StripeApi.ts:330</a></p>
+<ul>
+<li><code>this.retrieveCustomer(customerId)</code> &#x2014; line 333</li>
+</ul>
+<h3 id="listcustomerinvoices">listCustomerInvoices</h3>
+<p><code>listCustomerInvoices(customerId: string, limit: number = 10)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L337">api/StripeApi.ts:337</a></p>
+<ul>
+<li><code>this.stripeGet(this.invoicesEndpoint, { customer: customerId, limit, })</code> &#x2014; line 341</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 345</li>
+</ul>
+<h3 id="getcustomersubscription">getCustomerSubscription</h3>
+<p><code>getCustomerSubscription(params: { customer: string limit?: number status?: string })</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L349">api/StripeApi.ts:349</a></p>
+<ul>
+<li><code>this.stripeGet(this.subscriptionsEndpoint, params)</code> &#x2014; line 354</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 359</li>
+</ul>
+<h3 id="getsubscriptionid">getSubscriptionId</h3>
+<p><code>getSubscriptionId(customerId: string, status?: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L362">api/StripeApi.ts:362</a></p>
+<ul>
+<li><code>this.getCustomerSubscription({ customer: customerId, status, })</code> &#x2014; line 366</li>
+</ul>
+<h3 id="waitforsubscriptionid">waitForSubscriptionId</h3>
+<p><code>waitForSubscriptionId(customerId: string, status?: string, timeoutMs = 60_000)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L383">api/StripeApi.ts:383</a></p>
+<p>Polls until the subscription created by the billing UI is visible.</p>
+<ul>
+<li><code>this.getSubscriptionId(customerId, status)</code> &#x2014; line 393</li>
+</ul>
+<h3 id="cancelcustomersubscriptions">cancelCustomerSubscriptions</h3>
+<p><code>cancelCustomerSubscriptions(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L411">api/StripeApi.ts:411</a></p>
+<p>Immediately cancels every non-canceled Stripe subscription for the customer (<code>DELETE /v1/subscriptions/:id</code>). Dashboard cancel is often <code>cancel_at_period_end</code> and leaves an active sub that blocks a new charge.</p>
+<ul>
+<li><code>this.getCustomerSubscription({ customer: customerId })</code> &#x2014; line 412</li>
+<li><code>this.stripeDelete(&#x2032;&#x24;{this.subscriptionsEndpoint}/&#x24;{sub.id}&#x2032;)</code> &#x2014; line 422</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 425</li>
+</ul>
+<h3 id="cancelsubscriptionsforemail">cancelSubscriptionsForEmail</h3>
+<p><code>cancelSubscriptionsForEmail(email: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L431">api/StripeApi.ts:431</a></p>
+<ul>
+<li><code>this.waitForCustomerByEmail(email)</code> &#x2014; line 432</li>
+<li><code>this.waitForSubscriptionId(customerId)</code> &#x2014; line 433</li>
+<li><code>this.cancelCustomerSubscriptions(customerId)</code> &#x2014; line 434</li>
+</ul>
+<h3 id="checkcouponid">checkCouponId</h3>
+<p><code>checkCouponId(customerId: string, expectedCouponId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L437">api/StripeApi.ts:437</a></p>
+<ul>
+<li><code>this.getCustomerSubscription({ customer: customerId, })</code> &#x2014; line 441</li>
+</ul>
+<h3 id="check70monthlydiscount">check70MonthlyDiscount</h3>
+<p><code>check70MonthlyDiscount(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L458">api/StripeApi.ts:458</a></p>
+<ul>
+<li><code>this.checkCouponId(customerId, &apos;70OFF_1_FOREVER_V1&apos;)</code> &#x2014; line 459</li>
+</ul>
+<h3 id="countactivesubscriptiondiscounts">countActiveSubscriptionDiscounts</h3>
+<p><code>countActiveSubscriptionDiscounts(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L466">api/StripeApi.ts:466</a></p>
+<p>How many discounts are attached to the customer&apos;s active subscription. Used to prove a second promo did not stack (OQG3-1899-TC45).</p>
+<ul>
+<li><code>this.getCustomerSubscription({ customer: customerId, status: &apos;active&apos;, })</code> &#x2014; line 469</li>
+</ul>
+<h3 id="check70quarterlydiscount">check70QuarterlyDiscount</h3>
+<p><code>check70QuarterlyDiscount(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L482">api/StripeApi.ts:482</a></p>
+<ul>
+<li><code>this.checkCouponId(customerId, &apos;70OFF_3_FOREVER_V1&apos;)</code> &#x2014; line 483</li>
+</ul>
+<h3 id="check90monthlydiscount">check90MonthlyDiscount</h3>
+<p><code>check90MonthlyDiscount(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L486">api/StripeApi.ts:486</a></p>
+<ul>
+<li><code>this.checkCouponId(customerId, &apos;90OFF_1_FOREVER_V1&apos;)</code> &#x2014; line 487</li>
+</ul>
+<h3 id="check90quarterlydiscount">check90QuarterlyDiscount</h3>
+<p><code>check90QuarterlyDiscount(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L489">api/StripeApi.ts:489</a></p>
+<ul>
+<li><code>this.checkCouponId(customerId, &apos;90OFF_3_FOREVER_V1&apos;)</code> &#x2014; line 490</li>
+</ul>
+<h3 id="check90quarterlydiscount1">check90QuarterlyDiscount1</h3>
+<p><code>check90QuarterlyDiscount1(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L493">api/StripeApi.ts:493</a></p>
+<ul>
+<li><code>this.checkCouponId(customerId, &apos;90OFF_FOREVER&apos;)</code> &#x2014; line 494</li>
+</ul>
+<h3 id="getscheduledsubscription">getScheduledSubscription</h3>
+<p><code>getScheduledSubscription(customerId: string, statusValue?: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L497">api/StripeApi.ts:497</a></p>
+<ul>
+<li><code>this.stripeGet(this.subscriptionSchedulesEndpoint, params)</code> &#x2014; line 506</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 511</li>
+</ul>
+<h3 id="checkscheduledcoupon">checkScheduledCoupon</h3>
+<p><code>checkScheduledCoupon(customerId: string, expectedCouponId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L514">api/StripeApi.ts:514</a></p>
+<ul>
+<li><code>this.getScheduledSubscription(customerId)</code> &#x2014; line 518</li>
+</ul>
+<h3 id="check70annualdiscount">check70AnnualDiscount</h3>
+<p><code>check70AnnualDiscount(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L538">api/StripeApi.ts:538</a></p>
+<ul>
+<li><code>this.checkScheduledCoupon(customerId, &apos;70OFF_12_FOREVER_V1&apos;)</code> &#x2014; line 539</li>
+</ul>
+<h3 id="getsubsctipionid">getSubsctipionID</h3>
+<p><code>getSubsctipionID(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L542">api/StripeApi.ts:542</a></p>
+<ul>
+<li><code>this.getScheduledSubscription(customerId)</code> &#x2014; line 543</li>
+</ul>
+<h3 id="retrieveasubscription">retrieveASubscription</h3>
+<p><code>retrieveASubscription(subscriptionId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L555">api/StripeApi.ts:555</a></p>
+<ul>
+<li><code>this.stripeGet(&#x2032;&#x24;{this.subscriptionsEndpoint}/&#x24;{subscriptionId}&#x2032;)</code> &#x2014; line 556</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 560</li>
+</ul>
+<h3 id="check90annualdiscount">check90AnnualDiscount</h3>
+<p><code>check90AnnualDiscount(subscriptionId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L563">api/StripeApi.ts:563</a></p>
+<ul>
+<li><code>this.retrieveASubscription(subscriptionId)</code> &#x2014; line 564</li>
+</ul>
+<h3 id="check90monthlydiscountretrieve">check90MonthlyDiscountRetrieve</h3>
+<p><code>check90MonthlyDiscountRetrieve(subscriptionId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L568">api/StripeApi.ts:568</a></p>
+<ul>
+<li><code>this.retrieveASubscription(subscriptionId)</code> &#x2014; line 571</li>
+</ul>
+<h3 id="check90quarterlydiscountretrieve">check90QuarterlyDiscountRetrieve</h3>
+<p><code>check90QuarterlyDiscountRetrieve(subscriptionId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L576">api/StripeApi.ts:576</a></p>
+<ul>
+<li><code>this.retrieveASubscription(subscriptionId)</code> &#x2014; line 579</li>
+</ul>
+<h3 id="checkscheduledsubscriptionplan">checkScheduledSubscriptionPlan</h3>
+<p><code>checkScheduledSubscriptionPlan(customerId: string, expectedPlanId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L584">api/StripeApi.ts:584</a></p>
+<ul>
+<li><code>this.getScheduledSubscription(customerId)</code> &#x2014; line 588</li>
+</ul>
+<h3 id="getsubscriptioncancellationstatus">getSubscriptionCancellationStatus</h3>
+<p><code>getSubscriptionCancellationStatus(subscriptionId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L594">api/StripeApi.ts:594</a></p>
+<ul>
+<li><code>this.retrieveASubscription(subscriptionId)</code> &#x2014; line 599</li>
+</ul>
+<h3 id="getcustomercharges">getCustomerCharges</h3>
+<p><code>getCustomerCharges(customerId: string, limit: number = 3)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L608">api/StripeApi.ts:608</a></p>
+<ul>
+<li><code>this.stripeGet(this.chargesEndpoint, { limit, customer: customerId, })</code> &#x2014; line 609</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 614</li>
+</ul>
+<h3 id="checkactivesubscriptionplan">checkActiveSubscriptionPlan</h3>
+<p><code>checkActiveSubscriptionPlan(customerId: string, expectedPlanId: string, status?: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L617">api/StripeApi.ts:617</a></p>
+<ul>
+<li><code>this.getCustomerSubscription({ customer: customerId, ...(status &amp;&amp; { status }), })</code> &#x2014; line 622</li>
+</ul>
+<h3 id="checkdoublechargeamounts">checkDoubleChargeAmounts</h3>
+<p><code>checkDoubleChargeAmounts(customerId: string, firstAmount: number, secondAmount: number)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L631">api/StripeApi.ts:631</a></p>
+<ul>
+<li><code>this.getCustomerCharges(customerId, 3)</code> &#x2014; line 636</li>
+</ul>
+<h3 id="getinvoicechargeamounts">getInvoiceChargeAmounts</h3>
+<p><code>getInvoiceChargeAmounts(customerId: string, invoiceId: string, limit: number = 30)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L649">api/StripeApi.ts:649</a></p>
+<p>Charge amounts (minor units) recorded against one invoice, oldest attempt first. This is the only reliable per-retry amount during dunning: <code>invoice.amount_due</code> already carries the *next* retry tier&apos;s discount as soon as an attempt fails.</p>
+<ul>
+<li><code>this.getCustomerCharges(customerId, limit)</code> &#x2014; line 654</li>
+</ul>
+<h3 id="getcustomerchargeamounts">getCustomerChargeAmounts</h3>
+<p><code>getCustomerChargeAmounts(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L672">api/StripeApi.ts:672</a></p>
+<ul>
+<li><code>this.getCustomerCharges(customerId, 3)</code> &#x2014; line 673</li>
+</ul>
+<h3 id="countcustomersbyemail">countCustomersByEmail</h3>
+<p><code>countCustomersByEmail(email: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L681">api/StripeApi.ts:681</a></p>
+<p>Number of Stripe Customer objects matching this email (duplicate-customer check).</p>
+<ul>
+<li><code>this.stripeGet(this.customersEndpoint, { email })</code> &#x2014; line 682</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 683</li>
+</ul>
+<h3 id="findcustomeridbyemail">findCustomerIdByEmail</h3>
+<p><code>findCustomerIdByEmail(email: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L687">api/StripeApi.ts:687</a></p>
+<ul>
+<li><code>this.stripeGet(this.customersEndpoint, { email })</code> &#x2014; line 688</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 689</li>
+</ul>
+<h3 id="getcustomerchargedetails">getCustomerChargeDetails</h3>
+<p><code>getCustomerChargeDetails(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L693">api/StripeApi.ts:693</a></p>
+<ul>
+<li><code>this.getCustomerCharges(customerId, 10)</code> &#x2014; line 696</li>
+</ul>
+<h3 id="getcustomerinvoicedetails">getCustomerInvoiceDetails</h3>
+<p><code>getCustomerInvoiceDetails(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L712">api/StripeApi.ts:712</a></p>
+<ul>
+<li><code>this.stripeGet(&apos;/v1/invoices&apos;, { customer: customerId, limit: 5, })</code> &#x2014; line 715</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 719</li>
+</ul>
+<h3 id="getsubscriptionrecurringamounts">getSubscriptionRecurringAmounts</h3>
+<p><code>getSubscriptionRecurringAmounts(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L735">api/StripeApi.ts:735</a></p>
+<ul>
+<li><code>this.getCustomerSubscription({ customer: customerId, })</code> &#x2014; line 738</li>
+</ul>
+<h3 id="getactiveplanid">getActivePlanId</h3>
+<p><code>getActivePlanId(customerId: string, status?: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L761">api/StripeApi.ts:761</a></p>
+<ul>
+<li><code>this.getCustomerSubscription({ customer: customerId, ...(status &amp;&amp; { status }), })</code> &#x2014; line 765</li>
+</ul>
+<h3 id="getscheduledplanid">getScheduledPlanId</h3>
+<p><code>getScheduledPlanId(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L772">api/StripeApi.ts:772</a></p>
+<ul>
+<li><code>this.getScheduledSubscription(customerId)</code> &#x2014; line 773</li>
+</ul>
+<h3 id="getactivecouponid">getActiveCouponId</h3>
+<p><code>getActiveCouponId(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L777">api/StripeApi.ts:777</a></p>
+<ul>
+<li><code>this.getCustomerSubscription({ customer: customerId, })</code> &#x2014; line 778</li>
+</ul>
+<h3 id="getsubscriptioncouponid">getSubscriptionCouponId</h3>
+<p><code>getSubscriptionCouponId(subscriptionId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L789">api/StripeApi.ts:789</a></p>
+<ul>
+<li><code>this.retrieveASubscription(subscriptionId)</code> &#x2014; line 792</li>
+</ul>
+<h3 id="getscheduledcouponid">getScheduledCouponId</h3>
+<p><code>getScheduledCouponId(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L796">api/StripeApi.ts:796</a></p>
+<ul>
+<li><code>this.getScheduledSubscription(customerId)</code> &#x2014; line 797</li>
+</ul>
+<h3 id="getsubscriptionplaninfo">getSubscriptionPlanInfo</h3>
+<p><code>getSubscriptionPlanInfo(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L808">api/StripeApi.ts:808</a></p>
+<ul>
+<li><code>this.getCustomerSubscription({ customer: customerId, status: &apos;active&apos;, })</code> &#x2014; line 812</li>
+</ul>
+<h3 id="stripepost">stripePost</h3>
+<p><code>stripePost(endpoint: string, form: Record&lt;string, string | number | boolean&gt;)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L828">api/StripeApi.ts:828</a></p>
+<ul>
+<li><code>this.request.post(&#x2032;&#x24;{this.baseURL}&#x24;{endpoint}&#x2032;, { form, headers: await this.getHeaders(), })</code> &#x2014; line 832</li>
+<li><code>this.getHeaders()</code> &#x2014; line 834</li>
+</ul>
+<h3 id="stripedelete">stripeDelete</h3>
+<p><code>stripeDelete(endpoint: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L838">api/StripeApi.ts:838</a></p>
+<ul>
+<li><code>this.request.delete(&#x2032;&#x24;{this.baseURL}&#x24;{endpoint}&#x2032;, { headers: await this.getHeaders(), })</code> &#x2014; line 839</li>
+<li><code>this.getHeaders()</code> &#x2014; line 840</li>
+</ul>
+<h3 id="createtestclock">createTestClock</h3>
+<p><code>createTestClock(frozenTime: number, name?: string, customerId?: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L850">api/StripeApi.ts:850</a></p>
+<p>Creates a Stripe Test Clock frozen at <code>frozenTime</code> (unix seconds). Pass <code>customerId</code> to attach an <strong>existing</strong> customer (Stripe API 2026-05-27+ <code>customer</code> param). OQG3-1721 attaches it immediately after registration, before the UI creates a subscription. <code>frozenTime</code> must not be in the past.</p>
+<ul>
+<li><code>this.request.post(&#x2032;&#x24;{this.baseURL}&#x24;{this.testClocksEndpoint}&#x2032;, { form, headers: { ...(await this.getHeaders()), // &#x2032;customer&#x2032; on Test Clock create was added in this version. &apos;Stripe-Version&apos;: process.env.STRIPE_API_VERSION ?? &apos;2026-05-27.dahlia&apos;, }, })</code> &#x2014; line 860</li>
+<li><code>this.getHeaders()</code> &#x2014; line 865</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 872</li>
+<li><code>this.waitForTestClockReady(clock.id)</code> &#x2014; line 878</li>
+</ul>
+<h3 id="retrievetestclock">retrieveTestClock</h3>
+<p><code>retrieveTestClock(clockId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L881">api/StripeApi.ts:881</a></p>
+<ul>
+<li><code>this.stripeGet(&#x2032;&#x24;{this.testClocksEndpoint}/&#x24;{clockId}&#x2032;)</code> &#x2014; line 884</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 887</li>
+</ul>
+<h3 id="waitfortestclockready">waitForTestClockReady</h3>
+<p><code>waitForTestClockReady(clockId: string, timeoutMs = 120_000)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L895">api/StripeApi.ts:895</a></p>
+<p>Waits until Stripe finishes attaching/advancing a clock. Stripe rejects customer, payment-method, and subscription mutations with 429 while the clock status is <code>advancing</code>.</p>
+<ul>
+<li><code>this.retrieveTestClock(clockId)</code> &#x2014; line 902</li>
+</ul>
+<h3 id="advancetestclock">advanceTestClock</h3>
+<p><code>advanceTestClock(clockId: string, frozenTime: number, timeoutMs = 120_000)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L921">api/StripeApi.ts:921</a></p>
+<p>Advances a Test Clock then polls until status is <code>ready</code>. Stripe processes renewals/dunning while status is <code>advancing</code>.</p>
+<ul>
+<li><code>this.stripePost(&#x2032;&#x24;{this.testClocksEndpoint}/&#x24;{clockId}/advance&#x2032;, { frozen_time: frozenTime })</code> &#x2014; line 926</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 930</li>
+<li><code>this.waitForTestClockReady(clockId, timeoutMs)</code> &#x2014; line 932</li>
+</ul>
+<h3 id="deletetestclock">deleteTestClock</h3>
+<p><code>deleteTestClock(clockId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L935">api/StripeApi.ts:935</a></p>
+<ul>
+<li><code>this.stripeDelete(&#x2032;&#x24;{this.testClocksEndpoint}/&#x24;{clockId}&#x2032;)</code> &#x2014; line 936</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 941</li>
+</ul>
+<h3 id="createcustomerwithtestclock">createCustomerWithTestClock</h3>
+<p><code>createCustomerWithTestClock(params: { email: string testClockId: string name?: string metadata?: Record&lt;string, string&gt; })</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L946">api/StripeApi.ts:946</a></p>
+<p>Customer attached to a Test Clock (required for time-travel dunning).</p>
+<ul>
+<li><code>this.stripePost(this.customersEndpoint, form)</code> &#x2014; line 962</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 963</li>
+</ul>
+<h3 id="createcardpaymentmethod">createCardPaymentMethod</h3>
+<p><code>createCardPaymentMethod(cardToken: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L974">api/StripeApi.ts:974</a></p>
+<p>Creates a card PaymentMethod from a Stripe <strong>test token</strong> (<code>tok_visa</code>, <code>tok_chargeCustomerFail</code>, &#x2026;).</p>
+<p>Posting a raw card number here returns 402 &quot;Sending credit card numbers directly to the Stripe API is generally unsafe&quot; unless raw-card-data API access is enabled on the account, so tokens are the only portable path.</p>
+<ul>
+<li><code>this.stripePost(this.paymentMethodsEndpoint, { type: &apos;card&apos;, &apos;card[token]&apos;: cardToken, })</code> &#x2014; line 975</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 979</li>
+</ul>
+<h3 id="attachpaymentmethod">attachPaymentMethod</h3>
+<p><code>attachPaymentMethod(paymentMethodId: string, customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L982">api/StripeApi.ts:982</a></p>
+<ul>
+<li><code>this.stripePost(&#x2032;&#x24;{this.paymentMethodsEndpoint}/&#x24;{paymentMethodId}/attach&#x2032;, { customer: customerId })</code> &#x2014; line 986</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 990</li>
+</ul>
+<h3 id="setdefaultpaymentmethod">setDefaultPaymentMethod</h3>
+<p><code>setDefaultPaymentMethod(customerId: string, paymentMethodId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L993">api/StripeApi.ts:993</a></p>
+<ul>
+<li><code>this.stripePost(&#x2032;&#x24;{this.customersEndpoint}/&#x24;{customerId}&#x2032;, { &apos;invoice_settings[default_payment_method]&apos;: paymentMethodId, })</code> &#x2014; line 997</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 1003</li>
+</ul>
+<h3 id="setsubscriptiondefaultpaymentmethod">setSubscriptionDefaultPaymentMethod</h3>
+<p><code>setSubscriptionDefaultPaymentMethod(subscriptionId: string, paymentMethodId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L1007">api/StripeApi.ts:1007</a></p>
+<p>Sets the subscription-level default PM used for renewal invoice retries.</p>
+<ul>
+<li><code>this.stripePost(&#x2032;&#x24;{this.subscriptionsEndpoint}/&#x24;{subscriptionId}&#x2032;, { default_payment_method: paymentMethodId })</code> &#x2014; line 1011</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 1015</li>
+</ul>
+<h3 id="createsubscription">createSubscription</h3>
+<p><code>createSubscription(params: { customerId: string priceId: string paymentMethodId?: string trialEnd?: number metadata?: Record&lt;string, string&gt; })</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L1022">api/StripeApi.ts:1022</a></p>
+<p>Creates a subscription on a Test Clock customer. Prefer a short trial so the first real invoice is the renewal under test.</p>
+<ul>
+<li><code>this.stripePost(this.subscriptionsEndpoint, form)</code> &#x2014; line 1045</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 1046</li>
+</ul>
+<h3 id="listinvoices">listInvoices</h3>
+<p><code>listInvoices(customerId: string, limit = 20)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L1049">api/StripeApi.ts:1049</a></p>
+<ul>
+<li><code>this.stripeGet(this.invoicesEndpoint, { customer: customerId, limit, })</code> &#x2014; line 1067</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 1071</li>
+</ul>
+<h3 id="retrieveinvoice">retrieveInvoice</h3>
+<p><code>retrieveInvoice(invoiceId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L1074">api/StripeApi.ts:1074</a></p>
+<ul>
+<li><code>this.stripeGet(&#x2032;&#x24;{this.invoicesEndpoint}/&#x24;{invoiceId}&#x2032;)</code> &#x2014; line 1086</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 1089</li>
+</ul>
+<h3 id="getfailedrenewalinvoice">getFailedRenewalInvoice</h3>
+<p><code>getFailedRenewalInvoice(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L1096">api/StripeApi.ts:1096</a></p>
+<p>Open / uncollectible renewal invoice used for dunning assertions (<code>attempt_count</code>, <code>next_payment_attempt</code>, <code>amount_due</code>).</p>
+<ul>
+<li><code>this.listInvoices(customerId, 20)</code> &#x2014; line 1108</li>
+</ul>
+<h3 id="getinvoiceamountsdue">getInvoiceAmountsDue</h3>
+<p><code>getInvoiceAmountsDue(customerId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L1121">api/StripeApi.ts:1121</a></p>
+<p>Invoice amounts due (minor units), newest first.</p>
+<ul>
+<li><code>this.listInvoices(customerId, 20)</code> &#x2014; line 1122</li>
+</ul>
+<h3 id="getsubscriptionstatus">getSubscriptionStatus</h3>
+<p><code>getSubscriptionStatus(subscriptionId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L1126">api/StripeApi.ts:1126</a></p>
+<ul>
+<li><code>this.retrieveASubscription(subscriptionId)</code> &#x2014; line 1129</li>
+</ul>
+<h3 id="applysubscriptioncoupon">applySubscriptionCoupon</h3>
+<p><code>applySubscriptionCoupon(subscriptionId: string, couponId: string)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L1134">api/StripeApi.ts:1134</a></p>
+<p>Applies a Stripe coupon to an existing subscription (discounted / promo plans).</p>
+<ul>
+<li><code>this.stripePost(&#x2032;&#x24;{this.subscriptionsEndpoint}/&#x24;{subscriptionId}&#x2032;, { coupon: couponId })</code> &#x2014; line 1138</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 1142</li>
+</ul>
+<h3 id="waitforsubscriptionstatus">waitForSubscriptionStatus</h3>
+<p><code>waitForSubscriptionStatus(subscriptionId: string, statuses: string[], timeoutMs = 90_000)</code></p>
+<p><a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L1149">api/StripeApi.ts:1149</a></p>
+<p>Polls until subscription status matches one of <code>statuses</code> (e.g. <code>past_due</code>, <code>canceled</code>, <code>active</code>).</p>
+<ul>
+<li><code>this.getSubscriptionStatus(subscriptionId)</code> &#x2014; line 1157</li>
+</ul>
+<h2 id="api-userapi-ts">api/UserApi.ts</h2>
+<p><a data-source="api/UserApi.ts" href="../../sources/api/UserApi.ts.html#L1">api/UserApi.ts:1</a></p>
+<ul>
+<li><code>{ APIResponse }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseAPI }</code> &#x2190; <a data-source="api/ApiClient.ts" href="../../sources/api/ApiClient.ts.html#L1">api/ApiClient.ts:1</a></li>
+</ul>
+<h3 id="createuser">createUser</h3>
+<p><code>createUser(email: string, password: string)</code></p>
+<p><a data-source="api/UserApi.ts" href="../../sources/api/UserApi.ts.html#L11">api/UserApi.ts:11</a></p>
+<ul>
+<li><code>this.postForm(&#x2032;&#x24;{this.commonEndpoint}&#x2032;, data)</code> &#x2014; line 17</li>
+</ul>
+<h3 id="loginwithpassword">loginWithPassword</h3>
+<p><code>loginWithPassword(email: string, password: string)</code></p>
+<p><a data-source="api/UserApi.ts" href="../../sources/api/UserApi.ts.html#L55">api/UserApi.ts:55</a></p>
+<ul>
+<li><code>this.postForm(this.commonEndpoint, data)</code> &#x2014; line 70</li>
+</ul>
+<h3 id="createandloginuser">createAndLoginUser</h3>
+<p><code>createAndLoginUser(email: string, password: string)</code></p>
+<p><a data-source="api/UserApi.ts" href="../../sources/api/UserApi.ts.html#L109">api/UserApi.ts:109</a></p>
+<ul>
+<li><code>this.createUser(email, password)</code> &#x2014; line 113</li>
+<li><code>this.loginWithPassword(email, password)</code> &#x2014; line 114</li>
+</ul>
+<h3 id="getuserbyemail">getUserByEmail</h3>
+<p><code>getUserByEmail(email: string)</code></p>
+<p><a data-source="api/UserApi.ts" href="../../sources/api/UserApi.ts.html#L121">api/UserApi.ts:121</a></p>
+<ul>
+<li><code>this.request.post(&#x2032;&#x24;{this.baseURL}&#x24;{this.commonEndpoint}&#x2032;, { form: formData, headers: { &apos;User-Agent&apos;: &apos;QR-Automation-Test&apos;, Accept: &apos;application/json&apos;, }, })</code> &#x2014; line 129</li>
+</ul>
+<h3 id="getuserbyid">getUserById</h3>
+<p><code>getUserById()</code></p>
+<p><a data-source="api/UserApi.ts" href="../../sources/api/UserApi.ts.html#L177">api/UserApi.ts:177</a></p>
+<ul>
+<li><code>this.get(this.get_user_endpoint, params)</code> &#x2014; line 179</li>
+</ul>
+<h3 id="getqrcodesbyemail">getQrCodesByEmail</h3>
+<p><code>getQrCodesByEmail(email: string)</code></p>
+<p><a data-source="api/UserApi.ts" href="../../sources/api/UserApi.ts.html#L182">api/UserApi.ts:182</a></p>
+<ul>
+<li><code>this.getUserByEmail(email)</code> &#x2014; line 183</li>
+<li><code>this.get(this.get_qr_codes_endpoint, { user_id: userId, token_code: tokenCode, })</code> &#x2014; line 184</li>
+<li><code>this.validateResponse(response)</code> &#x2014; line 189</li>
+</ul>
+<h3 id="updateusercurrency-1">updateUserCurrency</h3>
+<p><code>updateUserCurrency(email: string, currencyCode: string, paymentCurrency: string = currencyCode, country: string = &apos;US&apos;)</code></p>
+<p><a data-source="api/UserApi.ts" href="../../sources/api/UserApi.ts.html#L192">api/UserApi.ts:192</a></p>
+<ul>
+<li><code>this.getUserByEmail(email)</code> &#x2014; line 198</li>
+<li><code>this.postForm(this.commonEndpoint, formData)</code> &#x2014; line 210</li>
+</ul>
+<h3 id="updatesubscriptiondate">updateSubscriptionDate</h3>
+<p><code>updateSubscriptionDate(email: string, expiredAt: string)</code></p>
+<p><a data-source="api/UserApi.ts" href="../../sources/api/UserApi.ts.html#L213">api/UserApi.ts:213</a></p>
+<ul>
+<li><code>this.request.post(&#x2032;&#x24;{this.baseURL}api/auto-test&#x2032;, { form: formData, headers: { &apos;User-Agent&apos;: &apos;QR-Automation-Test&apos;, Accept: &apos;application/json&apos;, }, })</code> &#x2014; line 219</li>
+</ul>
+<h3 id="deleteuser">deleteUser</h3>
+<p><code>deleteUser(emails: string[])</code></p>
+<p><a data-source="api/UserApi.ts" href="../../sources/api/UserApi.ts.html#L228">api/UserApi.ts:228</a></p>
+<ul>
+<li><code>this.request.post(&#x2032;&#x24;{this.baseURL}api/delete-test-user-records&#x2032;, { data: { action: &apos;delete_test_users&apos;, emails: emails, }, headers: { &apos;Content-Type&apos;: &apos;application/json&apos;, Accept: &apos;application/json&apos;, }, })</code> &#x2014; line 229</li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

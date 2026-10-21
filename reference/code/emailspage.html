@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/emailspage.html">
+<title>EmailsPage · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-emailspage-emailbodypage-ts">pages/EmailsPage/EmailBodyPage.ts</a>
+<a href="#pages-emailspage-emailsbodylocators-ts">pages/EmailsPage/EmailsBodyLocators.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="emailspage">EmailsPage</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-emailspage-emailbodypage-ts">pages/EmailsPage/EmailBodyPage.ts</h2>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L1">pages/EmailsPage/EmailBodyPage.ts:1</a></p>
+<ul>
+<li><code>{ test, type Page, type TestInfo }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ MailtrapApi }</code> &#x2190; <a data-source="api/Mailtrap.ts" href="../../sources/api/Mailtrap.ts.html#L1">api/Mailtrap.ts:1</a></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>{ PageFactory }</code> &#x2190; <a data-source="base/PageFactory.ts" href="../../sources/base/PageFactory.ts.html#L1">base/PageFactory.ts:1</a></li>
+<li><code>type { Product }</code> &#x2190; <a data-source="base/Product.ts" href="../../sources/base/Product.ts.html#L1">base/Product.ts:1</a></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>{ EmailBodyLocators, OqgEmailBodyLocators, QciEmailBodyLocators, }</code> &#x2190; <a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L1">pages/EmailsPage/EmailsBodyLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page, Locators: EmailBodyLocatorsConstructor)</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L25">pages/EmailsPage/EmailBodyPage.ts:25</a></p>
+<h3 id="openlinkinnewcontext">openLinkInNewContext</h3>
+<p><code>openLinkInNewContext(url: string, assertLocator: string)</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L32">pages/EmailsPage/EmailBodyPage.ts:32</a></p>
+<p>Opens an email link in an isolated context and verifies its destination.</p>
+<ul>
+<li><code>this.page.context().browser()!.newContext()</code> &#x2014; line 36</li>
+<li><code>this.page.context().browser()</code> &#x2014; line 36</li>
+<li><code>this.page.context()</code> &#x2014; line 36</li>
+<li><code>newPage.goto(url)</code> &#x2014; line 39</li>
+<li><code>this.expect(newPage.locator(assertLocator)).toBeVisible()</code> &#x2014; line 40</li>
+</ul>
+<h3 id="withrenderedemailhtml">withRenderedEmailHtml</h3>
+<p><code>withRenderedEmailHtml(html: string, action: (rendered: { page: Page locator: EmailBodyLocators }) =&gt; Promise&lt;T&gt;)</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L49">pages/EmailsPage/EmailBodyPage.ts:49</a></p>
+<p>Renders email HTML in an isolated tab so SPA navigation on the app page (e.g. QCI post-password-change redirect) cannot destroy setContent.</p>
+<ul>
+<li><code>this.page.context().newPage()</code> &#x2014; line 56</li>
+<li><code>this.page.context()</code> &#x2014; line 56</li>
+</ul>
+<h3 id="getresetpasswordlinkhref">getResetPasswordLinkHref</h3>
+<p><code>getResetPasswordLinkHref()</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L72">pages/EmailsPage/EmailBodyPage.ts:72</a></p>
+<p>Returns the magic recovery link href from a rendered forgot-password email. Expects the email HTML to already be loaded into this page via <code>setContent</code>.</p>
+<ul>
+<li><code>this.locator.resetPasswordLink.getAttribute(&apos;href&apos;)</code> &#x2014; line 73</li>
+</ul>
+<h3 id="getcontactlinkhref">getContactLinkHref</h3>
+<p><code>getContactLinkHref()</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L88">pages/EmailsPage/EmailBodyPage.ts:88</a></p>
+<p>Returns the contact/support link href from a rendered email. Expects the email HTML to already be loaded into this page via <code>setContent</code>. Sheet TC30 expects template #22 &#x201c;wasn&apos;t you&#x201d; / secure-account path to be <code>/contact</code> &#x2014; live mail currently omits it (PC-02).</p>
+<ul>
+<li><code>this.locator.contactLink.getAttribute(&apos;href&apos;)</code> &#x2014; line 89</li>
+</ul>
+<h3 id="collectemailhreflist">collectEmailHrefList</h3>
+<p><code>collectEmailHrefList(html: string)</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L102">pages/EmailsPage/EmailBodyPage.ts:102</a></p>
+<p>Collects unique absolute <code>href</code> values from email HTML. Used to audit every Password Changed link for hijack risk.</p>
+<h3 id="assertlinkdoesnotauthenticateaccount">assertLinkDoesNotAuthenticateAccount</h3>
+<p><code>assertLinkDoesNotAuthenticateAccount(url: string)</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L123">pages/EmailsPage/EmailBodyPage.ts:123</a></p>
+<p>Opens a URL in a fresh anonymous browser context and asserts it cannot authenticate / hijack an account. After the link, <code>/account</code> must stay inaccessible (no My Account password save / logout controls &#x2014; anonymous users are bounced). Do not use <code>input#password</code> as the logged-in signal: create-password and login flows share that id; use account-only controls instead.</p>
+<ul>
+<li><code>this.page.context().browser()!.newContext()</code> &#x2014; line 129</li>
+<li><code>this.page.context().browser()</code> &#x2014; line 129</li>
+<li><code>this.page.context()</code> &#x2014; line 129</li>
+<li><code>anonPage.goto(url, { waitUntil: &apos;domcontentloaded&apos; })</code> &#x2014; line 132</li>
+<li><code>this.expect(anonPage).not.toHaveURL(/\/qr-codes(?:\/|&#x24;|\?)|\/account(?:\/|&#x24;|\?)/)</code> &#x2014; line 134</li>
+<li><code>this.expect(anonPage.locator(&apos;button#passSave&apos;)).toHaveCount(0)</code> &#x2014; line 137</li>
+<li><code>this.expect( anonPage.locator(&apos;input#re_password&apos;) ).toHaveCount(0)</code> &#x2014; line 140</li>
+<li><code>this.expect( anonPage.locator(&apos;div.my-account-form-group&gt;button&apos;) ).toHaveCount(0)</code> &#x2014; line 143</li>
+<li><code>anonPage.goto(accountUrl, { waitUntil: &apos;domcontentloaded&apos; })</code> &#x2014; line 149</li>
+<li><code>this.expect(anonPage).not.toHaveURL(/\/account(?:\/|&#x24;|\?)/)</code> &#x2014; line 150</li>
+<li><code>this.expect(anonPage.locator(&apos;button#passSave&apos;)).toHaveCount(0)</code> &#x2014; line 151</li>
+<li><code>this.expect( anonPage.locator(&apos;input#re_password&apos;) ).toHaveCount(0)</code> &#x2014; line 154</li>
+<li><code>this.expect( anonPage.locator(&apos;div.my-account-form-group&gt;button&apos;) ).toHaveCount(0)</code> &#x2014; line 157</li>
+</ul>
+<h3 id="assertpasswordchangedemaillinks">assertPasswordChangedEmailLinks</h3>
+<p><code>assertPasswordChangedEmailLinks(html: string, expectedLogoHref: string, expectedFaqHref: string)</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L173">pages/EmailsPage/EmailBodyPage.ts:173</a></p>
+<p>Loads Password Changed email HTML and asserts logo + FAQ link targets. Template #22&#x2019;s &#x201c;wasn&#x2019;t you&#x201d; / support copy is plain text today &#x2014; the <code>/contact</code> CTA is covered by the dedicated TC30 case (PC-02), not here.</p>
+<ul>
+<li><code>this.withRenderedEmailHtml(html, [callback: see source])</code> &#x2014; line 178</li>
+<li><code>this.expect(logoHref).toBe(expectedLogoHref)</code> &#x2014; line 181</li>
+<li><code>this.expect(faqHref).toBe(expectedFaqHref)</code> &#x2014; line 182</li>
+</ul>
+<h3 id="assertpasswordchangedemaillocalizedlabels">assertPasswordChangedEmailLocalizedLabels</h3>
+<p><code>assertPasswordChangedEmailLocalizedLabels(html: string, expectedFaqHref: string, expectedFaqLabel: string, expectedLogoAlt: string, englishFaqLabel: string, englishLogoAlt: string)</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L191">pages/EmailsPage/EmailBodyPage.ts:191</a></p>
+<p>Asserts FAQ CTA label + logo alt are localised, and the FAQ href uses the account locale prefix (e.g. <code>/es/faq</code>). Template #22 has no separate button CTA &#x2014; FAQ is the labelled text link.</p>
+<ul>
+<li><code>this.withRenderedEmailHtml(html, [callback: see source])</code> &#x2014; line 199</li>
+<li><code>this.expect(faqHref).toBe(expectedFaqHref)</code> &#x2014; line 201</li>
+<li><code>this.expect(locator.faqLink).toContainText(expectedFaqLabel)</code> &#x2014; line 202</li>
+<li><code>this.expect(locator.faqLink).not.toContainText(englishFaqLabel)</code> &#x2014; line 203</li>
+<li><code>this.expect(logoImg).toBeVisible()</code> &#x2014; line 207</li>
+<li><code>this.expect(page.getByAltText(englishLogoAlt)).toHaveCount(0)</code> &#x2014; line 208</li>
+</ul>
+<h3 id="assertpasswordchangedemailcontent">assertPasswordChangedEmailContent</h3>
+<p><code>assertPasswordChangedEmailContent(html: string, raw: string, text: string, bodyTitle: string, previewSnippet: string, newPassword: string, securityCopy: readonly string[] = [])</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L225">pages/EmailsPage/EmailBodyPage.ts:225</a></p>
+<ul>
+<li><code>this.expect(html).toContain(bodyTitle)</code> &#x2014; line 234</li>
+<li><code>this.expect(html).toContain(previewSnippet)</code> &#x2014; line 235</li>
+<li><code>this.expect(html).toContain(snippet)</code> &#x2014; line 239</li>
+<li><code>this.expect(html.toLowerCase()).not.toContain(newPassword.toLowerCase())</code> &#x2014; line 241</li>
+<li><code>html.toLowerCase()</code> &#x2014; line 241</li>
+<li><code>newPassword.toLowerCase()</code> &#x2014; line 242</li>
+<li><code>this.expect(raw.toLowerCase()).not.toContain(newPassword.toLowerCase())</code> &#x2014; line 244</li>
+<li><code>raw.toLowerCase()</code> &#x2014; line 244</li>
+<li><code>newPassword.toLowerCase()</code> &#x2014; line 245</li>
+<li><code>this.expect(html).not.toMatch(/\/reset-password\//i)</code> &#x2014; line 248</li>
+<li><code>this.expect(raw).not.toMatch(/\/reset-password\//i)</code> &#x2014; line 249</li>
+<li><code>this.expect(text.toLowerCase()).not.toContain(newPassword.toLowerCase())</code> &#x2014; line 252</li>
+<li><code>text.toLowerCase()</code> &#x2014; line 252</li>
+<li><code>newPassword.toLowerCase()</code> &#x2014; line 253</li>
+<li><code>this.expect(text).not.toMatch(/\/reset-password\//i)</code> &#x2014; line 255</li>
+</ul>
+<h3 id="assertpasswordchangedemailplaintextfallback">assertPasswordChangedEmailPlainTextFallback</h3>
+<p><code>assertPasswordChangedEmailPlainTextFallback(raw: string, text: string, bodyTitle: string, previewSnippet: string)</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L264">pages/EmailsPage/EmailBodyPage.ts:264</a></p>
+<p>Asserts multipart <code>text/plain</code> fallback in raw MIME and that Mailpit&#x2019;s decoded Text matches template copy. Prefer Mailpit&#x2019;s decoded Text over parsing quoted-printable raw MIME.</p>
+<ul>
+<li><code>this.expect(raw).toMatch(/Content-Type:\s*text\/plain/i)</code> &#x2014; line 270</li>
+<li><code>this.expect(text.trim().length).toBeGreaterThan(0)</code> &#x2014; line 271</li>
+<li><code>this.expect(text).toContain(bodyTitle)</code> &#x2014; line 272</li>
+<li><code>this.expect(text).toContain(previewSnippet)</code> &#x2014; line 273</li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L278">pages/EmailsPage/EmailBodyPage.ts:278</a></p>
+<h3 id="constructor-2">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L284">pages/EmailsPage/EmailBodyPage.ts:284</a></p>
+<h3 id="createemailbodypage">createEmailBodyPage</h3>
+<p><code>createEmailBodyPage(page: Page, product: Product)</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L299">pages/EmailsPage/EmailBodyPage.ts:299</a></p>
+<p>Creates an Email Body Page for legacy specs that instantiate one directly.</p>
+<h3 id="triggertemplate7emailviabackbutton">triggerTemplate7EmailViaBackButton</h3>
+<p><code>triggerTemplate7EmailViaBackButton(page: Page, pageManager: PageManager, testInfo: TestInfo)</code></p>
+<p><a data-source="pages/EmailsPage/EmailBodyPage.ts" href="../../sources/pages/EmailsPage/EmailBodyPage.ts.html#L307">pages/EmailsPage/EmailBodyPage.ts:307</a></p>
+<p>Triggers template 7 and returns the recipient and Mailpit message ID.</p>
+<ul>
+<li><code>pageManager.registerPage.createUserData(true)</code> &#x2014; line 317</li>
+<li><code>pageManager.qrCreationPage.quickWebsiteCreateDPF()</code> &#x2014; line 322</li>
+<li><code>pageManager.registerPage.locator.emailInput.fill(fakeEmail)</code> &#x2014; line 323</li>
+<li><code>pageManager.qrCreationPage.locator.dpfFormSubmitButton.click()</code> &#x2014; line 324</li>
+<li><code>pageManager.myQrCodesPage.locator.modalDownloadButton.click()</code> &#x2014; line 332</li>
+</ul>
+<h2 id="pages-emailspage-emailsbodylocators-ts">pages/EmailsPage/EmailsBodyLocators.ts</h2>
+<p><a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L1">pages/EmailsPage/EmailsBodyLocators.ts:1</a></p>
+<ul>
+<li><code>type { Locator, Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseLocators }</code> &#x2190; <a data-source="pages/BaseLocators.ts" href="../../sources/pages/BaseLocators.ts.html#L1">pages/BaseLocators.ts:1</a></li>
+<li><code>type { Product }</code> &#x2190; <a data-source="base/Product.ts" href="../../sources/base/Product.ts.html#L1">base/Product.ts:1</a></li>
+</ul>
+<h3 id="constructor-3">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L21">pages/EmailsPage/EmailsBodyLocators.ts:21</a></p>
+<h3 id="constructor-4">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L38">pages/EmailsPage/EmailsBodyLocators.ts:38</a></p>
+<h3 id="constructor-5">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L49">pages/EmailsPage/EmailsBodyLocators.ts:49</a></p>
+<h3 id="createemailbodylocators">createEmailBodyLocators</h3>
+<p><code>createEmailBodyLocators(page: Page, product: Product)</code></p>
+<p><a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L67">pages/EmailsPage/EmailsBodyLocators.ts:67</a></p>
+<p>Creates product-specific locators for legacy specs that render email HTML outside PageManager.</p>
+<ul>
+<li><code>product.toUpperCase()</code> &#x2014; line 79</li>
+</ul>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.faqLink</code> &#x2190; <code>page.locator(&apos;//a[contains(@href, &quot;/faq&quot;)]&apos;)</code> &#x2014; <a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L24">pages/EmailsPage/EmailsBodyLocators.ts:24</a></li>
+<li><code>this.loginLink</code> &#x2190; <code>page.locator(&apos;//tbody/tr/td[2]/a&apos;)</code> &#x2014; <a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L25">pages/EmailsPage/EmailsBodyLocators.ts:25</a></li>
+<li><code>this.contactLink</code> &#x2190; <code>page.locator(&apos;//a[contains(@href, &quot;/contact&quot;)]&apos;)</code> &#x2014; <a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L26">pages/EmailsPage/EmailsBodyLocators.ts:26</a></li>
+<li><code>this.downloadButton</code> &#x2190; <code>page.locator(&apos;(//tr/td/a)[2]&apos;)</code> &#x2014; <a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L27">pages/EmailsPage/EmailsBodyLocators.ts:27</a></li>
+<li><code>this.myAccount</code> &#x2190; <code>page.locator(&apos;(//tr/td/a)[2]&apos;)</code> &#x2014; <a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L28">pages/EmailsPage/EmailsBodyLocators.ts:28</a></li>
+<li><code>this.createQrCodes</code> &#x2190; <code>page.locator(&apos;(//tr/td/a)[2]&apos;)</code> &#x2014; <a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L29">pages/EmailsPage/EmailsBodyLocators.ts:29</a></li>
+<li><code>this.loginLinkTId8</code> &#x2190; <code>page.locator(&apos;//tbody/tr/td/div/div/p/a&apos;)</code> &#x2014; <a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L30">pages/EmailsPage/EmailsBodyLocators.ts:30</a></li>
+<li><code>this.resetPasswordLink</code> &#x2190; <code>page.locator(&apos;a[href*=&quot;/reset-password/&quot;]&apos;)</code> &#x2014; <a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L31">pages/EmailsPage/EmailsBodyLocators.ts:31</a></li>
+<li><code>this.logoLink</code> &#x2190; <code>page .getByAltText(&apos;Online QR Generator logo&apos;) .locator(&apos;xpath=..&apos;)</code> &#x2014; <a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L40">pages/EmailsPage/EmailsBodyLocators.ts:40</a></li>
+<li><code>this.logoLink</code> &#x2190; <code>page .getByAltText( /QR Code\.io logo|Logo QR Code\.io|Online QR Generator logo/ ) .locator(&apos;xpath=..&apos;)</code> &#x2014; <a data-source="pages/EmailsPage/EmailsBodyLocators.ts" href="../../sources/pages/EmailsPage/EmailsBodyLocators.ts.html#L53">pages/EmailsPage/EmailsBodyLocators.ts:53</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

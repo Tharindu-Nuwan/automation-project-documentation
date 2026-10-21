@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/plansandpricespage.html">
+<title>PlansAndPricesPage · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-plansandpricespage-plansandpricepagelocators-ts">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts</a>
+<a href="#pages-plansandpricespage-plansandpricespage-ts">pages/PlansAndPricesPage/PlansAndPricesPage.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="plansandpricespage">PlansAndPricesPage</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-plansandpricespage-plansandpricepagelocators-ts">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts</h2>
+<p><a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L1">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:1</a></p>
+<ul>
+<li><code>{ Page, Locator }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseLocators }</code> &#x2190; <a data-source="pages/BaseLocators.ts" href="../../sources/pages/BaseLocators.ts.html#L1">pages/BaseLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L26">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:26</a></p>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.variablePlanButtonUniversalLocator</code> &#x2190; <code>page.locator( &quot;//div[@class=&apos;buy-btn-area&apos;]//a[@data-plan-name=&apos;Monthly&apos;] | //div[@class=&apos;buy-btn-area&apos;]//a[@data-plan-name=&apos;Annually&apos;] | //div[@class=&apos;buy-btn-area&apos;]//a[@data-plan-name=&apos;Quarterly&apos;] | //div[@class=&apos;buy-btn-area&apos;]//a[@data-plan-name=&apos;One Time&apos;] | //div[@class=&apos;buy-btn-area&apos;]//a[@data-plan-name=&apos;Discounted&apos;] | //input[@class=&apos;custom-radio-btn&apos; and @name=&apos;plan&apos;]&quot; )</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L29">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:29</a></li>
+<li><code>this.monthlyBuyNowButton</code> &#x2190; <code>page .locator(&quot;a[data-plan-name=&apos;Monthly&apos;]&quot;) .filter({ visible: true })</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L35">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:35</a></li>
+<li><code>this.annuallyBuyNowButton</code> &#x2190; <code>page .locator(&quot;a[data-plan-name=&apos;Annually&apos;]&quot;) .filter({ visible: true })</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L38">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:38</a></li>
+<li><code>this.quarterlyBuyNowButton</code> &#x2190; <code>page .locator(&quot;a[data-plan-name=&apos;Quarterly&apos;]&quot;) .filter({ visible: true })</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L41">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:41</a></li>
+<li><code>this.continueButton</code> &#x2190; <code>page.locator(&apos;#user_plan_url&apos;)</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L44">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:44</a></li>
+<li><code>this.currentPriceValue</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;dpfPlan1&apos;]&quot;)</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L46">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:46</a></li>
+<li><code>this.tabletAnnuallyBuyNowButton</code> &#x2190; <code>page.locator( &quot;input[data-plan-name=&apos;Annually&apos;]&quot; )</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L48">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:48</a></li>
+<li><code>this.tabletBuyNowButton</code> &#x2190; <code>page.locator(&apos;div.mobile-buy-btn-wrp a&apos;)</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L51">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:51</a></li>
+<li><code>this.specialDealBanner</code> &#x2190; <code>page.getByText(&apos;Special Deal&apos;)</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L53">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:53</a></li>
+<li><code>this.plansPricingHeader</code> &#x2190; <code>page .locator(&apos;h1.plan-header&apos;) .filter({ hasText: /Plans &amp; Pricing/i })</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L54">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:54</a></li>
+<li><code>this.mainPriceHeadings</code> &#x2190; <code>page.locator( &apos;h2.package-header-heading, h3.main-price&apos; )</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L59">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:59</a></li>
+<li><code>this.discountPlanHeader</code> &#x2190; <code>page .locator(&apos;h1.plan-header&apos;) .filter({ hasText: /Discounted Plan|One Time Payment/i })</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L62">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:62</a></li>
+<li><code>this.discountCardPrice</code> &#x2190; <code>page .locator( &apos;h2.price-reverse-order, h2.package-header-heading, h3.main-price&apos; ) .filter({ hasText: /\d/ })</code> &#x2014; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L67">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:67</a></li>
+</ul>
+<h2 id="pages-plansandpricespage-plansandpricespage-ts">pages/PlansAndPricesPage/PlansAndPricesPage.ts</h2>
+<p><a data-source="pages/PlansAndPricesPage/PlansAndPricesPage.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricesPage.ts.html#L1">pages/PlansAndPricesPage/PlansAndPricesPage.ts:1</a></p>
+<ul>
+<li><code>{ Page, Locator }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>type { Product }</code> &#x2190; <a data-source="base/Product.ts" href="../../sources/base/Product.ts.html#L1">base/Product.ts:1</a></li>
+<li><code>{ PlansAndPriceLocators }</code> &#x2190; <a data-source="pages/PlansAndPricesPage/PlansAndPricePageLocators.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricePageLocators.ts.html#L1">pages/PlansAndPricesPage/PlansAndPricePageLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page, product: Product = &apos;oqg&apos;)</code></p>
+<p><a data-source="pages/PlansAndPricesPage/PlansAndPricesPage.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricesPage.ts.html#L12">pages/PlansAndPricesPage/PlansAndPricesPage.ts:12</a></p>
+<h3 id="clickonplanbutton">clickOnPlanButton</h3>
+<p><code>clickOnPlanButton(planLocator: Locator)</code></p>
+<p><a data-source="pages/PlansAndPricesPage/PlansAndPricesPage.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricesPage.ts.html#L25">pages/PlansAndPricesPage/PlansAndPricesPage.ts:25</a></p>
+<p>Chooses a plan from Plans &amp; Pricing or the logged-in <code>/plan</code> checkout.</p>
+<p>Sidebar Billing sends unpaid users to <code>/plan</code>, which uses <code>.new-plan-plan-cards-wrap</code> cards &#x2014; not <code>a[data-plan-name]</code> Buy Now. Guest / promo Plans &amp; Pricing still uses the visible Buy Now <code>&lt;a&gt;</code>.</p>
+<ul>
+<li><code>this.planNameFromLocator(planLocator)</code> &#x2014; line 26</li>
+<li><code>this.page.locator(&apos;.new-plan-plan-cards-wrap&apos;)</code> &#x2014; line 28</li>
+<li><code>this.page.locator(&#x2032;input.custom-radio-btn[name=&apos;plan&apos;][value=&apos;&#x24;{planName}&apos;]&#x2032;)</code> &#x2014; line 30</li>
+<li><code>this.page.locator(&quot;input.custom-radio-btn[name=&apos;plan&apos;]&quot;)</code> &#x2014; line 33</li>
+<li><code>visibleBuyNow.first().click({ force: true })</code> &#x2014; line 49</li>
+<li><code>this.waitForCheckoutUrl()</code> &#x2014; line 50</li>
+<li><code>this.page.url()</code> &#x2014; line 56</li>
+<li><code>this.selectCheckoutPlanCard(planName, cardsWrap, radio)</code> &#x2014; line 60</li>
+</ul>
+<h3 id="plannamefromlocator">planNameFromLocator</h3>
+<p><code>planNameFromLocator(planLocator: Locator)</code></p>
+<p><a data-source="pages/PlansAndPricesPage/PlansAndPricesPage.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricesPage.ts.html#L63">pages/PlansAndPricesPage/PlansAndPricesPage.ts:63</a></p>
+<ul>
+<li><code>planLocator.toString()</code> &#x2014; line 74</li>
+</ul>
+<h3 id="selectcheckoutplancard">selectCheckoutPlanCard</h3>
+<p><code>selectCheckoutPlanCard(plan: BillingPlan, cardsWrap: Locator, radio: Locator)</code></p>
+<p><a data-source="pages/PlansAndPricesPage/PlansAndPricesPage.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricesPage.ts.html#L91">pages/PlansAndPricesPage/PlansAndPricesPage.ts:91</a></p>
+<p>Selects a plan on the <code>/plan</code> card picker (Stripe must un-blur the cards before the native radio is enabled).</p>
+<ul>
+<li><code>this.page.locator(&#x2032;div.plan-card-wrap.&#x24;{plan.toLowerCase()}-wrap&#x2032;)</code> &#x2014; line 96</li>
+<li><code>plan.toLowerCase()</code> &#x2014; line 97</li>
+<li><code>this.expect(cardsWrap).not.toHaveClass(/blur-cards/, { timeout: 30_000, })</code> &#x2014; line 102</li>
+<li><code>this.expect(radio) .toBeEnabled({ timeout: 15_000 }) .catch([callback: see source])</code> &#x2014; line 114</li>
+<li><code>this.expect(radio) .toBeEnabled({ timeout: 15_000 })</code> &#x2014; line 114</li>
+<li><code>planCard.click({ force: true })</code> &#x2014; line 121</li>
+<li><code>radio.check({ force: true })</code> &#x2014; line 123</li>
+<li><code>this.expect(radio).toBeChecked({ timeout: 10_000 })</code> &#x2014; line 126</li>
+<li><code>this.expect(target).toBeEnabled({ timeout: 20_000 })</code> &#x2014; line 131</li>
+<li><code>target.check({ force: true })</code> &#x2014; line 132</li>
+<li><code>this.expect(target).toBeChecked({ timeout: 10_000 })</code> &#x2014; line 133</li>
+</ul>
+<h3 id="waitforcheckouturl">waitForCheckoutUrl</h3>
+<p><code>waitForCheckoutUrl()</code></p>
+<p><a data-source="pages/PlansAndPricesPage/PlansAndPricesPage.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricesPage.ts.html#L136">pages/PlansAndPricesPage/PlansAndPricesPage.ts:136</a></p>
+<ul>
+<li><code>this.page.waitForURL(isCheckoutUrl, { timeout: 30_000 })</code> &#x2014; line 142</li>
+<li><code>isCheckoutUrl(new URL(this.page.url()))</code> &#x2014; line 144</li>
+<li><code>this.page.url()</code> &#x2014; line 144</li>
+<li><code>this.page.url()</code> &#x2014; line 146</li>
+</ul>
+<h3 id="readmainplanprices">readMainPlanPrices</h3>
+<p><code>readMainPlanPrices()</code></p>
+<p><a data-source="pages/PlansAndPricesPage/PlansAndPricesPage.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricesPage.ts.html#L156">pages/PlansAndPricesPage/PlansAndPricesPage.ts:156</a></p>
+<p>Reads multi-card Plans &amp; Pricing amounts in DOM order Monthly / Annually / Quarterly (<code>h2.package-header-heading</code> / <code>h3.main-price</code>).</p>
+<ul>
+<li><code>this.expect(prices.nth(0)).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 162</li>
+<li><code>this.expect(prices.nth(1)).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 163</li>
+<li><code>this.expect(prices.nth(2)).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 164</li>
+</ul>
+<h3 id="readdiscountcardprice">readDiscountCardPrice</h3>
+<p><code>readDiscountCardPrice()</code></p>
+<p><a data-source="pages/PlansAndPricesPage/PlansAndPricesPage.ts" href="../../sources/pages/PlansAndPricesPage/PlansAndPricesPage.ts.html#L173">pages/PlansAndPricesPage/PlansAndPricesPage.ts:173</a></p>
+<p>Reads the single-card discounted / one-time amount.</p>
+<ul>
+<li><code>this.locator.discountCardPrice.first()</code> &#x2014; line 174</li>
+<li><code>this.expect(price).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 175</li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

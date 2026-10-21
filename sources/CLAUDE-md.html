@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>CLAUDE.md · QA reference</title>
+<link rel="stylesheet" href="../assets/styles.css">
+<script defer src="../assets/search-index.js"></script><script defer src="../assets/app.js"></script>
+</head><body data-root-prefix="../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../index.html">Start here</a>
+<a href="../00-qa-quick-start.html">Your first check</a>
+<a href="../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../03-qr-creation.html">QR types and creation</a>
+<a href="../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../05-other-flows.html">Other product flows</a>
+<a href="../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../reference/index.html">Reference overview</a>
+<a href="../reference/spec-index.html">Complete spec map</a>
+<a href="../reference/code-index.html">Shared helpers and locators</a>
+<a href="../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../reference/data-index.html">Data sources and consumers</a>
+<a href="../reference/environment-index.html">Environment variables</a>
+<a href="../reference/assets.html">Upload asset inventory</a>
+<a href="../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical detail · bundled source snapshot · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../glossary.html">glossary</a>.</p>
+
+<article id="doc-content" tabindex="-1"><h1>CLAUDE.md</h1><p class="source-note">Bundled source snapshot. Credential-like literals are omitted. Line numbers correspond to the audited repository file; this page is for reading and is not executable test code.</p><pre class="source-code"><code><span class="source-line" id="L1"><a class="line-number" href="#L1" aria-label="Line 1">1</a> # QA Automation Engineering Standards</span>
+<span class="source-line" id="L2"><a class="line-number" href="#L2" aria-label="Line 2">2</a> </span>
+<span class="source-line" id="L3"><a class="line-number" href="#L3" aria-label="Line 3">3</a> &gt; **Audience: everyone who touches this repo — developers, QA engineers, and AI assistants.**</span>
+<span class="source-line" id="L4"><a class="line-number" href="#L4" aria-label="Line 4">4</a> &gt; The filename stays `CLAUDE.md` so Claude Code auto-loads it, but nothing here is</span>
+<span class="source-line" id="L5"><a class="line-number" href="#L5" aria-label="Line 5">5</a> &gt; AI-specific except the short appendix at the end.</span>
+<span class="source-line" id="L6"><a class="line-number" href="#L6" aria-label="Line 6">6</a> &gt;</span>
+<span class="source-line" id="L7"><a class="line-number" href="#L7" aria-label="Line 7">7</a> &gt; **How to read this file:** rules marked **[enforced]** fail lint or the pre-commit</span>
+<span class="source-line" id="L8"><a class="line-number" href="#L8" aria-label="Line 8">8</a> &gt; hook — you cannot merge past them. Rules marked **[convention]** are agreements we</span>
+<span class="source-line" id="L9"><a class="line-number" href="#L9" aria-label="Line 9">9</a> &gt; hold each other to in review. If you find a rule that the codebase contradicts,</span>
+<span class="source-line" id="L10"><a class="line-number" href="#L10" aria-label="Line 10">10</a> &gt; that is a bug in this document — fix the document or the code, don&#39;t ignore it.</span>
+<span class="source-line" id="L11"><a class="line-number" href="#L11" aria-label="Line 11">11</a> </span>
+<span class="source-line" id="L12"><a class="line-number" href="#L12" aria-label="Line 12">12</a> ---</span>
+<span class="source-line" id="L13"><a class="line-number" href="#L13" aria-label="Line 13">13</a> </span>
+<span class="source-line" id="L14"><a class="line-number" href="#L14" aria-label="Line 14">14</a> ## 1. What this project is</span>
+<span class="source-line" id="L15"><a class="line-number" href="#L15" aria-label="Line 15">15</a> </span>
+<span class="source-line" id="L16"><a class="line-number" href="#L16" aria-label="Line 16">16</a> Playwright + TypeScript end-to-end automation for the OQG, QCI, and QGA QR-code products.</span>
+<span class="source-line" id="L17"><a class="line-number" href="#L17" aria-label="Line 17">17</a> Work here is test-related: writing, reviewing, refactoring, or debugging automated tests.</span>
+<span class="source-line" id="L18"><a class="line-number" href="#L18" aria-label="Line 18">18</a> </span>
+<span class="source-line" id="L19"><a class="line-number" href="#L19" aria-label="Line 19">19</a> | Layer            | Technology                                              |</span>
+<span class="source-line" id="L20"><a class="line-number" href="#L20" aria-label="Line 20">20</a> | ---------------- | ------------------------------------------------------- |</span>
+<span class="source-line" id="L21"><a class="line-number" href="#L21" aria-label="Line 21">21</a> | Test framework   | Playwright                                              |</span>
+<span class="source-line" id="L22"><a class="line-number" href="#L22" aria-label="Line 22">22</a> | Language         | TypeScript (strict)                                     |</span>
+<span class="source-line" id="L23"><a class="line-number" href="#L23" aria-label="Line 23">23</a> | Runner           | `npx playwright test`                                   |</span>
+<span class="source-line" id="L24"><a class="line-number" href="#L24" aria-label="Line 24">24</a> | Architecture     | Page Object Model (POM)                                 |</span>
+<span class="source-line" id="L25"><a class="line-number" href="#L25" aria-label="Line 25">25</a> | Browser          | Chromium; selected suites also use Firefox and WebKit   |</span>
+<span class="source-line" id="L26"><a class="line-number" href="#L26" aria-label="Line 26">26</a> | CI/CD            | GitHub Actions (`.github/workflows/`)                   |</span>
+<span class="source-line" id="L27"><a class="line-number" href="#L27" aria-label="Line 27">27</a> | Lint / format    | ESLint (`eslint.config.mts`) + Prettier (`.prettierrc`) |</span>
+<span class="source-line" id="L28"><a class="line-number" href="#L28" aria-label="Line 28">28</a> | Config           | `playwright.config.ts`                                  |</span>
+<span class="source-line" id="L29"><a class="line-number" href="#L29" aria-label="Line 29">29</a> | Containerisation | Docker (`Dockerfile`)                                   |</span>
+<span class="source-line" id="L30"><a class="line-number" href="#L30" aria-label="Line 30">30</a> | Mail catcher     | **Mailpit** (`api/Mailpit.ts`)                          |</span>
+<span class="source-line" id="L31"><a class="line-number" href="#L31" aria-label="Line 31">31</a> | Test management  | Qase (`playwright-qase-reporter`)                       |</span>
+<span class="source-line" id="L32"><a class="line-number" href="#L32" aria-label="Line 32">32</a> </span>
+<span class="source-line" id="L33"><a class="line-number" href="#L33" aria-label="Line 33">33</a> ---</span>
+<span class="source-line" id="L34"><a class="line-number" href="#L34" aria-label="Line 34">34</a> </span>
+<span class="source-line" id="L35"><a class="line-number" href="#L35" aria-label="Line 35">35</a> ## 2. Environments — know which one you are targeting</span>
+<span class="source-line" id="L36"><a class="line-number" href="#L36" aria-label="Line 36">36</a> </span>
+<span class="source-line" id="L37"><a class="line-number" href="#L37" aria-label="Line 37">37</a> There is **no single &quot;the environment&quot;**. Three exist, and a suite that passes on one</span>
+<span class="source-line" id="L38"><a class="line-number" href="#L38" aria-label="Line 38">38</a> may be impossible to run on another.</span>
+<span class="source-line" id="L39"><a class="line-number" href="#L39" aria-label="Line 39">39</a> </span>
+<span class="source-line" id="L40"><a class="line-number" href="#L40" aria-label="Line 40">40</a> | Environment     | URL                                        | What runs there                                |</span>
+<span class="source-line" id="L41"><a class="line-number" href="#L41" aria-label="Line 41">41</a> | --------------- | ------------------------------------------ | ---------------------------------------------- |</span>
+<span class="source-line" id="L42"><a class="line-number" href="#L42" aria-label="Line 42">42</a> | **dev**         | `https://oqg.dev.test-qr.com/en` (default) | Everything except Event QR and the email suite |</span>
+<span class="source-line" id="L43"><a class="line-number" href="#L43" aria-label="Line 43">43</a> | **staging**     | `https://oqg.staging.test-qr.com/en`       | Historical target; same coverage as dev        |</span>
+<span class="source-line" id="L44"><a class="line-number" href="#L44" aria-label="Line 44">44</a> | **local Event** | `http://192.168.1.185:8000`                | **Event QR only** (guest `/create` funnel)     |</span>
+<span class="source-line" id="L45"><a class="line-number" href="#L45" aria-label="Line 45">45</a> </span>
+<span class="source-line" id="L46"><a class="line-number" href="#L46" aria-label="Line 46">46</a> `baseURL` defaults to **dev** (`playwright.config.ts`). Override per run — the shell</span>
+<span class="source-line" id="L47"><a class="line-number" href="#L47" aria-label="Line 47">47</a> variable wins over `.env`:</span>
+<span class="source-line" id="L48"><a class="line-number" href="#L48" aria-label="Line 48">48</a> </span>
+<span class="source-line" id="L49"><a class="line-number" href="#L49" aria-label="Line 49">49</a> ```bash</span>
+<span class="source-line" id="L50"><a class="line-number" href="#L50" aria-label="Line 50">50</a> BASE_URL=&#39;http://192.168.1.185:8000/en/&#39; npx playwright test tests/logged-in-user/create-qr-code/event-qr</span>
+<span class="source-line" id="L51"><a class="line-number" href="#L51" aria-label="Line 51">51</a> ```</span>
+<span class="source-line" id="L52"><a class="line-number" href="#L52" aria-label="Line 52">52</a> </span>
+<span class="source-line" id="L53"><a class="line-number" href="#L53" aria-label="Line 53">53</a> **Why Event QR is local-only:** Event isn&#39;t deployed to dev/staging, and the local stack</span>
+<span class="source-line" id="L54"><a class="line-number" href="#L54" aria-label="Line 54">54</a> has `/register` disabled (302 → home), so `authorizeUser()` — which _registers_ a fresh</span>
+<span class="source-line" id="L55"><a class="line-number" href="#L55" aria-label="Line 55">55</a> user — cannot run there. Event is therefore exercised through the **guest `/create`</span>
+<span class="source-line" id="L56"><a class="line-number" href="#L56" aria-label="Line 56">56</a> funnel**. Note `/login` **does** return 200 on local, so a login-based flow is possible</span>
+<span class="source-line" id="L57"><a class="line-number" href="#L57" aria-label="Line 57">57</a> if a persistent local account exists.</span>
+<span class="source-line" id="L58"><a class="line-number" href="#L58" aria-label="Line 58">58</a> </span>
+<span class="source-line" id="L59"><a class="line-number" href="#L59" aria-label="Line 59">59</a> `playwright.config.ts` `testIgnore` excludes `**/emails/**`, `**/create-qr-code/event-qr/**`,</span>
+<span class="source-line" id="L60"><a class="line-number" href="#L60" aria-label="Line 60">60</a> `**/event-qr-edit.spec.ts` and `**/visual/event-qr-percy.spec.ts` from dev-suite runs.</span>
+<span class="source-line" id="L61"><a class="line-number" href="#L61" aria-label="Line 61">61</a> </span>
+<span class="source-line" id="L62"><a class="line-number" href="#L62" aria-label="Line 62">62</a> **Timeouts are deliberately generous** (test 200s, expect 25s, action/navigation 90s)</span>
+<span class="source-line" id="L63"><a class="line-number" href="#L63" aria-label="Line 63">63</a> because dev and local are slow, shared boxes. Low ceilings produced false</span>
+<span class="source-line" id="L64"><a class="line-number" href="#L64" aria-label="Line 64">64</a> &quot;element not found&quot; failures. Don&#39;t tighten them to &quot;optimise&quot; a run. **[convention]**</span>
+<span class="source-line" id="L65"><a class="line-number" href="#L65" aria-label="Line 65">65</a> </span>
+<span class="source-line" id="L66"><a class="line-number" href="#L66" aria-label="Line 66">66</a> ### Products and the migration path **[convention]**</span>
+<span class="source-line" id="L67"><a class="line-number" href="#L67" aria-label="Line 67">67</a> </span>
+<span class="source-line" id="L68"><a class="line-number" href="#L68" aria-label="Line 68">68</a> Product and environment are separate concerns:</span>
+<span class="source-line" id="L69"><a class="line-number" href="#L69" aria-label="Line 69">69</a> </span>
+<span class="source-line" id="L70"><a class="line-number" href="#L70" aria-label="Line 70">70</a> - **Product:** OQG, QCI, or QGA.</span>
+<span class="source-line" id="L71"><a class="line-number" href="#L71" aria-label="Line 71">71</a> - **Environment:** local, dev, staging, or another deployed target.</span>
+<span class="source-line" id="L72"><a class="line-number" href="#L72" aria-label="Line 72">72</a> - **Browser:** Chromium, Firefox, Chromium with Edge device settings, or WebKit.</span>
+<span class="source-line" id="L73"><a class="line-number" href="#L73" aria-label="Line 73">73</a> </span>
+<span class="source-line" id="L74"><a class="line-number" href="#L74" aria-label="Line 74">74</a> This repository is being migrated incrementally. Both execution models are valid while</span>
+<span class="source-line" id="L75"><a class="line-number" href="#L75" aria-label="Line 75">75</a> that work continues:</span>
+<span class="source-line" id="L76"><a class="line-number" href="#L76" aria-label="Line 76">76</a> </span>
+<span class="source-line" id="L77"><a class="line-number" href="#L77" aria-label="Line 77">77</a> | Code                                            | Product selection                                            | Playwright projects                    |</span>
+<span class="source-line" id="L78"><a class="line-number" href="#L78" aria-label="Line 78">78</a> | ----------------------------------------------- | ------------------------------------------------------------ | -------------------------------------- |</span>
+<span class="source-line" id="L79"><a class="line-number" href="#L79" aria-label="Line 79">79</a> | Legacy, not yet migrated                        | `DOMAIN` / `BASE_URL` and helpers such as `getDomain()`      | Existing projects such as `chromium`   |</span>
+<span class="source-line" id="L80"><a class="line-number" href="#L80" aria-label="Line 80">80</a> | New or deliberately migrated multi-product code | The typed `product` fixture and a product-specific `baseURL` | `oqg-*`, `qci-*`, and `qga-*` projects |</span>
+<span class="source-line" id="L81"><a class="line-number" href="#L81" aria-label="Line 81">81</a> </span>
+<span class="source-line" id="L82"><a class="line-number" href="#L82" aria-label="Line 82">82</a> Do not break, rewrite, or automatically migrate legacy tests just because the new model</span>
+<span class="source-line" id="L83"><a class="line-number" href="#L83" aria-label="Line 83">83</a> exists. The existing projects and environment-based domain selection must keep working.</span>
+<span class="source-line" id="L84"><a class="line-number" href="#L84" aria-label="Line 84">84</a> Migrate one complete feature or test flow at a time when requested.</span>
+<span class="source-line" id="L85"><a class="line-number" href="#L85" aria-label="Line 85">85</a> </span>
+<span class="source-line" id="L86"><a class="line-number" href="#L86" aria-label="Line 86">86</a> A migrated flow must use one product-selection path from start to finish:</span>
+<span class="source-line" id="L87"><a class="line-number" href="#L87" aria-label="Line 87">87</a> </span>
+<span class="source-line" id="L88"><a class="line-number" href="#L88" aria-label="Line 88">88</a> ```text</span>
+<span class="source-line" id="L89"><a class="line-number" href="#L89" aria-label="Line 89">89</a> Playwright project -&gt; product fixture -&gt; PageManager -&gt; product Page Object -&gt; product locators</span>
+<span class="source-line" id="L90"><a class="line-number" href="#L90" aria-label="Line 90">90</a> ```</span>
+<span class="source-line" id="L91"><a class="line-number" href="#L91" aria-label="Line 91">91</a> </span>
+<span class="source-line" id="L92"><a class="line-number" href="#L92" aria-label="Line 92">92</a> Do not mix this with `getDomain()` or `isOqg()` / `isQci()` / `isQga()` inside the same</span>
+<span class="source-line" id="L93"><a class="line-number" href="#L93" aria-label="Line 93">93</a> migrated flow. Mixing the two can open one product through the project while an older</span>
+<span class="source-line" id="L94"><a class="line-number" href="#L94" aria-label="Line 94">94</a> locator silently selects another product from `DOMAIN` or `BASE_URL`.</span>
+<span class="source-line" id="L95"><a class="line-number" href="#L95" aria-label="Line 95">95</a> </span>
+<span class="source-line" id="L96"><a class="line-number" href="#L96" aria-label="Line 96">96</a> Current product projects are `&lt;product&gt;-chromium`, `&lt;product&gt;-firefox`,</span>
+<span class="source-line" id="L97"><a class="line-number" href="#L97" aria-label="Line 97">97</a> `&lt;product&gt;-edge`, and `&lt;product&gt;-safari`, where `&lt;product&gt;` is `oqg`, `qci`, or `qga`.</span>
+<span class="source-line" id="L98"><a class="line-number" href="#L98" aria-label="Line 98">98</a> The Edge-named projects use Playwright&#39;s bundled Chromium with Edge device settings; they</span>
+<span class="source-line" id="L99"><a class="line-number" href="#L99" aria-label="Line 99">99</a> do not launch branded Microsoft Edge. The Safari-named projects use Playwright WebKit,</span>
+<span class="source-line" id="L100"><a class="line-number" href="#L100" aria-label="Line 100">100</a> not the installed Safari application.</span>
+<span class="source-line" id="L101"><a class="line-number" href="#L101" aria-label="Line 101">101</a> </span>
+<span class="source-line" id="L102"><a class="line-number" href="#L102" aria-label="Line 102">102</a> New machines need the project dependencies and Playwright browser binaries:</span>
+<span class="source-line" id="L103"><a class="line-number" href="#L103" aria-label="Line 103">103</a> </span>
+<span class="source-line" id="L104"><a class="line-number" href="#L104" aria-label="Line 104">104</a> ```bash</span>
+<span class="source-line" id="L105"><a class="line-number" href="#L105" aria-label="Line 105">105</a> npm install</span>
+<span class="source-line" id="L106"><a class="line-number" href="#L106" aria-label="Line 106">106</a> npx playwright install chromium firefox webkit</span>
+<span class="source-line" id="L107"><a class="line-number" href="#L107" aria-label="Line 107">107</a> ```</span>
+<span class="source-line" id="L108"><a class="line-number" href="#L108" aria-label="Line 108">108</a> </span>
+<span class="source-line" id="L109"><a class="line-number" href="#L109" aria-label="Line 109">109</a> Product projects read their targets from `OQG_BASE_URL`, `QCI_BASE_URL`, and</span>
+<span class="source-line" id="L110"><a class="line-number" href="#L110" aria-label="Line 110">110</a> `QGA_BASE_URL`.</span>
+<span class="source-line" id="L111"><a class="line-number" href="#L111" aria-label="Line 111">111</a> </span>
+<span class="source-line" id="L112"><a class="line-number" href="#L112" aria-label="Line 112">112</a> ### Product-specific environment data **[convention]**</span>
+<span class="source-line" id="L113"><a class="line-number" href="#L113" aria-label="Line 113">113</a> </span>
+<span class="source-line" id="L114"><a class="line-number" href="#L114" aria-label="Line 114">114</a> `env.ts` is the single, simple configuration object for environment-backed values in the</span>
+<span class="source-line" id="L115"><a class="line-number" href="#L115" aria-label="Line 115">115</a> multi-product model. Keep its existing structure unchanged: load `.env`, call</span>
+<span class="source-line" id="L116"><a class="line-number" href="#L116" aria-label="Line 116">116</a> `defineEnv()`, and declare only the `shared`, `oqg`, `qci`, and `qga` configuration</span>
+<span class="source-line" id="L117"><a class="line-number" href="#L117" aria-label="Line 117">117</a> objects. Do not add loaders, exported helper functions, custom validation layers, or</span>
+<span class="source-line" id="L118"><a class="line-number" href="#L118" aria-label="Line 118">118</a> unrelated logic to this file.</span>
+<span class="source-line" id="L119"><a class="line-number" href="#L119" aria-label="Line 119">119</a> </span>
+<span class="source-line" id="L120"><a class="line-number" href="#L120" aria-label="Line 120">120</a> ```typescript</span>
+<span class="source-line" id="L121"><a class="line-number" href="#L121" aria-label="Line 121">121</a> export const env = defineEnv((get) =&gt; ({</span>
+<span class="source-line" id="L122"><a class="line-number" href="#L122" aria-label="Line 122">122</a>     shared: {</span>
+<span class="source-line" id="L123"><a class="line-number" href="#L123" aria-label="Line 123">123</a>         adminAuthEmail: get(&#39;STAGE_ADMIN_EMAIL&#39;),</span>
+<span class="source-line" id="L124"><a class="line-number" href="#L124" aria-label="Line 124">124</a>         adminAuthPassword: get(&#39;STAGE_ADMIN_PASSWORD&#39;),</span>
+<span class="source-line" id="L125"><a class="line-number" href="#L125" aria-label="Line 125">125</a>     },</span>
+<span class="source-line" id="L126"><a class="line-number" href="#L126" aria-label="Line 126">126</a>     oqg: {</span>
+<span class="source-line" id="L127"><a class="line-number" href="#L127" aria-label="Line 127">127</a>         product: &#39;oqg&#39; as const,</span>
+<span class="source-line" id="L128"><a class="line-number" href="#L128" aria-label="Line 128">128</a>         baseURL: get(&#39;OQG_BASE_URL&#39;, { required: true }),</span>
+<span class="source-line" id="L129"><a class="line-number" href="#L129" aria-label="Line 129">129</a>     },</span>
+<span class="source-line" id="L130"><a class="line-number" href="#L130" aria-label="Line 130">130</a>     qci: {</span>
+<span class="source-line" id="L131"><a class="line-number" href="#L131" aria-label="Line 131">131</a>         product: &#39;qci&#39; as const,</span>
+<span class="source-line" id="L132"><a class="line-number" href="#L132" aria-label="Line 132">132</a>         baseURL: get(&#39;QCI_BASE_URL&#39;, { required: true }),</span>
+<span class="source-line" id="L133"><a class="line-number" href="#L133" aria-label="Line 133">133</a>         adminAuthEmail: get(&#39;QCI_ADMIN_EMAIL&#39;) ?? get(&#39;STAGE_ADMIN_EMAIL&#39;),</span>
+<span class="source-line" id="L134"><a class="line-number" href="#L134" aria-label="Line 134">134</a>         adminAuthPassword:</span>
+<span class="source-line" id="L135"><a class="line-number" href="#L135" aria-label="Line 135">135</a>             get(&#39;QCI_ADMIN_PASSWORD&#39;) ?? get(&#39;STAGE_ADMIN_PASSWORD&#39;),</span>
+<span class="source-line" id="L136"><a class="line-number" href="#L136" aria-label="Line 136">136</a>     },</span>
+<span class="source-line" id="L137"><a class="line-number" href="#L137" aria-label="Line 137">137</a>     qga: {</span>
+<span class="source-line" id="L138"><a class="line-number" href="#L138" aria-label="Line 138">138</a>         product: &#39;qga&#39; as const,</span>
+<span class="source-line" id="L139"><a class="line-number" href="#L139" aria-label="Line 139">139</a>         baseURL: get(&#39;QGA_BASE_URL&#39;, { required: true }),</span>
+<span class="source-line" id="L140"><a class="line-number" href="#L140" aria-label="Line 140">140</a>     },</span>
+<span class="source-line" id="L141"><a class="line-number" href="#L141" aria-label="Line 141">141</a> }))</span>
+<span class="source-line" id="L142"><a class="line-number" href="#L142" aria-label="Line 142">142</a> ```</span>
+<span class="source-line" id="L143"><a class="line-number" href="#L143" aria-label="Line 143">143</a> </span>
+<span class="source-line" id="L144"><a class="line-number" href="#L144" aria-label="Line 144">144</a> `defineEnv()` merges `shared` values into each product and preserves the inferred type.</span>
+<span class="source-line" id="L145"><a class="line-number" href="#L145" aria-label="Line 145">145</a> Put a value in `shared` only when it is a genuine default for every product. Put a</span>
+<span class="source-line" id="L146"><a class="line-number" href="#L146" aria-label="Line 146">146</a> product-specific value or override directly in that product&#39;s object.</span>
+<span class="source-line" id="L147"><a class="line-number" href="#L147" aria-label="Line 147">147</a> </span>
+<span class="source-line" id="L148"><a class="line-number" href="#L148" aria-label="Line 148">148</a> Data flows in one direction:</span>
+<span class="source-line" id="L149"><a class="line-number" href="#L149" aria-label="Line 149">149</a> </span>
+<span class="source-line" id="L150"><a class="line-number" href="#L150" aria-label="Line 150">150</a> ```text</span>
+<span class="source-line" id="L151"><a class="line-number" href="#L151" aria-label="Line 151">151</a> .env locally / CI secret store</span>
+<span class="source-line" id="L152"><a class="line-number" href="#L152" aria-label="Line 152">152</a>   -&gt; env.ts/defineEnv()</span>
+<span class="source-line" id="L153"><a class="line-number" href="#L153" aria-label="Line 153">153</a>   -&gt; project selects product + baseURL</span>
+<span class="source-line" id="L154"><a class="line-number" href="#L154" aria-label="Line 154">154</a>   -&gt; baseFixture resolves env[product]</span>
+<span class="source-line" id="L155"><a class="line-number" href="#L155" aria-label="Line 155">155</a>   -&gt; test receives the env fixture and passes only the needed fields onward</span>
+<span class="source-line" id="L156"><a class="line-number" href="#L156" aria-label="Line 156">156</a> ```</span>
+<span class="source-line" id="L157"><a class="line-number" href="#L157" aria-label="Line 157">157</a> </span>
+<span class="source-line" id="L158"><a class="line-number" href="#L158" aria-label="Line 158">158</a> Only public execution data belongs in project `use`:</span>
+<span class="source-line" id="L159"><a class="line-number" href="#L159" aria-label="Line 159">159</a> </span>
+<span class="source-line" id="L160"><a class="line-number" href="#L160" aria-label="Line 160">160</a> ```typescript</span>
+<span class="source-line" id="L161"><a class="line-number" href="#L161" aria-label="Line 161">161</a> use: { product: env.oqg.product, baseURL: env.oqg.baseURL }</span>
+<span class="source-line" id="L162"><a class="line-number" href="#L162" aria-label="Line 162">162</a> ```</span>
+<span class="source-line" id="L163"><a class="line-number" href="#L163" aria-label="Line 163">163</a> </span>
+<span class="source-line" id="L164"><a class="line-number" href="#L164" aria-label="Line 164">164</a> Rules:</span>
+<span class="source-line" id="L165"><a class="line-number" href="#L165" aria-label="Line 165">165</a> </span>
+<span class="source-line" id="L166"><a class="line-number" href="#L166" aria-label="Line 166">166</a> - Add an explicit `get(&#39;EXACT_VARIABLE_NAME&#39;)` lookup to `shared` or the applicable</span>
+<span class="source-line" id="L167"><a class="line-number" href="#L167" aria-label="Line 167">167</a>   product object. Do not construct variable names dynamically or mutate `process.env`.</span>
+<span class="source-line" id="L168"><a class="line-number" href="#L168" aria-label="Line 168">168</a> - Environment values needed by new or migrated product-aware code must be declared here;</span>
+<span class="source-line" id="L169"><a class="line-number" href="#L169" aria-label="Line 169">169</a>   do not introduce new direct `process.env` reads.</span>
+<span class="source-line" id="L170"><a class="line-number" href="#L170" aria-label="Line 170">170</a> - Specs receive product-specific data through the `env` fixture. Page Objects must not</span>
+<span class="source-line" id="L171"><a class="line-number" href="#L171" aria-label="Line 171">171</a>   import `env.ts`; pass them only the field they need.</span>
+<span class="source-line" id="L172"><a class="line-number" href="#L172" aria-label="Line 172">172</a> - If a config file or helper genuinely needs to import `env.ts`, always use the named</span>
+<span class="source-line" id="L173"><a class="line-number" href="#L173" aria-label="Line 173">173</a>   import `env`, for example `import { env } from &#39;@/env&#39;`. Do not alias it to another</span>
+<span class="source-line" id="L174"><a class="line-number" href="#L174" aria-label="Line 174">174</a>   name.</span>
+<span class="source-line" id="L175"><a class="line-number" href="#L175" aria-label="Line 175">175</a> - `get()` is optional by default. Add `{ required: true }` manually only to an individual</span>
+<span class="source-line" id="L176"><a class="line-number" href="#L176" aria-label="Line 176">176</a>   variable that must exist whenever `env.ts` is imported. Never add `required` to every</span>
+<span class="source-line" id="L177"><a class="line-number" href="#L177" aria-label="Line 177">177</a>   variable: one missing value would make configuration startup fail and can break</span>
+<span class="source-line" id="L178"><a class="line-number" href="#L178" aria-label="Line 178">178</a>   unrelated products, helpers, and test runs.</span>
+<span class="source-line" id="L179"><a class="line-number" href="#L179" aria-label="Line 179">179</a> - Shared tests may use only fields with a consistent shape across their supported</span>
+<span class="source-line" id="L180"><a class="line-number" href="#L180" aria-label="Line 180">180</a>   products.</span>
+<span class="source-line" id="L181"><a class="line-number" href="#L181" aria-label="Line 181">181</a> - Keep `baseURL` in `use.baseURL` and navigate with relative URLs.</span>
+<span class="source-line" id="L182"><a class="line-number" href="#L182" aria-label="Line 182">182</a> - Never put secrets in `metadata` or project `use`, spread the complete environment object</span>
+<span class="source-line" id="L183"><a class="line-number" href="#L183" aria-label="Line 183">183</a>   into `use`, or log/attach/snapshot secret values. Reports, traces, screenshots, videos,</span>
+<span class="source-line" id="L184"><a class="line-number" href="#L184" aria-label="Line 184">184</a>   and Qase uploads are potentially visible artefacts.</span>
+<span class="source-line" id="L185"><a class="line-number" href="#L185" aria-label="Line 185">185</a> - Keep values in the gitignored `.env` locally and CI secret storage remotely; commit only</span>
+<span class="source-line" id="L186"><a class="line-number" href="#L186" aria-label="Line 186">186</a>   names/placeholders.</span>
+<span class="source-line" id="L187"><a class="line-number" href="#L187" aria-label="Line 187">187</a> </span>
+<span class="source-line" id="L188"><a class="line-number" href="#L188" aria-label="Line 188">188</a> `env.ts` is evaluated when it is imported, including while Playwright builds its project</span>
+<span class="source-line" id="L189"><a class="line-number" href="#L189" aria-label="Line 189">189</a> list before CLI project filtering. This is why required validation must be deliberate and</span>
+<span class="source-line" id="L190"><a class="line-number" href="#L190" aria-label="Line 190">190</a> limited to variables that truly are globally required at that point.</span>
+<span class="source-line" id="L191"><a class="line-number" href="#L191" aria-label="Line 191">191</a> </span>
+<span class="source-line" id="L192"><a class="line-number" href="#L192" aria-label="Line 192">192</a> The product projects currently have no product-specific `testMatch`. Playwright UI may</span>
+<span class="source-line" id="L193"><a class="line-number" href="#L193" aria-label="Line 193">193</a> therefore display the repository&#39;s tests under every product project. Opening the UI does</span>
+<span class="source-line" id="L194"><a class="line-number" href="#L194" aria-label="Line 194">194</a> not run a project, and selecting only `oqg-chromium` runs only OQG. However, an unfiltered</span>
+<span class="source-line" id="L195"><a class="line-number" href="#L195" aria-label="Line 195">195</a> `npm test` or `npx playwright test` selects every configured project, including products</span>
+<span class="source-line" id="L196"><a class="line-number" href="#L196" aria-label="Line 196">196</a> whose Page Objects may not be implemented. During this migration, select only the</span>
+<span class="source-line" id="L197"><a class="line-number" href="#L197" aria-label="Line 197">197</a> implemented product projects for local runs and CI jobs. Do not report an all-project run</span>
+<span class="source-line" id="L198"><a class="line-number" href="#L198" aria-label="Line 198">198</a> as supported while any selected product behavior remains unimplemented.</span>
+<span class="source-line" id="L199"><a class="line-number" href="#L199" aria-label="Line 199">199</a> </span>
+<span class="source-line" id="L200"><a class="line-number" href="#L200" aria-label="Line 200">200</a> ### Scripts</span>
+<span class="source-line" id="L201"><a class="line-number" href="#L201" aria-label="Line 201">201</a> </span>
+<span class="source-line" id="L202"><a class="line-number" href="#L202" aria-label="Line 202">202</a> | Script                                     | Runs                                           |</span>
+<span class="source-line" id="L203"><a class="line-number" href="#L203" aria-label="Line 203">203</a> | ------------------------------------------ | ---------------------------------------------- |</span>
+<span class="source-line" id="L204"><a class="line-number" href="#L204" aria-label="Line 204">204</a> | `npm test` / `test:dev`                    | Full suite (respects `testIgnore`)             |</span>
+<span class="source-line" id="L205"><a class="line-number" href="#L205" aria-label="Line 205">205</a> | `npm run test:smoke`                       | `@Smoke` tagged only                           |</span>
+<span class="source-line" id="L206"><a class="line-number" href="#L206" aria-label="Line 206">206</a> | `npm run test:event`                       | Event QR create suite (needs local `BASE_URL`) |</span>
+<span class="source-line" id="L207"><a class="line-number" href="#L207" aria-label="Line 207">207</a> | `npm run test:event:edit`                  | Event edit spec (needs a register-capable env) |</span>
+<span class="source-line" id="L208"><a class="line-number" href="#L208" aria-label="Line 208">208</a> | `npm run test:billing`                     | Billing suites, `--workers=1`                  |</span>
+<span class="source-line" id="L209"><a class="line-number" href="#L209" aria-label="Line 209">209</a> | `npm run test:percy:visual` / `test:sweep` | Visual / width-sweep captures                  |</span>
+<span class="source-line" id="L210"><a class="line-number" href="#L210" aria-label="Line 210">210</a> | `npm run docs:pdf`                         | Regenerate docs (HTML + PDF)                   |</span>
+<span class="source-line" id="L211"><a class="line-number" href="#L211" aria-label="Line 211">211</a> </span>
+<span class="source-line" id="L212"><a class="line-number" href="#L212" aria-label="Line 212">212</a> ---</span>
+<span class="source-line" id="L213"><a class="line-number" href="#L213" aria-label="Line 213">213</a> </span>
+<span class="source-line" id="L214"><a class="line-number" href="#L214" aria-label="Line 214">214</a> ## 3. Repository layout</span>
+<span class="source-line" id="L215"><a class="line-number" href="#L215" aria-label="Line 215">215</a> </span>
+<span class="source-line" id="L216"><a class="line-number" href="#L216" aria-label="Line 216">216</a> ```</span>
+<span class="source-line" id="L217"><a class="line-number" href="#L217" aria-label="Line 217">217</a> api/        API clients &amp; helpers (Mailpit, Stripe, User)</span>
+<span class="source-line" id="L218"><a class="line-number" href="#L218" aria-label="Line 218">218</a> base/       BasePage, PageManager, APIManager</span>
+<span class="source-line" id="L219"><a class="line-number" href="#L219" aria-label="Line 219">219</a> env.ts      Simple shared and product-specific environment configuration</span>
+<span class="source-line" id="L220"><a class="line-number" href="#L220" aria-label="Line 220">220</a> tsconfig.json  TypeScript settings, including the `@/` repository-root path alias</span>
+<span class="source-line" id="L221"><a class="line-number" href="#L221" aria-label="Line 221">221</a> fixtures/   baseFixture.ts — the only fixture file</span>
+<span class="source-line" id="L222"><a class="line-number" href="#L222" aria-label="Line 222">222</a> pages/      BaseLocators and Page Objects — one folder per page/feature</span>
+<span class="source-line" id="L223"><a class="line-number" href="#L223" aria-label="Line 223">223</a> tests/      Specs; tests/data/ holds test data; tests/helpers/ shared setup</span>
+<span class="source-line" id="L224"><a class="line-number" href="#L224" aria-label="Line 224">224</a> utils/      Formatters, generators, and environment configuration support</span>
+<span class="source-line" id="L225"><a class="line-number" href="#L225" aria-label="Line 225">225</a> scripts/    Node tooling (docs, generators) — not part of the test runtime</span>
+<span class="source-line" id="L226"><a class="line-number" href="#L226" aria-label="Line 226">226</a> docs/       Generated guides &amp; reports (md + html + pdf)</span>
+<span class="source-line" id="L227"><a class="line-number" href="#L227" aria-label="Line 227">227</a> ```</span>
+<span class="source-line" id="L228"><a class="line-number" href="#L228" aria-label="Line 228">228</a> </span>
+<span class="source-line" id="L229"><a class="line-number" href="#L229" aria-label="Line 229">229</a> **Placement rules [convention]**</span>
+<span class="source-line" id="L230"><a class="line-number" href="#L230" aria-label="Line 230">230</a> </span>
+<span class="source-line" id="L231"><a class="line-number" href="#L231" aria-label="Line 231">231</a> - Specs live only in `tests/`; Page Objects only in `pages/`.</span>
+<span class="source-line" id="L232"><a class="line-number" href="#L232" aria-label="Line 232">232</a> - Each Page Object gets its own folder: `pages/AccountPage/AccountPage.ts` +</span>
+<span class="source-line" id="L233"><a class="line-number" href="#L233" aria-label="Line 233">233</a>   `pages/AccountPage/AccountPageLocators.ts`.</span>
+<span class="source-line" id="L234"><a class="line-number" href="#L234" aria-label="Line 234">234</a> - Never edit `playwright-report/` or `test-results/` — they are generated.</span>
+<span class="source-line" id="L235"><a class="line-number" href="#L235" aria-label="Line 235">235</a> - Search for an existing locator before adding a new one; do not create duplicates.</span>
+<span class="source-line" id="L236"><a class="line-number" href="#L236" aria-label="Line 236">236</a> - Register new Page Objects in `PageManager`, new API helpers in `ApiManager`.</span>
+<span class="source-line" id="L237"><a class="line-number" href="#L237" aria-label="Line 237">237</a> - Never instantiate Page Objects or API helpers directly in a spec — go through</span>
+<span class="source-line" id="L238"><a class="line-number" href="#L238" aria-label="Line 238">238</a>   `pageManager` / `apiManager`.</span>
+<span class="source-line" id="L239"><a class="line-number" href="#L239" aria-label="Line 239">239</a> - **Organize by product feature, not by release.** Paths describe the feature</span>
+<span class="source-line" id="L240"><a class="line-number" href="#L240" aria-label="Line 240">240</a>   (`tests/logged-in-user/billing-page/…`, `…/my-qr-codes/…`). Jira, release, and TC</span>
+<span class="source-line" id="L241"><a class="line-number" href="#L241" aria-label="Line 241">241</a>   ids are **metadata** (file header + Playwright tags) — see §8.</span>
+<span class="source-line" id="L242"><a class="line-number" href="#L242" aria-label="Line 242">242</a> - Do **not** create nested release folders (`v2.7.0` inside `v2.6.0`) or a global</span>
+<span class="source-line" id="L243"><a class="line-number" href="#L243" aria-label="Line 243">243</a>   `tests/v2.5.0/` tree. Do **not** move/duplicate existing specs into release folders</span>
+<span class="source-line" id="L244"><a class="line-number" href="#L244" aria-label="Line 244">244</a>   when a requirement changes — update metadata/tags in place.</span>
+<span class="source-line" id="L245"><a class="line-number" href="#L245" aria-label="Line 245">245</a> - Legacy `…/v2.5.0/` trees may remain; **new** work goes under the feature path.</span>
+<span class="source-line" id="L246"><a class="line-number" href="#L246" aria-label="Line 246">246</a>   Migrate a file only when you are already editing it.</span>
+<span class="source-line" id="L247"><a class="line-number" href="#L247" aria-label="Line 247">247</a> </span>
+<span class="source-line" id="L248"><a class="line-number" href="#L248" aria-label="Line 248">248</a> ---</span>
+<span class="source-line" id="L249"><a class="line-number" href="#L249" aria-label="Line 249">249</a> </span>
+<span class="source-line" id="L250"><a class="line-number" href="#L250" aria-label="Line 250">250</a> ## 4. Naming conventions **[convention]**</span>
+<span class="source-line" id="L251"><a class="line-number" href="#L251" aria-label="Line 251">251</a> </span>
+<span class="source-line" id="L252"><a class="line-number" href="#L252" aria-label="Line 252">252</a> | Type           | Convention                                | Example                               |</span>
+<span class="source-line" id="L253"><a class="line-number" href="#L253" aria-label="Line 253">253</a> | -------------- | ----------------------------------------- | ------------------------------------- |</span>
+<span class="source-line" id="L254"><a class="line-number" href="#L254" aria-label="Line 254">254</a> | Page Object    | `PascalCase + Page.ts`                    | `LoginPage.ts`                        |</span>
+<span class="source-line" id="L255"><a class="line-number" href="#L255" aria-label="Line 255">255</a> | Locators class | `PascalCase + Locators.ts`                | `LoginPageLocators.ts`                |</span>
+<span class="source-line" id="L256"><a class="line-number" href="#L256" aria-label="Line 256">256</a> | Spec           | `{kebab-feature}-automations.spec.ts`     | `files-counter-automations.spec.ts`   |</span>
+<span class="source-line" id="L257"><a class="line-number" href="#L257" aria-label="Line 257">257</a> | Branch         | `{OQG3-XXXX}-{short-feature}-automations` | `OQG3-1424-files-counter-automations` |</span>
+<span class="source-line" id="L258"><a class="line-number" href="#L258" aria-label="Line 258">258</a> | API helper     | `PascalCase + Api.ts`                     | `UserApi.ts`                          |</span>
+<span class="source-line" id="L259"><a class="line-number" href="#L259" aria-label="Line 259">259</a> | Utility        | `camelCase.ts`                            | `dateFormatter.ts`                    |</span>
+<span class="source-line" id="L260"><a class="line-number" href="#L260" aria-label="Line 260">260</a> | Test data      | `{kebab-name}.data.ts`                    | `login-credentials.data.ts`           |</span>
+<span class="source-line" id="L261"><a class="line-number" href="#L261" aria-label="Line 261">261</a> | Test helper    | `{kebab-name}.helper.ts`                  | `fx-location.helper.ts`               |</span>
+<span class="source-line" id="L262"><a class="line-number" href="#L262" aria-label="Line 262">262</a> </span>
+<span class="source-line" id="L263"><a class="line-number" href="#L263" aria-label="Line 263">263</a> Locator property suffixes: `Input`, `Button`, `Checkbox`, `Toggle`/`Menu`, `Alert`,</span>
+<span class="source-line" id="L264"><a class="line-number" href="#L264" aria-label="Line 264">264</a> `TabButton`; prefixes `modal`, `frame`, `sidebar` where it aids clarity.</span>
+<span class="source-line" id="L265"><a class="line-number" href="#L265" aria-label="Line 265">265</a> Methods are verb-first (`fillLoginForm()`, `waitForDashboard()`). Constants are</span>
+<span class="source-line" id="L266"><a class="line-number" href="#L266" aria-label="Line 266">266</a> `SCREAMING_SNAKE_CASE`. `describe` blocks name the feature (include the Jira id when</span>
+<span class="source-line" id="L267"><a class="line-number" href="#L267" aria-label="Line 267">267</a> ticket-scoped, e.g. `OQG3-1424 folder file counter`); test titles are clear sentences,</span>
+<span class="source-line" id="L268"><a class="line-number" href="#L268" aria-label="Line 268">268</a> preferably prefixed with the TC id when applicable (`OQG3-1424-TC01: …`).</span>
+<span class="source-line" id="L269"><a class="line-number" href="#L269" aria-label="Line 269">269</a> </span>
+<span class="source-line" id="L270"><a class="line-number" href="#L270" aria-label="Line 270">270</a> Use kebab-case `.data.ts` and `.helper.ts` names for new files. Existing camelCase data</span>
+<span class="source-line" id="L271"><a class="line-number" href="#L271" aria-label="Line 271">271</a> and helper files are legacy-compatible; rename them only as part of an intentional</span>
+<span class="source-line" id="L272"><a class="line-number" href="#L272" aria-label="Line 272">272</a> migration where the import churn is justified.</span>
+<span class="source-line" id="L273"><a class="line-number" href="#L273" aria-label="Line 273">273</a> </span>
+<span class="source-line" id="L274"><a class="line-number" href="#L274" aria-label="Line 274">274</a> ---</span>
+<span class="source-line" id="L275"><a class="line-number" href="#L275" aria-label="Line 275">275</a> </span>
+<span class="source-line" id="L276"><a class="line-number" href="#L276" aria-label="Line 276">276</a> ## 5. Selector strategy **[convention]**</span>
+<span class="source-line" id="L277"><a class="line-number" href="#L277" aria-label="Line 277">277</a> </span>
+<span class="source-line" id="L278"><a class="line-number" href="#L278" aria-label="Line 278">278</a> Use in this order; don&#39;t skip a level without a reason.</span>
+<span class="source-line" id="L279"><a class="line-number" href="#L279" aria-label="Line 279">279</a> </span>
+<span class="source-line" id="L280"><a class="line-number" href="#L280" aria-label="Line 280">280</a> 1. `page.getByTestId()` — **preferred** (`data-qa-id`)</span>
+<span class="source-line" id="L281"><a class="line-number" href="#L281" aria-label="Line 281">281</a> 2. `page.getByRole()` — buttons, inputs, links, checkboxes</span>
+<span class="source-line" id="L282"><a class="line-number" href="#L282" aria-label="Line 282">282</a> 3. `page.getByLabel()` — labelled form fields</span>
+<span class="source-line" id="L283"><a class="line-number" href="#L283" aria-label="Line 283">283</a> 4. `page.getByPlaceholder()`</span>
+<span class="source-line" id="L284"><a class="line-number" href="#L284" aria-label="Line 284">284</a> 5. `page.locator(&#39;#id&#39;)` — stable ids</span>
+<span class="source-line" id="L285"><a class="line-number" href="#L285" aria-label="Line 285">285</a> 6. `page.locator(&quot;//xpath[@id]&quot;)` — XPath anchored on an id</span>
+<span class="source-line" id="L286"><a class="line-number" href="#L286" aria-label="Line 286">286</a> 7. `page.locator(&#39;.css-class&#39;)` — only if stable and unique</span>
+<span class="source-line" id="L287"><a class="line-number" href="#L287" aria-label="Line 287">287</a> 8. `page.locator(&#39;tag.class&#39;)` — last resort, document why</span>
+<span class="source-line" id="L288"><a class="line-number" href="#L288" aria-label="Line 288">288</a> </span>
+<span class="source-line" id="L289"><a class="line-number" href="#L289" aria-label="Line 289">289</a> ```typescript</span>
+<span class="source-line" id="L290"><a class="line-number" href="#L290" aria-label="Line 290">290</a> // ✅ role-based</span>
+<span class="source-line" id="L291"><a class="line-number" href="#L291" aria-label="Line 291">291</a> page.getByRole(&#39;button&#39;, { name: &#39;Website&#39; })</span>
+<span class="source-line" id="L292"><a class="line-number" href="#L292" aria-label="Line 292">292</a> // ✅ stable id</span>
+<span class="source-line" id="L293"><a class="line-number" href="#L293" aria-label="Line 293">293</a> page.locator(&quot;//input[@id=&#39;input-email&#39;]&quot;)</span>
+<span class="source-line" id="L294"><a class="line-number" href="#L294" aria-label="Line 294">294</a> // ✅ attribute selector</span>
+<span class="source-line" id="L295"><a class="line-number" href="#L295" aria-label="Line 295">295</a> page.locator(&quot;a[href*=&#39;analytics&#39;]&quot;)</span>
+<span class="source-line" id="L296"><a class="line-number" href="#L296" aria-label="Line 296">296</a> </span>
+<span class="source-line" id="L297"><a class="line-number" href="#L297" aria-label="Line 297">297</a> // ❌ fragile positional XPath — flag for refactor, never replicate</span>
+<span class="source-line" id="L298"><a class="line-number" href="#L298" aria-label="Line 298">298</a> page.locator(&quot;(//div[@class=&#39;feedback-radio-btn-wrap&#39;]/input)[2]&quot;)</span>
+<span class="source-line" id="L299"><a class="line-number" href="#L299" aria-label="Line 299">299</a> ```</span>
+<span class="source-line" id="L300"><a class="line-number" href="#L300" aria-label="Line 300">300</a> </span>
+<span class="source-line" id="L301"><a class="line-number" href="#L301" aria-label="Line 301">301</a> **Never:** positional selectors like `(//div)[3]`, `nth(0)` without a `.first()`/`.last()`</span>
+<span class="source-line" id="L302"><a class="line-number" href="#L302" aria-label="Line 302">302</a> rationale, `getByText()` for interactive elements, or CSS chains deeper than 3 levels.</span>
+<span class="source-line" id="L303"><a class="line-number" href="#L303" aria-label="Line 303">303</a> </span>
+<span class="source-line" id="L304"><a class="line-number" href="#L304" aria-label="Line 304">304</a> &gt; **Never invent a `data-qa-id`.** Confirm it exists in the live DOM first. Three</span>
+<span class="source-line" id="L305"><a class="line-number" href="#L305" aria-label="Line 305">305</a> &gt; non-existent test-ids were shipped this way and cost hours of debugging. If the</span>
+<span class="source-line" id="L306"><a class="line-number" href="#L306" aria-label="Line 306">306</a> &gt; element has no test-id, either ask the FE team to add one or use the next</span>
+<span class="source-line" id="L307"><a class="line-number" href="#L307" aria-label="Line 307">307</a> &gt; selector tier — do not guess a plausible-looking name. **[convention]**</span>
+<span class="source-line" id="L308"><a class="line-number" href="#L308" aria-label="Line 308">308</a> </span>
+<span class="source-line" id="L309"><a class="line-number" href="#L309" aria-label="Line 309">309</a> ---</span>
+<span class="source-line" id="L310"><a class="line-number" href="#L310" aria-label="Line 310">310</a> </span>
+<span class="source-line" id="L311"><a class="line-number" href="#L311" aria-label="Line 311">311</a> ## 6. Page Object Model</span>
+<span class="source-line" id="L312"><a class="line-number" href="#L312" aria-label="Line 312">312</a> </span>
+<span class="source-line" id="L313"><a class="line-number" href="#L313" aria-label="Line 313">313</a> The standard shape is two classes per page: locators, and behaviour. A multi-product</span>
+<span class="source-line" id="L314"><a class="line-number" href="#L314" aria-label="Line 314">314</a> page may use a shared abstract behaviour/locator contract plus product-specific classes.</span>
+<span class="source-line" id="L315"><a class="line-number" href="#L315" aria-label="Line 315">315</a> </span>
+<span class="source-line" id="L316"><a class="line-number" href="#L316" aria-label="Line 316">316</a> ```typescript</span>
+<span class="source-line" id="L317"><a class="line-number" href="#L317" aria-label="Line 317">317</a> // pages/ExamplePage/ExamplePageLocators.ts</span>
+<span class="source-line" id="L318"><a class="line-number" href="#L318" aria-label="Line 318">318</a> import { Page, Locator } from &#39;@playwright/test&#39;</span>
+<span class="source-line" id="L319"><a class="line-number" href="#L319" aria-label="Line 319">319</a> import { BaseLocators } from &#39;../BaseLocators&#39;</span>
+<span class="source-line" id="L320"><a class="line-number" href="#L320" aria-label="Line 320">320</a> </span>
+<span class="source-line" id="L321"><a class="line-number" href="#L321" aria-label="Line 321">321</a> export class ExamplePageLocators extends BaseLocators {</span>
+<span class="source-line" id="L322"><a class="line-number" href="#L322" aria-label="Line 322">322</a>     someButton: Locator</span>
+<span class="source-line" id="L323"><a class="line-number" href="#L323" aria-label="Line 323">323</a>     someInput: Locator</span>
+<span class="source-line" id="L324"><a class="line-number" href="#L324" aria-label="Line 324">324</a> </span>
+<span class="source-line" id="L325"><a class="line-number" href="#L325" aria-label="Line 325">325</a>     constructor(page: Page) {</span>
+<span class="source-line" id="L326"><a class="line-number" href="#L326" aria-label="Line 326">326</a>         super(page)</span>
+<span class="source-line" id="L327"><a class="line-number" href="#L327" aria-label="Line 327">327</a>         this.someButton = page.getByRole(&#39;button&#39;, { name: &#39;Save&#39; })</span>
+<span class="source-line" id="L328"><a class="line-number" href="#L328" aria-label="Line 328">328</a>         this.someInput = page.getByTestId(&#39;example-input&#39;)</span>
+<span class="source-line" id="L329"><a class="line-number" href="#L329" aria-label="Line 329">329</a>     }</span>
+<span class="source-line" id="L330"><a class="line-number" href="#L330" aria-label="Line 330">330</a> }</span>
+<span class="source-line" id="L331"><a class="line-number" href="#L331" aria-label="Line 331">331</a> ```</span>
+<span class="source-line" id="L332"><a class="line-number" href="#L332" aria-label="Line 332">332</a> </span>
+<span class="source-line" id="L333"><a class="line-number" href="#L333" aria-label="Line 333">333</a> ```typescript</span>
+<span class="source-line" id="L334"><a class="line-number" href="#L334" aria-label="Line 334">334</a> // pages/ExamplePage/ExamplePage.ts</span>
+<span class="source-line" id="L335"><a class="line-number" href="#L335" aria-label="Line 335">335</a> import { Page } from &#39;@playwright/test&#39;</span>
+<span class="source-line" id="L336"><a class="line-number" href="#L336" aria-label="Line 336">336</a> import { BasePage } from &#39;../../base/BasePage&#39;</span>
+<span class="source-line" id="L337"><a class="line-number" href="#L337" aria-label="Line 337">337</a> import { ExamplePageLocators } from &#39;./ExamplePageLocators&#39;</span>
+<span class="source-line" id="L338"><a class="line-number" href="#L338" aria-label="Line 338">338</a> </span>
+<span class="source-line" id="L339"><a class="line-number" href="#L339" aria-label="Line 339">339</a> export class ExamplePage extends BasePage {</span>
+<span class="source-line" id="L340"><a class="line-number" href="#L340" aria-label="Line 340">340</a>     locator: ExamplePageLocators</span>
+<span class="source-line" id="L341"><a class="line-number" href="#L341" aria-label="Line 341">341</a> </span>
+<span class="source-line" id="L342"><a class="line-number" href="#L342" aria-label="Line 342">342</a>     constructor(page: Page) {</span>
+<span class="source-line" id="L343"><a class="line-number" href="#L343" aria-label="Line 343">343</a>         super(page)</span>
+<span class="source-line" id="L344"><a class="line-number" href="#L344" aria-label="Line 344">344</a>         this.locator = new ExamplePageLocators(page)</span>
+<span class="source-line" id="L345"><a class="line-number" href="#L345" aria-label="Line 345">345</a>     }</span>
+<span class="source-line" id="L346"><a class="line-number" href="#L346" aria-label="Line 346">346</a> </span>
+<span class="source-line" id="L347"><a class="line-number" href="#L347" aria-label="Line 347">347</a>     /** Fills the form and submits it. */</span>
+<span class="source-line" id="L348"><a class="line-number" href="#L348" aria-label="Line 348">348</a>     async fillAndSubmit(title: string): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L349"><a class="line-number" href="#L349" aria-label="Line 349">349</a>         await this.locator.someInput.fill(title)</span>
+<span class="source-line" id="L350"><a class="line-number" href="#L350" aria-label="Line 350">350</a>         await this.locator.someButton.click()</span>
+<span class="source-line" id="L351"><a class="line-number" href="#L351" aria-label="Line 351">351</a>     }</span>
+<span class="source-line" id="L352"><a class="line-number" href="#L352" aria-label="Line 352">352</a> }</span>
+<span class="source-line" id="L353"><a class="line-number" href="#L353" aria-label="Line 353">353</a> ```</span>
+<span class="source-line" id="L354"><a class="line-number" href="#L354" aria-label="Line 354">354</a> </span>
+<span class="source-line" id="L355"><a class="line-number" href="#L355" aria-label="Line 355">355</a> **Rules [convention]**</span>
+<span class="source-line" id="L356"><a class="line-number" href="#L356" aria-label="Line 356">356</a> </span>
+<span class="source-line" id="L357"><a class="line-number" href="#L357" aria-label="Line 357">357</a> - Page Objects extend `BasePage`, never `BaseLocators`.</span>
+<span class="source-line" id="L358"><a class="line-number" href="#L358" aria-label="Line 358">358</a> - Locator classes extend `BaseLocators` when they use its shared selectors. A locator</span>
+<span class="source-line" id="L359"><a class="line-number" href="#L359" aria-label="Line 359">359</a>   class with no applicable shared selectors may remain standalone.</span>
+<span class="source-line" id="L360"><a class="line-number" href="#L360" aria-label="Line 360">360</a> - Locators are reached through the Page Object&#39;s locator object (`this.locator.x` or the</span>
+<span class="source-line" id="L361"><a class="line-number" href="#L361" aria-label="Line 361">361</a>   typed product equivalent), never declared as loose locator properties on the Page Object.</span>
+<span class="source-line" id="L362"><a class="line-number" href="#L362" aria-label="Line 362">362</a> - `BasePage` provides `page`, `expect`, `openPage()` and the fake-data helpers.</span>
+<span class="source-line" id="L363"><a class="line-number" href="#L363" aria-label="Line 363">363</a> - Add JSDoc to public methods.</span>
+<span class="source-line" id="L364"><a class="line-number" href="#L364" aria-label="Line 364">364</a> </span>
+<span class="source-line" id="L365"><a class="line-number" href="#L365" aria-label="Line 365">365</a> ### Reuse `BasePage` and `BaseLocators` first **[convention]**</span>
+<span class="source-line" id="L366"><a class="line-number" href="#L366" aria-label="Line 366">366</a> </span>
+<span class="source-line" id="L367"><a class="line-number" href="#L367" aria-label="Line 367">367</a> Before adding a locator, page helper, navigation wrapper, wait, assertion utility, or fake</span>
+<span class="source-line" id="L368"><a class="line-number" href="#L368" aria-label="Line 368">368</a> data method, inspect `base/BasePage.ts` and `pages/BaseLocators.ts` and search their current</span>
+<span class="source-line" id="L369"><a class="line-number" href="#L369" aria-label="Line 369">369</a> usage. Reuse an existing base member when its meaning and selector match the new flow.</span>
+<span class="source-line" id="L370"><a class="line-number" href="#L370" aria-label="Line 370">370</a> </span>
+<span class="source-line" id="L371"><a class="line-number" href="#L371" aria-label="Line 371">371</a> `BasePage` is the shared behavior foundation. It already provides:</span>
+<span class="source-line" id="L372"><a class="line-number" href="#L372" aria-label="Line 372">372</a> </span>
+<span class="source-line" id="L373"><a class="line-number" href="#L373" aria-label="Line 373">373</a> - the Playwright `page` and `expect` objects;</span>
+<span class="source-line" id="L374"><a class="line-number" href="#L374" aria-label="Line 374">374</a> - `openPage()` with retry handling for transient network drops;</span>
+<span class="source-line" id="L375"><a class="line-number" href="#L375" aria-label="Line 375">375</a> - `isInvisible()` and the documented `wait()` escape hatch; and</span>
+<span class="source-line" id="L376"><a class="line-number" href="#L376" aria-label="Line 376">376</a> - the repository&#39;s fake-data helpers.</span>
+<span class="source-line" id="L377"><a class="line-number" href="#L377" aria-label="Line 377">377</a> </span>
+<span class="source-line" id="L378"><a class="line-number" href="#L378" aria-label="Line 378">378</a> Prefer those members over reimplementing equivalent behavior in each product Page Object.</span>
+<span class="source-line" id="L379"><a class="line-number" href="#L379" aria-label="Line 379">379</a> For Page Object-controlled navigation, prefer `openPage()` when its retry behavior and</span>
+<span class="source-line" id="L380"><a class="line-number" href="#L380" aria-label="Line 380">380</a> options fit the flow; use direct `page.goto()` only when the test needs different navigation</span>
+<span class="source-line" id="L381"><a class="line-number" href="#L381" aria-label="Line 381">381</a> semantics.</span>
+<span class="source-line" id="L382"><a class="line-number" href="#L382" aria-label="Line 382">382</a> </span>
+<span class="source-line" id="L383"><a class="line-number" href="#L383" aria-label="Line 383">383</a> `BaseLocators` is the shared selector foundation. It contains common inputs, buttons,</span>
+<span class="source-line" id="L384"><a class="line-number" href="#L384" aria-label="Line 384">384</a> navigation controls, QR creation elements, frames, alerts, and other selectors used by</span>
+<span class="source-line" id="L385"><a class="line-number" href="#L385" aria-label="Line 385">385</a> multiple pages. Extend it and reuse matching inherited locators instead of redeclaring</span>
+<span class="source-line" id="L386"><a class="line-number" href="#L386" aria-label="Line 386">386</a> them.</span>
+<span class="source-line" id="L387"><a class="line-number" href="#L387" aria-label="Line 387">387</a> </span>
+<span class="source-line" id="L388"><a class="line-number" href="#L388" aria-label="Line 388">388</a> Base reuse must remain meaningful:</span>
+<span class="source-line" id="L389"><a class="line-number" href="#L389" aria-label="Line 389">389</a> </span>
+<span class="source-line" id="L390"><a class="line-number" href="#L390" aria-label="Line 390">390</a> - Reuse an inherited locator only when it represents the same element and behavior on the</span>
+<span class="source-line" id="L391"><a class="line-number" href="#L391" aria-label="Line 391">391</a>   selected product.</span>
+<span class="source-line" id="L392"><a class="line-number" href="#L392" aria-label="Line 392">392</a> - Add a new member to a base class only when it is genuinely shared across multiple pages</span>
+<span class="source-line" id="L393"><a class="line-number" href="#L393" aria-label="Line 393">393</a>   or product implementations. Keep feature- and product-specific members in their own</span>
+<span class="source-line" id="L394"><a class="line-number" href="#L394" aria-label="Line 394">394</a>   classes.</span>
+<span class="source-line" id="L395"><a class="line-number" href="#L395" aria-label="Line 395">395</a> - Do not override a base locator with an unrelated element just to reuse a property name.</span>
+<span class="source-line" id="L396"><a class="line-number" href="#L396" aria-label="Line 396">396</a> - Do not copy a base method or selector into OQG, QCI, and QGA classes. If it is truly common,</span>
+<span class="source-line" id="L397"><a class="line-number" href="#L397" aria-label="Line 397">397</a>   inherit it; if it differs, implement it separately in the product classes.</span>
+<span class="source-line" id="L398"><a class="line-number" href="#L398" aria-label="Line 398">398</a> - Preserve existing base behavior during migration. Changing a shared base member can</span>
+<span class="source-line" id="L399"><a class="line-number" href="#L399" aria-label="Line 399">399</a>   affect many legacy suites, so inspect all usages and verify them before editing it.</span>
+<span class="source-line" id="L400"><a class="line-number" href="#L400" aria-label="Line 400">400</a> </span>
+<span class="source-line" id="L401"><a class="line-number" href="#L401" aria-label="Line 401">401</a> ### Product-specific Page Objects **[convention]**</span>
+<span class="source-line" id="L402"><a class="line-number" href="#L402" aria-label="Line 402">402</a> </span>
+<span class="source-line" id="L403"><a class="line-number" href="#L403" aria-label="Line 403">403</a> Use a factory **only when locators or clicks differ by product**. If they are the same,</span>
+<span class="source-line" id="L404"><a class="line-number" href="#L404" aria-label="Line 404">404</a> use one concrete Page Object and locator class — no abstract class, no empty `Oqg*` /</span>
+<span class="source-line" id="L405"><a class="line-number" href="#L405" aria-label="Line 405">405</a> `Qci*` / `Qga*` subclasses, no factory.</span>
+<span class="source-line" id="L406"><a class="line-number" href="#L406" aria-label="Line 406">406</a> </span>
+<span class="source-line" id="L407"><a class="line-number" href="#L407" aria-label="Line 407">407</a> | Locators and clicks           | Pattern                                                                                  | `PageManager` constructor                               |</span>
+<span class="source-line" id="L408"><a class="line-number" href="#L408" aria-label="Line 408">408</a> | ----------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------- |</span>
+<span class="source-line" id="L409"><a class="line-number" href="#L409" aria-label="Line 409">409</a> | Same across products in scope | One concrete page + locator class (`MyQrCodesPage`)                                      | `this.myQrCodesPage = new MyQrCodesPage(page)`          |</span>
+<span class="source-line" id="L410"><a class="line-number" href="#L410" aria-label="Line 410">410</a> | Different per product         | Abstract shared contract + product classes + constructor-style factory (`DpfCreatePage`) | `this.dpfCreatePage = new DpfCreatePage(page, product)` |</span>
+<span class="source-line" id="L411"><a class="line-number" href="#L411" aria-label="Line 411">411</a> </span>
+<span class="source-line" id="L412"><a class="line-number" href="#L412" aria-label="Line 412">412</a> Empty product subclasses that only call `super(page)` mean the factory is unnecessary —</span>
+<span class="source-line" id="L413"><a class="line-number" href="#L413" aria-label="Line 413">413</a> collapse them. Do not add a factory “in case” products diverge later. Do not use lazy</span>
+<span class="source-line" id="L414"><a class="line-number" href="#L414" aria-label="Line 414">414</a> getters; construct every page in the constructor.</span>
+<span class="source-line" id="L415"><a class="line-number" href="#L415" aria-label="Line 415">415</a> </span>
+<span class="source-line" id="L416"><a class="line-number" href="#L416" aria-label="Line 416">416</a> When products have the same requirement but **different DOM**, keep the test and public</span>
+<span class="source-line" id="L417"><a class="line-number" href="#L417" aria-label="Line 417">417</a> page behavior shared and put selectors and UI interactions in product classes. Create</span>
+<span class="source-line" id="L418"><a class="line-number" href="#L418" aria-label="Line 418">418</a> separate Page Object and locator classes only for the products that actually implement</span>
+<span class="source-line" id="L419"><a class="line-number" href="#L419" aria-label="Line 419">419</a> that page and are in scope. Do not add empty placeholder classes, made-up selectors, or</span>
+<span class="source-line" id="L420"><a class="line-number" href="#L420" aria-label="Line 420">420</a> boilerplate for products that are not implemented yet. Add the product class and factory</span>
+<span class="source-line" id="L421"><a class="line-number" href="#L421" aria-label="Line 421">421</a> entry together when support is implemented later.</span>
+<span class="source-line" id="L422"><a class="line-number" href="#L422" aria-label="Line 422">422</a> </span>
+<span class="source-line" id="L423"><a class="line-number" href="#L423" aria-label="Line 423">423</a> Never extend one concrete product Page Object or locator class from another concrete</span>
+<span class="source-line" id="L424"><a class="line-number" href="#L424" aria-label="Line 424">424</a> product class. OQG, QCI, and QGA classes may inherit only their shared abstract contract,</span>
+<span class="source-line" id="L425"><a class="line-number" href="#L425" aria-label="Line 425">425</a> `BasePage`, `BaseLocators`, or a genuinely product-neutral helper.</span>
+<span class="source-line" id="L426"><a class="line-number" href="#L426" aria-label="Line 426">426</a> </span>
+<span class="source-line" id="L427"><a class="line-number" href="#L427" aria-label="Line 427">427</a> Use the constructor-style `PageFactory({...})` and register only implemented product</span>
+<span class="source-line" id="L428"><a class="line-number" href="#L428" aria-label="Line 428">428</a> constructors. This is the default factory API for multi-product pages whose selectors or</span>
+<span class="source-line" id="L429"><a class="line-number" href="#L429" aria-label="Line 429">429</a> interactions differ. The generated class is the feature page that `PageManager` constructs;</span>
+<span class="source-line" id="L430"><a class="line-number" href="#L430" aria-label="Line 430">430</a> do not add a separate `Create*Factory` class or a `.get(product)` call. An unregistered</span>
+<span class="source-line" id="L431"><a class="line-number" href="#L431" aria-label="Line 431">431</a> product does not break `PageManager` construction and is skipped with a clear reason when</span>
+<span class="source-line" id="L432"><a class="line-number" href="#L432" aria-label="Line 432">432</a> the page is used; never return another product&#39;s implementation as a fallback:</span>
+<span class="source-line" id="L433"><a class="line-number" href="#L433" aria-label="Line 433">433</a> </span>
+<span class="source-line" id="L434"><a class="line-number" href="#L434" aria-label="Line 434">434</a> ```typescript</span>
+<span class="source-line" id="L435"><a class="line-number" href="#L435" aria-label="Line 435">435</a> export class ExamplePage extends PageFactory({</span>
+<span class="source-line" id="L436"><a class="line-number" href="#L436" aria-label="Line 436">436</a>     oqg: OqgExamplePage,</span>
+<span class="source-line" id="L437"><a class="line-number" href="#L437" aria-label="Line 437">437</a>     qci: QciExamplePage,</span>
+<span class="source-line" id="L438"><a class="line-number" href="#L438" aria-label="Line 438">438</a>     // Add qga only when its Page Object and selectors are implemented.</span>
+<span class="source-line" id="L439"><a class="line-number" href="#L439" aria-label="Line 439">439</a> }) {}</span>
+<span class="source-line" id="L440"><a class="line-number" href="#L440" aria-label="Line 440">440</a> ```</span>
+<span class="source-line" id="L441"><a class="line-number" href="#L441" aria-label="Line 441">441</a> </span>
+<span class="source-line" id="L442"><a class="line-number" href="#L442" aria-label="Line 442">442</a> Keep the shared contract and product implementation classes module-private unless another</span>
+<span class="source-line" id="L443"><a class="line-number" href="#L443" aria-label="Line 443">443</a> module genuinely consumes them. Export the generated feature class used by `PageManager`.</span>
+<span class="source-line" id="L444"><a class="line-number" href="#L444" aria-label="Line 444">444</a> </span>
+<span class="source-line" id="L445"><a class="line-number" href="#L445" aria-label="Line 445">445</a> - Share selectors only when they are genuinely identical.</span>
+<span class="source-line" id="L446"><a class="line-number" href="#L446" aria-label="Line 446">446</a> - Keep different selectors in separate product locator classes; do not build one large</span>
+<span class="source-line" id="L447"><a class="line-number" href="#L447" aria-label="Line 447">447</a>   locator class full of product conditions.</span>
+<span class="source-line" id="L448"><a class="line-number" href="#L448" aria-label="Line 448">448</a> - Do not create an empty product locator or Page Object class. Do not point an unsupported</span>
+<span class="source-line" id="L449"><a class="line-number" href="#L449" aria-label="Line 449">449</a>   product at another product&#39;s implementation as a fallback.</span>
+<span class="source-line" id="L450"><a class="line-number" href="#L450" aria-label="Line 450">450</a> - Keep product-specific tabs, accordions, layout handling, and waits inside the product</span>
+<span class="source-line" id="L451"><a class="line-number" href="#L451" aria-label="Line 451">451</a>   Page Object rather than branching on the product in the spec.</span>
+<span class="source-line" id="L452"><a class="line-number" href="#L452" aria-label="Line 452">452</a> - Prefer semantic public methods that describe the business action or assertion. Method</span>
+<span class="source-line" id="L453"><a class="line-number" href="#L453" aria-label="Line 453">453</a>   names are not prescribed: choose clear, verb-first names that match what the method does</span>
+<span class="source-line" id="L454"><a class="line-number" href="#L454" aria-label="Line 454">454</a>   and preserve an established local convention where it remains clear.</span>
+<span class="source-line" id="L455"><a class="line-number" href="#L455" aria-label="Line 455">455</a> - Do not create an abstraction when the products have different requirements. Similar DOM</span>
+<span class="source-line" id="L456"><a class="line-number" href="#L456" aria-label="Line 456">456</a>   alone is not a reason to claim that two test cases are the same.</span>
+<span class="source-line" id="L457"><a class="line-number" href="#L457" aria-label="Line 457">457</a> </span>
+<span class="source-line" id="L458"><a class="line-number" href="#L458" aria-label="Line 458">458</a> ### Fake data — never use `faker` directly in specs **[convention]**</span>
+<span class="source-line" id="L459"><a class="line-number" href="#L459" aria-label="Line 459">459</a> </span>
+<span class="source-line" id="L460"><a class="line-number" href="#L460" aria-label="Line 460">460</a> Use the `BasePage` helpers: `fakeEmail()`, `fakeEmailWithMailtrapAccess()`,</span>
+<span class="source-line" id="L461"><a class="line-number" href="#L461" aria-label="Line 461">461</a> `fakePassword()`, `fakeString(n)`, `fakeText(n)`, `fakeWord()`, `fakeCompany()`,</span>
+<span class="source-line" id="L462"><a class="line-number" href="#L462" aria-label="Line 462">462</a> `fakeUrl()`, `fakeFirstName()`, `fakeLastName()`, `fakeUserName()`,</span>
+<span class="source-line" id="L463"><a class="line-number" href="#L463" aria-label="Line 463">463</a> `fakePhoneNumber()`, `fakeCity()`, `fakeInt(min,max)`, `fakeNumber()`.</span>
+<span class="source-line" id="L464"><a class="line-number" href="#L464" aria-label="Line 464">464</a> </span>
+<span class="source-line" id="L465"><a class="line-number" href="#L465" aria-label="Line 465">465</a> Use `fakeEmailWithMailtrapAccess()` **only** for tests that read mail (now via Mailpit);</span>
+<span class="source-line" id="L466"><a class="line-number" href="#L466" aria-label="Line 466">466</a> `fakeEmail()` everywhere else.</span>
+<span class="source-line" id="L467"><a class="line-number" href="#L467" aria-label="Line 467">467</a> </span>
+<span class="source-line" id="L468"><a class="line-number" href="#L468" aria-label="Line 468">468</a> Never generate realistic PII (real names, real emails, real phone numbers).</span>
+<span class="source-line" id="L469"><a class="line-number" href="#L469" aria-label="Line 469">469</a> </span>
+<span class="source-line" id="L470"><a class="line-number" href="#L470" aria-label="Line 470">470</a> ---</span>
+<span class="source-line" id="L471"><a class="line-number" href="#L471" aria-label="Line 471">471</a> </span>
+<span class="source-line" id="L472"><a class="line-number" href="#L472" aria-label="Line 472">472</a> ## 7. Fixtures and managers</span>
+<span class="source-line" id="L473"><a class="line-number" href="#L473" aria-label="Line 473">473</a> </span>
+<span class="source-line" id="L474"><a class="line-number" href="#L474" aria-label="Line 474">474</a> `fixtures/baseFixture.ts` is the only fixture file.</span>
+<span class="source-line" id="L475"><a class="line-number" href="#L475" aria-label="Line 475">475</a> </span>
+<span class="source-line" id="L476"><a class="line-number" href="#L476" aria-label="Line 476">476</a> ```typescript</span>
+<span class="source-line" id="L477"><a class="line-number" href="#L477" aria-label="Line 477">477</a> import { expect } from &#39;@playwright/test&#39; // ← expect comes from Playwright</span>
+<span class="source-line" id="L478"><a class="line-number" href="#L478" aria-label="Line 478">478</a> import { test } from &#39;../../fixtures/baseFixture&#39; // ← test comes from the fixture</span>
+<span class="source-line" id="L479"><a class="line-number" href="#L479" aria-label="Line 479">479</a> ```</span>
+<span class="source-line" id="L480"><a class="line-number" href="#L480" aria-label="Line 480">480</a> </span>
+<span class="source-line" id="L481"><a class="line-number" href="#L481" aria-label="Line 481">481</a> &gt; **[enforced]** Importing `expect` from `baseFixture` throws at runtime</span>
+<span class="source-line" id="L482"><a class="line-number" href="#L482" aria-label="Line 482">482</a> &gt; (`_baseFixture.expect is not a function`). ESLint blocks it.</span>
+<span class="source-line" id="L483"><a class="line-number" href="#L483" aria-label="Line 483">483</a> </span>
+<span class="source-line" id="L484"><a class="line-number" href="#L484" aria-label="Line 484">484</a> `pageManager` exposes the registered Page Objects — `accountPage`, `adminPage`,</span>
+<span class="source-line" id="L485"><a class="line-number" href="#L485" aria-label="Line 485">485</a> `billingPage`, `emailBodyPage`, `loginPage`, `mainPage`, `menuPage`, `myQrCodesPage`,</span>
+<span class="source-line" id="L486"><a class="line-number" href="#L486" aria-label="Line 486">486</a> `paymentPage`, `planAndPricesPage`, `qrAnalyticsPage`, `qrCreationPage`,</span>
+<span class="source-line" id="L487"><a class="line-number" href="#L487" aria-label="Line 487">487</a> `registerPage`, `step1Page`, `step2Page`, `step3Page`.</span>
+<span class="source-line" id="L488"><a class="line-number" href="#L488" aria-label="Line 488">488</a> `apiManager` exposes `userApi` and `stripeApi`. Access locators through `.locator`:</span>
+<span class="source-line" id="L489"><a class="line-number" href="#L489" aria-label="Line 489">489</a> </span>
+<span class="source-line" id="L490"><a class="line-number" href="#L490" aria-label="Line 490">490</a> ```typescript</span>
+<span class="source-line" id="L491"><a class="line-number" href="#L491" aria-label="Line 491">491</a> await pageManager.myQrCodesPage.locator.sidebarAnalyticsButton.click() // ✅</span>
+<span class="source-line" id="L492"><a class="line-number" href="#L492" aria-label="Line 492">492</a> await pageManager.myQrCodesPage.sidebarAnalyticsButton.click() // ❌</span>
+<span class="source-line" id="L493"><a class="line-number" href="#L493" aria-label="Line 493">493</a> ```</span>
+<span class="source-line" id="L494"><a class="line-number" href="#L494" aria-label="Line 494">494</a> </span>
+<span class="source-line" id="L495"><a class="line-number" href="#L495" aria-label="Line 495">495</a> &gt; Note: `pages/ScannedPage/` exists as a Page Object but is **not** registered in</span>
+<span class="source-line" id="L496"><a class="line-number" href="#L496" aria-label="Line 496">496</a> &gt; `PageManager`. Register it there before using it, rather than instantiating it</span>
+<span class="source-line" id="L497"><a class="line-number" href="#L497" aria-label="Line 497">497</a> &gt; directly in a spec.</span>
+<span class="source-line" id="L498"><a class="line-number" href="#L498" aria-label="Line 498">498</a> </span>
+<span class="source-line" id="L499"><a class="line-number" href="#L499" aria-label="Line 499">499</a> For product-aware code, `baseFixture` supplies `product` to `PageManager`. Pages whose</span>
+<span class="source-line" id="L500"><a class="line-number" href="#L500" aria-label="Line 500">500</a> DOM differs by product are created with `new FeaturePage(page, product)` from the</span>
+<span class="source-line" id="L501"><a class="line-number" href="#L501" aria-label="Line 501">501</a> constructor-style factory; pages whose locators and behavior are shared use their regular</span>
+<span class="source-line" id="L502"><a class="line-number" href="#L502" aria-label="Line 502">502</a> single-argument constructor. Specs must continue to use</span>
+<span class="source-line" id="L503"><a class="line-number" href="#L503" aria-label="Line 503">503</a> `pageManager`; never instantiate `Oqg*Page` or `Qci*Page` directly. The same rule applies</span>
+<span class="source-line" id="L504"><a class="line-number" href="#L504" aria-label="Line 504">504</a> to `Qga*Page` classes.</span>
+<span class="source-line" id="L505"><a class="line-number" href="#L505" aria-label="Line 505">505</a> </span>
+<span class="source-line" id="L506"><a class="line-number" href="#L506" aria-label="Line 506">506</a> `baseFixture` also supplies the selected product&#39;s `env` object:</span>
+<span class="source-line" id="L507"><a class="line-number" href="#L507" aria-label="Line 507">507</a> </span>
+<span class="source-line" id="L508"><a class="line-number" href="#L508" aria-label="Line 508">508</a> ```typescript</span>
+<span class="source-line" id="L509"><a class="line-number" href="#L509" aria-label="Line 509">509</a> env: async ({ product }, use) =&gt; {</span>
+<span class="source-line" id="L510"><a class="line-number" href="#L510" aria-label="Line 510">510</a>     await use(env[product])</span>
+<span class="source-line" id="L511"><a class="line-number" href="#L511" aria-label="Line 511">511</a> },</span>
+<span class="source-line" id="L512"><a class="line-number" href="#L512" aria-label="Line 512">512</a> ```</span>
+<span class="source-line" id="L513"><a class="line-number" href="#L513" aria-label="Line 513">513</a> </span>
+<span class="source-line" id="L514"><a class="line-number" href="#L514" aria-label="Line 514">514</a> Fixtures wrap a test: values created before `await use(value)` are provided to the test,</span>
+<span class="source-line" id="L515"><a class="line-number" href="#L515" aria-label="Line 515">515</a> and code after it is teardown. Therefore, a spec requests project-specific data by</span>
+<span class="source-line" id="L516"><a class="line-number" href="#L516" aria-label="Line 516">516</a> destructuring `env` from the fixture:</span>
+<span class="source-line" id="L517"><a class="line-number" href="#L517" aria-label="Line 517">517</a> </span>
+<span class="source-line" id="L518"><a class="line-number" href="#L518" aria-label="Line 518">518</a> ```typescript</span>
+<span class="source-line" id="L519"><a class="line-number" href="#L519" aria-label="Line 519">519</a> test(&#39;example&#39;, async ({ env }) =&gt; {</span>
+<span class="source-line" id="L520"><a class="line-number" href="#L520" aria-label="Line 520">520</a>     // env is resolved from the current project&#39;s product fixture.</span>
+<span class="source-line" id="L521"><a class="line-number" href="#L521" aria-label="Line 521">521</a> })</span>
+<span class="source-line" id="L522"><a class="line-number" href="#L522" aria-label="Line 522">522</a> ```</span>
+<span class="source-line" id="L523"><a class="line-number" href="#L523" aria-label="Line 523">523</a> </span>
+<span class="source-line" id="L524"><a class="line-number" href="#L524" aria-label="Line 524">524</a> Import `test` from `fixtures/baseFixture.ts`; importing Playwright&#39;s unextended `test`</span>
+<span class="source-line" id="L525"><a class="line-number" href="#L525" aria-label="Line 525">525</a> does not provide `product`, `env`, `pageManager`, or `apiManager`.</span>
+<span class="source-line" id="L526"><a class="line-number" href="#L526" aria-label="Line 526">526</a> </span>
+<span class="source-line" id="L527"><a class="line-number" href="#L527" aria-label="Line 527">527</a> ---</span>
+<span class="source-line" id="L528"><a class="line-number" href="#L528" aria-label="Line 528">528</a> </span>
+<span class="source-line" id="L529"><a class="line-number" href="#L529" aria-label="Line 529">529</a> ## 8. Test structure</span>
+<span class="source-line" id="L530"><a class="line-number" href="#L530" aria-label="Line 530">530</a> </span>
+<span class="source-line" id="L531"><a class="line-number" href="#L531" aria-label="Line 531">531</a> ```typescript</span>
+<span class="source-line" id="L532"><a class="line-number" href="#L532" aria-label="Line 532">532</a> import { expect } from &#39;@playwright/test&#39;</span>
+<span class="source-line" id="L533"><a class="line-number" href="#L533" aria-label="Line 533">533</a> import { qase } from &#39;playwright-qase-reporter&#39;</span>
+<span class="source-line" id="L534"><a class="line-number" href="#L534" aria-label="Line 534">534</a> import { test } from &#39;../../../fixtures/baseFixture&#39;</span>
+<span class="source-line" id="L535"><a class="line-number" href="#L535" aria-label="Line 535">535</a> </span>
+<span class="source-line" id="L536"><a class="line-number" href="#L536" aria-label="Line 536">536</a> test.describe(&#39;Suite Name&#39;, () =&gt; {</span>
+<span class="source-line" id="L537"><a class="line-number" href="#L537" aria-label="Line 537">537</a>     let userData: { email: string; password: string }</span>
+<span class="source-line" id="L538"><a class="line-number" href="#L538" aria-label="Line 538">538</a> </span>
+<span class="source-line" id="L539"><a class="line-number" href="#L539" aria-label="Line 539">539</a>     test.beforeEach(async ({ page, pageManager }) =&gt; {</span>
+<span class="source-line" id="L540"><a class="line-number" href="#L540" aria-label="Line 540">540</a>         userData = await pageManager.registerPage.authorizeUser()</span>
+<span class="source-line" id="L541"><a class="line-number" href="#L541" aria-label="Line 541">541</a>         await page.goto(&#39;/relative-path&#39;)</span>
+<span class="source-line" id="L542"><a class="line-number" href="#L542" aria-label="Line 542">542</a>     })</span>
+<span class="source-line" id="L543"><a class="line-number" href="#L543" aria-label="Line 543">543</a> </span>
+<span class="source-line" id="L544"><a class="line-number" href="#L544" aria-label="Line 544">544</a>     test.afterEach(async ({ apiManager }) =&gt; {</span>
+<span class="source-line" id="L545"><a class="line-number" href="#L545" aria-label="Line 545">545</a>         await apiManager.userApi.deleteUser([userData.email]) // always clean up</span>
+<span class="source-line" id="L546"><a class="line-number" href="#L546" aria-label="Line 546">546</a>     })</span>
+<span class="source-line" id="L547"><a class="line-number" href="#L547" aria-label="Line 547">547</a> </span>
+<span class="source-line" id="L548"><a class="line-number" href="#L548" aria-label="Line 548">548</a>     /**</span>
+<span class="source-line" id="L549"><a class="line-number" href="#L549" aria-label="Line 549">549</a>      * @covers OQG3-1424-TC03</span>
+<span class="source-line" id="L550"><a class="line-number" href="#L550" aria-label="Line 550">550</a>      */</span>
+<span class="source-line" id="L551"><a class="line-number" href="#L551" aria-label="Line 551">551</a>     test(</span>
+<span class="source-line" id="L552"><a class="line-number" href="#L552" aria-label="Line 552">552</a>         &#39;short descriptive title&#39;,</span>
+<span class="source-line" id="L553"><a class="line-number" href="#L553" aria-label="Line 553">553</a>         {</span>
+<span class="source-line" id="L554"><a class="line-number" href="#L554" aria-label="Line 554">554</a>             tag: [&#39;@Smoke&#39;, &#39;@High&#39;],</span>
+<span class="source-line" id="L555"><a class="line-number" href="#L555" aria-label="Line 555">555</a>             annotation: [{ type: &#39;testId&#39;, description: &#39;OQG3-1424-TC03&#39; }],</span>
+<span class="source-line" id="L556"><a class="line-number" href="#L556" aria-label="Line 556">556</a>         },</span>
+<span class="source-line" id="L557"><a class="line-number" href="#L557" aria-label="Line 557">557</a>         async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L558"><a class="line-number" href="#L558" aria-label="Line 558">558</a>             qase.id(0) // new tests use 0 — no unique ids (see §8 &quot;Qase IDs&quot;)</span>
+<span class="source-line" id="L559"><a class="line-number" href="#L559" aria-label="Line 559">559</a>             qase.title(&#39;short descriptive title&#39;)</span>
+<span class="source-line" id="L560"><a class="line-number" href="#L560" aria-label="Line 560">560</a>             qase.suite(&#39;Suite Name&#39;)</span>
+<span class="source-line" id="L561"><a class="line-number" href="#L561" aria-label="Line 561">561</a>             // ...</span>
+<span class="source-line" id="L562"><a class="line-number" href="#L562" aria-label="Line 562">562</a>         }</span>
+<span class="source-line" id="L563"><a class="line-number" href="#L563" aria-label="Line 563">563</a>     )</span>
+<span class="source-line" id="L564"><a class="line-number" href="#L564" aria-label="Line 564">564</a> })</span>
+<span class="source-line" id="L565"><a class="line-number" href="#L565" aria-label="Line 565">565</a> ```</span>
+<span class="source-line" id="L566"><a class="line-number" href="#L566" aria-label="Line 566">566</a> </span>
+<span class="source-line" id="L567"><a class="line-number" href="#L567" aria-label="Line 567">567</a> **Rules [convention]**</span>
+<span class="source-line" id="L568"><a class="line-number" href="#L568" aria-label="Line 568">568</a> </span>
+<span class="source-line" id="L569"><a class="line-number" href="#L569" aria-label="Line 569">569</a> - Use the 3-argument `test(title, { tag, annotation }, fn)` form.</span>
+<span class="source-line" id="L570"><a class="line-number" href="#L570" aria-label="Line 570">570</a> - Start every test body with `qase.id` / `qase.title` / `qase.suite`.</span>
+<span class="source-line" id="L571"><a class="line-number" href="#L571" aria-label="Line 571">571</a> - **Covered test IDs (required):** each test records the sheet IDs it covers in a</span>
+<span class="source-line" id="L572"><a class="line-number" href="#L572" aria-label="Line 572">572</a>   JSDoc `@covers` comment **and** a Playwright `annotation` (`type: &#39;testId&#39;`,</span>
+<span class="source-line" id="L573"><a class="line-number" href="#L573" aria-label="Line 573">573</a>   `description` = full ID such as `OQG3-1424-TC03`). A test that covers several</span>
+<span class="source-line" id="L574"><a class="line-number" href="#L574" aria-label="Line 574">574</a>   TCs lists every ID in both places. The suite comment above `describe` still</span>
+<span class="source-line" id="L575"><a class="line-number" href="#L575" aria-label="Line 575">575</a>   lists all IDs in the file. Do not leave coverage implied by the title alone.</span>
+<span class="source-line" id="L576"><a class="line-number" href="#L576" aria-label="Line 576">576</a> - Clean up created users in `afterEach`.</span>
+<span class="source-line" id="L577"><a class="line-number" href="#L577" aria-label="Line 577">577</a> - Use relative paths in `page.goto(&#39;/x&#39;)`.</span>
+<span class="source-line" id="L578"><a class="line-number" href="#L578" aria-label="Line 578">578</a> - Tests must be atomic — never depend on another test having run.</span>
+<span class="source-line" id="L579"><a class="line-number" href="#L579" aria-label="Line 579">579</a> - Tags in use: `@Smoke`, `@Automated_smoke`, and the priority tags `@High` / `@Medium` / `@Low`.</span>
+<span class="source-line" id="L580"><a class="line-number" href="#L580" aria-label="Line 580">580</a> - **Priority tag (required):** tag every test with its test-case priority from the test-case</span>
+<span class="source-line" id="L581"><a class="line-number" href="#L581" aria-label="Line 581">581</a>   document — `@High`, `@Medium`, or `@Low`. When one spec/test covers multiple TCs of differing</span>
+<span class="source-line" id="L582"><a class="line-number" href="#L582" aria-label="Line 582">582</a>   priority, use the **highest** (`@High` &gt; `@Medium` &gt; `@Low`). A `describe` takes the highest</span>
+<span class="source-line" id="L583"><a class="line-number" href="#L583" aria-label="Line 583">583</a>   priority among its tests.</span>
+<span class="source-line" id="L584"><a class="line-number" href="#L584" aria-label="Line 584">584</a> - **Filenames are feature-only:** `{short-kebab-feature}-automations.spec.ts`</span>
+<span class="source-line" id="L585"><a class="line-number" href="#L585" aria-label="Line 585">585</a>   (example: `files-counter-automations.spec.ts`). The Jira ticket lives on the **branch**</span>
+<span class="source-line" id="L586"><a class="line-number" href="#L586" aria-label="Line 586">586</a>   (`{OQG3-XXXX}-{short-feature}-automations`, e.g. `OQG3-1424-files-counter-automations`), not in</span>
+<span class="source-line" id="L587"><a class="line-number" href="#L587" aria-label="Line 587">587</a>   the filename. Do **not** rename when the ticket is updated for a later release — refresh</span>
+<span class="source-line" id="L588"><a class="line-number" href="#L588" aria-label="Line 588">588</a>   metadata/tags only.</span>
+<span class="source-line" id="L589"><a class="line-number" href="#L589" aria-label="Line 589">589</a> - **File-level metadata** on ticket-scoped / release-touched specs. The header block</span>
+<span class="source-line" id="L590"><a class="line-number" href="#L590" aria-label="Line 590">590</a>   goes at the **very top of the file**:</span>
+<span class="source-line" id="L591"><a class="line-number" href="#L591" aria-label="Line 591">591</a> </span>
+<span class="source-line" id="L592"><a class="line-number" href="#L592" aria-label="Line 592">592</a> ```typescript</span>
+<span class="source-line" id="L593"><a class="line-number" href="#L593" aria-label="Line 593">593</a> /**</span>
+<span class="source-line" id="L594"><a class="line-number" href="#L594" aria-label="Line 594">594</a>  * Release version: v2.5.0</span>
+<span class="source-line" id="L595"><a class="line-number" href="#L595" aria-label="Line 595">595</a>  * Jira: OQG3-1424</span>
+<span class="source-line" id="L596"><a class="line-number" href="#L596" aria-label="Line 596">596</a>  * Feature: Folder file counter</span>
+<span class="source-line" id="L597"><a class="line-number" href="#L597" aria-label="Line 597">597</a>  */</span>
+<span class="source-line" id="L598"><a class="line-number" href="#L598" aria-label="Line 598">598</a> ```</span>
+<span class="source-line" id="L599"><a class="line-number" href="#L599" aria-label="Line 599">599</a> </span>
+<span class="source-line" id="L600"><a class="line-number" href="#L600" aria-label="Line 600">600</a> and the **covered-test-cases comment goes immediately above the `test.describe`**</span>
+<span class="source-line" id="L601"><a class="line-number" href="#L601" aria-label="Line 601">601</a> (not at the top of the file), so a reader sees which TCs the suite addresses right</span>
+<span class="source-line" id="L602"><a class="line-number" href="#L602" aria-label="Line 602">602</a> where the suite begins. **IDs are enough** — keep it clean and clear; note skipped /</span>
+<span class="source-line" id="L603"><a class="line-number" href="#L603" aria-label="Line 603">603</a> not-yet-covered TCs too so coverage is honest at a glance:</span>
+<span class="source-line" id="L604"><a class="line-number" href="#L604" aria-label="Line 604">604</a> </span>
+<span class="source-line" id="L605"><a class="line-number" href="#L605" aria-label="Line 605">605</a> ```typescript</span>
+<span class="source-line" id="L606"><a class="line-number" href="#L606" aria-label="Line 606">606</a> // Test cases covered by this spec: OQG3-1424-TC03, TC04, TC05, TC09, TC10, TC12,</span>
+<span class="source-line" id="L607"><a class="line-number" href="#L607" aria-label="Line 607">607</a> //   TC14, TC15, TC16, TC18, TC23, TC31, TC46, TC47, TC50</span>
+<span class="source-line" id="L608"><a class="line-number" href="#L608" aria-label="Line 608">608</a> // Skipped (env/feature gaps): TC07, TC08 ; Not yet covered: TC19, TC33</span>
+<span class="source-line" id="L609"><a class="line-number" href="#L609" aria-label="Line 609">609</a> test.describe(&#39;OQG3-1424 folder file counter&#39;, { tag: [&#39;@High&#39;] }, () =&gt; {</span>
+<span class="source-line" id="L610"><a class="line-number" href="#L610" aria-label="Line 610">610</a>     // …</span>
+<span class="source-line" id="L611"><a class="line-number" href="#L611" aria-label="Line 611">611</a> })</span>
+<span class="source-line" id="L612"><a class="line-number" href="#L612" aria-label="Line 612">612</a> ```</span>
+<span class="source-line" id="L613"><a class="line-number" href="#L613" aria-label="Line 613">613</a> </span>
+<span class="source-line" id="L614"><a class="line-number" href="#L614" aria-label="Line 614">614</a> When later updated for another release, keep the path/name and extend the header</span>
+<span class="source-line" id="L615"><a class="line-number" href="#L615" aria-label="Line 615">615</a> (e.g. `Updated for: v2.7.0 — …`) plus the covered-TCs comment.</span>
+<span class="source-line" id="L616"><a class="line-number" href="#L616" aria-label="Line 616">616</a> </span>
+<span class="source-line" id="L617"><a class="line-number" href="#L617" aria-label="Line 617">617</a> - **Multi-TC helpers** may list covered TC ids on `@param page`:</span>
+<span class="source-line" id="L618"><a class="line-number" href="#L618" aria-label="Line 618">618</a> </span>
+<span class="source-line" id="L619"><a class="line-number" href="#L619" aria-label="Line 619">619</a> ```typescript</span>
+<span class="source-line" id="L620"><a class="line-number" href="#L620" aria-label="Line 620">620</a> /**</span>
+<span class="source-line" id="L621"><a class="line-number" href="#L621" aria-label="Line 621">621</a>  * @param page OQG3-1424-TC03 | OQG3-1424-TC04 | OQG3-1424-TC05</span>
+<span class="source-line" id="L622"><a class="line-number" href="#L622" aria-label="Line 622">622</a>  * @param pageManager</span>
+<span class="source-line" id="L623"><a class="line-number" href="#L623" aria-label="Line 623">623</a>  */</span>
+<span class="source-line" id="L624"><a class="line-number" href="#L624" aria-label="Line 624">624</a> ```</span>
+<span class="source-line" id="L625"><a class="line-number" href="#L625" aria-label="Line 625">625</a> </span>
+<span class="source-line" id="L626"><a class="line-number" href="#L626" aria-label="Line 626">626</a> - Filter runs by priority: `npx playwright test --grep @High`.</span>
+<span class="source-line" id="L627"><a class="line-number" href="#L627" aria-label="Line 627">627</a> - Update metadata whenever coverage changes.</span>
+<span class="source-line" id="L628"><a class="line-number" href="#L628" aria-label="Line 628">628</a> </span>
+<span class="source-line" id="L629"><a class="line-number" href="#L629" aria-label="Line 629">629</a> ### Multi-product tests and safe migration **[convention]**</span>
+<span class="source-line" id="L630"><a class="line-number" href="#L630" aria-label="Line 630">630</a> </span>
+<span class="source-line" id="L631"><a class="line-number" href="#L631" aria-label="Line 631">631</a> Write one shared test across OQG, QCI, and QGA **only for the products where the test</span>
+<span class="source-line" id="L632"><a class="line-number" href="#L632" aria-label="Line 632">632</a> case, requirement, expected behavior, and meaningful assertions are the same**. Different selectors or interaction</span>
+<span class="source-line" id="L633"><a class="line-number" href="#L633" aria-label="Line 633">633</a> steps are implementation details and belong in product Page Objects:</span>
+<span class="source-line" id="L634"><a class="line-number" href="#L634" aria-label="Line 634">634</a> </span>
+<span class="source-line" id="L635"><a class="line-number" href="#L635" aria-label="Line 635">635</a> ```typescript</span>
+<span class="source-line" id="L636"><a class="line-number" href="#L636" aria-label="Line 636">636</a> await pageManager.dpfCreatePage.open({ fx: value })</span>
+<span class="source-line" id="L637"><a class="line-number" href="#L637" aria-label="Line 637">637</a> await pageManager.dpfCreatePage.expectFxValueInAllLocations(value)</span>
+<span class="source-line" id="L638"><a class="line-number" href="#L638" aria-label="Line 638">638</a> ```</span>
+<span class="source-line" id="L639"><a class="line-number" href="#L639" aria-label="Line 639">639</a> </span>
+<span class="source-line" id="L640"><a class="line-number" href="#L640" aria-label="Line 640">640</a> Do not put product selector branches in a shared spec:</span>
+<span class="source-line" id="L641"><a class="line-number" href="#L641" aria-label="Line 641">641</a> </span>
+<span class="source-line" id="L642"><a class="line-number" href="#L642" aria-label="Line 642">642</a> ```typescript</span>
+<span class="source-line" id="L643"><a class="line-number" href="#L643" aria-label="Line 643">643</a> // ❌ product-specific DOM knowledge belongs in product Page Objects</span>
+<span class="source-line" id="L644"><a class="line-number" href="#L644" aria-label="Line 644">644</a> if (product === &#39;oqg&#39;) {</span>
+<span class="source-line" id="L645"><a class="line-number" href="#L645" aria-label="Line 645">645</a>     // OQG selectors</span>
+<span class="source-line" id="L646"><a class="line-number" href="#L646" aria-label="Line 646">646</a> } else {</span>
+<span class="source-line" id="L647"><a class="line-number" href="#L647" aria-label="Line 647">647</a>     // QCI selectors</span>
+<span class="source-line" id="L648"><a class="line-number" href="#L648" aria-label="Line 648">648</a> }</span>
+<span class="source-line" id="L649"><a class="line-number" href="#L649" aria-label="Line 649">649</a> ```</span>
+<span class="source-line" id="L650"><a class="line-number" href="#L650" aria-label="Line 650">650</a> </span>
+<span class="source-line" id="L651"><a class="line-number" href="#L651" aria-label="Line 651">651</a> Use separate tests when a feature exists on only one product, the requirements or</span>
+<span class="source-line" id="L652"><a class="line-number" href="#L652" aria-label="Line 652">652</a> expected results differ, or sharing would require many product conditions. Do not force</span>
+<span class="source-line" id="L653"><a class="line-number" href="#L653" aria-label="Line 653">653</a> unrelated cases into one abstraction merely to reduce duplicated code.</span>
+<span class="source-line" id="L654"><a class="line-number" href="#L654" aria-label="Line 654">654</a> </span>
+<span class="source-line" id="L655"><a class="line-number" href="#L655" aria-label="Line 655">655</a> When asked to &quot;update to the new structure&quot;, &quot;use the new way&quot;, or migrate existing</span>
+<span class="source-line" id="L656"><a class="line-number" href="#L656" aria-label="Line 656">656</a> tests to product projects, perform a behavior-preserving migration:</span>
+<span class="source-line" id="L657"><a class="line-number" href="#L657" aria-label="Line 657">657</a> </span>
+<span class="source-line" id="L658"><a class="line-number" href="#L658" aria-label="Line 658">658</a> 1. Inspect and preserve existing requirements, assertions, metadata, coverage, cleanup,</span>
+<span class="source-line" id="L659"><a class="line-number" href="#L659" aria-label="Line 659">659</a>    and behavior; do not invent missing requirements.</span>
+<span class="source-line" id="L660"><a class="line-number" href="#L660" aria-label="Line 660">660</a> 2. Separate shared requirements from product-specific ones. Follow §6 for independent</span>
+<span class="source-line" id="L661"><a class="line-number" href="#L661" aria-label="Line 661">661</a>    product Page Objects, locators, factories, and unsupported-product behavior.</span>
+<span class="source-line" id="L662"><a class="line-number" href="#L662" aria-label="Line 662">662</a> 3. Migrate one complete flow through project → fixture → `PageManager` → product Page</span>
+<span class="source-line" id="L663"><a class="line-number" href="#L663" aria-label="Line 663">663</a>    Object. Use relative navigation and do not mix in legacy domain helpers.</span>
+<span class="source-line" id="L664"><a class="line-number" href="#L664" aria-label="Line 664">664</a> 4. Leave unrelated legacy flows and projects unchanged.</span>
+<span class="source-line" id="L665"><a class="line-number" href="#L665" aria-label="Line 665">665</a> 5. Run every applicable product independently, then together; confirm failures identify</span>
+<span class="source-line" id="L666"><a class="line-number" href="#L666" aria-label="Line 666">666</a>    the correct product/browser project.</span>
+<span class="source-line" id="L667"><a class="line-number" href="#L667" aria-label="Line 667">667</a> 6. Keep differing behavior separate. Never weaken assertions or drop coverage to force</span>
+<span class="source-line" id="L668"><a class="line-number" href="#L668" aria-label="Line 668">668</a>    the new structure to fit.</span>
+<span class="source-line" id="L669"><a class="line-number" href="#L669" aria-label="Line 669">669</a> </span>
+<span class="source-line" id="L670"><a class="line-number" href="#L670" aria-label="Line 670">670</a> Example product runs:</span>
+<span class="source-line" id="L671"><a class="line-number" href="#L671" aria-label="Line 671">671</a> </span>
+<span class="source-line" id="L672"><a class="line-number" href="#L672" aria-label="Line 672">672</a> ```bash</span>
+<span class="source-line" id="L673"><a class="line-number" href="#L673" aria-label="Line 673">673</a> npx playwright test &lt;spec-or-feature&gt; --project=oqg-chromium</span>
+<span class="source-line" id="L674"><a class="line-number" href="#L674" aria-label="Line 674">674</a> npx playwright test &lt;spec-or-feature&gt; --project=qci-chromium</span>
+<span class="source-line" id="L675"><a class="line-number" href="#L675" aria-label="Line 675">675</a> npx playwright test &lt;spec-or-feature&gt; --project=qga-chromium</span>
+<span class="source-line" id="L676"><a class="line-number" href="#L676" aria-label="Line 676">676</a> npx playwright test &lt;spec-or-feature&gt; --project=oqg-chromium --project=qci-chromium</span>
+<span class="source-line" id="L677"><a class="line-number" href="#L677" aria-label="Line 677">677</a> ```</span>
+<span class="source-line" id="L678"><a class="line-number" href="#L678" aria-label="Line 678">678</a> </span>
+<span class="source-line" id="L679"><a class="line-number" href="#L679" aria-label="Line 679">679</a> Include `--project=qga-chromium` only when the requested QGA behavior is implemented and</span>
+<span class="source-line" id="L680"><a class="line-number" href="#L680" aria-label="Line 680">680</a> the same test case applies to QGA.</span>
+<span class="source-line" id="L681"><a class="line-number" href="#L681" aria-label="Line 681">681</a> </span>
+<span class="source-line" id="L682"><a class="line-number" href="#L682" aria-label="Line 682">682</a> Legacy tests continue to use their existing projects (for example, `chromium`) and their</span>
+<span class="source-line" id="L683"><a class="line-number" href="#L683" aria-label="Line 683">683</a> existing `DOMAIN` / `BASE_URL` behavior until an intentional migration is requested.</span>
+<span class="source-line" id="L684"><a class="line-number" href="#L684" aria-label="Line 684">684</a> </span>
+<span class="source-line" id="L685"><a class="line-number" href="#L685" aria-label="Line 685">685</a> ### Automation status in the test-case sheet **[convention]**</span>
+<span class="source-line" id="L686"><a class="line-number" href="#L686" aria-label="Line 686">686</a> </span>
+<span class="source-line" id="L687"><a class="line-number" href="#L687" aria-label="Line 687">687</a> `docs/OQG_v2.5.0_TestCases.xlsx` carries an **Automation Notes** column — **column M**</span>
+<span class="source-line" id="L688"><a class="line-number" href="#L688" aria-label="Line 688">688</a> — on every ticket tab. Each test case row gets one status:</span>
+<span class="source-line" id="L689"><a class="line-number" href="#L689" aria-label="Line 689">689</a> </span>
+<span class="source-line" id="L690"><a class="line-number" href="#L690" aria-label="Line 690">690</a> | Status in column M                             | Meaning                                                                                                             |</span>
+<span class="source-line" id="L691"><a class="line-number" href="#L691" aria-label="Line 691">691</a> | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |</span>
+<span class="source-line" id="L692"><a class="line-number" href="#L692" aria-label="Line 692">692</a> | `Automated`                                    | A running spec covers it.                                                                                           |</span>
+<span class="source-line" id="L693"><a class="line-number" href="#L693" aria-label="Line 693">693</a> | `Automated — expected-fail (product bug &lt;ID&gt;)` | Covered by a `test.fail()`/`test.fixme()` that documents a real bug (§11).                                          |</span>
+<span class="source-line" id="L694"><a class="line-number" href="#L694" aria-label="Line 694">694</a> | `Cannot automate here — &lt;env/infra reason&gt;`    | Not automatable in this harness (missing admin control, Stripe, cross-browser engine, DB endpoint, RTL strings, …). |</span>
+<span class="source-line" id="L695"><a class="line-number" href="#L695" aria-label="Line 695">695</a> | `Not yet automated — &lt;what&#39;s needed&gt;`          | Automatable but not yet built; the note says what it needs.                                                         |</span>
+<span class="source-line" id="L696"><a class="line-number" href="#L696" aria-label="Line 696">696</a> </span>
+<span class="source-line" id="L697"><a class="line-number" href="#L697" aria-label="Line 697">697</a> **Rule:** a test case that cannot be automated MUST carry its reason in column M —</span>
+<span class="source-line" id="L698"><a class="line-number" href="#L698" aria-label="Line 698">698</a> never leave it blank. Keep column M in sync whenever coverage changes, alongside the</span>
+<span class="source-line" id="L699"><a class="line-number" href="#L699" aria-label="Line 699">699</a> spec&#39;s `// Test cases covered by this spec:` comment above its `test.describe` (above).</span>
+<span class="source-line" id="L700"><a class="line-number" href="#L700" aria-label="Line 700">700</a> The `.xlsx` is a generated/data</span>
+<span class="source-line" id="L701"><a class="line-number" href="#L701" aria-label="Line 701">701</a> artefact and is `.prettierignore`d, so it commits as-is.</span>
+<span class="source-line" id="L702"><a class="line-number" href="#L702" aria-label="Line 702">702</a> </span>
+<span class="source-line" id="L703"><a class="line-number" href="#L703" aria-label="Line 703">703</a> ### Assertions</span>
+<span class="source-line" id="L704"><a class="line-number" href="#L704" aria-label="Line 704">704</a> </span>
+<span class="source-line" id="L705"><a class="line-number" href="#L705" aria-label="Line 705">705</a> Inline `expect()` in a spec is **fine and normal** — most specs do this. Extract an</span>
+<span class="source-line" id="L706"><a class="line-number" href="#L706" aria-label="Line 706">706</a> assertion into a Page Object method when it is **reused across specs** or when it</span>
+<span class="source-line" id="L707"><a class="line-number" href="#L707" aria-label="Line 707">707</a> encodes non-trivial waiting/retry logic. Wrapping every single assertion in a page</span>
+<span class="source-line" id="L708"><a class="line-number" href="#L708" aria-label="Line 708">708</a> method is not required. **[convention]**</span>
+<span class="source-line" id="L709"><a class="line-number" href="#L709" aria-label="Line 709">709</a> </span>
+<span class="source-line" id="L710"><a class="line-number" href="#L710" aria-label="Line 710">710</a> ### Qase IDs</span>
+<span class="source-line" id="L711"><a class="line-number" href="#L711" aria-label="Line 711">711</a> </span>
+<span class="source-line" id="L712"><a class="line-number" href="#L712" aria-label="Line 712">712</a> New tests use `qase.id(0)`; existing tests keep their current ids. Every test still needs</span>
+<span class="source-line" id="L713"><a class="line-number" href="#L713" aria-label="Line 713">713</a> `qase.title()` matching its test title and `qase.suite()` matching its describe block.</span>
+<span class="source-line" id="L714"><a class="line-number" href="#L714" aria-label="Line 714">714</a> The reporter is inert locally unless `QASE_MODE=testops` is set.</span>
+<span class="source-line" id="L715"><a class="line-number" href="#L715" aria-label="Line 715">715</a> </span>
+<span class="source-line" id="L716"><a class="line-number" href="#L716" aria-label="Line 716">716</a> ---</span>
+<span class="source-line" id="L717"><a class="line-number" href="#L717" aria-label="Line 717">717</a> </span>
+<span class="source-line" id="L718"><a class="line-number" href="#L718" aria-label="Line 718">718</a> ## 9. Waiting &amp; timing **[enforced]**</span>
+<span class="source-line" id="L719"><a class="line-number" href="#L719" aria-label="Line 719">719</a> </span>
+<span class="source-line" id="L720"><a class="line-number" href="#L720" aria-label="Line 720">720</a> Hardcoded sleeps are the single biggest source of flakiness and wasted CI minutes.</span>
+<span class="source-line" id="L721"><a class="line-number" href="#L721" aria-label="Line 721">721</a> </span>
+<span class="source-line" id="L722"><a class="line-number" href="#L722" aria-label="Line 722">722</a> ```typescript</span>
+<span class="source-line" id="L723"><a class="line-number" href="#L723" aria-label="Line 723">723</a> await page.waitForTimeout(3000) // ❌ ESLint error</span>
+<span class="source-line" id="L724"><a class="line-number" href="#L724" aria-label="Line 724">724</a> ```</span>
+<span class="source-line" id="L725"><a class="line-number" href="#L725" aria-label="Line 725">725</a> </span>
+<span class="source-line" id="L726"><a class="line-number" href="#L726" aria-label="Line 726">726</a> ```typescript</span>
+<span class="source-line" id="L727"><a class="line-number" href="#L727" aria-label="Line 727">727</a> await expect(element).toBeVisible({ timeout: 10_000 }) // ✅</span>
+<span class="source-line" id="L728"><a class="line-number" href="#L728" aria-label="Line 728">728</a> await element.waitFor({ state: &#39;visible&#39; }) // ✅</span>
+<span class="source-line" id="L729"><a class="line-number" href="#L729" aria-label="Line 729">729</a> await element.waitFor({ state: &#39;hidden&#39; }) // ✅</span>
+<span class="source-line" id="L730"><a class="line-number" href="#L730" aria-label="Line 730">730</a> await page.waitForURL(&#39;**/dashboard**&#39;) // ✅</span>
+<span class="source-line" id="L731"><a class="line-number" href="#L731" aria-label="Line 731">731</a> await page.waitForLoadState(&#39;networkidle&#39;) // ✅</span>
+<span class="source-line" id="L732"><a class="line-number" href="#L732" aria-label="Line 732">732</a> ```</span>
+<span class="source-line" id="L733"><a class="line-number" href="#L733" aria-label="Line 733">733</a> </span>
+<span class="source-line" id="L734"><a class="line-number" href="#L734" aria-label="Line 734">734</a> **The one escape hatch:** `BasePage.wait(ms)` (`base/BasePage.ts`). Use it only when no</span>
+<span class="source-line" id="L735"><a class="line-number" href="#L735" aria-label="Line 735">735</a> event-based wait exists, and add a comment saying why.</span>
+<span class="source-line" id="L736"><a class="line-number" href="#L736" aria-label="Line 736">736</a> </span>
+<span class="source-line" id="L737"><a class="line-number" href="#L737" aria-label="Line 737">737</a> **Legacy debt:** 32 files still contain hardcoded sleeps and carry a</span>
+<span class="source-line" id="L738"><a class="line-number" href="#L738" aria-label="Line 738">738</a> `/* eslint-disable no-restricted-syntax -- legacy hardcoded waits (test debt) */`</span>
+<span class="source-line" id="L739"><a class="line-number" href="#L739" aria-label="Line 739">739</a> header. That header is a marker, not permission: when you touch one of those files,</span>
+<span class="source-line" id="L740"><a class="line-number" href="#L740" aria-label="Line 740">740</a> replace the sleeps you encounter and shrink the header&#39;s reach. Never add a new</span>
+<span class="source-line" id="L741"><a class="line-number" href="#L741" aria-label="Line 741">741</a> disable header to get around this rule.</span>
+<span class="source-line" id="L742"><a class="line-number" href="#L742" aria-label="Line 742">742</a> </span>
+<span class="source-line" id="L743"><a class="line-number" href="#L743" aria-label="Line 743">743</a> Iframes:</span>
+<span class="source-line" id="L744"><a class="line-number" href="#L744" aria-label="Line 744">744</a> </span>
+<span class="source-line" id="L745"><a class="line-number" href="#L745" aria-label="Line 745">745</a> ```typescript</span>
+<span class="source-line" id="L746"><a class="line-number" href="#L746" aria-label="Line 746">746</a> const frame = page</span>
+<span class="source-line" id="L747"><a class="line-number" href="#L747" aria-label="Line 747">747</a>     .getByTestId(&#39;phone-mockup-container&#39;)</span>
+<span class="source-line" id="L748"><a class="line-number" href="#L748" aria-label="Line 748">748</a>     .locator(&#39;iframe&#39;)</span>
+<span class="source-line" id="L749"><a class="line-number" href="#L749" aria-label="Line 749">749</a>     .first()</span>
+<span class="source-line" id="L750"><a class="line-number" href="#L750" aria-label="Line 750">750</a> await frame</span>
+<span class="source-line" id="L751"><a class="line-number" href="#L751" aria-label="Line 751">751</a>     .contentFrame()</span>
+<span class="source-line" id="L752"><a class="line-number" href="#L752" aria-label="Line 752">752</a>     .locator(&#39;#LocationBlock&#39;)</span>
+<span class="source-line" id="L753"><a class="line-number" href="#L753" aria-label="Line 753">753</a>     .waitFor({ state: &#39;visible&#39; })</span>
+<span class="source-line" id="L754"><a class="line-number" href="#L754" aria-label="Line 754">754</a> ```</span>
+<span class="source-line" id="L755"><a class="line-number" href="#L755" aria-label="Line 755">755</a> </span>
+<span class="source-line" id="L756"><a class="line-number" href="#L756" aria-label="Line 756">756</a> ---</span>
+<span class="source-line" id="L757"><a class="line-number" href="#L757" aria-label="Line 757">757</a> </span>
+<span class="source-line" id="L758"><a class="line-number" href="#L758" aria-label="Line 758">758</a> ## 10. Reliability &amp; concurrency patterns</span>
+<span class="source-line" id="L759"><a class="line-number" href="#L759" aria-label="Line 759">759</a> </span>
+<span class="source-line" id="L760"><a class="line-number" href="#L760" aria-label="Line 760">760</a> Hard-won lessons — each of these caused a real failure.</span>
+<span class="source-line" id="L761"><a class="line-number" href="#L761" aria-label="Line 761">761</a> </span>
+<span class="source-line" id="L762"><a class="line-number" href="#L762" aria-label="Line 762">762</a> - **`await` every click.** An un-awaited dropdown click in `setQrCodeFont` raced the</span>
+<span class="source-line" id="L763"><a class="line-number" href="#L763" aria-label="Line 763">763</a>   option selection and produced an intermittent wrong-font failure.</span>
+<span class="source-line" id="L764"><a class="line-number" href="#L764" aria-label="Line 764">764</a> - **Don&#39;t chain toggles.** Clicking an accordion twice in a row races the animation;</span>
+<span class="source-line" id="L765"><a class="line-number" href="#L765" aria-label="Line 765">765</a>   wait for the state between clicks:</span>
+<span class="source-line" id="L766"><a class="line-number" href="#L766" aria-label="Line 766">766</a>     ```typescript</span>
+<span class="source-line" id="L767"><a class="line-number" href="#L767" aria-label="Line 767">767</a>     await trigger.click()</span>
+<span class="source-line" id="L768"><a class="line-number" href="#L768" aria-label="Line 768">768</a>     await expect(trigger).toHaveAttribute(&#39;aria-expanded&#39;, &#39;false&#39;)</span>
+<span class="source-line" id="L769"><a class="line-number" href="#L769" aria-label="Line 769">769</a>     await trigger.click()</span>
+<span class="source-line" id="L770"><a class="line-number" href="#L770" aria-label="Line 770">770</a>     await expect(trigger).toHaveAttribute(&#39;aria-expanded&#39;, &#39;true&#39;)</span>
+<span class="source-line" id="L771"><a class="line-number" href="#L771" aria-label="Line 771">771</a>     ```</span>
+<span class="source-line" id="L772"><a class="line-number" href="#L772" aria-label="Line 772">772</a> - **Don&#39;t assert on `input.files` after an upload.** The FE consumes the native file</span>
+<span class="source-line" id="L773"><a class="line-number" href="#L773" aria-label="Line 773">773</a>   input and clears it. Assert the resulting UI instead (preview image, Delete control):</span>
+<span class="source-line" id="L774"><a class="line-number" href="#L774" aria-label="Line 774">774</a>     ```typescript</span>
+<span class="source-line" id="L775"><a class="line-number" href="#L775" aria-label="Line 775">775</a>     await expect(page.getByTestId(&#39;...-image-delete-button&#39;)).toBeVisible()</span>
+<span class="source-line" id="L776"><a class="line-number" href="#L776" aria-label="Line 776">776</a>     await expect(page.locator(&#39;img[alt=&quot;Preview&quot;]&#39;)).toHaveAttribute(</span>
+<span class="source-line" id="L777"><a class="line-number" href="#L777" aria-label="Line 777">777</a>         &#39;src&#39;,</span>
+<span class="source-line" id="L778"><a class="line-number" href="#L778" aria-label="Line 778">778</a>         /^data:image/</span>
+<span class="source-line" id="L779"><a class="line-number" href="#L779" aria-label="Line 779">779</a>     )</span>
+<span class="source-line" id="L780"><a class="line-number" href="#L780" aria-label="Line 780">780</a>     ```</span>
+<span class="source-line" id="L781"><a class="line-number" href="#L781" aria-label="Line 781">781</a> - **Expanded ≠ populated.** A section can be open (`aria-expanded=&quot;true&quot;`) while its</span>
+<span class="source-line" id="L782"><a class="line-number" href="#L782" aria-label="Line 782">782</a>   content is gone. Assert the thing you actually care about.</span>
+<span class="source-line" id="L783"><a class="line-number" href="#L783" aria-label="Line 783">783</a> - **Prove new tests under load** before calling them done:</span>
+<span class="source-line" id="L784"><a class="line-number" href="#L784" aria-label="Line 784">784</a>     ```bash</span>
+<span class="source-line" id="L785"><a class="line-number" href="#L785" aria-label="Line 785">785</a>     npx playwright test &lt;file&gt; --grep &quot;&lt;id&gt;&quot; --repeat-each=3 --workers=2 --retries=0</span>
+<span class="source-line" id="L786"><a class="line-number" href="#L786" aria-label="Line 786">786</a>     ```</span>
+<span class="source-line" id="L787"><a class="line-number" href="#L787" aria-label="Line 787">787</a>     `--retries=0` shows the true first-run result; retries hide flakes.</span>
+<span class="source-line" id="L788"><a class="line-number" href="#L788" aria-label="Line 788">788</a> </span>
+<span class="source-line" id="L789"><a class="line-number" href="#L789" aria-label="Line 789">789</a> ---</span>
+<span class="source-line" id="L790"><a class="line-number" href="#L790" aria-label="Line 790">790</a> </span>
+<span class="source-line" id="L791"><a class="line-number" href="#L791" aria-label="Line 791">791</a> ## 10a. Security &amp; attack-input testing **[convention]**</span>
+<span class="source-line" id="L792"><a class="line-number" href="#L792" aria-label="Line 792">792</a> </span>
+<span class="source-line" id="L793"><a class="line-number" href="#L793" aria-label="Line 793">793</a> Patterns used by the Event QR &quot;heavy&quot; suites (`event-qr-security-heavy`,</span>
+<span class="source-line" id="L794"><a class="line-number" href="#L794" aria-label="Line 794">794</a> `event-qr-edge-cases`, `event-qr-resilience`) — reuse them, don&#39;t reinvent.</span>
+<span class="source-line" id="L795"><a class="line-number" href="#L795" aria-label="Line 795">795</a> </span>
+<span class="source-line" id="L796"><a class="line-number" href="#L796" aria-label="Line 796">796</a> - **Payloads live in data**, not inline: `tests/data/eventSecurityPayloads.data.ts`</span>
+<span class="source-line" id="L797"><a class="line-number" href="#L797" aria-label="Line 797">797</a>   (XSS, unsafe URL schemes, SQLi, template/command/CRLF injection, unicode/bidi,</span>
+<span class="source-line" id="L798"><a class="line-number" href="#L798" aria-label="Line 798">798</a>   DoS-scale strings, and `maliciousUpload()` in-memory files). Grow the set there.</span>
+<span class="source-line" id="L799"><a class="line-number" href="#L799" aria-label="Line 799">799</a> - **Prove XSS didn&#39;t execute with a dialog spy** — a DOM-count check alone can race:</span>
+<span class="source-line" id="L800"><a class="line-number" href="#L800" aria-label="Line 800">800</a>     ```typescript</span>
+<span class="source-line" id="L801"><a class="line-number" href="#L801" aria-label="Line 801">801</a>     const dialogs: string[] = []</span>
+<span class="source-line" id="L802"><a class="line-number" href="#L802" aria-label="Line 802">802</a>     page.on(&#39;dialog&#39;, (d) =&gt; {</span>
+<span class="source-line" id="L803"><a class="line-number" href="#L803" aria-label="Line 803">803</a>         dialogs.push(d.message())</span>
+<span class="source-line" id="L804"><a class="line-number" href="#L804" aria-label="Line 804">804</a>         d.dismiss()</span>
+<span class="source-line" id="L805"><a class="line-number" href="#L805" aria-label="Line 805">805</a>     })</span>
+<span class="source-line" id="L806"><a class="line-number" href="#L806" aria-label="Line 806">806</a>     // ...feed payloads...</span>
+<span class="source-line" id="L807"><a class="line-number" href="#L807" aria-label="Line 807">807</a>     expect(dialogs).toHaveLength(0) // any alert() = a real, reportable XSS bug</span>
+<span class="source-line" id="L808"><a class="line-number" href="#L808" aria-label="Line 808">808</a>     ```</span>
+<span class="source-line" id="L809"><a class="line-number" href="#L809" aria-label="Line 809">809</a>     Then also sweep for inert markup in the page **and** the preview iframe (`frameView`).</span>
+<span class="source-line" id="L810"><a class="line-number" href="#L810" aria-label="Line 810">810</a> - **Craft malicious uploads in memory** — no fixture files, and you control MIME:</span>
+<span class="source-line" id="L811"><a class="line-number" href="#L811" aria-label="Line 811">811</a>     ```typescript</span>
+<span class="source-line" id="L812"><a class="line-number" href="#L812" aria-label="Line 812">812</a>     await input.setInputFiles({</span>
+<span class="source-line" id="L813"><a class="line-number" href="#L813" aria-label="Line 813">813</a>         name: &#39;logo.png&#39;,</span>
+<span class="source-line" id="L814"><a class="line-number" href="#L814" aria-label="Line 814">814</a>         mimeType: &#39;image/png&#39;,</span>
+<span class="source-line" id="L815"><a class="line-number" href="#L815" aria-label="Line 815">815</a>         buffer: Buffer.from(&#39;&lt;svg onload=alert(1)&gt;&#39;),</span>
+<span class="source-line" id="L816"><a class="line-number" href="#L816" aria-label="Line 816">816</a>     }) // MIME/extension mismatch</span>
+<span class="source-line" id="L817"><a class="line-number" href="#L817" aria-label="Line 817">817</a>     ```</span>
+<span class="source-line" id="L818"><a class="line-number" href="#L818" aria-label="Line 818">818</a> - **Test error paths without a working backend** via `page.route`:</span>
+<span class="source-line" id="L819"><a class="line-number" href="#L819" aria-label="Line 819">819</a>     ```typescript</span>
+<span class="source-line" id="L820"><a class="line-number" href="#L820" aria-label="Line 820">820</a>     await page.route(&#39;**/api/steps/qr/content**&#39;, (r) =&gt;</span>
+<span class="source-line" id="L821"><a class="line-number" href="#L821" aria-label="Line 821">821</a>         r.fulfill({ status: 500 })</span>
+<span class="source-line" id="L822"><a class="line-number" href="#L822" aria-label="Line 822">822</a>     )</span>
+<span class="source-line" id="L823"><a class="line-number" href="#L823" aria-label="Line 823">823</a>     // assert the UI does NOT advance and does not crash</span>
+<span class="source-line" id="L824"><a class="line-number" href="#L824" aria-label="Line 824">824</a>     ```</span>
+<span class="source-line" id="L825"><a class="line-number" href="#L825" aria-label="Line 825">825</a>     This is how the resilience suite covers 400/403/500/abort even when the local</span>
+<span class="source-line" id="L826"><a class="line-number" href="#L826" aria-label="Line 826">826</a>     save endpoint is down.</span>
+<span class="source-line" id="L827"><a class="line-number" href="#L827" aria-label="Line 827">827</a> - **Fields with `maxlength` truncate input** — that is correct, secure behaviour.</span>
+<span class="source-line" id="L828"><a class="line-number" href="#L828" aria-label="Line 828">828</a>   Don&#39;t assert the full payload survives; assert it&#39;s stored (capped) and inert.</span>
+<span class="source-line" id="L829"><a class="line-number" href="#L829" aria-label="Line 829">829</a> - A payload that **executes**, or an input that **500s/crashes** the app, is a real</span>
+<span class="source-line" id="L830"><a class="line-number" href="#L830" aria-label="Line 830">830</a>   **product bug** (§11) — document and quarantine, never weaken the assertion. Finding</span>
+<span class="source-line" id="L831"><a class="line-number" href="#L831" aria-label="Line 831">831</a>   these is the entire point of automating instead of manual-testing this QR type.</span>
+<span class="source-line" id="L832"><a class="line-number" href="#L832" aria-label="Line 832">832</a> </span>
+<span class="source-line" id="L833"><a class="line-number" href="#L833" aria-label="Line 833">833</a> ---</span>
+<span class="source-line" id="L834"><a class="line-number" href="#L834" aria-label="Line 834">834</a> </span>
+<span class="source-line" id="L835"><a class="line-number" href="#L835" aria-label="Line 835">835</a> ## 11. When a test fails: triage &amp; quarantine **[convention]**</span>
+<span class="source-line" id="L836"><a class="line-number" href="#L836" aria-label="Line 836">836</a> </span>
+<span class="source-line" id="L837"><a class="line-number" href="#L837" aria-label="Line 837">837</a> **The QA suite encodes expected behavior.** Investigate every failure before changing</span>
+<span class="source-line" id="L838"><a class="line-number" href="#L838" aria-label="Line 838">838</a> the test; do not bend assertions to match a broken product.</span>
+<span class="source-line" id="L839"><a class="line-number" href="#L839" aria-label="Line 839">839</a> </span>
+<span class="source-line" id="L840"><a class="line-number" href="#L840" aria-label="Line 840">840</a> **Root cause first — classify every red before you change anything, and state which</span>
+<span class="source-line" id="L841"><a class="line-number" href="#L841" aria-label="Line 841">841</a> class it is. Never guess:**</span>
+<span class="source-line" id="L842"><a class="line-number" href="#L842" aria-label="Line 842">842</a> </span>
+<span class="source-line" id="L843"><a class="line-number" href="#L843" aria-label="Line 843">843</a> | Class           | Action                                                                                                    |</span>
+<span class="source-line" id="L844"><a class="line-number" href="#L844" aria-label="Line 844">844</a> | --------------- | --------------------------------------------------------------------------------------------------------- |</span>
+<span class="source-line" id="L845"><a class="line-number" href="#L845" aria-label="Line 845">845</a> | **Test defect** | Fix the test / Page Object. Prefer fixing the existing test over rewriting a working one.                 |</span>
+<span class="source-line" id="L846"><a class="line-number" href="#L846" aria-label="Line 846">846</a> | **Product bug** | **Keep the test**; mark it `test.fail()` or `test.fixme()` + document. A real find is a **good** outcome. |</span>
+<span class="source-line" id="L847"><a class="line-number" href="#L847" aria-label="Line 847">847</a> | **Env gap**     | `test.skip()` with an env reason (missing key, service absent on this env, browser limit).                |</span>
+<span class="source-line" id="L848"><a class="line-number" href="#L848" aria-label="Line 848">848</a> | **Data issue**  | Fix the data / fixture. Don&#39;t loosen an assertion to tolerate bad data.                                   |</span>
+<span class="source-line" id="L849"><a class="line-number" href="#L849" aria-label="Line 849">849</a> </span>
+<span class="source-line" id="L850"><a class="line-number" href="#L850" aria-label="Line 850">850</a> &gt; Never weaken/delete an assertion, loosen a matcher, or raise a timeout merely to turn a</span>
+<span class="source-line" id="L851"><a class="line-number" href="#L851" aria-label="Line 851">851</a> &gt; test green. If the root cause is unclear, investigate or ask.</span>
+<span class="source-line" id="L852"><a class="line-number" href="#L852" aria-label="Line 852">852</a> </span>
+<span class="source-line" id="L853"><a class="line-number" href="#L853" aria-label="Line 853">853</a> ### Product bug → never `test.skip()`</span>
+<span class="source-line" id="L854"><a class="line-number" href="#L854" aria-label="Line 854">854</a> </span>
+<span class="source-line" id="L855"><a class="line-number" href="#L855" aria-label="Line 855">855</a> - **`test.fail()`** — the test **runs**, is expected to fail, and flips to _failing_ the</span>
+<span class="source-line" id="L856"><a class="line-number" href="#L856" aria-label="Line 856">856</a>   moment the product is fixed (so you&#39;re prompted to remove the marker). Use for</span>
+<span class="source-line" id="L857"><a class="line-number" href="#L857" aria-label="Line 857">857</a>   confirmed, deterministic bugs where running the test is cheap and safe. **Preferred.**</span>
+<span class="source-line" id="L858"><a class="line-number" href="#L858" aria-label="Line 858">858</a> - **`test.fixme()`** — skipped, but explicitly flagged &quot;known-broken, must be fixed&quot;. Use</span>
+<span class="source-line" id="L859"><a class="line-number" href="#L859" aria-label="Line 859">859</a>   when running the test is impossible or harmful (it hangs, blocks the run, or leaves bad</span>
+<span class="source-line" id="L860"><a class="line-number" href="#L860" aria-label="Line 860">860</a>   state), so a slow expected-failure isn&#39;t worth it.</span>
+<span class="source-line" id="L861"><a class="line-number" href="#L861" aria-label="Line 861">861</a> </span>
+<span class="source-line" id="L862"><a class="line-number" href="#L862" aria-label="Line 862">862</a> ```typescript</span>
+<span class="source-line" id="L863"><a class="line-number" href="#L863" aria-label="Line 863">863</a> // Product bug UPL-1996-01: an HTML doc named photo.png (declared text/html) is</span>
+<span class="source-line" id="L864"><a class="line-number" href="#L864" aria-label="Line 864">864</a> // accepted and served as text/html — expected: rejected. Reproduced on dev 2.6.0.</span>
+<span class="source-line" id="L865"><a class="line-number" href="#L865" aria-label="Line 865">865</a> // See docs/Upload_Security_OQG3-1996_Bugs.md.</span>
+<span class="source-line" id="L866"><a class="line-number" href="#L866" aria-label="Line 866">866</a> test(</span>
+<span class="source-line" id="L867"><a class="line-number" href="#L867" aria-label="Line 867">867</a>     &#39;an HTML doc named .png is rejected, not served as HTML [AC2]&#39;,</span>
+<span class="source-line" id="L868"><a class="line-number" href="#L868" aria-label="Line 868">868</a>     { tag: [&#39;@High&#39;, &#39;@Security&#39;] },</span>
+<span class="source-line" id="L869"><a class="line-number" href="#L869" aria-label="Line 869">869</a>     async ({ page, pageManager }) =&gt; {</span>
+<span class="source-line" id="L870"><a class="line-number" href="#L870" aria-label="Line 870">870</a>         test.fail() // expected to fail until UPL-1996-01 is fixed; flips to failing when it is</span>
+<span class="source-line" id="L871"><a class="line-number" href="#L871" aria-label="Line 871">871</a>         // ...assert the CORRECT behaviour (rejected). Do NOT change it to match the bug...</span>
+<span class="source-line" id="L872"><a class="line-number" href="#L872" aria-label="Line 872">872</a>     }</span>
+<span class="source-line" id="L873"><a class="line-number" href="#L873" aria-label="Line 873">873</a> )</span>
+<span class="source-line" id="L874"><a class="line-number" href="#L874" aria-label="Line 874">874</a> ```</span>
+<span class="source-line" id="L875"><a class="line-number" href="#L875" aria-label="Line 875">875</a> </span>
+<span class="source-line" id="L876"><a class="line-number" href="#L876" aria-label="Line 876">876</a> Then add a row to the matching bug report (`docs/Event_QR_Product_Bugs_Report.md`,</span>
+<span class="source-line" id="L877"><a class="line-number" href="#L877" aria-label="Line 877">877</a> `docs/Upload_Security_OQG3-1996_Bugs.md`) — the main table for product bugs, the</span>
+<span class="source-line" id="L878"><a class="line-number" href="#L878" aria-label="Line 878">878</a> &quot;Local-env only&quot; table for environment limitations.</span>
+<span class="source-line" id="L879"><a class="line-number" href="#L879" aria-label="Line 879">879</a> </span>
+<span class="source-line" id="L880"><a class="line-number" href="#L880" aria-label="Line 880">880</a> Use `test.skip()` only for a documented non-product reason: an inapplicable feature or</span>
+<span class="source-line" id="L881"><a class="line-number" href="#L881" aria-label="Line 881">881</a> environment, browser limitation, unavailable dependency, or temporarily broken test with</span>
+<span class="source-line" id="L882"><a class="line-number" href="#L882" aria-label="Line 882">882</a> a follow-up. If a change would hide a bug, alter expected behavior, or reduce coverage,</span>
+<span class="source-line" id="L883"><a class="line-number" href="#L883" aria-label="Line 883">883</a> stop and explain.</span>
+<span class="source-line" id="L884"><a class="line-number" href="#L884" aria-label="Line 884">884</a> </span>
+<span class="source-line" id="L885"><a class="line-number" href="#L885" aria-label="Line 885">885</a> ---</span>
+<span class="source-line" id="L886"><a class="line-number" href="#L886" aria-label="Line 886">886</a> </span>
+<span class="source-line" id="L887"><a class="line-number" href="#L887" aria-label="Line 887">887</a> ## 12. Debugging method **[convention]**</span>
+<span class="source-line" id="L888"><a class="line-number" href="#L888" aria-label="Line 888">888</a> </span>
+<span class="source-line" id="L889"><a class="line-number" href="#L889" aria-label="Line 889">889</a> 1. **Run the real test and read the real error.** Don&#39;t theorise from the code.</span>
+<span class="source-line" id="L890"><a class="line-number" href="#L890" aria-label="Line 890">890</a> 2. **Confirm against the live DOM** before changing a locator or assertion — dump the</span>
+<span class="source-line" id="L891"><a class="line-number" href="#L891" aria-label="Line 891">891</a>    element/attributes you&#39;re targeting and verify it exists.</span>
+<span class="source-line" id="L892"><a class="line-number" href="#L892" aria-label="Line 892">892</a> 3. **Then** fix, and re-run the specific test (`--grep`) to confirm.</span>
+<span class="source-line" id="L893"><a class="line-number" href="#L893" aria-label="Line 893">893</a> </span>
+<span class="source-line" id="L894"><a class="line-number" href="#L894" aria-label="Line 894">894</a> **Use UI mode — it is the fastest way to debug a red test:**</span>
+<span class="source-line" id="L895"><a class="line-number" href="#L895" aria-label="Line 895">895</a> </span>
+<span class="source-line" id="L896"><a class="line-number" href="#L896" aria-label="Line 896">896</a> ```bash</span>
+<span class="source-line" id="L897"><a class="line-number" href="#L897" aria-label="Line 897">897</a> npm run test:dev -- --ui</span>
+<span class="source-line" id="L898"><a class="line-number" href="#L898" aria-label="Line 898">898</a> # Event QR (needs the local stack), PowerShell:</span>
+<span class="source-line" id="L899"><a class="line-number" href="#L899" aria-label="Line 899">899</a> $env:BASE_URL=&#39;http://192.168.1.185:8000/en/&#39;; npx playwright test tests/logged-in-user/create-qr-code/event-qr --ui</span>
+<span class="source-line" id="L900"><a class="line-number" href="#L900" aria-label="Line 900">900</a> ```</span>
+<span class="source-line" id="L901"><a class="line-number" href="#L901" aria-label="Line 901">901</a> </span>
+<span class="source-line" id="L902"><a class="line-number" href="#L902" aria-label="Line 902">902</a> It gives you the failing line, a time-travel DOM snapshot, locator picker, and watch-mode</span>
+<span class="source-line" id="L903"><a class="line-number" href="#L903" aria-label="Line 903">903</a> re-runs. It is interactive, so use it locally—not in CI. Throwaway probe specs are</span>
+<span class="source-line" id="L904"><a class="line-number" href="#L904" aria-label="Line 904">904</a> diagnostic scaffolding: name them `_probe.spec.ts` and delete them before committing.</span>
+<span class="source-line" id="L905"><a class="line-number" href="#L905" aria-label="Line 905">905</a> </span>
+<span class="source-line" id="L906"><a class="line-number" href="#L906" aria-label="Line 906">906</a> ---</span>
+<span class="source-line" id="L907"><a class="line-number" href="#L907" aria-label="Line 907">907</a> </span>
+<span class="source-line" id="L908"><a class="line-number" href="#L908" aria-label="Line 908">908</a> ## 13. Definition of Done for a test **[convention]**</span>
+<span class="source-line" id="L909"><a class="line-number" href="#L909" aria-label="Line 909">909</a> </span>
+<span class="source-line" id="L910"><a class="line-number" href="#L910" aria-label="Line 910">910</a> - [ ] Passes on its target environment</span>
+<span class="source-line" id="L911"><a class="line-number" href="#L911" aria-label="Line 911">911</a> - [ ] Passes under concurrency (`--repeat-each=3 --workers=2 --retries=0`)</span>
+<span class="source-line" id="L912"><a class="line-number" href="#L912" aria-label="Line 912">912</a> - [ ] No hardcoded sleeps; no invented test-ids</span>
+<span class="source-line" id="L913"><a class="line-number" href="#L913" aria-label="Line 913">913</a> - [ ] Locators follow the selector ladder and live in a Locators class</span>
+<span class="source-line" id="L914"><a class="line-number" href="#L914" aria-label="Line 914">914</a> - [ ] Existing `BasePage` behavior and `BaseLocators` selectors were reused where their</span>
+<span class="source-line" id="L915"><a class="line-number" href="#L915" aria-label="Line 915">915</a>       meaning matches; shared base members were not duplicated in product classes</span>
+<span class="source-line" id="L916"><a class="line-number" href="#L916" aria-label="Line 916">916</a> - [ ] A new or migrated page uses one concrete Page Object when locators/behavior are</span>
+<span class="source-line" id="L917"><a class="line-number" href="#L917" aria-label="Line 917">917</a>       shared, or independent product classes + `PageFactory({...})` when they differ; unsupported</span>
+<span class="source-line" id="L918"><a class="line-number" href="#L918" aria-label="Line 918">918</a>       products fail clearly without placeholder classes or another product&#39;s implementation</span>
+<span class="source-line" id="L919"><a class="line-number" href="#L919" aria-label="Line 919">919</a> - [ ] `qase.id/title/suite` present; created data cleaned up in `afterEach`</span>
+<span class="source-line" id="L920"><a class="line-number" href="#L920" aria-label="Line 920">920</a> - [ ] Priority tag present (`@High`/`@Medium`/`@Low`); when a test covers multiple TCs of differing priority, the **highest** is used</span>
+<span class="source-line" id="L921"><a class="line-number" href="#L921" aria-label="Line 921">921</a> - [ ] Any `skip`/`fixme`/`fail` carries a documented reason (§11) — a **product bug uses `fixme`/`fail`, never `skip`** — plus a bug-report row</span>
+<span class="source-line" id="L922"><a class="line-number" href="#L922" aria-label="Line 922">922</a> - [ ] Happy path **and** at least one negative/error case covered</span>
+<span class="source-line" id="L923"><a class="line-number" href="#L923" aria-label="Line 923">923</a> - [ ] For a migrated multi-product flow, the product is selected consistently through</span>
+<span class="source-line" id="L924"><a class="line-number" href="#L924" aria-label="Line 924">924</a>       project → fixture → `PageManager` → product Page Object; no legacy domain detection is</span>
+<span class="source-line" id="L925"><a class="line-number" href="#L925" aria-label="Line 925">925</a>       mixed into that flow</span>
+<span class="source-line" id="L926"><a class="line-number" href="#L926" aria-label="Line 926">926</a> - [ ] A shared multi-product test represents the same test case and expected behavior on</span>
+<span class="source-line" id="L927"><a class="line-number" href="#L927" aria-label="Line 927">927</a>       every included product; product differences remain inside Page Objects and locator classes</span>
+<span class="source-line" id="L928"><a class="line-number" href="#L928" aria-label="Line 928">928</a> - [ ] Each applicable product passes independently and shared cases run against all</span>
+<span class="source-line" id="L929"><a class="line-number" href="#L929" aria-label="Line 929">929</a>       applicable product projects without changing `.env` between runs</span>
+<span class="source-line" id="L930"><a class="line-number" href="#L930" aria-label="Line 930">930</a> - [ ] Unrelated legacy tests and projects retain their existing behavior</span>
+<span class="source-line" id="L931"><a class="line-number" href="#L931" aria-label="Line 931">931</a> </span>
+<span class="source-line" id="L932"><a class="line-number" href="#L932" aria-label="Line 932">932</a> ---</span>
+<span class="source-line" id="L933"><a class="line-number" href="#L933" aria-label="Line 933">933</a> </span>
+<span class="source-line" id="L934"><a class="line-number" href="#L934" aria-label="Line 934">934</a> ## 14. Code style, lint &amp; the pre-commit hook</span>
+<span class="source-line" id="L935"><a class="line-number" href="#L935" aria-label="Line 935">935</a> </span>
+<span class="source-line" id="L936"><a class="line-number" href="#L936" aria-label="Line 936">936</a> - `async/await` only — no `.then()` chains. **[convention]**</span>
+<span class="source-line" id="L937"><a class="line-number" href="#L937" aria-label="Line 937">937</a> - No `any` without a comment explaining why (ESLint warns). **[convention]**</span>
+<span class="source-line" id="L938"><a class="line-number" href="#L938" aria-label="Line 938">938</a> - Import order: Playwright → project classes → test data → types. **[convention]**</span>
+<span class="source-line" id="L939"><a class="line-number" href="#L939" aria-label="Line 939">939</a> - In new TypeScript code, use the `@/` path alias for imports that cross repository</span>
+<span class="source-line" id="L940"><a class="line-number" href="#L940" aria-label="Line 940">940</a>   directories. `@/` maps to the repository root, for example</span>
+<span class="source-line" id="L941"><a class="line-number" href="#L941" aria-label="Line 941">941</a>   `import { test } from &#39;@/fixtures/baseFixture&#39;`. Keep `./` for modules in the same</span>
+<span class="source-line" id="L942"><a class="line-number" href="#L942" aria-label="Line 942">942</a>   directory. Existing relative imports are valid legacy code; do not rewrite them only to</span>
+<span class="source-line" id="L943"><a class="line-number" href="#L943" aria-label="Line 943">943</a>   adopt the alias. **[convention]**</span>
+<span class="source-line" id="L944"><a class="line-number" href="#L944" aria-label="Line 944">944</a> - Never disable an ESLint rule without a `--` justification in the directive. **[convention]**</span>
+<span class="source-line" id="L945"><a class="line-number" href="#L945" aria-label="Line 945">945</a> </span>
+<span class="source-line" id="L946"><a class="line-number" href="#L946" aria-label="Line 946">946</a> **The hook [enforced]:** `.husky/pre-commit` runs `npx lint-staged`, which lints and</span>
+<span class="source-line" id="L947"><a class="line-number" href="#L947" aria-label="Line 947">947</a> formats **only the files you staged** and re-stages the result. This means:</span>
+<span class="source-line" id="L948"><a class="line-number" href="#L948" aria-label="Line 948">948</a> </span>
+<span class="source-line" id="L949"><a class="line-number" href="#L949" aria-label="Line 949">949</a> - Your commit contains the formatted code (the old hook formatted files but committed</span>
+<span class="source-line" id="L950"><a class="line-number" href="#L950" aria-label="Line 950">950</a>   the unformatted version).</span>
+<span class="source-line" id="L951"><a class="line-number" href="#L951" aria-label="Line 951">951</a> - An unrelated broken file elsewhere in the repo can no longer abort your commit.</span>
+<span class="source-line" id="L952"><a class="line-number" href="#L952" aria-label="Line 952">952</a> - Generated artefacts (`docs/*.html`, `docs/*.pdf`, reports) are listed in</span>
+<span class="source-line" id="L953"><a class="line-number" href="#L953" aria-label="Line 953">953</a>   `.prettierignore` — Prettier cannot parse the generated HTML and would fail the hook.</span>
+<span class="source-line" id="L954"><a class="line-number" href="#L954" aria-label="Line 954">954</a> </span>
+<span class="source-line" id="L955"><a class="line-number" href="#L955" aria-label="Line 955">955</a> ---</span>
+<span class="source-line" id="L956"><a class="line-number" href="#L956" aria-label="Line 956">956</a> </span>
+<span class="source-line" id="L957"><a class="line-number" href="#L957" aria-label="Line 957">957</a> ## 15. Git &amp; PR hygiene **[convention]**</span>
+<span class="source-line" id="L958"><a class="line-number" href="#L958" aria-label="Line 958">958</a> </span>
+<span class="source-line" id="L959"><a class="line-number" href="#L959" aria-label="Line 959">959</a> - Branch naming (ticket-scoped work): `{OQG3-XXXX}-{short-feature}-automations`</span>
+<span class="source-line" id="L960"><a class="line-number" href="#L960" aria-label="Line 960">960</a>   (e.g. `OQG3-1424-files-counter-automations`). For non-ticket chores, `qa/&lt;topic&gt;`</span>
+<span class="source-line" id="L961"><a class="line-number" href="#L961" aria-label="Line 961">961</a>   (e.g. `qa/event-qr-meta-batch-fixes`) is fine.</span>
+<span class="source-line" id="L962"><a class="line-number" href="#L962" aria-label="Line 962">962</a> - **Never commit:** `.env`, `test-results/`, `playwright-report/`, probe specs, or real</span>
+<span class="source-line" id="L963"><a class="line-number" href="#L963" aria-label="Line 963">963</a>   credentials. Keep commits scoped to one logical change.</span>
+<span class="source-line" id="L964"><a class="line-number" href="#L964" aria-label="Line 964">964</a> - Don&#39;t commit unrelated changes you find in your working tree — surface them instead.</span>
+<span class="source-line" id="L965"><a class="line-number" href="#L965" aria-label="Line 965">965</a> - **CRLF gotcha:** on Windows with `core.autocrlf=true`, a merge can fail with</span>
+<span class="source-line" id="L966"><a class="line-number" href="#L966" aria-label="Line 966">966</a>   _&quot;Your local changes would be overwritten&quot;_ even though `git status` is clean. It&#39;s a</span>
+<span class="source-line" id="L967"><a class="line-number" href="#L967" aria-label="Line 967">967</a>   line-ending phantom, not real edits. Fix:</span>
+<span class="source-line" id="L968"><a class="line-number" href="#L968" aria-label="Line 968">968</a>     ```bash</span>
+<span class="source-line" id="L969"><a class="line-number" href="#L969" aria-label="Line 969">969</a>     git add --renormalize .</span>
+<span class="source-line" id="L970"><a class="line-number" href="#L970" aria-label="Line 970">970</a>     ```</span>
+<span class="source-line" id="L971"><a class="line-number" href="#L971" aria-label="Line 971">971</a> </span>
+<span class="source-line" id="L972"><a class="line-number" href="#L972" aria-label="Line 972">972</a> ---</span>
+<span class="source-line" id="L973"><a class="line-number" href="#L973" aria-label="Line 973">973</a> </span>
+<span class="source-line" id="L974"><a class="line-number" href="#L974" aria-label="Line 974">974</a> ## 16. Secrets &amp; data safety **[convention]**</span>
+<span class="source-line" id="L975"><a class="line-number" href="#L975" aria-label="Line 975">975</a> </span>
+<span class="source-line" id="L976"><a class="line-number" href="#L976" aria-label="Line 976">976</a> - Credentials, keys and URLs live in `.env` (gitignored) or the CI secret store. In</span>
+<span class="source-line" id="L977"><a class="line-number" href="#L977" aria-label="Line 977">977</a>   migrated product-aware tests they are resolved centrally by `env.ts` and exposed</span>
+<span class="source-line" id="L978"><a class="line-number" href="#L978" aria-label="Line 978">978</a>   through the `env` fixture; specs and Page Objects must not read `process.env` directly.</span>
+<span class="source-line" id="L979"><a class="line-number" href="#L979" aria-label="Line 979">979</a>   Legacy flows may retain existing direct environment access until intentionally migrated.</span>
+<span class="source-line" id="L980"><a class="line-number" href="#L980" aria-label="Line 980">980</a>   Never hardcode or log secret values.</span>
+<span class="source-line" id="L981"><a class="line-number" href="#L981" aria-label="Line 981">981</a> - Declare new product-aware environment values in `env.ts` with `get(&#39;NAME&#39;)`. Keep them</span>
+<span class="source-line" id="L982"><a class="line-number" href="#L982" aria-label="Line 982">982</a>   optional unless that individual value must be present whenever `env.ts` is imported;</span>
+<span class="source-line" id="L983"><a class="line-number" href="#L983" aria-label="Line 983">983</a>   only then add `{ required: true }` manually.</span>
+<span class="source-line" id="L984"><a class="line-number" href="#L984" aria-label="Line 984">984</a> - Keep secrets out of Playwright `metadata` and project `use`. Only public execution</span>
+<span class="source-line" id="L985"><a class="line-number" href="#L985" aria-label="Line 985">985</a>   configuration such as `product` and `baseURL` belongs there.</span>
+<span class="source-line" id="L986"><a class="line-number" href="#L986" aria-label="Line 986">986</a> - Do not print an `env` fixture, pass it wholesale to a Page Object, or attach it to a</span>
+<span class="source-line" id="L987"><a class="line-number" href="#L987" aria-label="Line 987">987</a>   result. Pass only the specific field required for the current action.</span>
+<span class="source-line" id="L988"><a class="line-number" href="#L988" aria-label="Line 988">988</a> - In documentation use placeholders (`sk_test_…`), never a real key.</span>
+<span class="source-line" id="L989"><a class="line-number" href="#L989" aria-label="Line 989">989</a> - Never paste real credentials into chat, commit messages, or test files.</span>
+<span class="source-line" id="L990"><a class="line-number" href="#L990" aria-label="Line 990">990</a> </span>
+<span class="source-line" id="L991"><a class="line-number" href="#L991" aria-label="Line 991">991</a> Key variables: `BASE_URL`, `OQG_BASE_URL`, `QCI_BASE_URL`, `QGA_BASE_URL`, `STAGE_ADMIN_LINK`,</span>
+<span class="source-line" id="L992"><a class="line-number" href="#L992" aria-label="Line 992">992</a> `DPF_BASE_URL`, `DEFAULT_USER_LOGIN` / `DEFAULT_USER_PASSWORD`, `STAGE_ADMIN_EMAIL` / `STAGE_ADMIN_PASSWORD`,</span>
+<span class="source-line" id="L993"><a class="line-number" href="#L993" aria-label="Line 993">993</a> `MAILPIT_BASE_URL` / `MAILPIT_USER` / `MAILPIT_PASSWORD`, `STRIPE_SECRET_KEY`,</span>
+<span class="source-line" id="L994"><a class="line-number" href="#L994" aria-label="Line 994">994</a> `QCI_BASE_URL` / `QGAI_BASE_URL` (OQG3-1899-TC04; optional</span>
+<span class="source-line" id="L995"><a class="line-number" href="#L995" aria-label="Line 995">995</a> `QCI_ADMIN_*` / `QGAI_ADMIN_*` fall back to `STAGE_ADMIN_*`),</span>
+<span class="source-line" id="L996"><a class="line-number" href="#L996" aria-label="Line 996">996</a> `QASE_API_TOKEN` / `QASE_TESTOPS_PROJECT`, `PERCY_TOKEN`, `DB_USER` / `DB_PASSWORD` / `DB_HOST`,</span>
+<span class="source-line" id="L997"><a class="line-number" href="#L997" aria-label="Line 997">997</a> `OQG_DB_PLAN` / `OQG_DB_EMAIL`, `QCI_DB_PLAN` / `QCI_DB_EMAIL`, `QGA_DB_PLAN` / `QGA_DB_EMAIL`.</span>
+<span class="source-line" id="L998"><a class="line-number" href="#L998" aria-label="Line 998">998</a> </span>
+<span class="source-line" id="L999"><a class="line-number" href="#L999" aria-label="Line 999">999</a> ---</span>
+<span class="source-line" id="L1000"><a class="line-number" href="#L1000" aria-label="Line 1000">1000</a> </span>
+<span class="source-line" id="L1001"><a class="line-number" href="#L1001" aria-label="Line 1001">1001</a> ## 17. API tests **[convention]**</span>
+<span class="source-line" id="L1002"><a class="line-number" href="#L1002" aria-label="Line 1002">1002</a> </span>
+<span class="source-line" id="L1003"><a class="line-number" href="#L1003" aria-label="Line 1003">1003</a> - Live in `api/`; use Playwright&#39;s `request` context — not axios or fetch.</span>
+<span class="source-line" id="L1004"><a class="line-number" href="#L1004" aria-label="Line 1004">1004</a> - Assert status code, body shape, and key field values.</span>
+<span class="source-line" id="L1005"><a class="line-number" href="#L1005" aria-label="Line 1005">1005</a> - Reuse auth via fixtures; don&#39;t re-login per test.</span>
+<span class="source-line" id="L1006"><a class="line-number" href="#L1006" aria-label="Line 1006">1006</a> - Mail is read through **Mailpit** (`api/Mailpit.ts`). `api/Mailtrap.ts` is a</span>
+<span class="source-line" id="L1007"><a class="line-number" href="#L1007" aria-label="Line 1007">1007</a>   backwards-compatible re-export shim — prefer importing from `Mailpit`.</span>
+<span class="source-line" id="L1008"><a class="line-number" href="#L1008" aria-label="Line 1008">1008</a> </span>
+<span class="source-line" id="L1009"><a class="line-number" href="#L1009" aria-label="Line 1009">1009</a> ---</span>
+<span class="source-line" id="L1010"><a class="line-number" href="#L1010" aria-label="Line 1010">1010</a> </span>
+<span class="source-line" id="L1011"><a class="line-number" href="#L1011" aria-label="Line 1011">1011</a> ## 18. CI/CD</span>
+<span class="source-line" id="L1012"><a class="line-number" href="#L1012" aria-label="Line 1012">1012</a> </span>
+<span class="source-line" id="L1013"><a class="line-number" href="#L1013" aria-label="Line 1013">1013</a> Tests run on GitHub Actions against configured targets in headless browsers. Legacy jobs</span>
+<span class="source-line" id="L1014"><a class="line-number" href="#L1014" aria-label="Line 1014">1014</a> primarily run the existing Chromium project; migrated suites may use the OQG/QCI/QGA product</span>
+<span class="source-line" id="L1015"><a class="line-number" href="#L1015" aria-label="Line 1015">1015</a> projects. Never depend on local filesystem paths or on a developer machine&#39;s state.</span>
+<span class="source-line" id="L1016"><a class="line-number" href="#L1016" aria-label="Line 1016">1016</a> Artefact capture (screenshots, video, traces) is configured centrally in</span>
+<span class="source-line" id="L1017"><a class="line-number" href="#L1017" aria-label="Line 1017">1017</a> `playwright.config.ts` — don&#39;t override it per test. **[convention]**</span>
+<span class="source-line" id="L1018"><a class="line-number" href="#L1018" aria-label="Line 1018">1018</a> </span>
+<span class="source-line" id="L1019"><a class="line-number" href="#L1019" aria-label="Line 1019">1019</a> Normal PR validation should prefer the smallest product/browser set that proves the</span>
+<span class="source-line" id="L1020"><a class="line-number" href="#L1020" aria-label="Line 1020">1020</a> change. Broader Firefox/WebKit or full product/browser runs may be used for compatibility,</span>
+<span class="source-line" id="L1021"><a class="line-number" href="#L1021" aria-label="Line 1021">1021</a> nightly, or release validation. Do not silently expand or replace legacy CI execution as</span>
+<span class="source-line" id="L1022"><a class="line-number" href="#L1022" aria-label="Line 1022">1022</a> part of migrating a single feature.</span>
+<span class="source-line" id="L1023"><a class="line-number" href="#L1023" aria-label="Line 1023">1023</a> </span>
+<span class="source-line" id="L1024"><a class="line-number" href="#L1024" aria-label="Line 1024">1024</a> ---</span>
+<span class="source-line" id="L1025"><a class="line-number" href="#L1025" aria-label="Line 1025">1025</a> </span>
+<span class="source-line" id="L1026"><a class="line-number" href="#L1026" aria-label="Line 1026">1026</a> ## 19. Glossary</span>
+<span class="source-line" id="L1027"><a class="line-number" href="#L1027" aria-label="Line 1027">1027</a> </span>
+<span class="source-line" id="L1028"><a class="line-number" href="#L1028" aria-label="Line 1028">1028</a> | Term              | Meaning                                                                                                  |</span>
+<span class="source-line" id="L1029"><a class="line-number" href="#L1029" aria-label="Line 1029">1029</a> | ----------------- | -------------------------------------------------------------------------------------------------------- |</span>
+<span class="source-line" id="L1030"><a class="line-number" href="#L1030" aria-label="Line 1030">1030</a> | DPF               | Download Page Flow — onboarding funnel after registration                                                |</span>
+<span class="source-line" id="L1031"><a class="line-number" href="#L1031" aria-label="Line 1031">1031</a> | Step 1 / 2 / 3    | QR wizard: type selection / content / design &amp; finalise                                                  |</span>
+<span class="source-line" id="L1032"><a class="line-number" href="#L1032" aria-label="Line 1032">1032</a> | QR type           | Website, vCard, Business, PDF, Links, Event, …                                                           |</span>
+<span class="source-line" id="L1033"><a class="line-number" href="#L1033" aria-label="Line 1033">1033</a> | Product fixture   | Typed OQG/QCI/QGA option supplied by a product Playwright project                                        |</span>
+<span class="source-line" id="L1034"><a class="line-number" href="#L1034" aria-label="Line 1034">1034</a> | Legacy domain     | Product selected globally through `DOMAIN` or inferred `BASE_URL`                                        |</span>
+<span class="source-line" id="L1035"><a class="line-number" href="#L1035" aria-label="Line 1035">1035</a> | frame             | Mobile preview iframe inside the editor                                                                  |</span>
+<span class="source-line" id="L1036"><a class="line-number" href="#L1036" aria-label="Line 1036">1036</a> | Admin panel       | Internal tool at `STAGE_ADMIN_LINK`                                                                      |</span>
+<span class="source-line" id="L1037"><a class="line-number" href="#L1037" aria-label="Line 1037">1037</a> | `authorizeUser()` | Registers **and** logs in a fresh test user (`registerPage`)                                             |</span>
+<span class="source-line" id="L1038"><a class="line-number" href="#L1038" aria-label="Line 1038">1038</a> | `deleteUser()`    | Cleanup on `userApi` — call in `afterEach`                                                               |</span>
+<span class="source-line" id="L1039"><a class="line-number" href="#L1039" aria-label="Line 1039">1039</a> | Expired plan      | Subscription with a past expiry, set via `updateSubscriptionDate()`                                      |</span>
+<span class="source-line" id="L1040"><a class="line-number" href="#L1040" aria-label="Line 1040">1040</a> | Quarantine        | Documented, kept-in-suite marker for a known issue: `fail`/`fixme` = product bug, `skip` = env gap (§11) |</span>
+<span class="source-line" id="L1041"><a class="line-number" href="#L1041" aria-label="Line 1041">1041</a> </span>
+<span class="source-line" id="L1042"><a class="line-number" href="#L1042" aria-label="Line 1042">1042</a> ---</span>
+<span class="source-line" id="L1043"><a class="line-number" href="#L1043" aria-label="Line 1043">1043</a> </span>
+<span class="source-line" id="L1044"><a class="line-number" href="#L1044" aria-label="Line 1044">1044</a> ## Appendix — for AI assistants</span>
+<span class="source-line" id="L1045"><a class="line-number" href="#L1045" aria-label="Line 1045">1045</a> </span>
+<span class="source-line" id="L1046"><a class="line-number" href="#L1046" aria-label="Line 1046">1046</a> Everything above applies to you exactly as it applies to a human engineer. In addition:</span>
+<span class="source-line" id="L1047"><a class="line-number" href="#L1047" aria-label="Line 1047">1047</a> </span>
+<span class="source-line" id="L1048"><a class="line-number" href="#L1048" aria-label="Line 1048">1048</a> - **Verify before you edit:** confirm a locator/test-id exists in the live DOM, and read</span>
+<span class="source-line" id="L1049"><a class="line-number" href="#L1049" aria-label="Line 1049">1049</a>   the actual test error, before changing code (§12).</span>
+<span class="source-line" id="L1050"><a class="line-number" href="#L1050" aria-label="Line 1050">1050</a> - **Delete throwaway probe specs** you create for diagnosis.</span>
+<span class="source-line" id="L1051"><a class="line-number" href="#L1051" aria-label="Line 1051">1051</a> - **Surface, don&#39;t absorb:** if the working tree contains changes you didn&#39;t make, report</span>
+<span class="source-line" id="L1052"><a class="line-number" href="#L1052" aria-label="Line 1052">1052</a>   them rather than committing them.</span>
+<span class="source-line" id="L1053"><a class="line-number" href="#L1053" aria-label="Line 1053">1053</a> - **Don&#39;t push, open PRs, or merge** unless explicitly asked.</span>
+<span class="source-line" id="L1054"><a class="line-number" href="#L1054" aria-label="Line 1054">1054</a> - Prefer editing existing Page Objects/helpers over creating parallel ones; search first.</span>
+<span class="source-line" id="L1055"><a class="line-number" href="#L1055" aria-label="Line 1055">1055</a> - **Explain your reasoning before a large change**; when several viable solutions exist,</span>
+<span class="source-line" id="L1056"><a class="line-number" href="#L1056" aria-label="Line 1056">1056</a>   lay out the trade-offs before choosing one.</span>
+<span class="source-line" id="L1057"><a class="line-number" href="#L1057" aria-label="Line 1057">1057</a> - **Make the smallest safe change and preserve the existing architecture.** Don&#39;t rewrite</span>
+<span class="source-line" id="L1058"><a class="line-number" href="#L1058" aria-label="Line 1058">1058</a>   a working test unless asked, and don&#39;t silently modify files unrelated to the task.</span>
+<span class="source-line" id="L1059"><a class="line-number" href="#L1059" aria-label="Line 1059">1059</a> - **Never fabricate a missing requirement.** When the ask is ambiguous, ask — don&#39;t guess.</span>
+<span class="source-line" id="L1060"><a class="line-number" href="#L1060" aria-label="Line 1060">1060</a> - **Multi-product test refactor:** when migrating a suite to product projects /</span>
+<span class="source-line" id="L1061"><a class="line-number" href="#L1061" aria-label="Line 1061">1061</a>   factories / `*-automations.spec.ts` files, follow</span>
+<span class="source-line" id="L1062"><a class="line-number" href="#L1062" aria-label="Line 1062">1062</a>   `docs/MULTI-PRODUCT-TEST-REFACTOR.md`. Use a factory only when locators or clicks</span>
+<span class="source-line" id="L1063"><a class="line-number" href="#L1063" aria-label="Line 1063">1063</a>   differ by product; otherwise one concrete Page Object (`MyQrCodesPage`). Use the</span>
+<span class="source-line" id="L1064"><a class="line-number" href="#L1064" aria-label="Line 1064">1064</a>   constructor-style `PageFactory({...})` API and construct pages in the `PageManager`</span>
+<span class="source-line" id="L1065"><a class="line-number" href="#L1065" aria-label="Line 1065">1065</a>   constructor. Cursor loads</span>
+<span class="source-line" id="L1066"><a class="line-number" href="#L1066" aria-label="Line 1066">1066</a>   `.cursor/skills/multi-product-test-refactor/`; Codex loads</span>
+<span class="source-line" id="L1067"><a class="line-number" href="#L1067" aria-label="Line 1067">1067</a>   `.agents/skills/multi-product-test-refactor/`. Do not invent a second pattern.</span>
+<span class="source-line" id="L1068"><a class="line-number" href="#L1068" aria-label="Line 1068">1068</a> </span></code></pre></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

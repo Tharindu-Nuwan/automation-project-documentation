@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>tests/logged-in-user/create-qr-code/event-qr/event-qr-scan-content-automations.spec.ts · QA reference</title>
+<link rel="stylesheet" href="../../../../../assets/styles.css">
+<script defer src="../../../../../assets/search-index.js"></script><script defer src="../../../../../assets/app.js"></script>
+</head><body data-root-prefix="../../../../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../../../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../../../../index.html">Start here</a>
+<a href="../../../../../00-qa-quick-start.html">Your first check</a>
+<a href="../../../../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../../../../03-qr-creation.html">QR types and creation</a>
+<a href="../../../../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../../../../05-other-flows.html">Other product flows</a>
+<a href="../../../../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../../../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../../../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../../../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../../../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../../../../reference/index.html">Reference overview</a>
+<a href="../../../../../reference/spec-index.html">Complete spec map</a>
+<a href="../../../../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../../../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../../../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../../../../reference/environment-index.html">Environment variables</a>
+<a href="../../../../../reference/assets.html">Upload asset inventory</a>
+<a href="../../../../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical detail · bundled source snapshot · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../../../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../../../../glossary.html">glossary</a>.</p>
+
+<article id="doc-content" tabindex="-1"><h1>tests/logged-in-user/create-qr-code/event-qr/event-qr-scan-content-automations.spec.ts</h1><p class="source-note">Bundled source snapshot. Credential-like literals are omitted. Line numbers correspond to the audited repository file; this page is for reading and is not executable test code.</p><pre class="source-code"><code><span class="source-line" id="L1"><a class="line-number" href="#L1" aria-label="Line 1">1</a> /**</span>
+<span class="source-line" id="L2"><a class="line-number" href="#L2" aria-label="Line 2">2</a>  * Jira: OQG3-2367 / OQG3-2368 / OQG3-2371 / OQG3-2372 / OQG3-2376</span>
+<span class="source-line" id="L3"><a class="line-number" href="#L3" aria-label="Line 3">3</a>  * Feature: Event QR scan page content, and the edit-mode round trip</span>
+<span class="source-line" id="L4"><a class="line-number" href="#L4" aria-label="Line 4">4</a>  *</span>
+<span class="source-line" id="L5"><a class="line-number" href="#L5" aria-label="Line 5">5</a>  * Each of these stories closes with &quot;Scanner mobile display behavior&quot;, whose</span>
+<span class="source-line" id="L6"><a class="line-number" href="#L6" aria-label="Line 6">6</a>  * sub-criteria describe what the published landing page must render and what</span>
+<span class="source-line" id="L7"><a class="line-number" href="#L7" aria-label="Line 7">7</a>  * must survive a save. The suite asserted the section headings but not the</span>
+<span class="source-line" id="L8"><a class="line-number" href="#L8" aria-label="Line 8">8</a>  * arrangement the criteria specify — the title above the image, the link</span>
+<span class="source-line" id="L9"><a class="line-number" href="#L9" aria-label="Line 9">9</a>  * opening in a new tab, the details block centre aligned — nor that every</span>
+<span class="source-line" id="L10"><a class="line-number" href="#L10" aria-label="Line 10">10</a>  * section comes back when the QR is reopened for editing.</span>
+<span class="source-line" id="L11"><a class="line-number" href="#L11" aria-label="Line 11">11</a>  */</span>
+<span class="source-line" id="L12"><a class="line-number" href="#L12" aria-label="Line 12">12</a> </span>
+<span class="source-line" id="L13"><a class="line-number" href="#L13" aria-label="Line 13">13</a> import { expect } from &#39;@playwright/test&#39;</span>
+<span class="source-line" id="L14"><a class="line-number" href="#L14" aria-label="Line 14">14</a> import { qase } from &#39;playwright-qase-reporter&#39;</span>
+<span class="source-line" id="L15"><a class="line-number" href="#L15" aria-label="Line 15">15</a> </span>
+<span class="source-line" id="L16"><a class="line-number" href="#L16" aria-label="Line 16">16</a> import { test } from &#39;../../../../fixtures/baseFixture&#39;</span>
+<span class="source-line" id="L17"><a class="line-number" href="#L17" aria-label="Line 17">17</a> import type { Page } from &#39;@playwright/test&#39;</span>
+<span class="source-line" id="L18"><a class="line-number" href="#L18" aria-label="Line 18">18</a> import type { PageManager } from &#39;../../../../base/PageManager&#39;</span>
+<span class="source-line" id="L19"><a class="line-number" href="#L19" aria-label="Line 19">19</a> import { openEventScanPage } from &#39;../../../helpers/eventLocalSetup&#39;</span>
+<span class="source-line" id="L20"><a class="line-number" href="#L20" aria-label="Line 20">20</a> </span>
+<span class="source-line" id="L21"><a class="line-number" href="#L21" aria-label="Line 21">21</a> const SUITE = &#39;Event QR Scan Content&#39;</span>
+<span class="source-line" id="L22"><a class="line-number" href="#L22" aria-label="Line 22">22</a> const SUMMARY = &#39;Join us for a day of talks and demos.&#39;</span>
+<span class="source-line" id="L23"><a class="line-number" href="#L23" aria-label="Line 23">23</a> const DETAILS_LINE_ONE = &#39;Doors open at nine.&#39;</span>
+<span class="source-line" id="L24"><a class="line-number" href="#L24" aria-label="Line 24">24</a> const DETAILS_LINE_TWO = &#39;Bring your badge.&#39;</span>
+<span class="source-line" id="L25"><a class="line-number" href="#L25" aria-label="Line 25">25</a> const LINK_LABEL = &#39;Tickets&#39;</span>
+<span class="source-line" id="L26"><a class="line-number" href="#L26" aria-label="Line 26">26</a> const LINK_URL = &#39;https://example.com/tickets&#39;</span>
+<span class="source-line" id="L27"><a class="line-number" href="#L27" aria-label="Line 27">27</a> </span>
+<span class="source-line" id="L28"><a class="line-number" href="#L28" aria-label="Line 28">28</a> /** Opens Step 2 of a fresh Event QR with the required fields filled. */</span>
+<span class="source-line" id="L29"><a class="line-number" href="#L29" aria-label="Line 29">29</a> async function openEventStep2(</span>
+<span class="source-line" id="L30"><a class="line-number" href="#L30" aria-label="Line 30">30</a>     page: Page,</span>
+<span class="source-line" id="L31"><a class="line-number" href="#L31" aria-label="Line 31">31</a>     pageManager: PageManager,</span>
+<span class="source-line" id="L32"><a class="line-number" href="#L32" aria-label="Line 32">32</a>     title: string</span>
+<span class="source-line" id="L33"><a class="line-number" href="#L33" aria-label="Line 33">33</a> ): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L34"><a class="line-number" href="#L34" aria-label="Line 34">34</a>     await page.goto(&#39;/qr-codes&#39;)</span>
+<span class="source-line" id="L35"><a class="line-number" href="#L35" aria-label="Line 35">35</a>     await pageManager.menuPage.goToCreateQrCode()</span>
+<span class="source-line" id="L36"><a class="line-number" href="#L36" aria-label="Line 36">36</a>     await pageManager.step1Page.locator.eventQrType.waitFor({</span>
+<span class="source-line" id="L37"><a class="line-number" href="#L37" aria-label="Line 37">37</a>         state: &#39;visible&#39;,</span>
+<span class="source-line" id="L38"><a class="line-number" href="#L38" aria-label="Line 38">38</a>         timeout: 30_000,</span>
+<span class="source-line" id="L39"><a class="line-number" href="#L39" aria-label="Line 39">39</a>     })</span>
+<span class="source-line" id="L40"><a class="line-number" href="#L40" aria-label="Line 40">40</a>     await pageManager.step1Page.selectEventQrType()</span>
+<span class="source-line" id="L41"><a class="line-number" href="#L41" aria-label="Line 41">41</a>     await pageManager.step2Page.ensureHelpClosedBeforeUpload().catch(() =&gt; {})</span>
+<span class="source-line" id="L42"><a class="line-number" href="#L42" aria-label="Line 42">42</a>     await pageManager.step2Page.fillEventRequiredFields(title)</span>
+<span class="source-line" id="L43"><a class="line-number" href="#L43" aria-label="Line 43">43</a> }</span>
+<span class="source-line" id="L44"><a class="line-number" href="#L44" aria-label="Line 44">44</a> </span>
+<span class="source-line" id="L45"><a class="line-number" href="#L45" aria-label="Line 45">45</a> /** Publishes the Event QR currently open on Step 2. */</span>
+<span class="source-line" id="L46"><a class="line-number" href="#L46" aria-label="Line 46">46</a> async function publish(</span>
+<span class="source-line" id="L47"><a class="line-number" href="#L47" aria-label="Line 47">47</a>     page: Page,</span>
+<span class="source-line" id="L48"><a class="line-number" href="#L48" aria-label="Line 48">48</a>     pageManager: PageManager,</span>
+<span class="source-line" id="L49"><a class="line-number" href="#L49" aria-label="Line 49">49</a>     title: string</span>
+<span class="source-line" id="L50"><a class="line-number" href="#L50" aria-label="Line 50">50</a> ): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L51"><a class="line-number" href="#L51" aria-label="Line 51">51</a>     await pageManager.step2Page.setEventQrName(`QR ${title}`)</span>
+<span class="source-line" id="L52"><a class="line-number" href="#L52" aria-label="Line 52">52</a>     await pageManager.qrCreationPage.clickStep2NextButton()</span>
+<span class="source-line" id="L53"><a class="line-number" href="#L53" aria-label="Line 53">53</a>     await page.waitForURL(&#39;**step=3**&#39;, { timeout: 60_000 })</span>
+<span class="source-line" id="L54"><a class="line-number" href="#L54" aria-label="Line 54">54</a>     await pageManager.qrCreationPage.clickStep3CreateButton()</span>
+<span class="source-line" id="L55"><a class="line-number" href="#L55" aria-label="Line 55">55</a>     await pageManager.qrCreationPage.closeDownloadModalIfPresent()</span>
+<span class="source-line" id="L56"><a class="line-number" href="#L56" aria-label="Line 56">56</a> }</span>
+<span class="source-line" id="L57"><a class="line-number" href="#L57" aria-label="Line 57">57</a> </span>
+<span class="source-line" id="L58"><a class="line-number" href="#L58" aria-label="Line 58">58</a> /** Fills every optional Event section this spec asserts on. */</span>
+<span class="source-line" id="L59"><a class="line-number" href="#L59" aria-label="Line 59">59</a> async function fillAllSections(pageManager: PageManager): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L60"><a class="line-number" href="#L60" aria-label="Line 60">60</a>     const step2 = pageManager.step2Page</span>
+<span class="source-line" id="L61"><a class="line-number" href="#L61" aria-label="Line 61">61</a>     await step2.setEventSummary(SUMMARY)</span>
+<span class="source-line" id="L62"><a class="line-number" href="#L62" aria-label="Line 62">62</a>     await step2.setEventDetails(`${DETAILS_LINE_ONE}\n${DETAILS_LINE_TWO}`)</span>
+<span class="source-line" id="L63"><a class="line-number" href="#L63" aria-label="Line 63">63</a>     await step2.setEventImage()</span>
+<span class="source-line" id="L64"><a class="line-number" href="#L64" aria-label="Line 64">64</a>     await step2.setEventLink(LINK_LABEL, LINK_URL)</span>
+<span class="source-line" id="L65"><a class="line-number" href="#L65" aria-label="Line 65">65</a>     await step2.expandEventAccordion(</span>
+<span class="source-line" id="L66"><a class="line-number" href="#L66" aria-label="Line 66">66</a>         step2.locator.eventLocationAccordionTrigger</span>
+<span class="source-line" id="L67"><a class="line-number" href="#L67" aria-label="Line 67">67</a>     )</span>
+<span class="source-line" id="L68"><a class="line-number" href="#L68" aria-label="Line 68">68</a>     await step2.setEventManualLocation()</span>
+<span class="source-line" id="L69"><a class="line-number" href="#L69" aria-label="Line 69">69</a>     await step2.setEventContactName(&#39;Jane Organizer&#39;)</span>
+<span class="source-line" id="L70"><a class="line-number" href="#L70" aria-label="Line 70">70</a>     await step2.setEventContactPhone()</span>
+<span class="source-line" id="L71"><a class="line-number" href="#L71" aria-label="Line 71">71</a>     await step2.setEventFacility(&#39;Wi-Fi&#39;)</span>
+<span class="source-line" id="L72"><a class="line-number" href="#L72" aria-label="Line 72">72</a> }</span>
+<span class="source-line" id="L73"><a class="line-number" href="#L73" aria-label="Line 73">73</a> </span>
+<span class="source-line" id="L74"><a class="line-number" href="#L74" aria-label="Line 74">74</a> /**</span>
+<span class="source-line" id="L75"><a class="line-number" href="#L75" aria-label="Line 75">75</a>  * Document order of the landing page&#39;s title, summary, image and link, so the</span>
+<span class="source-line" id="L76"><a class="line-number" href="#L76" aria-label="Line 76">76</a>  * arrangement OQG3-2367-AC05.02 specifies can be asserted rather than assumed.</span>
+<span class="source-line" id="L77"><a class="line-number" href="#L77" aria-label="Line 77">77</a>  */</span>
+<span class="source-line" id="L78"><a class="line-number" href="#L78" aria-label="Line 78">78</a> async function landingOutline(scan: Page): Promise&lt;string[]&gt; {</span>
+<span class="source-line" id="L79"><a class="line-number" href="#L79" aria-label="Line 79">79</a>     return scan.evaluate(() =&gt;</span>
+<span class="source-line" id="L80"><a class="line-number" href="#L80" aria-label="Line 80">80</a>         Array.from(document.querySelectorAll(&#39;h1,p,img,a&#39;))</span>
+<span class="source-line" id="L81"><a class="line-number" href="#L81" aria-label="Line 81">81</a>             .map((el) =&gt; {</span>
+<span class="source-line" id="L82"><a class="line-number" href="#L82" aria-label="Line 82">82</a>                 const text = (el.textContent || &#39;&#39;).trim()</span>
+<span class="source-line" id="L83"><a class="line-number" href="#L83" aria-label="Line 83">83</a>                 if (el.tagName === &#39;IMG&#39;) return &#39;IMG&#39;</span>
+<span class="source-line" id="L84"><a class="line-number" href="#L84" aria-label="Line 84">84</a>                 if (el.tagName === &#39;H1&#39;) return `H1:${text}`</span>
+<span class="source-line" id="L85"><a class="line-number" href="#L85" aria-label="Line 85">85</a>                 if (el.tagName === &#39;A&#39;) return `A:${text}`</span>
+<span class="source-line" id="L86"><a class="line-number" href="#L86" aria-label="Line 86">86</a>                 return `P:${text}`</span>
+<span class="source-line" id="L87"><a class="line-number" href="#L87" aria-label="Line 87">87</a>             })</span>
+<span class="source-line" id="L88"><a class="line-number" href="#L88" aria-label="Line 88">88</a>             .filter(Boolean)</span>
+<span class="source-line" id="L89"><a class="line-number" href="#L89" aria-label="Line 89">89</a>     )</span>
+<span class="source-line" id="L90"><a class="line-number" href="#L90" aria-label="Line 90">90</a> }</span>
+<span class="source-line" id="L91"><a class="line-number" href="#L91" aria-label="Line 91">91</a> </span>
+<span class="source-line" id="L92"><a class="line-number" href="#L92" aria-label="Line 92">92</a> // Acceptance criteria covered by this spec: OQG3-2367-AC05.01, AC05.02,</span>
+<span class="source-line" id="L93"><a class="line-number" href="#L93" aria-label="Line 93">93</a> //   AC05.03, AC05.04, AC05.05, AC05.07, AC05.08, OQG3-2368-AC10.02, AC10.03,</span>
+<span class="source-line" id="L94"><a class="line-number" href="#L94" aria-label="Line 94">94</a> //   AC10.04, OQG3-2371-AC04.04, OQG3-2372-AC07.02, AC07.04,</span>
+<span class="source-line" id="L95"><a class="line-number" href="#L95" aria-label="Line 95">95</a> //   OQG3-2376-AC05.03.</span>
+<span class="source-line" id="L96"><a class="line-number" href="#L96" aria-label="Line 96">96</a> test.describe(SUITE, { tag: [&#39;@High&#39;] }, () =&gt; {</span>
+<span class="source-line" id="L97"><a class="line-number" href="#L97" aria-label="Line 97">97</a>     let userData: { email: string; password: string }</span>
+<span class="source-line" id="L98"><a class="line-number" href="#L98" aria-label="Line 98">98</a> </span>
+<span class="source-line" id="L99"><a class="line-number" href="#L99" aria-label="Line 99">99</a>     test.beforeEach(async ({ pageManager }) =&gt; {</span>
+<span class="source-line" id="L100"><a class="line-number" href="#L100" aria-label="Line 100">100</a>         userData = await pageManager.registerPage.authorizeUser()</span>
+<span class="source-line" id="L101"><a class="line-number" href="#L101" aria-label="Line 101">101</a>     })</span>
+<span class="source-line" id="L102"><a class="line-number" href="#L102" aria-label="Line 102">102</a> </span>
+<span class="source-line" id="L103"><a class="line-number" href="#L103" aria-label="Line 103">103</a>     test.afterEach(async ({ apiManager }) =&gt; {</span>
+<span class="source-line" id="L104"><a class="line-number" href="#L104" aria-label="Line 104">104</a>         if (userData?.email) {</span>
+<span class="source-line" id="L105"><a class="line-number" href="#L105" aria-label="Line 105">105</a>             await apiManager.userApi</span>
+<span class="source-line" id="L106"><a class="line-number" href="#L106" aria-label="Line 106">106</a>                 .deleteUser([userData.email])</span>
+<span class="source-line" id="L107"><a class="line-number" href="#L107" aria-label="Line 107">107</a>                 .catch(() =&gt; {})</span>
+<span class="source-line" id="L108"><a class="line-number" href="#L108" aria-label="Line 108">108</a>         }</span>
+<span class="source-line" id="L109"><a class="line-number" href="#L109" aria-label="Line 109">109</a>     })</span>
+<span class="source-line" id="L110"><a class="line-number" href="#L110" aria-label="Line 110">110</a> </span>
+<span class="source-line" id="L111"><a class="line-number" href="#L111" aria-label="Line 111">111</a>     /**</span>
+<span class="source-line" id="L112"><a class="line-number" href="#L112" aria-label="Line 112">112</a>      * @covers OQG3-2367-AC05.01</span>
+<span class="source-line" id="L113"><a class="line-number" href="#L113" aria-label="Line 113">113</a>      * @covers OQG3-2367-AC05.02</span>
+<span class="source-line" id="L114"><a class="line-number" href="#L114" aria-label="Line 114">114</a>      * @covers OQG3-2367-AC05.03</span>
+<span class="source-line" id="L115"><a class="line-number" href="#L115" aria-label="Line 115">115</a>      * @covers OQG3-2367-AC05.04</span>
+<span class="source-line" id="L116"><a class="line-number" href="#L116" aria-label="Line 116">116</a>      * @covers OQG3-2367-AC05.05</span>
+<span class="source-line" id="L117"><a class="line-number" href="#L117" aria-label="Line 117">117</a>      * @covers OQG3-2368-AC10.02</span>
+<span class="source-line" id="L118"><a class="line-number" href="#L118" aria-label="Line 118">118</a>      * @covers OQG3-2368-AC10.03</span>
+<span class="source-line" id="L119"><a class="line-number" href="#L119" aria-label="Line 119">119</a>      */</span>
+<span class="source-line" id="L120"><a class="line-number" href="#L120" aria-label="Line 120">120</a>     test(</span>
+<span class="source-line" id="L121"><a class="line-number" href="#L121" aria-label="Line 121">121</a>         &#39;OQG3-2367-AC05 the landing page arranges title, summary, image, link and details as specified&#39;,</span>
+<span class="source-line" id="L122"><a class="line-number" href="#L122" aria-label="Line 122">122</a>         {</span>
+<span class="source-line" id="L123"><a class="line-number" href="#L123" aria-label="Line 123">123</a>             tag: [&#39;@Regression&#39;, &#39;@High&#39;],</span>
+<span class="source-line" id="L124"><a class="line-number" href="#L124" aria-label="Line 124">124</a>             annotation: [</span>
+<span class="source-line" id="L125"><a class="line-number" href="#L125" aria-label="Line 125">125</a>                 { type: &#39;testId&#39;, description: &#39;OQG3-2367-AC05.01&#39; },</span>
+<span class="source-line" id="L126"><a class="line-number" href="#L126" aria-label="Line 126">126</a>                 { type: &#39;testId&#39;, description: &#39;OQG3-2367-AC05.02&#39; },</span>
+<span class="source-line" id="L127"><a class="line-number" href="#L127" aria-label="Line 127">127</a>                 { type: &#39;testId&#39;, description: &#39;OQG3-2367-AC05.03&#39; },</span>
+<span class="source-line" id="L128"><a class="line-number" href="#L128" aria-label="Line 128">128</a>                 { type: &#39;testId&#39;, description: &#39;OQG3-2367-AC05.04&#39; },</span>
+<span class="source-line" id="L129"><a class="line-number" href="#L129" aria-label="Line 129">129</a>                 { type: &#39;testId&#39;, description: &#39;OQG3-2367-AC05.05&#39; },</span>
+<span class="source-line" id="L130"><a class="line-number" href="#L130" aria-label="Line 130">130</a>                 { type: &#39;testId&#39;, description: &#39;OQG3-2368-AC10.02&#39; },</span>
+<span class="source-line" id="L131"><a class="line-number" href="#L131" aria-label="Line 131">131</a>                 { type: &#39;testId&#39;, description: &#39;OQG3-2368-AC10.03&#39; },</span>
+<span class="source-line" id="L132"><a class="line-number" href="#L132" aria-label="Line 132">132</a>             ],</span>
+<span class="source-line" id="L133"><a class="line-number" href="#L133" aria-label="Line 133">133</a>         },</span>
+<span class="source-line" id="L134"><a class="line-number" href="#L134" aria-label="Line 134">134</a>         async ({ page, pageManager }) =&gt; {</span>
+<span class="source-line" id="L135"><a class="line-number" href="#L135" aria-label="Line 135">135</a>             qase.id(0)</span>
+<span class="source-line" id="L136"><a class="line-number" href="#L136" aria-label="Line 136">136</a>             qase.title(</span>
+<span class="source-line" id="L137"><a class="line-number" href="#L137" aria-label="Line 137">137</a>                 &#39;OQG3-2367-AC05 the landing page arranges title, summary, image, link and details as specified&#39;</span>
+<span class="source-line" id="L138"><a class="line-number" href="#L138" aria-label="Line 138">138</a>             )</span>
+<span class="source-line" id="L139"><a class="line-number" href="#L139" aria-label="Line 139">139</a>             qase.suite(SUITE)</span>
+<span class="source-line" id="L140"><a class="line-number" href="#L140" aria-label="Line 140">140</a>             test.slow()</span>
+<span class="source-line" id="L141"><a class="line-number" href="#L141" aria-label="Line 141">141</a>             test.setTimeout(300_000)</span>
+<span class="source-line" id="L142"><a class="line-number" href="#L142" aria-label="Line 142">142</a> </span>
+<span class="source-line" id="L143"><a class="line-number" href="#L143" aria-label="Line 143">143</a>             const title = `Scan Content ${Date.now()}`</span>
+<span class="source-line" id="L144"><a class="line-number" href="#L144" aria-label="Line 144">144</a>             await openEventStep2(page, pageManager, title)</span>
+<span class="source-line" id="L145"><a class="line-number" href="#L145" aria-label="Line 145">145</a>             await fillAllSections(pageManager)</span>
+<span class="source-line" id="L146"><a class="line-number" href="#L146" aria-label="Line 146">146</a>             await publish(page, pageManager, title)</span>
+<span class="source-line" id="L147"><a class="line-number" href="#L147" aria-label="Line 147">147</a> </span>
+<span class="source-line" id="L148"><a class="line-number" href="#L148" aria-label="Line 148">148</a>             const { scanned } = await openEventScanPage(page, pageManager)</span>
+<span class="source-line" id="L149"><a class="line-number" href="#L149" aria-label="Line 149">149</a>             const scan = scanned.page</span>
+<span class="source-line" id="L150"><a class="line-number" href="#L150" aria-label="Line 150">150</a> </span>
+<span class="source-line" id="L151"><a class="line-number" href="#L151" aria-label="Line 151">151</a>             // AC05.03: the title is the page&#39;s main heading.</span>
+<span class="source-line" id="L152"><a class="line-number" href="#L152" aria-label="Line 152">152</a>             await expect(</span>
+<span class="source-line" id="L153"><a class="line-number" href="#L153" aria-label="Line 153">153</a>                 scan.locator(&#39;h1&#39;),</span>
+<span class="source-line" id="L154"><a class="line-number" href="#L154" aria-label="Line 154">154</a>                 &#39;the Event title must be the main heading of the scan page&#39;</span>
+<span class="source-line" id="L155"><a class="line-number" href="#L155" aria-label="Line 155">155</a>             ).toHaveText(title, { timeout: 30_000 })</span>
+<span class="source-line" id="L156"><a class="line-number" href="#L156" aria-label="Line 156">156</a> </span>
+<span class="source-line" id="L157"><a class="line-number" href="#L157" aria-label="Line 157">157</a>             // AC05.01 / AC05.04: the Event Information content is the primary</span>
+<span class="source-line" id="L158"><a class="line-number" href="#L158" aria-label="Line 158">158</a>             // area, with the summary rendered under the title.</span>
+<span class="source-line" id="L159"><a class="line-number" href="#L159" aria-label="Line 159">159</a>             await expect(</span>
+<span class="source-line" id="L160"><a class="line-number" href="#L160" aria-label="Line 160">160</a>                 scan.getByText(SUMMARY),</span>
+<span class="source-line" id="L161"><a class="line-number" href="#L161" aria-label="Line 161">161</a>                 &#39;the Summary must render on the landing page&#39;</span>
+<span class="source-line" id="L162"><a class="line-number" href="#L162" aria-label="Line 162">162</a>             ).toBeVisible()</span>
+<span class="source-line" id="L163"><a class="line-number" href="#L163" aria-label="Line 163">163</a> </span>
+<span class="source-line" id="L164"><a class="line-number" href="#L164" aria-label="Line 164">164</a>             // AC05.02: title, then summary, then the uploaded image.</span>
+<span class="source-line" id="L165"><a class="line-number" href="#L165" aria-label="Line 165">165</a>             const outline = await landingOutline(scan)</span>
+<span class="source-line" id="L166"><a class="line-number" href="#L166" aria-label="Line 166">166</a>             const titleAt = outline.findIndex((n) =&gt; n === `H1:${title}`)</span>
+<span class="source-line" id="L167"><a class="line-number" href="#L167" aria-label="Line 167">167</a>             const summaryAt = outline.findIndex((n) =&gt; n === `P:${SUMMARY}`)</span>
+<span class="source-line" id="L168"><a class="line-number" href="#L168" aria-label="Line 168">168</a>             const imageAt = outline.findIndex((n) =&gt; n === &#39;IMG&#39;)</span>
+<span class="source-line" id="L169"><a class="line-number" href="#L169" aria-label="Line 169">169</a>             expect(</span>
+<span class="source-line" id="L170"><a class="line-number" href="#L170" aria-label="Line 170">170</a>                 titleAt,</span>
+<span class="source-line" id="L171"><a class="line-number" href="#L171" aria-label="Line 171">171</a>                 &#39;the Event title must appear on the landing page&#39;</span>
+<span class="source-line" id="L172"><a class="line-number" href="#L172" aria-label="Line 172">172</a>             ).toBeGreaterThanOrEqual(0)</span>
+<span class="source-line" id="L173"><a class="line-number" href="#L173" aria-label="Line 173">173</a>             expect(</span>
+<span class="source-line" id="L174"><a class="line-number" href="#L174" aria-label="Line 174">174</a>                 titleAt,</span>
+<span class="source-line" id="L175"><a class="line-number" href="#L175" aria-label="Line 175">175</a>                 &#39;the Event title must sit above the uploaded image&#39;</span>
+<span class="source-line" id="L176"><a class="line-number" href="#L176" aria-label="Line 176">176</a>             ).toBeLessThan(imageAt)</span>
+<span class="source-line" id="L177"><a class="line-number" href="#L177" aria-label="Line 177">177</a>             expect(</span>
+<span class="source-line" id="L178"><a class="line-number" href="#L178" aria-label="Line 178">178</a>                 summaryAt,</span>
+<span class="source-line" id="L179"><a class="line-number" href="#L179" aria-label="Line 179">179</a>                 &#39;the Summary must follow the Event title&#39;</span>
+<span class="source-line" id="L180"><a class="line-number" href="#L180" aria-label="Line 180">180</a>             ).toBeGreaterThan(titleAt)</span>
+<span class="source-line" id="L181"><a class="line-number" href="#L181" aria-label="Line 181">181</a> </span>
+<span class="source-line" id="L182"><a class="line-number" href="#L182" aria-label="Line 182">182</a>             // AC05.05: the link renders as a tappable control using its label</span>
+<span class="source-line" id="L183"><a class="line-number" href="#L183" aria-label="Line 183">183</a>             // and opens in a new tab.</span>
+<span class="source-line" id="L184"><a class="line-number" href="#L184" aria-label="Line 184">184</a>             const link = scan.getByRole(&#39;link&#39;, { name: LINK_LABEL })</span>
+<span class="source-line" id="L185"><a class="line-number" href="#L185" aria-label="Line 185">185</a>             await expect(</span>
+<span class="source-line" id="L186"><a class="line-number" href="#L186" aria-label="Line 186">186</a>                 link,</span>
+<span class="source-line" id="L187"><a class="line-number" href="#L187" aria-label="Line 187">187</a>                 &#39;the added link must render using the entered Name as its label&#39;</span>
+<span class="source-line" id="L188"><a class="line-number" href="#L188" aria-label="Line 188">188</a>             ).toBeVisible()</span>
+<span class="source-line" id="L189"><a class="line-number" href="#L189" aria-label="Line 189">189</a>             await expect(</span>
+<span class="source-line" id="L190"><a class="line-number" href="#L190" aria-label="Line 190">190</a>                 link,</span>
+<span class="source-line" id="L191"><a class="line-number" href="#L191" aria-label="Line 191">191</a>                 &#39;the added link must point at the entered URL&#39;</span>
+<span class="source-line" id="L192"><a class="line-number" href="#L192" aria-label="Line 192">192</a>             ).toHaveAttribute(&#39;href&#39;, LINK_URL)</span>
+<span class="source-line" id="L193"><a class="line-number" href="#L193" aria-label="Line 193">193</a>             await expect(</span>
+<span class="source-line" id="L194"><a class="line-number" href="#L194" aria-label="Line 194">194</a>                 link,</span>
+<span class="source-line" id="L195"><a class="line-number" href="#L195" aria-label="Line 195">195</a>                 &#39;the added link must open in a new browser tab&#39;</span>
+<span class="source-line" id="L196"><a class="line-number" href="#L196" aria-label="Line 196">196</a>             ).toHaveAttribute(&#39;target&#39;, &#39;_blank&#39;)</span>
+<span class="source-line" id="L197"><a class="line-number" href="#L197" aria-label="Line 197">197</a> </span>
+<span class="source-line" id="L198"><a class="line-number" href="#L198" aria-label="Line 198">198</a>             // OQG3-2368-AC10.02: the details block is centre aligned.</span>
+<span class="source-line" id="L199"><a class="line-number" href="#L199" aria-label="Line 199">199</a>             const detailsNode = scan</span>
+<span class="source-line" id="L200"><a class="line-number" href="#L200" aria-label="Line 200">200</a>                 .getByText(DETAILS_LINE_ONE, { exact: false })</span>
+<span class="source-line" id="L201"><a class="line-number" href="#L201" aria-label="Line 201">201</a>                 .last()</span>
+<span class="source-line" id="L202"><a class="line-number" href="#L202" aria-label="Line 202">202</a>             await expect(</span>
+<span class="source-line" id="L203"><a class="line-number" href="#L203" aria-label="Line 203">203</a>                 detailsNode,</span>
+<span class="source-line" id="L204"><a class="line-number" href="#L204" aria-label="Line 204">204</a>                 &#39;the Event Details text must render on the landing page&#39;</span>
+<span class="source-line" id="L205"><a class="line-number" href="#L205" aria-label="Line 205">205</a>             ).toBeVisible()</span>
+<span class="source-line" id="L206"><a class="line-number" href="#L206" aria-label="Line 206">206</a>             expect(</span>
+<span class="source-line" id="L207"><a class="line-number" href="#L207" aria-label="Line 207">207</a>                 await detailsNode.evaluate(</span>
+<span class="source-line" id="L208"><a class="line-number" href="#L208" aria-label="Line 208">208</a>                     (el) =&gt; getComputedStyle(el as HTMLElement).textAlign</span>
+<span class="source-line" id="L209"><a class="line-number" href="#L209" aria-label="Line 209">209</a>                 ),</span>
+<span class="source-line" id="L210"><a class="line-number" href="#L210" aria-label="Line 210">210</a>                 &#39;the Event Details block must be centre aligned&#39;</span>
+<span class="source-line" id="L211"><a class="line-number" href="#L211" aria-label="Line 211">211</a>             ).toBe(&#39;center&#39;)</span>
+<span class="source-line" id="L212"><a class="line-number" href="#L212" aria-label="Line 212">212</a> </span>
+<span class="source-line" id="L213"><a class="line-number" href="#L213" aria-label="Line 213">213</a>             // OQG3-2368-AC10.03: stored as plain text, line breaks preserved.</span>
+<span class="source-line" id="L214"><a class="line-number" href="#L214" aria-label="Line 214">214</a>             const detailsHtml = await detailsNode.evaluate(</span>
+<span class="source-line" id="L215"><a class="line-number" href="#L215" aria-label="Line 215">215</a>                 (el) =&gt; (el as HTMLElement).innerHTML</span>
+<span class="source-line" id="L216"><a class="line-number" href="#L216" aria-label="Line 216">216</a>             )</span>
+<span class="source-line" id="L217"><a class="line-number" href="#L217" aria-label="Line 217">217</a>             expect(</span>
+<span class="source-line" id="L218"><a class="line-number" href="#L218" aria-label="Line 218">218</a>                 detailsHtml,</span>
+<span class="source-line" id="L219"><a class="line-number" href="#L219" aria-label="Line 219">219</a>                 &#39;Event Details must not be rendered as rich text&#39;</span>
+<span class="source-line" id="L220"><a class="line-number" href="#L220" aria-label="Line 220">220</a>             ).not.toMatch(/&lt;(b|strong|i|em|script)\b/i)</span>
+<span class="source-line" id="L221"><a class="line-number" href="#L221" aria-label="Line 221">221</a>             await expect(</span>
+<span class="source-line" id="L222"><a class="line-number" href="#L222" aria-label="Line 222">222</a>                 scan.getByText(DETAILS_LINE_TWO, { exact: false }).last(),</span>
+<span class="source-line" id="L223"><a class="line-number" href="#L223" aria-label="Line 223">223</a>                 &#39;both entered lines must survive to the landing page&#39;</span>
+<span class="source-line" id="L224"><a class="line-number" href="#L224" aria-label="Line 224">224</a>             ).toBeVisible()</span>
+<span class="source-line" id="L225"><a class="line-number" href="#L225" aria-label="Line 225">225</a>         }</span>
+<span class="source-line" id="L226"><a class="line-number" href="#L226" aria-label="Line 226">226</a>     )</span>
+<span class="source-line" id="L227"><a class="line-number" href="#L227" aria-label="Line 227">227</a> </span>
+<span class="source-line" id="L228"><a class="line-number" href="#L228" aria-label="Line 228">228</a>     /** @covers OQG3-2367-AC05.07 */</span>
+<span class="source-line" id="L229"><a class="line-number" href="#L229" aria-label="Line 229">229</a>     test(</span>
+<span class="source-line" id="L230"><a class="line-number" href="#L230" aria-label="Line 230">230</a>         &#39;OQG3-2367-AC05.07 the Event Information section fits a mobile scanner viewport&#39;,</span>
+<span class="source-line" id="L231"><a class="line-number" href="#L231" aria-label="Line 231">231</a>         {</span>
+<span class="source-line" id="L232"><a class="line-number" href="#L232" aria-label="Line 232">232</a>             tag: [&#39;@Regression&#39;, &#39;@Medium&#39;],</span>
+<span class="source-line" id="L233"><a class="line-number" href="#L233" aria-label="Line 233">233</a>             annotation: [{ type: &#39;testId&#39;, description: &#39;OQG3-2367-AC05.07&#39; }],</span>
+<span class="source-line" id="L234"><a class="line-number" href="#L234" aria-label="Line 234">234</a>         },</span>
+<span class="source-line" id="L235"><a class="line-number" href="#L235" aria-label="Line 235">235</a>         async ({ page, pageManager }) =&gt; {</span>
+<span class="source-line" id="L236"><a class="line-number" href="#L236" aria-label="Line 236">236</a>             qase.id(0)</span>
+<span class="source-line" id="L237"><a class="line-number" href="#L237" aria-label="Line 237">237</a>             qase.title(</span>
+<span class="source-line" id="L238"><a class="line-number" href="#L238" aria-label="Line 238">238</a>                 &#39;OQG3-2367-AC05.07 the Event Information section fits a mobile scanner viewport&#39;</span>
+<span class="source-line" id="L239"><a class="line-number" href="#L239" aria-label="Line 239">239</a>             )</span>
+<span class="source-line" id="L240"><a class="line-number" href="#L240" aria-label="Line 240">240</a>             qase.suite(SUITE)</span>
+<span class="source-line" id="L241"><a class="line-number" href="#L241" aria-label="Line 241">241</a>             test.slow()</span>
+<span class="source-line" id="L242"><a class="line-number" href="#L242" aria-label="Line 242">242</a>             test.setTimeout(300_000)</span>
+<span class="source-line" id="L243"><a class="line-number" href="#L243" aria-label="Line 243">243</a> </span>
+<span class="source-line" id="L244"><a class="line-number" href="#L244" aria-label="Line 244">244</a>             const title = `Mobile Scan ${Date.now()}`</span>
+<span class="source-line" id="L245"><a class="line-number" href="#L245" aria-label="Line 245">245</a>             await openEventStep2(page, pageManager, title)</span>
+<span class="source-line" id="L246"><a class="line-number" href="#L246" aria-label="Line 246">246</a>             await pageManager.step2Page.setEventSummary(SUMMARY)</span>
+<span class="source-line" id="L247"><a class="line-number" href="#L247" aria-label="Line 247">247</a>             await pageManager.step2Page.setEventImage()</span>
+<span class="source-line" id="L248"><a class="line-number" href="#L248" aria-label="Line 248">248</a>             await pageManager.step2Page.setEventLink(LINK_LABEL, LINK_URL)</span>
+<span class="source-line" id="L249"><a class="line-number" href="#L249" aria-label="Line 249">249</a>             await publish(page, pageManager, title)</span>
+<span class="source-line" id="L250"><a class="line-number" href="#L250" aria-label="Line 250">250</a> </span>
+<span class="source-line" id="L251"><a class="line-number" href="#L251" aria-label="Line 251">251</a>             const { scanned } = await openEventScanPage(page, pageManager)</span>
+<span class="source-line" id="L252"><a class="line-number" href="#L252" aria-label="Line 252">252</a>             const scan = scanned.page</span>
+<span class="source-line" id="L253"><a class="line-number" href="#L253" aria-label="Line 253">253</a>             await scan.setViewportSize({ width: 390, height: 844 })</span>
+<span class="source-line" id="L254"><a class="line-number" href="#L254" aria-label="Line 254">254</a>             await expect(scan.locator(&#39;h1&#39;)).toHaveText(title, {</span>
+<span class="source-line" id="L255"><a class="line-number" href="#L255" aria-label="Line 255">255</a>                 timeout: 30_000,</span>
+<span class="source-line" id="L256"><a class="line-number" href="#L256" aria-label="Line 256">256</a>             })</span>
+<span class="source-line" id="L257"><a class="line-number" href="#L257" aria-label="Line 257">257</a> </span>
+<span class="source-line" id="L258"><a class="line-number" href="#L258" aria-label="Line 258">258</a>             // The page must not scroll sideways at phone width.</span>
+<span class="source-line" id="L259"><a class="line-number" href="#L259" aria-label="Line 259">259</a>             const overflow = await scan.evaluate(</span>
+<span class="source-line" id="L260"><a class="line-number" href="#L260" aria-label="Line 260">260</a>                 () =&gt;</span>
+<span class="source-line" id="L261"><a class="line-number" href="#L261" aria-label="Line 261">261</a>                     document.documentElement.scrollWidth -</span>
+<span class="source-line" id="L262"><a class="line-number" href="#L262" aria-label="Line 262">262</a>                     document.documentElement.clientWidth</span>
+<span class="source-line" id="L263"><a class="line-number" href="#L263" aria-label="Line 263">263</a>             )</span>
+<span class="source-line" id="L264"><a class="line-number" href="#L264" aria-label="Line 264">264</a>             expect(</span>
+<span class="source-line" id="L265"><a class="line-number" href="#L265" aria-label="Line 265">265</a>                 overflow,</span>
+<span class="source-line" id="L266"><a class="line-number" href="#L266" aria-label="Line 266">266</a>                 &#39;the landing page must not overflow a 390px viewport&#39;</span>
+<span class="source-line" id="L267"><a class="line-number" href="#L267" aria-label="Line 267">267</a>             ).toBeLessThanOrEqual(1)</span>
+<span class="source-line" id="L268"><a class="line-number" href="#L268" aria-label="Line 268">268</a> </span>
+<span class="source-line" id="L269"><a class="line-number" href="#L269" aria-label="Line 269">269</a>             // The banner image must scale to fit rather than be cropped.</span>
+<span class="source-line" id="L270"><a class="line-number" href="#L270" aria-label="Line 270">270</a>             const image = scan.locator(&#39;img&#39;).first()</span>
+<span class="source-line" id="L271"><a class="line-number" href="#L271" aria-label="Line 271">271</a>             await expect(</span>
+<span class="source-line" id="L272"><a class="line-number" href="#L272" aria-label="Line 272">272</a>                 image,</span>
+<span class="source-line" id="L273"><a class="line-number" href="#L273" aria-label="Line 273">273</a>                 &#39;the event image must render at mobile width&#39;</span>
+<span class="source-line" id="L274"><a class="line-number" href="#L274" aria-label="Line 274">274</a>             ).toBeVisible()</span>
+<span class="source-line" id="L275"><a class="line-number" href="#L275" aria-label="Line 275">275</a>             const imageWidth = await image.evaluate(</span>
+<span class="source-line" id="L276"><a class="line-number" href="#L276" aria-label="Line 276">276</a>                 (el) =&gt; (el as HTMLElement).getBoundingClientRect().width</span>
+<span class="source-line" id="L277"><a class="line-number" href="#L277" aria-label="Line 277">277</a>             )</span>
+<span class="source-line" id="L278"><a class="line-number" href="#L278" aria-label="Line 278">278</a>             expect(</span>
+<span class="source-line" id="L279"><a class="line-number" href="#L279" aria-label="Line 279">279</a>                 imageWidth,</span>
+<span class="source-line" id="L280"><a class="line-number" href="#L280" aria-label="Line 280">280</a>                 &#39;the event image must scale to fit the viewport&#39;</span>
+<span class="source-line" id="L281"><a class="line-number" href="#L281" aria-label="Line 281">281</a>             ).toBeLessThanOrEqual(390)</span>
+<span class="source-line" id="L282"><a class="line-number" href="#L282" aria-label="Line 282">282</a> </span>
+<span class="source-line" id="L283"><a class="line-number" href="#L283" aria-label="Line 283">283</a>             // The link stays tappable.</span>
+<span class="source-line" id="L284"><a class="line-number" href="#L284" aria-label="Line 284">284</a>             const link = scan.getByRole(&#39;link&#39;, { name: LINK_LABEL })</span>
+<span class="source-line" id="L285"><a class="line-number" href="#L285" aria-label="Line 285">285</a>             await expect(</span>
+<span class="source-line" id="L286"><a class="line-number" href="#L286" aria-label="Line 286">286</a>                 link,</span>
+<span class="source-line" id="L287"><a class="line-number" href="#L287" aria-label="Line 287">287</a>                 &#39;the added link must stay reachable on a phone viewport&#39;</span>
+<span class="source-line" id="L288"><a class="line-number" href="#L288" aria-label="Line 288">288</a>             ).toBeVisible()</span>
+<span class="source-line" id="L289"><a class="line-number" href="#L289" aria-label="Line 289">289</a>             const box = await link.boundingBox()</span>
+<span class="source-line" id="L290"><a class="line-number" href="#L290" aria-label="Line 290">290</a>             expect(</span>
+<span class="source-line" id="L291"><a class="line-number" href="#L291" aria-label="Line 291">291</a>                 box?.height ?? 0,</span>
+<span class="source-line" id="L292"><a class="line-number" href="#L292" aria-label="Line 292">292</a>                 &#39;the added link must stay large enough to tap&#39;</span>
+<span class="source-line" id="L293"><a class="line-number" href="#L293" aria-label="Line 293">293</a>             ).toBeGreaterThan(20)</span>
+<span class="source-line" id="L294"><a class="line-number" href="#L294" aria-label="Line 294">294</a>         }</span>
+<span class="source-line" id="L295"><a class="line-number" href="#L295" aria-label="Line 295">295</a>     )</span>
+<span class="source-line" id="L296"><a class="line-number" href="#L296" aria-label="Line 296">296</a> </span>
+<span class="source-line" id="L297"><a class="line-number" href="#L297" aria-label="Line 297">297</a>     /**</span>
+<span class="source-line" id="L298"><a class="line-number" href="#L298" aria-label="Line 298">298</a>      * @covers OQG3-2367-AC05.08</span>
+<span class="source-line" id="L299"><a class="line-number" href="#L299" aria-label="Line 299">299</a>      * @covers OQG3-2368-AC10.04</span>
+<span class="source-line" id="L300"><a class="line-number" href="#L300" aria-label="Line 300">300</a>      * @covers OQG3-2371-AC04.04</span>
+<span class="source-line" id="L301"><a class="line-number" href="#L301" aria-label="Line 301">301</a>      * @covers OQG3-2372-AC07.04</span>
+<span class="source-line" id="L302"><a class="line-number" href="#L302" aria-label="Line 302">302</a>      * @covers OQG3-2376-AC05.03</span>
+<span class="source-line" id="L303"><a class="line-number" href="#L303" aria-label="Line 303">303</a>      */</span>
+<span class="source-line" id="L304"><a class="line-number" href="#L304" aria-label="Line 304">304</a>     test(</span>
+<span class="source-line" id="L305"><a class="line-number" href="#L305" aria-label="Line 305">305</a>         &#39;every Event section is saved and pre-filled again in edit mode&#39;,</span>
+<span class="source-line" id="L306"><a class="line-number" href="#L306" aria-label="Line 306">306</a>         {</span>
+<span class="source-line" id="L307"><a class="line-number" href="#L307" aria-label="Line 307">307</a>             tag: [&#39;@Regression&#39;, &#39;@High&#39;],</span>
+<span class="source-line" id="L308"><a class="line-number" href="#L308" aria-label="Line 308">308</a>             annotation: [</span>
+<span class="source-line" id="L309"><a class="line-number" href="#L309" aria-label="Line 309">309</a>                 { type: &#39;testId&#39;, description: &#39;OQG3-2367-AC05.08&#39; },</span>
+<span class="source-line" id="L310"><a class="line-number" href="#L310" aria-label="Line 310">310</a>                 { type: &#39;testId&#39;, description: &#39;OQG3-2368-AC10.04&#39; },</span>
+<span class="source-line" id="L311"><a class="line-number" href="#L311" aria-label="Line 311">311</a>                 { type: &#39;testId&#39;, description: &#39;OQG3-2371-AC04.04&#39; },</span>
+<span class="source-line" id="L312"><a class="line-number" href="#L312" aria-label="Line 312">312</a>                 { type: &#39;testId&#39;, description: &#39;OQG3-2372-AC07.04&#39; },</span>
+<span class="source-line" id="L313"><a class="line-number" href="#L313" aria-label="Line 313">313</a>                 { type: &#39;testId&#39;, description: &#39;OQG3-2376-AC05.03&#39; },</span>
+<span class="source-line" id="L314"><a class="line-number" href="#L314" aria-label="Line 314">314</a>             ],</span>
+<span class="source-line" id="L315"><a class="line-number" href="#L315" aria-label="Line 315">315</a>         },</span>
+<span class="source-line" id="L316"><a class="line-number" href="#L316" aria-label="Line 316">316</a>         async ({ page, pageManager }) =&gt; {</span>
+<span class="source-line" id="L317"><a class="line-number" href="#L317" aria-label="Line 317">317</a>             qase.id(0)</span>
+<span class="source-line" id="L318"><a class="line-number" href="#L318" aria-label="Line 318">318</a>             qase.title(</span>
+<span class="source-line" id="L319"><a class="line-number" href="#L319" aria-label="Line 319">319</a>                 &#39;every Event section is saved and pre-filled again in edit mode&#39;</span>
+<span class="source-line" id="L320"><a class="line-number" href="#L320" aria-label="Line 320">320</a>             )</span>
+<span class="source-line" id="L321"><a class="line-number" href="#L321" aria-label="Line 321">321</a>             qase.suite(SUITE)</span>
+<span class="source-line" id="L322"><a class="line-number" href="#L322" aria-label="Line 322">322</a>             test.slow()</span>
+<span class="source-line" id="L323"><a class="line-number" href="#L323" aria-label="Line 323">323</a>             test.setTimeout(360_000)</span>
+<span class="source-line" id="L324"><a class="line-number" href="#L324" aria-label="Line 324">324</a> </span>
+<span class="source-line" id="L325"><a class="line-number" href="#L325" aria-label="Line 325">325</a>             const step2 = pageManager.step2Page</span>
+<span class="source-line" id="L326"><a class="line-number" href="#L326" aria-label="Line 326">326</a>             const title = `Persisted Event ${Date.now()}`</span>
+<span class="source-line" id="L327"><a class="line-number" href="#L327" aria-label="Line 327">327</a>             await openEventStep2(page, pageManager, title)</span>
+<span class="source-line" id="L328"><a class="line-number" href="#L328" aria-label="Line 328">328</a>             await fillAllSections(pageManager)</span>
+<span class="source-line" id="L329"><a class="line-number" href="#L329" aria-label="Line 329">329</a>             await publish(page, pageManager, title)</span>
+<span class="source-line" id="L330"><a class="line-number" href="#L330" aria-label="Line 330">330</a> </span>
+<span class="source-line" id="L331"><a class="line-number" href="#L331" aria-label="Line 331">331</a>             // Publishing leaves the download modal over the dashboard, and its</span>
+<span class="source-line" id="L332"><a class="line-number" href="#L332" aria-label="Line 332">332</a>             // backdrop swallows the card menu click.</span>
+<span class="source-line" id="L333"><a class="line-number" href="#L333" aria-label="Line 333">333</a>             await pageManager.qrCreationPage.closeDownloadModalIfPresent()</span>
+<span class="source-line" id="L334"><a class="line-number" href="#L334" aria-label="Line 334">334</a>             await expect(</span>
+<span class="source-line" id="L335"><a class="line-number" href="#L335" aria-label="Line 335">335</a>                 page.locator(&#39;#DownloadModal.show&#39;),</span>
+<span class="source-line" id="L336"><a class="line-number" href="#L336" aria-label="Line 336">336</a>                 &#39;the download modal must be dismissed before using the card menu&#39;</span>
+<span class="source-line" id="L337"><a class="line-number" href="#L337" aria-label="Line 337">337</a>             ).toBeHidden({ timeout: 30_000 })</span>
+<span class="source-line" id="L338"><a class="line-number" href="#L338" aria-label="Line 338">338</a> </span>
+<span class="source-line" id="L339"><a class="line-number" href="#L339" aria-label="Line 339">339</a>             await pageManager.myQrCodesPage.locator.qrKebabButton</span>
+<span class="source-line" id="L340"><a class="line-number" href="#L340" aria-label="Line 340">340</a>                 .first()</span>
+<span class="source-line" id="L341"><a class="line-number" href="#L341" aria-label="Line 341">341</a>                 .click()</span>
+<span class="source-line" id="L342"><a class="line-number" href="#L342" aria-label="Line 342">342</a>             await pageManager.myQrCodesPage.locator.editQrContentButton.click()</span>
+<span class="source-line" id="L343"><a class="line-number" href="#L343" aria-label="Line 343">343</a>             await page.waitForURL(/step=2/, { timeout: 60_000 })</span>
+<span class="source-line" id="L344"><a class="line-number" href="#L344" aria-label="Line 344">344</a> </span>
+<span class="source-line" id="L345"><a class="line-number" href="#L345" aria-label="Line 345">345</a>             // AC05.08 / AC10.04: Event Information and Details come back.</span>
+<span class="source-line" id="L346"><a class="line-number" href="#L346" aria-label="Line 346">346</a>             await expect(</span>
+<span class="source-line" id="L347"><a class="line-number" href="#L347" aria-label="Line 347">347</a>                 step2.locator.eventTitleInput,</span>
+<span class="source-line" id="L348"><a class="line-number" href="#L348" aria-label="Line 348">348</a>                 &#39;the saved Event title must be pre-filled in edit mode&#39;</span>
+<span class="source-line" id="L349"><a class="line-number" href="#L349" aria-label="Line 349">349</a>             ).toHaveValue(title, { timeout: 30_000 })</span>
+<span class="source-line" id="L350"><a class="line-number" href="#L350" aria-label="Line 350">350</a>             await expect(</span>
+<span class="source-line" id="L351"><a class="line-number" href="#L351" aria-label="Line 351">351</a>                 step2.locator.eventSummaryTextarea,</span>
+<span class="source-line" id="L352"><a class="line-number" href="#L352" aria-label="Line 352">352</a>                 &#39;the saved Summary must be pre-filled in edit mode&#39;</span>
+<span class="source-line" id="L353"><a class="line-number" href="#L353" aria-label="Line 353">353</a>             ).toHaveValue(SUMMARY)</span>
+<span class="source-line" id="L354"><a class="line-number" href="#L354" aria-label="Line 354">354</a>             await expect(</span>
+<span class="source-line" id="L355"><a class="line-number" href="#L355" aria-label="Line 355">355</a>                 step2.locator.eventDetailsTextarea,</span>
+<span class="source-line" id="L356"><a class="line-number" href="#L356" aria-label="Line 356">356</a>                 &#39;the saved Event Details must be pre-filled in edit mode&#39;</span>
+<span class="source-line" id="L357"><a class="line-number" href="#L357" aria-label="Line 357">357</a>             ).toHaveValue(`${DETAILS_LINE_ONE}\n${DETAILS_LINE_TWO}`)</span>
+<span class="source-line" id="L358"><a class="line-number" href="#L358" aria-label="Line 358">358</a> </span>
+<span class="source-line" id="L359"><a class="line-number" href="#L359" aria-label="Line 359">359</a>             // AC04.04: the manual address comes back.</span>
+<span class="source-line" id="L360"><a class="line-number" href="#L360" aria-label="Line 360">360</a>             await step2.expandEventAccordion(</span>
+<span class="source-line" id="L361"><a class="line-number" href="#L361" aria-label="Line 361">361</a>                 step2.locator.eventLocationAccordionTrigger</span>
+<span class="source-line" id="L362"><a class="line-number" href="#L362" aria-label="Line 362">362</a>             )</span>
+<span class="source-line" id="L363"><a class="line-number" href="#L363" aria-label="Line 363">363</a>             await expect(</span>
+<span class="source-line" id="L364"><a class="line-number" href="#L364" aria-label="Line 364">364</a>                 step2.locator.shipAddressStreetInput,</span>
+<span class="source-line" id="L365"><a class="line-number" href="#L365" aria-label="Line 365">365</a>                 &#39;the saved street must be pre-filled in edit mode&#39;</span>
+<span class="source-line" id="L366"><a class="line-number" href="#L366" aria-label="Line 366">366</a>             ).toHaveValue(&#39;Manchester Street&#39;)</span>
+<span class="source-line" id="L367"><a class="line-number" href="#L367" aria-label="Line 367">367</a>             await expect(</span>
+<span class="source-line" id="L368"><a class="line-number" href="#L368" aria-label="Line 368">368</a>                 step2.locator.shipAddressCityInput,</span>
+<span class="source-line" id="L369"><a class="line-number" href="#L369" aria-label="Line 369">369</a>                 &#39;the saved city must be pre-filled in edit mode&#39;</span>
+<span class="source-line" id="L370"><a class="line-number" href="#L370" aria-label="Line 370">370</a>             ).toHaveValue(&#39;Los Angeles&#39;)</span>
+<span class="source-line" id="L371"><a class="line-number" href="#L371" aria-label="Line 371">371</a> </span>
+<span class="source-line" id="L372"><a class="line-number" href="#L372" aria-label="Line 372">372</a>             // AC07.04: the contact name and phone row come back.</span>
+<span class="source-line" id="L373"><a class="line-number" href="#L373" aria-label="Line 373">373</a>             await expect(</span>
+<span class="source-line" id="L374"><a class="line-number" href="#L374" aria-label="Line 374">374</a>                 step2.locator.eventContactNameInput,</span>
+<span class="source-line" id="L375"><a class="line-number" href="#L375" aria-label="Line 375">375</a>                 &#39;the saved contact name must be pre-filled in edit mode&#39;</span>
+<span class="source-line" id="L376"><a class="line-number" href="#L376" aria-label="Line 376">376</a>             ).toHaveValue(&#39;Jane Organizer&#39;)</span>
+<span class="source-line" id="L377"><a class="line-number" href="#L377" aria-label="Line 377">377</a>             await expect(</span>
+<span class="source-line" id="L378"><a class="line-number" href="#L378" aria-label="Line 378">378</a>                 step2.locator.eventPhone0Input,</span>
+<span class="source-line" id="L379"><a class="line-number" href="#L379" aria-label="Line 379">379</a>                 &#39;the saved phone row must be pre-filled in edit mode&#39;</span>
+<span class="source-line" id="L380"><a class="line-number" href="#L380" aria-label="Line 380">380</a>             ).toHaveValue(/14187777123/)</span>
+<span class="source-line" id="L381"><a class="line-number" href="#L381" aria-label="Line 381">381</a> </span>
+<span class="source-line" id="L382"><a class="line-number" href="#L382" aria-label="Line 382">382</a>             // AC05.03 (2376): the chosen facility comes back selected.</span>
+<span class="source-line" id="L383"><a class="line-number" href="#L383" aria-label="Line 383">383</a>             await step2.expandEventAccordion(</span>
+<span class="source-line" id="L384"><a class="line-number" href="#L384" aria-label="Line 384">384</a>                 step2.locator.eventFacilitiesAccordionTrigger</span>
+<span class="source-line" id="L385"><a class="line-number" href="#L385" aria-label="Line 385">385</a>             )</span>
+<span class="source-line" id="L386"><a class="line-number" href="#L386" aria-label="Line 386">386</a>             await expect(</span>
+<span class="source-line" id="L387"><a class="line-number" href="#L387" aria-label="Line 387">387</a>                 step2.eventFacilityCards().filter({ hasText: &#39;Wi-Fi&#39; }).first(),</span>
+<span class="source-line" id="L388"><a class="line-number" href="#L388" aria-label="Line 388">388</a>                 &#39;the saved facility must come back selected in edit mode&#39;</span>
+<span class="source-line" id="L389"><a class="line-number" href="#L389" aria-label="Line 389">389</a>             ).toHaveAttribute(&#39;aria-pressed&#39;, &#39;true&#39;)</span>
+<span class="source-line" id="L390"><a class="line-number" href="#L390" aria-label="Line 390">390</a>         }</span>
+<span class="source-line" id="L391"><a class="line-number" href="#L391" aria-label="Line 391">391</a>     )</span>
+<span class="source-line" id="L392"><a class="line-number" href="#L392" aria-label="Line 392">392</a> </span>
+<span class="source-line" id="L393"><a class="line-number" href="#L393" aria-label="Line 393">393</a>     /** @covers OQG3-2372-AC07.02 */</span>
+<span class="source-line" id="L394"><a class="line-number" href="#L394" aria-label="Line 394">394</a>     test(</span>
+<span class="source-line" id="L395"><a class="line-number" href="#L395" aria-label="Line 395">395</a>         &#39;OQG3-2372-AC07.02 a page with contact details paints Add to Calendar in the chosen primary colour&#39;,</span>
+<span class="source-line" id="L396"><a class="line-number" href="#L396" aria-label="Line 396">396</a>         {</span>
+<span class="source-line" id="L397"><a class="line-number" href="#L397" aria-label="Line 397">397</a>             tag: [&#39;@Regression&#39;, &#39;@Medium&#39;],</span>
+<span class="source-line" id="L398"><a class="line-number" href="#L398" aria-label="Line 398">398</a>             annotation: [{ type: &#39;testId&#39;, description: &#39;OQG3-2372-AC07.02&#39; }],</span>
+<span class="source-line" id="L399"><a class="line-number" href="#L399" aria-label="Line 399">399</a>         },</span>
+<span class="source-line" id="L400"><a class="line-number" href="#L400" aria-label="Line 400">400</a>         async ({ page, pageManager }) =&gt; {</span>
+<span class="source-line" id="L401"><a class="line-number" href="#L401" aria-label="Line 401">401</a>             qase.id(0)</span>
+<span class="source-line" id="L402"><a class="line-number" href="#L402" aria-label="Line 402">402</a>             qase.title(</span>
+<span class="source-line" id="L403"><a class="line-number" href="#L403" aria-label="Line 403">403</a>                 &#39;OQG3-2372-AC07.02 a page with contact details paints Add to Calendar in the chosen primary colour&#39;</span>
+<span class="source-line" id="L404"><a class="line-number" href="#L404" aria-label="Line 404">404</a>             )</span>
+<span class="source-line" id="L405"><a class="line-number" href="#L405" aria-label="Line 405">405</a>             qase.suite(SUITE)</span>
+<span class="source-line" id="L406"><a class="line-number" href="#L406" aria-label="Line 406">406</a>             test.slow()</span>
+<span class="source-line" id="L407"><a class="line-number" href="#L407" aria-label="Line 407">407</a>             test.setTimeout(300_000)</span>
+<span class="source-line" id="L408"><a class="line-number" href="#L408" aria-label="Line 408">408</a> </span>
+<span class="source-line" id="L409"><a class="line-number" href="#L409" aria-label="Line 409">409</a>             // A colour no default palette uses, so a match cannot be chance.</span>
+<span class="source-line" id="L410"><a class="line-number" href="#L410" aria-label="Line 410">410</a>             const primaryHex = &#39;#8E2DE2&#39;</span>
+<span class="source-line" id="L411"><a class="line-number" href="#L411" aria-label="Line 411">411</a>             const primaryRgb = &#39;rgb(142, 45, 226)&#39;</span>
+<span class="source-line" id="L412"><a class="line-number" href="#L412" aria-label="Line 412">412</a> </span>
+<span class="source-line" id="L413"><a class="line-number" href="#L413" aria-label="Line 413">413</a>             const step2 = pageManager.step2Page</span>
+<span class="source-line" id="L414"><a class="line-number" href="#L414" aria-label="Line 414">414</a>             const title = `Contact Colour ${Date.now()}`</span>
+<span class="source-line" id="L415"><a class="line-number" href="#L415" aria-label="Line 415">415</a>             await openEventStep2(page, pageManager, title)</span>
+<span class="source-line" id="L416"><a class="line-number" href="#L416" aria-label="Line 416">416</a>             await step2.locator.eventPrimaryColorHexInput.fill(primaryHex)</span>
+<span class="source-line" id="L417"><a class="line-number" href="#L417" aria-label="Line 417">417</a>             await step2.setEventContactName(&#39;Jane Organizer&#39;)</span>
+<span class="source-line" id="L418"><a class="line-number" href="#L418" aria-label="Line 418">418</a>             await step2.setEventContactPhone()</span>
+<span class="source-line" id="L419"><a class="line-number" href="#L419" aria-label="Line 419">419</a>             await publish(page, pageManager, title)</span>
+<span class="source-line" id="L420"><a class="line-number" href="#L420" aria-label="Line 420">420</a> </span>
+<span class="source-line" id="L421"><a class="line-number" href="#L421" aria-label="Line 421">421</a>             const { scanned } = await openEventScanPage(page, pageManager)</span>
+<span class="source-line" id="L422"><a class="line-number" href="#L422" aria-label="Line 422">422</a>             const scan = scanned.page</span>
+<span class="source-line" id="L423"><a class="line-number" href="#L423" aria-label="Line 423">423</a>             await expect(scan.locator(&#39;h1&#39;)).toHaveText(title, {</span>
+<span class="source-line" id="L424"><a class="line-number" href="#L424" aria-label="Line 424">424</a>                 timeout: 30_000,</span>
+<span class="source-line" id="L425"><a class="line-number" href="#L425" aria-label="Line 425">425</a>             })</span>
+<span class="source-line" id="L426"><a class="line-number" href="#L426" aria-label="Line 426">426</a> </span>
+<span class="source-line" id="L427"><a class="line-number" href="#L427" aria-label="Line 427">427</a>             await expect(</span>
+<span class="source-line" id="L428"><a class="line-number" href="#L428" aria-label="Line 428">428</a>                 scan.getByText(&#39;Jane Organizer&#39;),</span>
+<span class="source-line" id="L429"><a class="line-number" href="#L429" aria-label="Line 429">429</a>                 &#39;the saved contact must render on the landing page&#39;</span>
+<span class="source-line" id="L430"><a class="line-number" href="#L430" aria-label="Line 430">430</a>             ).toBeVisible()</span>
+<span class="source-line" id="L431"><a class="line-number" href="#L431" aria-label="Line 431">431</a> </span>
+<span class="source-line" id="L432"><a class="line-number" href="#L432" aria-label="Line 432">432</a>             // The AC names the primary colour&#39;s two targets; the CTA is the</span>
+<span class="source-line" id="L433"><a class="line-number" href="#L433" aria-label="Line 433">433</a>             // one with a stable, testable computed value.</span>
+<span class="source-line" id="L434"><a class="line-number" href="#L434" aria-label="Line 434">434</a>             const calendarBg = await scan.evaluate(() =&gt; {</span>
+<span class="source-line" id="L435"><a class="line-number" href="#L435" aria-label="Line 435">435</a>                 const cta = Array.from(</span>
+<span class="source-line" id="L436"><a class="line-number" href="#L436" aria-label="Line 436">436</a>                     document.querySelectorAll(&#39;a,button&#39;)</span>
+<span class="source-line" id="L437"><a class="line-number" href="#L437" aria-label="Line 437">437</a>                 ).find((el) =&gt; /add to calendar/i.test(el.textContent || &#39;&#39;))</span>
+<span class="source-line" id="L438"><a class="line-number" href="#L438" aria-label="Line 438">438</a>                 return cta</span>
+<span class="source-line" id="L439"><a class="line-number" href="#L439" aria-label="Line 439">439</a>                     ? getComputedStyle(cta as HTMLElement).backgroundColor</span>
+<span class="source-line" id="L440"><a class="line-number" href="#L440" aria-label="Line 440">440</a>                     : &#39;NO CTA&#39;</span>
+<span class="source-line" id="L441"><a class="line-number" href="#L441" aria-label="Line 441">441</a>             })</span>
+<span class="source-line" id="L442"><a class="line-number" href="#L442" aria-label="Line 442">442</a>             expect(</span>
+<span class="source-line" id="L443"><a class="line-number" href="#L443" aria-label="Line 443">443</a>                 calendarBg,</span>
+<span class="source-line" id="L444"><a class="line-number" href="#L444" aria-label="Line 444">444</a>                 `the Add to Calendar button must use the chosen primary colour ${primaryHex}`</span>
+<span class="source-line" id="L445"><a class="line-number" href="#L445" aria-label="Line 445">445</a>             ).toBe(primaryRgb)</span>
+<span class="source-line" id="L446"><a class="line-number" href="#L446" aria-label="Line 446">446</a>         }</span>
+<span class="source-line" id="L447"><a class="line-number" href="#L447" aria-label="Line 447">447</a>     )</span>
+<span class="source-line" id="L448"><a class="line-number" href="#L448" aria-label="Line 448">448</a> })</span>
+<span class="source-line" id="L449"><a class="line-number" href="#L449" aria-label="Line 449">449</a> </span></code></pre></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

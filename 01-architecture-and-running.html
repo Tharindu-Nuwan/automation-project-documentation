@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="01-architecture-and-running.html">
+<title>Automation setup and execution · QA reference</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script defer src="assets/search-index.js"></script><script defer src="assets/app.js"></script>
+</head><body data-root-prefix="">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="index.html">Start here</a>
+<a href="00-qa-quick-start.html">Your first check</a>
+<a href="02-accounts-and-credentials.html">Accounts and login</a>
+<a href="03-qr-creation.html">QR types and creation</a>
+<a href="04-data-and-inputs.html">What to enter and upload</a>
+<a href="05-other-flows.html">Other product flows</a>
+<a href="07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="01-architecture-and-running.html" class="active" aria-current="page">Automation setup and execution</a>
+<a href="06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="reference/index.html">Reference overview</a>
+<a href="reference/spec-index.html">Complete spec map</a>
+<a href="reference/code-index.html">Shared helpers and locators</a>
+<a href="reference/field-inputs.html">Field inputs and defaults</a>
+<a href="reference/data-index.html">Data sources and consumers</a>
+<a href="reference/environment-index.html">Environment variables</a>
+<a href="reference/assets.html">Upload asset inventory</a>
+<a href="reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (5)</summary><a href="#follow-one-test-from-the-command-line">Follow one test from the command line</a>
+<a href="#what-belongs-where">What belongs where</a>
+<a href="#product-environment-and-browser-are-separate-choices">Product, environment, and browser are separate choices</a>
+<a href="#set-up-and-run-a-focused-example">Set up and run a focused example</a>
+<a href="#runner-defaults-that-affect-interpretation">Runner defaults that affect interpretation</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="1-architecture-and-execution">Automation setup and execution</h1>
+<p><a href="index.html">Start</a> &#xb7; <a href="02-accounts-and-credentials.html">Next: accounts</a></p>
+<p class="callout"><strong>Optional technical detail.</strong> This page is for people setting up or running automated tests. For a manual product check, use <a href="00-qa-quick-start.html">Your first check</a>. The commands below belong in a configured development environment; they are not steps to type into the product.</p><h2 id="follow-one-test-from-the-command-line">Follow one test from the command line</h2>
+<pre><code>package.json script / Playwright CLI
+  &#x2192; playwright.config.ts loads env.ts and defines projects
+  &#x2192; selected project supplies baseURL + product + browser settings
+  &#x2192; fixtures/baseFixture.ts supplies pageManager, apiManager, env, adminAuth
+  &#x2192; spec beforeEach sets up its user and starting page
+  &#x2192; test calls a Page Object or API helper
+  &#x2192; Page Object uses locators and shared BasePage helpers
+  &#x2192; assertions inspect UI, API, database, email, or downloaded files
+  &#x2192; spec afterEach performs its declared cleanup
+  &#x2192; reporter records the result and configured artifacts</code></pre>
+<p>The browser <code>page</code> and API <code>request</code> are Playwright fixtures. The custom fixture constructs managers; it does <strong>not</strong> automatically register a user, log in, buy a plan, delete a user, or read mail. Those operations happen only when a spec/helper requests them. There is no configured shared <code>storageState</code> login in the root config.</p>
+<h2 id="what-belongs-where">What belongs where</h2>
+<div class="table-wrap"><table>
+<tr><th>Location</th><th>Responsibility</th><th>Example</th></tr>
+<tr><td><code>tests/**/*.spec.ts</code></td><td>Scenario, hooks, metadata, expected result</td><td>Website invalid URL vs successful content submission</td></tr>
+<tr><td><code>tests/data/</code></td><td>Explicit examples, matrices, expected text/prices, files</td><td><code>email-templates.data.ts</code>, <code>payments_test_data.ts</code></td></tr>
+<tr><td><code>tests/helpers/</code></td><td>A multi-step operation reused across specs</td><td>Register &#x2192; create &#x2192; publish Event; create QR in a folder</td></tr>
+<tr><td><code>pages/Feature/FeaturePage.ts</code></td><td>User actions and reusable UI assertions</td><td>Two-stage login, upload PDF, fill Event dates</td></tr>
+<tr><td><code>pages/Feature/*Locators.ts</code></td><td>The selectors used by those actions</td><td>Input, footer button, phone preview frame</td></tr>
+<tr><td><code>pages/BaseLocators.ts</code></td><td>Shared controls and type selectors</td><td>QR type cards, common inputs and navigation</td></tr>
+<tr><td><code>base/BasePage.ts</code></td><td>Faker, navigation retries, scrolling, visibility helpers</td><td><code>fakeString()</code>, <code>fakeCompany()</code>, <code>openPage()</code></td></tr>
+<tr><td><code>base/PageManager.ts</code></td><td>The Page Objects available to the test</td><td><code>pageManager.step2Page</code></td></tr>
+<tr><td><code>base/APIManager.ts</code></td><td>User, Stripe and DB helpers</td><td><code>apiManager.dbApi</code></td></tr>
+<tr><td><code>api/</code></td><td>HTTP/SQL/mail operations</td><td>Fetch user, change expiry, read subscription, query DB</td></tr>
+<tr><td><code>env.ts</code>, <code>utils/defineEnv.ts</code></td><td>Product configuration and shared defaults</td><td>Selected product database names</td></tr>
+<tr><td><code>.github/workflows/</code></td><td>CI commands and variable bindings</td><td>Login workflow; regression workflow</td></tr>
+</table></div>
+<p>Source: <a data-source="fixtures/baseFixture.ts" href="sources/fixtures/baseFixture.ts.html">fixture</a>, <a data-source="base/PageManager.ts" href="sources/base/PageManager.ts.html">PageManager</a>, <a data-source="base/APIManager.ts" href="sources/base/APIManager.ts.html">APIManager</a>, <a data-source="base/BasePage.ts" href="sources/base/BasePage.ts.html">BasePage</a>.</p>
+<h2 id="product-environment-and-browser-are-separate-choices">Product, environment, and browser are separate choices</h2>
+<p>Product is <code>oqg</code>, <code>qci</code>, <code>qga</code>, or <code>qgc</code>. Environment is the deployment URL. Browser is Chromium, Firefox, Edge configuration, or WebKit. <code>oqg-chromium</code> does not itself mean staging: <code>OQG_BASE_URL</code> decides where it goes.</p>
+<p>The main config has 16 product/browser projects, a deprecated <code>chromium</code> project, four folder-counter browser projects, and three password-changed browser projects. <strong>An unfiltered <code>npm test</code> selects all configured projects.</strong> Choose a project and a feature deliberately.</p>
+<div class="table-wrap"><table>
+<tr><th>Model</th><th>URL and product selection</th><th>Main trap</th></tr>
+<tr><td>Product projects</td><td><code>OQG_BASE_URL</code>, <code>QCI_BASE_URL</code>, <code>QGA_BASE_URL</code>, <code>QGC_BASE_URL</code>; typed <code>product</code> fixture</td><td>Project existence is not full feature implementation</td></tr>
+<tr><td>Legacy <code>chromium</code></td><td>Root <code>BASE_URL</code>, fixture product defaults to <code>oqg</code>; some selectors use <code>DOMAIN</code> or infer from <code>BASE_URL</code></td><td>Setting <code>DOMAIN=qci</code> does not change the typed product fixture</td></tr>
+<tr><td><code>utils/productEnv.ts</code></td><td>Product URL first, legacy <code>BASE_URL</code> fallback; adds scheme if missing, resolves origin</td><td>Different behavior from raw <code>&#x24;{BASE_URL}path</code> concatenation</td></tr>
+</table></div>
+<p><code>env.ts</code> loads root <code>.env</code> through dotenv. Existing shell variables take precedence under the default dotenv behavior. <code>defineEnv()</code> trims values, then merges <code>shared</code> into each product with product fields winning. OQG/QCI/QGA base URLs are required when the module is imported, <strong>even before CLI project filtering</strong>. QGC has a hardcoded dev fallback. Missing optional values fail later when a feature actually needs them. An empty string is not <code>undefined</code>: <code>??</code> fallbacks do not replace empty values.</p>
+<h3 id="actual-factory-support">Actual factory support</h3>
+<div class="table-wrap"><table>
+<tr><th>Factory-backed Page Object</th><th>Registered products</th></tr>
+<tr><td>Login, Register, Account, EmailBody</td><td>OQG, QCI</td></tr>
+<tr><td>DpfCreate, DpfGenerate</td><td>OQG, QCI</td></tr>
+<tr><td>FitYourNeeds</td><td>OQG</td></tr>
+<tr><td>VisualLanding</td><td>OQG, QCI, QGA, QGC</td></tr>
+</table></div>
+<p>Other pages are concrete shared classes, sometimes with product arguments or legacy domain logic. A shared class is not proof its DOM works on every product. <a data-source="base/PageFactory.ts" href="sources/base/PageFactory.ts.html">PageFactory</a> returns a proxy for unsupported products and calls <code>test.skip()</code> on member access. A skipped QGA login test is not a passed QGA login test. QGC main-config projects match only the two landing visual specs.</p>
+<p>Browser nuance: <code>oqg-edge</code> explicitly sets <code>channel: &apos;msedge&apos;</code>; QCI/QGA/QGC Edge projects use the Desktop Edge device preset without that explicit channel. Safari-named projects run Playwright WebKit. Dedicated <code>Google Chrome</code> / <code>Microsoft Edge</code> projects explicitly request branded channels. See <a data-source="playwright.config.ts" href="sources/playwright.config.ts.html">config</a>.</p>
+<h2 id="set-up-and-run-a-focused-example">Set up and run a focused example</h2>
+<p>Use the repository root and the team&apos;s Node version compatible with installed dependencies. <code>package.json</code> does not pin a Node engine; workflows use <code>lts/*</code>.</p>
+<pre><code>npm ci
+npx playwright install chromium</code></pre>
+<p>Create local <code>.env</code> from the team&apos;s approved configuration; <a data-source=".example.env" href="sources/.example-env.html">.example.env</a> is a starting point, not proof that every current lookup is present. At minimum, config evaluation needs real test-target values for <code>OQG_BASE_URL</code>, <code>QCI_BASE_URL</code>, and <code>QGA_BASE_URL</code>. Add the variables required by the selected feature from <a href="02-accounts-and-credentials.html">Chapter 2</a>. Never use placeholder hosts for a real run.</p>
+<pre><code># Discover cases without executing browser actions.
+QASE_MODE=off npx playwright test tests/logged-out-user/login/login.spec.ts --project=oqg-chromium --list
+
+# Use configured existing login credentials.
+QASE_MODE=off npx playwright test tests/logged-out-user/login/login.spec.ts --project=oqg-chromium --workers=1 --retries=0 --headed
+
+# Inspect a specific case interactively.
+QASE_MODE=off npx playwright test tests/logged-in-user/create-qr-code/website-qr.spec.ts --project=oqg-chromium --grep &apos;Fill only the required fields&apos; --debug</code></pre>
+<p>Some legacy login assertions concatenate <code>&#x24;{baseURL}qr-codes</code>; their expected URL needs a trailing slash and the correct locale path. Newer relative navigation <code>/register</code> resolves at the origin and discards a base URL locale path. Check both the navigation and assertion in the selected spec before changing URL configuration.</p>
+<h2 id="runner-defaults-that-affect-interpretation">Runner defaults that affect interpretation</h2>
+<div class="table-wrap"><table>
+<tr><th>Setting</th><th>Current main-config behavior</th></tr>
+<tr><td>Test timeout</td><td>200 seconds</td></tr>
+<tr><td>Assertion timeout</td><td>25 seconds</td></tr>
+<tr><td>Action / navigation timeout</td><td>90 seconds each</td></tr>
+<tr><td>Parallelism</td><td><code>fullyParallel: true</code>; CI and <code>test:dev</code> set 4 workers; otherwise runner default unless CLI overrides</td></tr>
+<tr><td>Retries</td><td>2 in CI, 1 locally; use <code>--retries=0</code> for a clean diagnosis</td></tr>
+<tr><td>Screenshots</td><td>Failure only</td></tr>
+<tr><td>Video</td><td>First retry; with zero retries, this setting produces no retry video</td></tr>
+<tr><td>Trace</td><td>The config trace setting is commented out; opt in with <code>--trace on</code> when needed</td></tr>
+<tr><td>Test IDs</td><td><code>getByTestId()</code> means <code>data-qa-id</code>, not <code>data-testid</code></td></tr>
+<tr><td>Outputs</td><td>Runs in <code>test-results/runs</code>; HTML reporter normally uses <code>playwright-report</code></td></tr>
+<tr><td>Qase</td><td>Reporter configured with <code>QASE_API_TOKEN</code>, <code>QASE_TESTOPS_PROJECT</code>; mode comes from reporter configuration/environment</td></tr>
+</table></div>
+<p><code>npm run test:dev</code> changes ignores through <code>npm_lifecycle_event</code>; it does not select a dev URL. Its Event exclusions are active, but the email exclusion is commented out. <code>tests/tools</code> is globally ignored; deprecated <code>chromium</code> overrides <code>testIgnore</code> with <code>[]</code>, so an unrestricted legacy run can include persistent-data generators. Verify collection with <code>--list</code> before running that project broadly.</p>
+<p>Separate visual config: <code>npm run test:visual -- --project=oqg-chromium-visual</code> matches only create/generate landing specs. Baselines use <code>test-results/visuals/{arg}{ext}</code>; visual run output goes to <code>test-results/visual-runs</code>. Percy is a different path. See <a data-source="playwright.visual.config.ts" href="sources/playwright.visual.config.ts.html">visual config</a>.</p></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

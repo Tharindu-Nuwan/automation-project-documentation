@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/field-inputs.html">
+<title>Every Step 2 input: parameters, defaults, and field writes · QA reference</title>
+<link rel="stylesheet" href="../assets/styles.css">
+<script defer src="../assets/search-index.js"></script><script defer src="../assets/app.js"></script>
+</head><body data-root-prefix="../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../index.html">Start here</a>
+<a href="../00-qa-quick-start.html">Your first check</a>
+<a href="../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../03-qr-creation.html">QR types and creation</a>
+<a href="../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../05-other-flows.html">Other product flows</a>
+<a href="../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../reference/index.html">Reference overview</a>
+<a href="../reference/spec-index.html">Complete spec map</a>
+<a href="../reference/code-index.html">Shared helpers and locators</a>
+<a href="../reference/field-inputs.html" class="active" aria-current="page">Field inputs and defaults</a>
+<a href="../reference/data-index.html">Data sources and consumers</a>
+<a href="../reference/environment-index.html">Environment variables</a>
+<a href="../reference/assets.html">Upload asset inventory</a>
+<a href="../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (117)</summary><a href="#emailtemplatespage-fillrequiredbasicinformation">EmailTemplatesPage / fillRequiredBasicInformation</a>
+<a href="#emailtemplatespage-filltemplate">EmailTemplatesPage / fillTemplate</a>
+<a href="#emailtemplatespage-fillbodyandreadvalue">EmailTemplatesPage / fillBodyAndReadValue</a>
+<a href="#emailtemplatespage-setqrname">EmailTemplatesPage / setQrName</a>
+<a href="#qrcreationpage-submitdpfemailregistration">QrCreationPage / submitDpfEmailRegistration</a>
+<a href="#qrcreationpage-selectdpfannualplan">QrCreationPage / selectDpfAnnualPlan</a>
+<a href="#qrcreationpage-quickwebsitecreate">QrCreationPage / quickWebsiteCreate</a>
+<a href="#qrcreationpage-quickwebsitecreatedpf">QrCreationPage / quickWebsiteCreateDPF</a>
+<a href="#qrcreationpage-instagramqrcreate">QrCreationPage / instagramQrCreate</a>
+<a href="#qrcreationpage-setqrcodepassword">QrCreationPage / setQrCodePassword</a>
+<a href="#qrcreationpage-setqrcodefolder">QrCreationPage / setQrCodeFolder</a>
+<a href="#qrcreationpage-setwelcomescreenimage">QrCreationPage / setWelcomeScreenImage</a>
+<a href="#step2page-setqrcodename">Step2Page / setQrCodeName</a>
+<a href="#step2page-setwebsiteqrurl">Step2Page / setWebsiteQrUrl</a>
+<a href="#step2page-uploadpdf">Step2Page / uploadPdf</a>
+<a href="#step2page-setpdfcompanyname">Step2Page / setPdfCompanyName</a>
+<a href="#step2page-setpdffilename">Step2Page / setPdfFileName</a>
+<a href="#step2page-setpdfdescription">Step2Page / setPdfDescription</a>
+<a href="#step2page-setpdfwebsite">Step2Page / setPdfWebsite</a>
+<a href="#step2page-setpdfbuttontext">Step2Page / setPdfButtonText</a>
+<a href="#step2page-uploadvideo">Step2Page / uploadVideo</a>
+<a href="#step2page-setyoutubevideo">Step2Page / setYoutubeVideo</a>
+<a href="#step2page-addyoutubevideo">Step2Page / addYoutubeVideo</a>
+<a href="#step2page-setuploadedvideodescription">Step2Page / setUploadedVideoDescription</a>
+<a href="#step2page-setvideocompanyname">Step2Page / setVideoCompanyName</a>
+<a href="#step2page-setvideotitle">Step2Page / setVideoTitle</a>
+<a href="#step2page-setvideodescription">Step2Page / setVideoDescription</a>
+<a href="#step2page-uploadimage">Step2Page / uploadImage</a>
+<a href="#step2page-setimagetitle">Step2Page / setImageTitle</a>
+<a href="#step2page-setimagedescription">Step2Page / setImageDescription</a>
+<a href="#step2page-setimagewebsite">Step2Page / setImageWebsite</a>
+<a href="#step2page-setmp3logo">Step2Page / setMp3Logo</a>
+<a href="#step2page-uploadmp3">Step2Page / uploadMp3</a>
+<a href="#step2page-setmp3title">Step2Page / setMp3Title</a>
+<a href="#step2page-setmp3description">Step2Page / setMp3Description</a>
+<a href="#step2page-setmp3website">Step2Page / setMp3Website</a>
+<a href="#step2page-setmenudigitallogo">Step2Page / setMenuDigitalLogo</a>
+<a href="#step2page-setlinkslogo">Step2Page / setLinksLogo</a>
+<a href="#step2page-setlinkscompanytitle">Step2Page / setLinksCompanyTitle</a>
+<a href="#step2page-setlinkscompanydescription">Step2Page / setLinksCompanyDescription</a>
+<a href="#step2page-setlinksimage">Step2Page / setLinksImage</a>
+<a href="#step2page-setlinkstext">Step2Page / setLinksText</a>
+<a href="#step2page-setlinksurl">Step2Page / setLinksUrl</a>
+<a href="#step2page-addsocialmedialink">Step2Page / addSocialMediaLink</a>
+<a href="#step2page-setvcardcompanylogo">Step2Page / setVcardCompanyLogo</a>
+<a href="#step2page-setvcardpersonalname">Step2Page / setVcardPersonalName</a>
+<a href="#step2page-setvcardcompanyname">Step2Page / setVcardCompanyName</a>
+<a href="#step2page-setvcardcompanyprofession">Step2Page / setVcardCompanyProfession</a>
+<a href="#step2page-setvcardcompanynotes">Step2Page / setVcardCompanyNotes</a>
+<a href="#step2page-setcontactinfophonenumber">Step2Page / setContactInfoPhoneNumber</a>
+<a href="#step2page-setcontactinfoemail">Step2Page / setContactInfoEmail</a>
+<a href="#step2page-setcontactinfowebsite">Step2Page / setContactInfoWebsite</a>
+<a href="#step2page-setshipaddress">Step2Page / setShipAddress</a>
+<a href="#step2page-setbusinessshipaddress">Step2Page / setBusinessShipAddress</a>
+<a href="#step2page-setbusinesscompanylogo">Step2Page / setBusinessCompanyLogo</a>
+<a href="#step2page-setaboutcompany">Step2Page / setAboutCompany</a>
+<a href="#step2page-setbusinesscontactname">Step2Page / setBusinessContactName</a>
+<a href="#step2page-setbusinesscompanyname">Step2Page / setBusinessCompanyName</a>
+<a href="#step2page-setbusinesscompanytitle">Step2Page / setBusinessCompanyTitle</a>
+<a href="#step2page-setbusinesscompanysubtitle">Step2Page / setBusinessCompanySubTitle</a>
+<a href="#step2page-setfacebooklogo">Step2Page / setFacebookLogo</a>
+<a href="#step2page-setfacebookurl">Step2Page / setFacebookUrl</a>
+<a href="#step2page-setfacebooktitle">Step2Page / setFacebookTitle</a>
+<a href="#step2page-setfacebookdescription">Step2Page / setFacebookDescription</a>
+<a href="#step2page-setinstagramusername">Step2Page / setInstagramUsername</a>
+<a href="#step2page-setsocialmediatitle">Step2Page / setSocialMediaTitle</a>
+<a href="#step2page-setsocialmediatitledescription">Step2Page / setSocialMediaTitleDescription</a>
+<a href="#step2page-setwhatsappphonenumber">Step2Page / setWhatsappPhoneNumber</a>
+<a href="#step2page-fillwhatsappphoneforsubmit">Step2Page / fillWhatsappPhoneForSubmit</a>
+<a href="#step2page-setwhatsappmessage">Step2Page / setWhatsappMessage</a>
+<a href="#step2page-setapplogo">Step2Page / setAppLogo</a>
+<a href="#step2page-setappname">Step2Page / setAppName</a>
+<a href="#step2page-setappdeveloper">Step2Page / setAppDeveloper</a>
+<a href="#step2page-setappdescription">Step2Page / setAppDescription</a>
+<a href="#step2page-setappwebsite">Step2Page / setAppWebsite</a>
+<a href="#step2page-setappgoogleplayurl">Step2Page / setAppGooglePlayUrl</a>
+<a href="#step2page-setappapplestoreurl">Step2Page / setAppAppleStoreUrl</a>
+<a href="#step2page-setappamazonstoreurl">Step2Page / setAppAmazonStoreUrl</a>
+<a href="#step2page-setcouponlogo">Step2Page / setCouponLogo</a>
+<a href="#step2page-setcouponcompanyname">Step2Page / setCouponCompanyName</a>
+<a href="#step2page-setcouponcompanytitle">Step2Page / setCouponCompanyTitle</a>
+<a href="#step2page-setcouponcompanydescription">Step2Page / setCouponCompanyDescription</a>
+<a href="#step2page-setcouponcode">Step2Page / setCouponCode</a>
+<a href="#step2page-setcouponterms">Step2Page / setCouponTerms</a>
+<a href="#step2page-setcouponbuttontext">Step2Page / setCouponButtonText</a>
+<a href="#step2page-setwifinetworkname">Step2Page / setWifiNetworkName</a>
+<a href="#step2page-setwifinetworkpassword">Step2Page / setWifiNetworkPassword</a>
+<a href="#step2page-selectwifinetworkhide">Step2Page / selectWifiNetworkHide</a>
+<a href="#step2page-setmenudigitalsectiontitle">Step2Page / setMenuDigitalSectionTitle</a>
+<a href="#step2page-setmenudigitalsectiondescription">Step2Page / setMenuDigitalSectionDescription</a>
+<a href="#step2page-setmenudigitalproductimage">Step2Page / setMenuDigitalProductImage</a>
+<a href="#step2page-setmenudigitalrestaurantname">Step2Page / setMenuDigitalRestaurantName</a>
+<a href="#step2page-setmenudigitalrestaurantdescription">Step2Page / setMenuDigitalRestaurantDescription</a>
+<a href="#step2page-setmenudigitalproductname">Step2Page / setMenuDigitalProductName</a>
+<a href="#step2page-setmenudigitalproducttranslatedname">Step2Page / setMenuDigitalProductTranslatedName</a>
+<a href="#step2page-setmenudigitalproductdescription">Step2Page / setMenuDigitalProductDescription</a>
+<a href="#step2page-setmenudigitalproductprice">Step2Page / setMenuDigitalProductPrice</a>
+<a href="#step2page-createeventfolder">Step2Page / createEventFolder</a>
+<a href="#step2page-seteventtitle">Step2Page / setEventTitle</a>
+<a href="#step2page-seteventsummary">Step2Page / setEventSummary</a>
+<a href="#step2page-seteventimage">Step2Page / setEventImage</a>
+<a href="#step2page-seteventdetails">Step2Page / setEventDetails</a>
+<a href="#step2page-seteventlink">Step2Page / setEventLink</a>
+<a href="#step2page-checkeventshowcalendaratbottom">Step2Page / checkEventShowCalendarAtBottom</a>
+<a href="#step2page-seteventcolors">Step2Page / setEventColors</a>
+<a href="#step2page-seteventcontactname">Step2Page / setEventContactName</a>
+<a href="#step2page-seteventmanuallocation">Step2Page / setEventManualLocation</a>
+<a href="#step2page-seteventcontactphone">Step2Page / setEventContactPhone</a>
+<a href="#step2page-seteventcontactemail">Step2Page / setEventContactEmail</a>
+<a href="#step2page-seteventcontactwebsite">Step2Page / setEventContactWebsite</a>
+<a href="#step2page-enableeventpassword">Step2Page / enableEventPassword</a>
+<a href="#step2page-seteventqrname">Step2Page / setEventQrName</a>
+<a href="#step2page-uploademailbasicinfoimage">Step2Page / uploadEmailBasicInfoImage</a>
+<a href="#step2page-setemailbusinessname">Step2Page / setEmailBusinessName</a>
+<a href="#step2page-setemaildescription">Step2Page / setEmailDescription</a>
+<a href="#step2page-fillemailtemplaterequiredfields">Step2Page / fillEmailTemplateRequiredFields</a>
+<a href="#step2page-expectemaildescriptioncappedat">Step2Page / expectEmailDescriptionCappedAt</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="every-step-2-input-parameters-defaults-and-field-writes">Every Step 2 input: parameters, defaults, and field writes</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<p>A default is used only when the caller omits that argument. Follow the calling QR recipe or spec to see overrides. Values are test examples, not a formal required-field specification. Password/email literals may be omitted from both this reference and the bundled source snapshots. Obtain actual approved account values from your QA lead or test maintainer.</p>
+<h2 id="emailtemplatespage-fillrequiredbasicinformation">EmailTemplatesPage / fillRequiredBasicInformation</h2>
+<p><code>fillRequiredBasicInformation(name: string = REQUIRED_BASIC_INFO_NAME)</code></p>
+<p><a data-source="pages/EmailTemplatesPage/EmailTemplatesPage.ts" href="../sources/pages/EmailTemplatesPage/EmailTemplatesPage.ts.html#L110">pages/EmailTemplatesPage/EmailTemplatesPage.ts:110</a></p>
+<ul>
+<li><code>this.locator.basicInformationTitleInput.fill(name)</code> &#x2014; line 113</li>
+</ul>
+<h2 id="emailtemplatespage-filltemplate">EmailTemplatesPage / fillTemplate</h2>
+<p><code>fillTemplate(index: number, fields: EmailTemplateFields)</code></p>
+<p><a data-source="pages/EmailTemplatesPage/EmailTemplatesPage.ts" href="../sources/pages/EmailTemplatesPage/EmailTemplatesPage.ts.html#L123">pages/EmailTemplatesPage/EmailTemplatesPage.ts:123</a></p>
+<ul>
+<li><code>this.locator.templateTitleInput(index).fill(fields.title)</code> &#x2014; line 128</li>
+<li><code>this.locator.templateEmailInput(index).fill(fields.email)</code> &#x2014; line 134</li>
+<li><code>this.locator.subjectInput(index).fill(fields.subject)</code> &#x2014; line 140</li>
+<li><code>this.locator.bodyTextarea(index).fill(fields.body)</code> &#x2014; line 146</li>
+</ul>
+<h2 id="emailtemplatespage-fillbodyandreadvalue">EmailTemplatesPage / fillBodyAndReadValue</h2>
+<p><code>fillBodyAndReadValue(text: string, index: number = 0)</code></p>
+<p><a data-source="pages/EmailTemplatesPage/EmailTemplatesPage.ts" href="../sources/pages/EmailTemplatesPage/EmailTemplatesPage.ts.html#L298">pages/EmailTemplatesPage/EmailTemplatesPage.ts:298</a></p>
+<ul>
+<li><code>textarea.fill(text)</code> &#x2014; line 303</li>
+</ul>
+<h2 id="emailtemplatespage-setqrname">EmailTemplatesPage / setQrName</h2>
+<p><code>setQrName(name: string)</code></p>
+<p><a data-source="pages/EmailTemplatesPage/EmailTemplatesPage.ts" href="../sources/pages/EmailTemplatesPage/EmailTemplatesPage.ts.html#L398">pages/EmailTemplatesPage/EmailTemplatesPage.ts:398</a></p>
+<ul>
+<li><code>this.locator.step2QrNameInput.fill(name)</code> &#x2014; line 404</li>
+</ul>
+<h2 id="qrcreationpage-submitdpfemailregistration">QrCreationPage / submitDpfEmailRegistration</h2>
+<p><code>submitDpfEmailRegistration(email: string)</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L35">pages/QrCreationPage/QrCreationFlowPage.ts:35</a></p>
+<ul>
+<li><code>this.locator.emailInput.fill(email)</code> &#x2014; line 40</li>
+</ul>
+<h2 id="qrcreationpage-selectdpfannualplan">QrCreationPage / selectDpfAnnualPlan</h2>
+<p><code>selectDpfAnnualPlan()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L86">pages/QrCreationPage/QrCreationFlowPage.ts:86</a></p>
+<ul>
+<li><code>this.locator.annualPlanButton.check({ force: true })</code> &#x2014; line 87</li>
+</ul>
+<h2 id="qrcreationpage-quickwebsitecreate">QrCreationPage / quickWebsiteCreate</h2>
+<p><code>quickWebsiteCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L119">pages/QrCreationPage/QrCreationFlowPage.ts:119</a></p>
+<ul>
+<li><code>this.locator.setupWebsiteQrCodeInput.fill(this.fakeUrl())</code> &#x2014; line 122</li>
+</ul>
+<h2 id="qrcreationpage-quickwebsitecreatedpf">QrCreationPage / quickWebsiteCreateDPF</h2>
+<p><code>quickWebsiteCreateDPF()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L169">pages/QrCreationPage/QrCreationFlowPage.ts:169</a></p>
+<ul>
+<li><code>this.locator.setupWebsiteQrCodeInput.fill(this.fakeUrl())</code> &#x2014; line 171</li>
+</ul>
+<h2 id="qrcreationpage-instagramqrcreate">QrCreationPage / instagramQrCreate</h2>
+<p><code>instagramQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L448">pages/QrCreationPage/QrCreationFlowPage.ts:448</a></p>
+<ul>
+<li><code>this.locator.instagramBasicInfoUsernameInput.fill(this.fakeUserName())</code> &#x2014; line 450</li>
+</ul>
+<h2 id="qrcreationpage-setqrcodepassword">QrCreationPage / setQrCodePassword</h2>
+<p><code>setQrCodePassword(qrCodePassword: string = &quot;&lt;literal omitted; see source&gt;&quot;)</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L519">pages/QrCreationPage/QrCreationFlowPage.ts:519</a></p>
+<ul>
+<li><code>this.locator.qrPasswordCheckbox.check()</code> &#x2014; line 523</li>
+<li><code>this.locator.qrPasswordInput.fill(qrCodePassword)</code> &#x2014; line 524</li>
+</ul>
+<h2 id="qrcreationpage-setqrcodefolder">QrCreationPage / setQrCodeFolder</h2>
+<p><code>setQrCodeFolder(qrFolderName: string = this.fakeString())</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L528">pages/QrCreationPage/QrCreationFlowPage.ts:528</a></p>
+<ul>
+<li><code>this.locator.folderNameInput.fill(qrFolderName)</code> &#x2014; line 559</li>
+</ul>
+<h2 id="qrcreationpage-setwelcomescreenimage">QrCreationPage / setWelcomeScreenImage</h2>
+<p><code>setWelcomeScreenImage(imagePath: string = &apos;tests/data/test_files/image_files/vscode_logo.png&apos;)</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L657">pages/QrCreationPage/QrCreationFlowPage.ts:657</a></p>
+<ul>
+<li><code>this.locator.qrWelcomeScreenImageInput.setInputFiles(imagePath)</code> &#x2014; line 661</li>
+</ul>
+<h2 id="step2page-setqrcodename">Step2Page / setQrCodeName</h2>
+<p><code>setQrCodeName()</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L23">pages/Step2Page/Step2Page.ts:23</a></p>
+<ul>
+<li><code>this.locator.qrCodeNameInput.fill(this.fakeString(10))</code> &#x2014; line 25</li>
+</ul>
+<h2 id="step2page-setwebsiteqrurl">Step2Page / setWebsiteQrUrl</h2>
+<p><code>setWebsiteQrUrl(url: string = &apos;google.com&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L37">pages/Step2Page/Step2Page.ts:37</a></p>
+<ul>
+<li><code>this.locator.websiteQrUrlInput.pressSequentially(url)</code> &#x2014; line 38</li>
+</ul>
+<h2 id="step2page-uploadpdf">Step2Page / uploadPdf</h2>
+<p><code>uploadPdf(filePath: string = &apos;tests/data/test_files/pdf_files/valid.pdf&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L44">pages/Step2Page/Step2Page.ts:44</a></p>
+<ul>
+<li><code>fileChooser.setFiles(filePath)</code> &#x2014; line 51</li>
+</ul>
+<h2 id="step2page-setpdfcompanyname">Step2Page / setPdfCompanyName</h2>
+<p><code>setPdfCompanyName(companyName: string)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L55">pages/Step2Page/Step2Page.ts:55</a></p>
+<ul>
+<li><code>this.locator.pdfCompanyInput.pressSequentially(companyName)</code> &#x2014; line 57</li>
+</ul>
+<h2 id="step2page-setpdffilename">Step2Page / setPdfFileName</h2>
+<p><code>setPdfFileName(fileName: string)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L63">pages/Step2Page/Step2Page.ts:63</a></p>
+<ul>
+<li><code>this.locator.pdfFileName.pressSequentially(fileName)</code> &#x2014; line 65</li>
+</ul>
+<h2 id="step2page-setpdfdescription">Step2Page / setPdfDescription</h2>
+<p><code>setPdfDescription(description: string)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L69">pages/Step2Page/Step2Page.ts:69</a></p>
+<ul>
+<li><code>this.locator.pdfDescriptionArea.pressSequentially(description)</code> &#x2014; line 71</li>
+</ul>
+<h2 id="step2page-setpdfwebsite">Step2Page / setPdfWebsite</h2>
+<p><code>setPdfWebsite(website: string = &apos;google.com&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L77">pages/Step2Page/Step2Page.ts:77</a></p>
+<ul>
+<li><code>this.locator.pdfWebsiteInput.pressSequentially(website)</code> &#x2014; line 79</li>
+</ul>
+<h2 id="step2page-setpdfbuttontext">Step2Page / setPdfButtonText</h2>
+<p><code>setPdfButtonText(buttonText: string)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L83">pages/Step2Page/Step2Page.ts:83</a></p>
+<ul>
+<li><code>this.locator.pdfButtonTextInput.pressSequentially(buttonText)</code> &#x2014; line 85</li>
+</ul>
+<h2 id="step2page-uploadvideo">Step2Page / uploadVideo</h2>
+<p><code>uploadVideo(videoPath: string = &apos;tests/data/test_files/video_files/sample.mp4&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L102">pages/Step2Page/Step2Page.ts:102</a></p>
+<ul>
+<li><code>fileChooser.setFiles(videoPath)</code> &#x2014; line 108</li>
+</ul>
+<h2 id="step2page-setyoutubevideo">Step2Page / setYoutubeVideo</h2>
+<p><code>setYoutubeVideo(youtubeUrl: string = &apos;https://www.youtube.com/watch?v=cTQ3Ko9ZKg8&amp;ab_channel=Netflix&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L112">pages/Step2Page/Step2Page.ts:112</a></p>
+<ul>
+<li><code>this.locator.urlYoutubeVideoInput.pressSequentially(youtubeUrl)</code> &#x2014; line 115</li>
+</ul>
+<h2 id="step2page-addyoutubevideo">Step2Page / addYoutubeVideo</h2>
+<p><code>addYoutubeVideo(youtubeUrl: string = &apos;https://www.youtube.com/watch?v=cTQ3Ko9ZKg8&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L128">pages/Step2Page/Step2Page.ts:128</a></p>
+<ul>
+<li><code>input.pressSequentially(youtubeUrl)</code> &#x2014; line 135</li>
+</ul>
+<h2 id="step2page-setuploadedvideodescription">Step2Page / setUploadedVideoDescription</h2>
+<p><code>setUploadedVideoDescription(description: string = &apos;This is a sample video description.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L144">pages/Step2Page/Step2Page.ts:144</a></p>
+<ul>
+<li><code>this.locator.uploadedVideoDescriptionTextarea .first() .pressSequentially(description)</code> &#x2014; line 147</li>
+</ul>
+<h2 id="step2page-setvideocompanyname">Step2Page / setVideoCompanyName</h2>
+<p><code>setVideoCompanyName(companyName: string = &apos;Test Company&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L155">pages/Step2Page/Step2Page.ts:155</a></p>
+<ul>
+<li><code>this.locator.videoCompanyNameInput.pressSequentially(companyName)</code> &#x2014; line 158</li>
+</ul>
+<h2 id="step2page-setvideotitle">Step2Page / setVideoTitle</h2>
+<p><code>setVideoTitle(videoTitle: string = &apos;SampleVideo&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L164">pages/Step2Page/Step2Page.ts:164</a></p>
+<ul>
+<li><code>this.locator.videoVideoTitleInput.pressSequentially(videoTitle)</code> &#x2014; line 165</li>
+</ul>
+<h2 id="step2page-setvideodescription">Step2Page / setVideoDescription</h2>
+<p><code>setVideoDescription(videoDescription: string = &apos;This is a sample video description.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L171">pages/Step2Page/Step2Page.ts:171</a></p>
+<ul>
+<li><code>this.locator.videoDescriptionTextarea.pressSequentially(videoDescription)</code> &#x2014; line 174</li>
+</ul>
+<h2 id="step2page-uploadimage">Step2Page / uploadImage</h2>
+<p><code>uploadImage(imagePath: string = &apos;tests/data/test_files/image_files/vscode_logo.png&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L192">pages/Step2Page/Step2Page.ts:192</a></p>
+<ul>
+<li><code>fileChooser.setFiles(imagePath)</code> &#x2014; line 199</li>
+</ul>
+<h2 id="step2page-setimagetitle">Step2Page / setImageTitle</h2>
+<p><code>setImageTitle(imageTitle: string = &apos;Sample Image&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L203">pages/Step2Page/Step2Page.ts:203</a></p>
+<ul>
+<li><code>this.locator.imageTitleInput.pressSequentially(imageTitle)</code> &#x2014; line 204</li>
+</ul>
+<h2 id="step2page-setimagedescription">Step2Page / setImageDescription</h2>
+<p><code>setImageDescription(imageDescription: string = &apos;This is a sample image description.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L210">pages/Step2Page/Step2Page.ts:210</a></p>
+<ul>
+<li><code>this.locator.imageDescriptionTextarea.pressSequentially(imageDescription)</code> &#x2014; line 213</li>
+</ul>
+<h2 id="step2page-setimagewebsite">Step2Page / setImageWebsite</h2>
+<p><code>setImageWebsite(imageWebsite: string = &apos;example.com&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L221">pages/Step2Page/Step2Page.ts:221</a></p>
+<ul>
+<li><code>this.locator.imageWebsiteInput.pressSequentially(imageWebsite)</code> &#x2014; line 222</li>
+</ul>
+<h2 id="step2page-setmp3logo">Step2Page / setMp3Logo</h2>
+<p><code>setMp3Logo(companyLogoPath: string = &apos;tests/data/test_files/company_logos/google.png&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L239">pages/Step2Page/Step2Page.ts:239</a></p>
+<ul>
+<li><code>this.locator.mp3LogoInput.setInputFiles(companyLogoPath)</code> &#x2014; line 242</li>
+</ul>
+<h2 id="step2page-uploadmp3">Step2Page / uploadMp3</h2>
+<p><code>uploadMp3(mp3Path: string = &apos;tests/data/test_files/audio_files/sample.mp3&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L247">pages/Step2Page/Step2Page.ts:247</a></p>
+<ul>
+<li><code>fileChooser.setFiles(mp3Path)</code> &#x2014; line 254</li>
+</ul>
+<h2 id="step2page-setmp3title">Step2Page / setMp3Title</h2>
+<p><code>setMp3Title(title: string = &apos;Sample MP3 Title&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L257">pages/Step2Page/Step2Page.ts:257</a></p>
+<ul>
+<li><code>this.locator.mp3FileTitle.pressSequentially(title)</code> &#x2014; line 258</li>
+</ul>
+<h2 id="step2page-setmp3description">Step2Page / setMp3Description</h2>
+<p><code>setMp3Description(description: string = &apos;This is a sample MP3 description.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L262">pages/Step2Page/Step2Page.ts:262</a></p>
+<ul>
+<li><code>this.locator.mp3FileDescription.pressSequentially(description)</code> &#x2014; line 265</li>
+</ul>
+<h2 id="step2page-setmp3website">Step2Page / setMp3Website</h2>
+<p><code>setMp3Website(website: string = &apos;example.com&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L271">pages/Step2Page/Step2Page.ts:271</a></p>
+<ul>
+<li><code>this.locator.mp3FileWebsite.pressSequentially(website)</code> &#x2014; line 272</li>
+</ul>
+<h2 id="step2page-setmenudigitallogo">Step2Page / setMenuDigitalLogo</h2>
+<p><code>setMenuDigitalLogo(menuLogoPath: string = &apos;tests/data/test_files/image_files/vscode_logo.png&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L296">pages/Step2Page/Step2Page.ts:296</a></p>
+<ul>
+<li><code>this.locator.menuDigitalLogoInput.setInputFiles(menuLogoPath)</code> &#x2014; line 299</li>
+</ul>
+<h2 id="step2page-setlinkslogo">Step2Page / setLinksLogo</h2>
+<p><code>setLinksLogo(companyLogoPath: string = &apos;tests/data/test_files/company_logos/google.png&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L309">pages/Step2Page/Step2Page.ts:309</a></p>
+<ul>
+<li><code>this.locator.linksLogoInput.setInputFiles(companyLogoPath)</code> &#x2014; line 312</li>
+</ul>
+<h2 id="step2page-setlinkscompanytitle">Step2Page / setLinksCompanyTitle</h2>
+<p><code>setLinksCompanyTitle(companyTitle: string = &apos;Test Company&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L317">pages/Step2Page/Step2Page.ts:317</a></p>
+<ul>
+<li><code>this.locator.linksCompanyTitleInput.pressSequentially(companyTitle)</code> &#x2014; line 320</li>
+</ul>
+<h2 id="step2page-setlinkscompanydescription">Step2Page / setLinksCompanyDescription</h2>
+<p><code>setLinksCompanyDescription(companyDescription: string = &apos;This is a test company description.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L340">pages/Step2Page/Step2Page.ts:340</a></p>
+<ul>
+<li><code>this.locator.linksCompanyDescriptionInput.pressSequentially(companyDescription)</code> &#x2014; line 344</li>
+</ul>
+<h2 id="step2page-setlinksimage">Step2Page / setLinksImage</h2>
+<p><code>setLinksImage(imagePath: string = &apos;tests/data/test_files/image_files/vscode_logo.png&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L352">pages/Step2Page/Step2Page.ts:352</a></p>
+<ul>
+<li><code>this.locator.linksImageInput.setInputFiles(imagePath)</code> &#x2014; line 355</li>
+</ul>
+<h2 id="step2page-setlinkstext">Step2Page / setLinksText</h2>
+<p><code>setLinksText(text: string = &apos;Test Link Text&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L361">pages/Step2Page/Step2Page.ts:361</a></p>
+<ul>
+<li><code>this.locator.linkTextInput.pressSequentially(text)</code> &#x2014; line 363</li>
+</ul>
+<h2 id="step2page-setlinksurl">Step2Page / setLinksUrl</h2>
+<p><code>setLinksUrl(url: string = &apos;example.com&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L375">pages/Step2Page/Step2Page.ts:375</a></p>
+<ul>
+<li><code>this.locator.linkUrlInput.pressSequentially(url)</code> &#x2014; line 377</li>
+</ul>
+<h2 id="step2page-addsocialmedialink">Step2Page / addSocialMediaLink</h2>
+<p><code>addSocialMediaLink(url: string = &apos;example.com&apos;, urlText: string = &apos;Test Link Text&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L380">pages/Step2Page/Step2Page.ts:380</a></p>
+<ul>
+<li><code>this.locator.linkedInURLInput.pressSequentially(url)</code> &#x2014; line 404</li>
+<li><code>this.locator.linkedInTextInput.pressSequentially(urlText)</code> &#x2014; line 405</li>
+</ul>
+<h2 id="step2page-setvcardcompanylogo">Step2Page / setVcardCompanyLogo</h2>
+<p><code>setVcardCompanyLogo(avatarPath: string = &apos;tests/data/test_files/image_files/vscode_logo.png&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L415">pages/Step2Page/Step2Page.ts:415</a></p>
+<ul>
+<li><code>this.locator.vcardImageInput.setInputFiles(avatarPath)</code> &#x2014; line 418</li>
+</ul>
+<h2 id="step2page-setvcardpersonalname">Step2Page / setVcardPersonalName</h2>
+<p><code>setVcardPersonalName(firstName: string = &apos;John&apos;, lastName: string = &apos;Doe&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L424">pages/Step2Page/Step2Page.ts:424</a></p>
+<ul>
+<li><code>this.locator.vcardFirstNameInput.pressSequentially(firstName)</code> &#x2014; line 428</li>
+<li><code>this.locator.vcardLastNameInput.pressSequentially(lastName)</code> &#x2014; line 429</li>
+</ul>
+<h2 id="step2page-setvcardcompanyname">Step2Page / setVcardCompanyName</h2>
+<p><code>setVcardCompanyName(companyName: string = &apos;Test Company&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L436">pages/Step2Page/Step2Page.ts:436</a></p>
+<ul>
+<li><code>this.locator.vcardCompanyNameInput.pressSequentially(companyName)</code> &#x2014; line 439</li>
+</ul>
+<h2 id="step2page-setvcardcompanyprofession">Step2Page / setVcardCompanyProfession</h2>
+<p><code>setVcardCompanyProfession(profession: string = &apos;Software Engineer&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L445">pages/Step2Page/Step2Page.ts:445</a></p>
+<ul>
+<li><code>this.locator.vcardCompanyProfessionInput.pressSequentially(profession)</code> &#x2014; line 448</li>
+</ul>
+<h2 id="step2page-setvcardcompanynotes">Step2Page / setVcardCompanyNotes</h2>
+<p><code>setVcardCompanyNotes(notes: string = &apos;These are test notes.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L459">pages/Step2Page/Step2Page.ts:459</a></p>
+<ul>
+<li><code>this.locator.vcardCompanyNoteTextarea.pressSequentially(notes)</code> &#x2014; line 462</li>
+</ul>
+<h2 id="step2page-setcontactinfophonenumber">Step2Page / setContactInfoPhoneNumber</h2>
+<p><code>setContactInfoPhoneNumber(phoneNumberLabel: string = &apos;Phone&apos;, phoneNumber: string = &apos;14187777&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L470">pages/Step2Page/Step2Page.ts:470</a></p>
+<ul>
+<li><code>this.locator.phoneNumberContactInfoLabelInput.pressSequentially(phoneNumberLabel)</code> &#x2014; line 482</li>
+<li><code>this.locator.phoneNumberContactInfoInput.pressSequentially(phoneNumber)</code> &#x2014; line 485</li>
+</ul>
+<h2 id="step2page-setcontactinfoemail">Step2Page / setContactInfoEmail</h2>
+<p><code>setContactInfoEmail(emailLabel: string = &apos;Email&apos;, email: string = &quot;&lt;literal omitted; see source&gt;&quot;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L496">pages/Step2Page/Step2Page.ts:496</a></p>
+<ul>
+<li><code>this.locator.emailContactInfoLabel.pressSequentially(emailLabel)</code> &#x2014; line 501</li>
+<li><code>this.locator.emailContactInfoInput.pressSequentially(email)</code> &#x2014; line 502</li>
+</ul>
+<h2 id="step2page-setcontactinfowebsite">Step2Page / setContactInfoWebsite</h2>
+<p><code>setContactInfoWebsite(websiteLabel: string = &apos;Website&apos;, website: string = &apos;example.com&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L511">pages/Step2Page/Step2Page.ts:511</a></p>
+<ul>
+<li><code>this.locator.websiteContactInfoLabel.pressSequentially(websiteLabel)</code> &#x2014; line 517</li>
+<li><code>this.locator.websiteContactInfoInput.pressSequentially(website)</code> &#x2014; line 520</li>
+</ul>
+<h2 id="step2page-setshipaddress">Step2Page / setShipAddress</h2>
+<p><code>setShipAddress(city: string = &apos;New York&apos;, street: string = &apos;Main St&apos;, streetNumber: string = &apos;456&apos;, postalCode: string = &apos;10001&apos;, state: string = &apos;NY&apos;, country: string = &apos;USA&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L531">pages/Step2Page/Step2Page.ts:531</a></p>
+<ul>
+<li><code>this.locator.shipAddressStreetInput.pressSequentially(street)</code> &#x2014; line 545</li>
+<li><code>this.locator.shipAddressStreetNumberInput.pressSequentially(streetNumber)</code> &#x2014; line 546</li>
+<li><code>this.locator.shipAddressPostalCodeInput.pressSequentially(postalCode)</code> &#x2014; line 549</li>
+<li><code>this.locator.shipAddressCityInput.pressSequentially(city)</code> &#x2014; line 552</li>
+<li><code>this.locator.shipAddressCityStateInput.pressSequentially(state)</code> &#x2014; line 553</li>
+<li><code>this.locator.shipAddressCountryInput.pressSequentially(country)</code> &#x2014; line 554</li>
+</ul>
+<h2 id="step2page-setbusinessshipaddress">Step2Page / setBusinessShipAddress</h2>
+<p><code>setBusinessShipAddress(city: string = &apos;New York&apos;, street: string = &apos;Main St&apos;, streetNumber: string = &apos;456&apos;, postalCode: string = &apos;10001&apos;, state: string = &apos;NY&apos;, country: string = &apos;USA&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L558">pages/Step2Page/Step2Page.ts:558</a></p>
+<ul>
+<li><code>this.locator.shipAddressStreetInput.pressSequentially(street)</code> &#x2014; line 567</li>
+<li><code>this.locator.shipAddressStreetNumberInput.pressSequentially(streetNumber)</code> &#x2014; line 568</li>
+<li><code>this.locator.shipAddressPostalCodeInput.pressSequentially(postalCode)</code> &#x2014; line 571</li>
+<li><code>this.locator.shipAddressCityInput.pressSequentially(city)</code> &#x2014; line 574</li>
+<li><code>this.locator.shipAddressCityStateInput.pressSequentially(state)</code> &#x2014; line 575</li>
+<li><code>this.locator.shipAddressCountryInput.pressSequentially(country)</code> &#x2014; line 576</li>
+</ul>
+<h2 id="step2page-setbusinesscompanylogo">Step2Page / setBusinessCompanyLogo</h2>
+<p><code>setBusinessCompanyLogo(companyLogoPath: string = &apos;tests/data/test_files/company_logos/google.png&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L583">pages/Step2Page/Step2Page.ts:583</a></p>
+<ul>
+<li><code>this.locator.businessLogoInput.setInputFiles(companyLogoPath)</code> &#x2014; line 586</li>
+</ul>
+<h2 id="step2page-setaboutcompany">Step2Page / setAboutCompany</h2>
+<p><code>setAboutCompany(aboutCompanyText: string = &apos;This is a test company.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L592">pages/Step2Page/Step2Page.ts:592</a></p>
+<ul>
+<li><code>this.locator.businessAboutCompanyTextarea.pressSequentially(aboutCompanyText)</code> &#x2014; line 595</li>
+</ul>
+<h2 id="step2page-setbusinesscontactname">Step2Page / setBusinessContactName</h2>
+<p><code>setBusinessContactName(contactName: string = &apos;John Doe&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L603">pages/Step2Page/Step2Page.ts:603</a></p>
+<ul>
+<li><code>this.locator.contactInfoContactNameInput.pressSequentially(contactName)</code> &#x2014; line 606</li>
+</ul>
+<h2 id="step2page-setbusinesscompanyname">Step2Page / setBusinessCompanyName</h2>
+<p><code>setBusinessCompanyName(companyName: string = &apos;Test Company&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L622">pages/Step2Page/Step2Page.ts:622</a></p>
+<ul>
+<li><code>this.locator.businessCompanyNameInput.pressSequentially(companyName)</code> &#x2014; line 625</li>
+</ul>
+<h2 id="step2page-setbusinesscompanytitle">Step2Page / setBusinessCompanyTitle</h2>
+<p><code>setBusinessCompanyTitle(companyTitle: string = &apos;Test Company&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L633">pages/Step2Page/Step2Page.ts:633</a></p>
+<ul>
+<li><code>this.locator.businessCompanyTitleInput .first() .pressSequentially(companyTitle)</code> &#x2014; line 636</li>
+</ul>
+<h2 id="step2page-setbusinesscompanysubtitle">Step2Page / setBusinessCompanySubTitle</h2>
+<p><code>setBusinessCompanySubTitle(companySubTitle: string = &apos;Test Subtitle&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L644">pages/Step2Page/Step2Page.ts:644</a></p>
+<ul>
+<li><code>this.locator.businessCompanySubTitleInput.pressSequentially(companySubTitle)</code> &#x2014; line 647</li>
+</ul>
+<h2 id="step2page-setfacebooklogo">Step2Page / setFacebookLogo</h2>
+<p><code>setFacebookLogo(facebookLogoPath: string = &apos;tests/data/test_files/image_files/vscode_logo.png&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L735">pages/Step2Page/Step2Page.ts:735</a></p>
+<ul>
+<li><code>this.locator.facebookLogoInput.setInputFiles(facebookLogoPath)</code> &#x2014; line 738</li>
+</ul>
+<h2 id="step2page-setfacebookurl">Step2Page / setFacebookUrl</h2>
+<p><code>setFacebookUrl(facebookUrl: string = &apos;https://www.facebook.com/yourpage&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L744">pages/Step2Page/Step2Page.ts:744</a></p>
+<ul>
+<li><code>this.locator.facebookUrlInput.pressSequentially(facebookUrl)</code> &#x2014; line 747</li>
+</ul>
+<h2 id="step2page-setfacebooktitle">Step2Page / setFacebookTitle</h2>
+<p><code>setFacebookTitle(facebookTitle: string = &apos;Your Facebook Page&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L750">pages/Step2Page/Step2Page.ts:750</a></p>
+<ul>
+<li><code>this.locator.facebookTitleInput.pressSequentially(facebookTitle)</code> &#x2014; line 753</li>
+</ul>
+<h2 id="step2page-setfacebookdescription">Step2Page / setFacebookDescription</h2>
+<p><code>setFacebookDescription(facebookDescription: string = &apos;This is a sample Facebook page description.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L759">pages/Step2Page/Step2Page.ts:759</a></p>
+<ul>
+<li><code>this.locator.facebookDescriptionTextarea.pressSequentially(facebookDescription)</code> &#x2014; line 762</li>
+</ul>
+<h2 id="step2page-setinstagramusername">Step2Page / setInstagramUsername</h2>
+<p><code>setInstagramUsername(username: string = &apos;yourusernthisisbillgatesame&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L772">pages/Step2Page/Step2Page.ts:772</a></p>
+<ul>
+<li><code>this.locator.instagramUsernameInput.pressSequentially(username)</code> &#x2014; line 775</li>
+</ul>
+<h2 id="step2page-setsocialmediatitle">Step2Page / setSocialMediaTitle</h2>
+<p><code>setSocialMediaTitle(title: string = &apos;Social Media Title&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L786">pages/Step2Page/Step2Page.ts:786</a></p>
+<ul>
+<li><code>this.locator.socialMediaTitleInput.pressSequentially(title)</code> &#x2014; line 789</li>
+</ul>
+<h2 id="step2page-setsocialmediatitledescription">Step2Page / setSocialMediaTitleDescription</h2>
+<p><code>setSocialMediaTitleDescription(description: string = &apos;This is a sample social media description.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L795">pages/Step2Page/Step2Page.ts:795</a></p>
+<ul>
+<li><code>this.locator.socialMediaTitleDescriptionTextarea.pressSequentially(description)</code> &#x2014; line 798</li>
+</ul>
+<h2 id="step2page-setwhatsappphonenumber">Step2Page / setWhatsappPhoneNumber</h2>
+<p><code>setWhatsappPhoneNumber(phoneNumber: string = &apos;050 123 4545&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L808">pages/Step2Page/Step2Page.ts:808</a></p>
+<ul>
+<li><code>this.locator.whatsappPhoneNumberInput.fill(phoneNumber)</code> &#x2014; line 811</li>
+</ul>
+<h2 id="step2page-fillwhatsappphoneforsubmit">Step2Page / fillWhatsappPhoneForSubmit</h2>
+<p><code>fillWhatsappPhoneForSubmit(phoneNumber: string = &apos;050 123 4545&apos;, country: string = &apos;Israel&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L823">pages/Step2Page/Step2Page.ts:823</a></p>
+<ul>
+<li><code>this.locator.whatsappCountrySearchInput.fill(country)</code> &#x2014; line 829</li>
+<li><code>input.fill(phoneNumber)</code> &#x2014; line 836</li>
+</ul>
+<h2 id="step2page-setwhatsappmessage">Step2Page / setWhatsappMessage</h2>
+<p><code>setWhatsappMessage(message: string = &apos;Hello, this is a test message!&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L841">pages/Step2Page/Step2Page.ts:841</a></p>
+<ul>
+<li><code>this.locator.whatsappMessageTextarea.pressSequentially(message)</code> &#x2014; line 844</li>
+</ul>
+<h2 id="step2page-setapplogo">Step2Page / setAppLogo</h2>
+<p><code>setAppLogo(appImagePath: string = &apos;tests/data/test_files/image_files/vscode_logo.png&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L851">pages/Step2Page/Step2Page.ts:851</a></p>
+<ul>
+<li><code>this.locator.appLogoInput.setInputFiles(appImagePath)</code> &#x2014; line 854</li>
+</ul>
+<h2 id="step2page-setappname">Step2Page / setAppName</h2>
+<p><code>setAppName(appName: string = &apos;Sample App&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L859">pages/Step2Page/Step2Page.ts:859</a></p>
+<ul>
+<li><code>this.locator.appNameInput.pressSequentially(appName)</code> &#x2014; line 860</li>
+</ul>
+<h2 id="step2page-setappdeveloper">Step2Page / setAppDeveloper</h2>
+<p><code>setAppDeveloper(developerName: string = &apos;Sample Developer&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L864">pages/Step2Page/Step2Page.ts:864</a></p>
+<ul>
+<li><code>this.locator.appDeveloperInput.pressSequentially(developerName)</code> &#x2014; line 867</li>
+</ul>
+<h2 id="step2page-setappdescription">Step2Page / setAppDescription</h2>
+<p><code>setAppDescription(description: string = &apos;This is a sample app description.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L873">pages/Step2Page/Step2Page.ts:873</a></p>
+<ul>
+<li><code>this.locator.appDescriptionTextarea.pressSequentially(description)</code> &#x2014; line 876</li>
+</ul>
+<h2 id="step2page-setappwebsite">Step2Page / setAppWebsite</h2>
+<p><code>setAppWebsite(website: string = &apos;example.com&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L882">pages/Step2Page/Step2Page.ts:882</a></p>
+<ul>
+<li><code>this.locator.appWebsiteInput.pressSequentially(website)</code> &#x2014; line 883</li>
+</ul>
+<h2 id="step2page-setappgoogleplayurl">Step2Page / setAppGooglePlayUrl</h2>
+<p><code>setAppGooglePlayUrl(url: string = &apos;https://play.google.com/store/apps/&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L887">pages/Step2Page/Step2Page.ts:887</a></p>
+<ul>
+<li><code>this.locator.appGooglePlayUrlInput.pressSequentially(url)</code> &#x2014; line 890</li>
+</ul>
+<h2 id="step2page-setappapplestoreurl">Step2Page / setAppAppleStoreUrl</h2>
+<p><code>setAppAppleStoreUrl(url: string = &apos;https://apps.apple.com/&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L894">pages/Step2Page/Step2Page.ts:894</a></p>
+<ul>
+<li><code>this.locator.appAppleStoreUrlInput.pressSequentially(url)</code> &#x2014; line 897</li>
+</ul>
+<h2 id="step2page-setappamazonstoreurl">Step2Page / setAppAmazonStoreUrl</h2>
+<p><code>setAppAmazonStoreUrl(url: string = &apos;http://amazon.com/&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L901">pages/Step2Page/Step2Page.ts:901</a></p>
+<ul>
+<li><code>this.locator.appAmazonStoreUrlInput.pressSequentially(url)</code> &#x2014; line 904</li>
+</ul>
+<h2 id="step2page-setcouponlogo">Step2Page / setCouponLogo</h2>
+<p><code>setCouponLogo(couponImagePath: string = &apos;tests/data/test_files/image_files/vscode_logo.png&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L909">pages/Step2Page/Step2Page.ts:909</a></p>
+<ul>
+<li><code>this.locator.couponCompanyLogoInput.setInputFiles(couponImagePath)</code> &#x2014; line 912</li>
+</ul>
+<h2 id="step2page-setcouponcompanyname">Step2Page / setCouponCompanyName</h2>
+<p><code>setCouponCompanyName(companyName: string = &apos;Test Company&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L917">pages/Step2Page/Step2Page.ts:917</a></p>
+<ul>
+<li><code>this.locator.couponCompanyNameInput.pressSequentially(companyName)</code> &#x2014; line 920</li>
+</ul>
+<h2 id="step2page-setcouponcompanytitle">Step2Page / setCouponCompanyTitle</h2>
+<p><code>setCouponCompanyTitle(companyTitle: string = &apos;Test Company&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L926">pages/Step2Page/Step2Page.ts:926</a></p>
+<ul>
+<li><code>this.locator.couponCompanyTitleInput.pressSequentially(companyTitle)</code> &#x2014; line 929</li>
+</ul>
+<h2 id="step2page-setcouponcompanydescription">Step2Page / setCouponCompanyDescription</h2>
+<p><code>setCouponCompanyDescription(companyDescription: string = &apos;This is a sample company description.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L937">pages/Step2Page/Step2Page.ts:937</a></p>
+<ul>
+<li><code>this.locator.couponCompanyDescriptionTextarea.pressSequentially(companyDescription)</code> &#x2014; line 940</li>
+</ul>
+<h2 id="step2page-setcouponcode">Step2Page / setCouponCode</h2>
+<p><code>setCouponCode(couponCode: string = &apos;COUPON123&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L952">pages/Step2Page/Step2Page.ts:952</a></p>
+<ul>
+<li><code>this.locator.couponCodeInput.pressSequentially(couponCode)</code> &#x2014; line 953</li>
+</ul>
+<h2 id="step2page-setcouponterms">Step2Page / setCouponTerms</h2>
+<p><code>setCouponTerms(terms: string = &apos;Terms and conditions apply.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L960">pages/Step2Page/Step2Page.ts:960</a></p>
+<ul>
+<li><code>this.locator.couponTermsConditionsTextarea.pressSequentially(terms)</code> &#x2014; line 963</li>
+</ul>
+<h2 id="step2page-setcouponbuttontext">Step2Page / setCouponButtonText</h2>
+<p><code>setCouponButtonText(buttonText: string = &apos;Get Coupon&apos;, buttonUrl: string = &apos;google.com&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L970">pages/Step2Page/Step2Page.ts:970</a></p>
+<ul>
+<li><code>this.locator.couponButtonTextInput.pressSequentially(buttonText)</code> &#x2014; line 974</li>
+<li><code>this.locator.couponButtonUrlInput.pressSequentially(buttonUrl)</code> &#x2014; line 975</li>
+</ul>
+<h2 id="step2page-setwifinetworkname">Step2Page / setWifiNetworkName</h2>
+<p><code>setWifiNetworkName(networkName: string = &apos;MyWiFiNetwork&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L984">pages/Step2Page/Step2Page.ts:984</a></p>
+<ul>
+<li><code>this.locator.wifiNetworkNameInput.pressSequentially(networkName)</code> &#x2014; line 987</li>
+</ul>
+<h2 id="step2page-setwifinetworkpassword">Step2Page / setWifiNetworkPassword</h2>
+<p><code>setWifiNetworkPassword(password: string = &quot;&lt;literal omitted; see source&gt;&quot;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L990">pages/Step2Page/Step2Page.ts:990</a></p>
+<ul>
+<li><code>this.locator.wifiNetworkPasswordInput.pressSequentially(password)</code> &#x2014; line 993</li>
+</ul>
+<h2 id="step2page-selectwifinetworkhide">Step2Page / selectWifiNetworkHide</h2>
+<p><code>selectWifiNetworkHide()</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1001">pages/Step2Page/Step2Page.ts:1001</a></p>
+<ul>
+<li><code>this.locator.wifiNetworkHideNetworkCheckbox.check()</code> &#x2014; line 1002</li>
+</ul>
+<h2 id="step2page-setmenudigitalsectiontitle">Step2Page / setMenuDigitalSectionTitle</h2>
+<p><code>setMenuDigitalSectionTitle(sectionTitle: string = &apos;Sample Section Title&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1007">pages/Step2Page/Step2Page.ts:1007</a></p>
+<ul>
+<li><code>this.locator.menuDigitalSectionNameInput.pressSequentially(sectionTitle)</code> &#x2014; line 1010</li>
+</ul>
+<h2 id="step2page-setmenudigitalsectiondescription">Step2Page / setMenuDigitalSectionDescription</h2>
+<p><code>setMenuDigitalSectionDescription(sectionDescription: string = &apos;This is a sample section description.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1018">pages/Step2Page/Step2Page.ts:1018</a></p>
+<ul>
+<li><code>this.locator.menuDigitalSectionDescriptionInput.pressSequentially(sectionDescription)</code> &#x2014; line 1021</li>
+</ul>
+<h2 id="step2page-setmenudigitalproductimage">Step2Page / setMenuDigitalProductImage</h2>
+<p><code>setMenuDigitalProductImage(imagePath: string = &apos;tests/data/test_files/image_files/product_img.webp&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1029">pages/Step2Page/Step2Page.ts:1029</a></p>
+<ul>
+<li><code>this.locator.menuDigitalProductImageLogoInput.setInputFiles(imagePath)</code> &#x2014; line 1032</li>
+</ul>
+<h2 id="step2page-setmenudigitalrestaurantname">Step2Page / setMenuDigitalRestaurantName</h2>
+<p><code>setMenuDigitalRestaurantName(restaurantName: string = &apos;My Restaurant&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1043">pages/Step2Page/Step2Page.ts:1043</a></p>
+<ul>
+<li><code>this.locator.menuDigitalRestaurantNameInput.pressSequentially(restaurantName)</code> &#x2014; line 1046</li>
+</ul>
+<h2 id="step2page-setmenudigitalrestaurantdescription">Step2Page / setMenuDigitalRestaurantDescription</h2>
+<p><code>setMenuDigitalRestaurantDescription(restaurantDescription: string = &apos;This is a sample restaurant description.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1054">pages/Step2Page/Step2Page.ts:1054</a></p>
+<ul>
+<li><code>this.locator.menuDigitalRestaurantDescriptionTextarea.pressSequentially(restaurantDescription)</code> &#x2014; line 1057</li>
+</ul>
+<h2 id="step2page-setmenudigitalproductname">Step2Page / setMenuDigitalProductName</h2>
+<p><code>setMenuDigitalProductName(productName: string = &apos;Sample Product&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1074">pages/Step2Page/Step2Page.ts:1074</a></p>
+<ul>
+<li><code>this.locator.menuDigitalProductNameInput.pressSequentially(productName)</code> &#x2014; line 1077</li>
+</ul>
+<h2 id="step2page-setmenudigitalproducttranslatedname">Step2Page / setMenuDigitalProductTranslatedName</h2>
+<p><code>setMenuDigitalProductTranslatedName(translatedName: string = &apos;Translated Product Name&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1085">pages/Step2Page/Step2Page.ts:1085</a></p>
+<ul>
+<li><code>this.locator.menuDigitalProductTranslatedNameInput.pressSequentially(translatedName)</code> &#x2014; line 1088</li>
+</ul>
+<h2 id="step2page-setmenudigitalproductdescription">Step2Page / setMenuDigitalProductDescription</h2>
+<p><code>setMenuDigitalProductDescription(productDescription: string = &apos;This is a sample product description.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1096">pages/Step2Page/Step2Page.ts:1096</a></p>
+<ul>
+<li><code>this.locator.menuDigitalProductDescriptionInput.pressSequentially(productDescription)</code> &#x2014; line 1099</li>
+</ul>
+<h2 id="step2page-setmenudigitalproductprice">Step2Page / setMenuDigitalProductPrice</h2>
+<p><code>setMenuDigitalProductPrice(productPrice: string = &apos;9.99&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1107">pages/Step2Page/Step2Page.ts:1107</a></p>
+<ul>
+<li><code>this.locator.menuDigitalProductPriceInput.pressSequentially(productPrice)</code> &#x2014; line 1110</li>
+</ul>
+<h2 id="step2page-createeventfolder">Step2Page / createEventFolder</h2>
+<p><code>createEventFolder(name: string)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1499">pages/Step2Page/Step2Page.ts:1499</a></p>
+<ul>
+<li><code>this.locator.eventFolderCreateNameInput.fill(name)</code> &#x2014; line 1505</li>
+</ul>
+<h2 id="step2page-seteventtitle">Step2Page / setEventTitle</h2>
+<p><code>setEventTitle(title: string = &apos;Test Event&apos;, options: { assertPreview?: boolean } = {})</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1660">pages/Step2Page/Step2Page.ts:1660</a></p>
+<ul>
+<li><code>this.locator.eventTitleInput.pressSequentially(title)</code> &#x2014; line 1665</li>
+</ul>
+<h2 id="step2page-seteventsummary">Step2Page / setEventSummary</h2>
+<p><code>setEventSummary(summary: string = &apos;Event summary text&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1677">pages/Step2Page/Step2Page.ts:1677</a></p>
+<ul>
+<li><code>this.locator.eventSummaryTextarea.pressSequentially(summary)</code> &#x2014; line 1680</li>
+</ul>
+<h2 id="step2page-seteventimage">Step2Page / setEventImage</h2>
+<p><code>setEventImage(imagePath: string = &apos;tests/data/test_files/image_files/vscode_logo.png&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1686">pages/Step2Page/Step2Page.ts:1686</a></p>
+<ul>
+<li><code>this.locator.eventImageInput.setInputFiles(imagePath)</code> &#x2014; line 1689</li>
+</ul>
+<h2 id="step2page-seteventdetails">Step2Page / setEventDetails</h2>
+<p><code>setEventDetails(details: string = &apos;Additional event details for scanners.&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1695">pages/Step2Page/Step2Page.ts:1695</a></p>
+<ul>
+<li><code>this.locator.eventDetailsTextarea.pressSequentially(details)</code> &#x2014; line 1698</li>
+</ul>
+<h2 id="step2page-seteventlink">Step2Page / setEventLink</h2>
+<p><code>setEventLink(label: string = &apos;Tickets&apos;, url: string = &apos;https://google.com&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1704">pages/Step2Page/Step2Page.ts:1704</a></p>
+<ul>
+<li><code>this.locator.eventLink0LabelInput.pressSequentially(label)</code> &#x2014; line 1709</li>
+<li><code>this.locator.eventLink0UrlInput.pressSequentially(url)</code> &#x2014; line 1710</li>
+</ul>
+<h2 id="step2page-checkeventshowcalendaratbottom">Step2Page / checkEventShowCalendarAtBottom</h2>
+<p><code>checkEventShowCalendarAtBottom()</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1775">pages/Step2Page/Step2Page.ts:1775</a></p>
+<ul>
+<li><code>this.locator.eventShowCalendarCheckbox.check()</code> &#x2014; line 1777</li>
+</ul>
+<h2 id="step2page-seteventcolors">Step2Page / setEventColors</h2>
+<p><code>setEventColors(primary: string = &apos;#527AC9&apos;, secondary: string = &apos;#7EC09F&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1792">pages/Step2Page/Step2Page.ts:1792</a></p>
+<ul>
+<li><code>this.locator.eventPrimaryColorHexInput.fill(primary)</code> &#x2014; line 1797</li>
+<li><code>this.locator.eventSecondaryColorHexInput.fill(secondary)</code> &#x2014; line 1799</li>
+</ul>
+<h2 id="step2page-seteventcontactname">Step2Page / setEventContactName</h2>
+<p><code>setEventContactName(contactName: string = &apos;John Doe&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1812">pages/Step2Page/Step2Page.ts:1812</a></p>
+<ul>
+<li><code>this.locator.eventContactNameInput.pressSequentially(contactName)</code> &#x2014; line 1813</li>
+</ul>
+<h2 id="step2page-seteventmanuallocation">Step2Page / setEventManualLocation</h2>
+<p><code>setEventManualLocation(street: string = &apos;Manchester Street&apos;, number: string = &apos;156&apos;, postalCode: string = &apos;90401&apos;, city: string = &apos;Los Angeles&apos;, state: string = &apos;California&apos;, country: string = &apos;United States&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1848">pages/Step2Page/Step2Page.ts:1848</a></p>
+<ul>
+<li><code>this.locator.shipAddressStreetInput.fill(street)</code> &#x2014; line 1857</li>
+<li><code>this.locator.shipAddressStreetNumberInput.fill(number)</code> &#x2014; line 1858</li>
+<li><code>this.locator.shipAddressPostalCodeInput.fill(postalCode)</code> &#x2014; line 1859</li>
+<li><code>this.locator.shipAddressCityInput.fill(city)</code> &#x2014; line 1860</li>
+<li><code>this.locator.shipAddressCityStateInput.fill(state)</code> &#x2014; line 1861</li>
+<li><code>this.locator.shipAddressCountryInput.fill(country)</code> &#x2014; line 1862</li>
+</ul>
+<h2 id="step2page-seteventcontactphone">Step2Page / setEventContactPhone</h2>
+<p><code>setEventContactPhone(phoneNumber: string = &apos;14187777123&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1868">pages/Step2Page/Step2Page.ts:1868</a></p>
+<ul>
+<li><code>this.locator.eventPhone0Input.fill(phoneNumber)</code> &#x2014; line 1872</li>
+</ul>
+<h2 id="step2page-seteventcontactemail">Step2Page / setEventContactEmail</h2>
+<p><code>setEventContactEmail(email: string = &quot;&lt;literal omitted; see source&gt;&quot;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1878">pages/Step2Page/Step2Page.ts:1878</a></p>
+<ul>
+<li><code>this.locator.eventEmail0Input.fill(email)</code> &#x2014; line 1882</li>
+</ul>
+<h2 id="step2page-seteventcontactwebsite">Step2Page / setEventContactWebsite</h2>
+<p><code>setEventContactWebsite(website: string = &apos;https://example.com&apos;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1888">pages/Step2Page/Step2Page.ts:1888</a></p>
+<ul>
+<li><code>this.locator.eventWebsite0UrlInput.fill(website)</code> &#x2014; line 1892</li>
+</ul>
+<h2 id="step2page-enableeventpassword">Step2Page / enableEventPassword</h2>
+<p><code>enableEventPassword(password: string = &quot;&lt;literal omitted; see source&gt;&quot;)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1898">pages/Step2Page/Step2Page.ts:1898</a></p>
+<ul>
+<li><code>this.locator.qrPasswordCheckbox.check()</code> &#x2014; line 1900</li>
+<li><code>this.locator.qrPasswordInput.fill(password)</code> &#x2014; line 1901</li>
+</ul>
+<h2 id="step2page-seteventqrname">Step2Page / setEventQrName</h2>
+<p><code>setEventQrName(name: string)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L1907">pages/Step2Page/Step2Page.ts:1907</a></p>
+<ul>
+<li><code>this.locator.qrCodeNameInput.fill(name)</code> &#x2014; line 1909</li>
+</ul>
+<h2 id="step2page-uploademailbasicinfoimage">Step2Page / uploadEmailBasicInfoImage</h2>
+<p><code>uploadEmailBasicInfoImage(imagePath: string)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L2427">pages/Step2Page/Step2Page.ts:2427</a></p>
+<ul>
+<li><code>this.locator.emailBasicInfoImageInput.setInputFiles(imagePath)</code> &#x2014; line 2433</li>
+</ul>
+<h2 id="step2page-setemailbusinessname">Step2Page / setEmailBusinessName</h2>
+<p><code>setEmailBusinessName(name: string, options: { assertPreview?: boolean } = {})</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L2483">pages/Step2Page/Step2Page.ts:2483</a></p>
+<ul>
+<li><code>this.locator.emailBasicInfoTitleInput.fill(name)</code> &#x2014; line 2492</li>
+</ul>
+<h2 id="step2page-setemaildescription">Step2Page / setEmailDescription</h2>
+<p><code>setEmailDescription(description: string, options: { assertPreview?: boolean } = {})</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L2504">pages/Step2Page/Step2Page.ts:2504</a></p>
+<ul>
+<li><code>this.locator.emailBasicInfoDescriptionTextarea.fill(description)</code> &#x2014; line 2513</li>
+</ul>
+<h2 id="step2page-fillemailtemplaterequiredfields">Step2Page / fillEmailTemplateRequiredFields</h2>
+<p><code>fillEmailTemplateRequiredFields(title: string, emailAddress: string)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L2522">pages/Step2Page/Step2Page.ts:2522</a></p>
+<ul>
+<li><code>this.locator.emailTemplateTitleInput.fill(title)</code> &#x2014; line 2534</li>
+<li><code>this.locator.emailTemplateAddressInput.fill(emailAddress)</code> &#x2014; line 2535</li>
+</ul>
+<h2 id="step2page-expectemaildescriptioncappedat">Step2Page / expectEmailDescriptionCappedAt</h2>
+<p><code>expectEmailDescriptionCappedAt(maxLength: number)</code></p>
+<p><a data-source="pages/Step2Page/Step2Page.ts" href="../sources/pages/Step2Page/Step2Page.ts.html#L2564">pages/Step2Page/Step2Page.ts:2564</a></p>
+<ul>
+<li><code>this.locator.emailBasicInfoDescriptionTextarea.fill(overflow)</code> &#x2014; line 2567</li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

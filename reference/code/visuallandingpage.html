@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/visuallandingpage.html">
+<title>VisualLandingPage · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-visuallandingpage-visuallandingpage-ts">pages/VisualLandingPage/VisualLandingPage.ts</a>
+<a href="#pages-visuallandingpage-visuallandingpagelocators-ts">pages/VisualLandingPage/VisualLandingPageLocators.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="visuallandingpage">VisualLandingPage</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-visuallandingpage-visuallandingpage-ts">pages/VisualLandingPage/VisualLandingPage.ts</h2>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPage.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPage.ts.html#L1">pages/VisualLandingPage/VisualLandingPage.ts:1</a></p>
+<ul>
+<li><code>type { Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>{ PageFactory }</code> &#x2190; <a data-source="base/PageFactory.ts" href="../../sources/base/PageFactory.ts.html#L1">base/PageFactory.ts:1</a></li>
+<li><code>{ settleLayout, waitForVisualReady, }</code> &#x2190; <a data-source="tests/helpers/waitForVisualReady.ts" href="../../sources/tests/helpers/waitForVisualReady.ts.html#L1">tests/helpers/waitForVisualReady.ts:1</a></li>
+<li><code>{ PERCY_CSS }</code> &#x2190; <a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L1">tests/visual/screens.config.ts:1</a></li>
+<li><code>type { VisualQaScreen, VisualQaViewport, }</code> &#x2190; <a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L1">tests/helpers/visualQaConfig.ts:1</a></li>
+<li><code>{ OqgVisualLandingPageLocators, QgcVisualLandingPageLocators, QciVisualLandingPageLocators, QgaVisualLandingPageLocators, type VisualLandingPageLocators, }</code> &#x2190; <a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L1">pages/VisualLandingPage/VisualLandingPageLocators.ts:1</a></li>
+</ul>
+<h3 id="preparecapture">prepareCapture</h3>
+<p><code>prepareCapture(screen: VisualQaScreen, viewport: VisualQaViewport)</code></p>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPage.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPage.ts.html#L25">pages/VisualLandingPage/VisualLandingPage.ts:25</a></p>
+<p>Resize and wait for the selected landing page before taking a screenshot.</p>
+<ul>
+<li><code>this.page.setViewportSize({ width: viewport.width, height: viewport.height, })</code> &#x2014; line 29</li>
+<li><code>this.page.addStyleTag({ content: PERCY_CSS })</code> &#x2014; line 40</li>
+</ul>
+<h3 id="resolvecaptureclip">resolveCaptureClip</h3>
+<p><code>resolveCaptureClip(screen: VisualQaScreen, viewport: VisualQaViewport)</code></p>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPage.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPage.ts.html#L44">pages/VisualLandingPage/VisualLandingPage.ts:44</a></p>
+<p>Capture through the three-steps title on desktop/mobile, or the tablet viewport.</p>
+<ul>
+<li><code>this.page.evaluate([callback: see source])</code> &#x2014; line 48</li>
+<li><code>this.expect(this.locators.createReady).toBeVisible({ timeout: 30_000, })</code> &#x2014; line 50</li>
+<li><code>this.expect(this.locators.phoneMockup).toBeVisible({ timeout: 30_000, })</code> &#x2014; line 54</li>
+<li><code>this.expect(this.locators.generateReady).toBeVisible({ timeout: 30_000, })</code> &#x2014; line 59</li>
+<li><code>this.expect(this.locators.captureEnd).toBeVisible()</code> &#x2014; line 69</li>
+<li><code>this.locators.captureEnd.evaluate([callback: see source])</code> &#x2014; line 70</li>
+<li><code>this.page.evaluate([callback: see source])</code> &#x2014; line 74</li>
+<li><code>this.locators.captureEnd.evaluate([callback: see source])</code> &#x2014; line 76</li>
+<li><code>this.expect( height, &#x2032;&#x24;{screen} capture boundary must be visible&#x2032; ).toBeGreaterThan(0)</code> &#x2014; line 81</li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPage.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPage.ts.html#L93">pages/VisualLandingPage/VisualLandingPage.ts:93</a></p>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPage.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPage.ts.html#L102">pages/VisualLandingPage/VisualLandingPage.ts:102</a></p>
+<h3 id="constructor-2">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPage.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPage.ts.html#L111">pages/VisualLandingPage/VisualLandingPage.ts:111</a></p>
+<h3 id="constructor-3">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPage.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPage.ts.html#L120">pages/VisualLandingPage/VisualLandingPage.ts:120</a></p>
+<h2 id="pages-visuallandingpage-visuallandingpagelocators-ts">pages/VisualLandingPage/VisualLandingPageLocators.ts</h2>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L1">pages/VisualLandingPage/VisualLandingPageLocators.ts:1</a></p>
+<ul>
+<li><code>type { Locator, Page }</code> &#x2190; <code>@playwright/test</code></li>
+</ul>
+<h3 id="constructor-4">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L9">pages/VisualLandingPage/VisualLandingPageLocators.ts:9</a></p>
+<h3 id="constructor-5">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L22">pages/VisualLandingPage/VisualLandingPageLocators.ts:22</a></p>
+<h3 id="constructor-6">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L36">pages/VisualLandingPage/VisualLandingPageLocators.ts:36</a></p>
+<h3 id="constructor-7">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L50">pages/VisualLandingPage/VisualLandingPageLocators.ts:50</a></p>
+<h3 id="constructor-8">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L64">pages/VisualLandingPage/VisualLandingPageLocators.ts:64</a></p>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.createReady</code> &#x2190; <code>page.getByTestId(&apos;step1-website-card&apos;)</code> &#x2014; <a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L10">pages/VisualLandingPage/VisualLandingPageLocators.ts:10</a></li>
+<li><code>this.phoneMockup</code> &#x2190; <code>page.getByTestId(&apos;phone-mockup-container&apos;)</code> &#x2014; <a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L11">pages/VisualLandingPage/VisualLandingPageLocators.ts:11</a></li>
+<li><code>this.generateReady</code> &#x2190; <code>page .getByTestId(&apos;generate-url-input-url-input-mobile&apos;) .or(page.getByTestId(&apos;generate-url-input-url-input-desktop&apos;)) .filter({ visible: true })</code> &#x2014; <a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L12">pages/VisualLandingPage/VisualLandingPageLocators.ts:12</a></li>
+<li><code>this.captureEnd</code> &#x2190; <code>page .locator( &apos;main div[class~=&quot;qr-lg:text-[52px]&quot;][class~=&quot;qr-lg:leading-[60px]&quot;][class~=&quot;text-center&quot;][class~=&quot;text-2xl&quot;][class~=&quot;leading-7&quot;][class~=&quot;font-medium&quot;][class~=&quot;text-pretty&quot;][class~=&quot;text-neutral-900&quot;]&apos; ) .filter({ visible: true }) .first()</code> &#x2014; <a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L24">pages/VisualLandingPage/VisualLandingPageLocators.ts:24</a></li>
+<li><code>this.captureEnd</code> &#x2190; <code>page .locator( &apos;main h2[class~=&quot;text-ink-900&quot;][class~=&quot;qr-lg:flex&quot;][class~=&quot;font-extrabold&quot;]&apos; ) .filter({ visible: true }) .first()</code> &#x2014; <a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L38">pages/VisualLandingPage/VisualLandingPageLocators.ts:38</a></li>
+<li><code>this.captureEnd</code> &#x2190; <code>page .locator( &apos;main h2[class~=&quot;qr-lg:text-5xl&quot;][class~=&quot;text-ink-900&quot;][class~=&quot;font-bold&quot;][class~=&quot;text-balance&quot;]&apos; ) .filter({ visible: true }) .first()</code> &#x2014; <a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L52">pages/VisualLandingPage/VisualLandingPageLocators.ts:52</a></li>
+<li><code>this.captureEnd</code> &#x2190; <code>page .locator( &apos;main h2[class~=&quot;font-figtree&quot;][class~=&quot;max-w-147.25&quot;][class~=&quot;font-semibold&quot;]&apos; ) .filter({ visible: true }) .first()</code> &#x2014; <a data-source="pages/VisualLandingPage/VisualLandingPageLocators.ts" href="../../sources/pages/VisualLandingPage/VisualLandingPageLocators.ts.html#L66">pages/VisualLandingPage/VisualLandingPageLocators.ts:66</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

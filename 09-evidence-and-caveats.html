@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="09-evidence-and-caveats.html">
+<title>Evidence and known limitations · QA reference</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script defer src="assets/search-index.js"></script><script defer src="assets/app.js"></script>
+</head><body data-root-prefix="">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="index.html">Start here</a>
+<a href="00-qa-quick-start.html">Your first check</a>
+<a href="02-accounts-and-credentials.html">Accounts and login</a>
+<a href="03-qr-creation.html">QR types and creation</a>
+<a href="04-data-and-inputs.html">What to enter and upload</a>
+<a href="05-other-flows.html">Other product flows</a>
+<a href="07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="01-architecture-and-running.html">Automation setup and execution</a>
+<a href="06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="09-evidence-and-caveats.html" class="active" aria-current="page">Evidence and known limitations</a>
+<a href="reference/index.html">Reference overview</a>
+<a href="reference/spec-index.html">Complete spec map</a>
+<a href="reference/code-index.html">Shared helpers and locators</a>
+<a href="reference/field-inputs.html">Field inputs and defaults</a>
+<a href="reference/data-index.html">Data sources and consumers</a>
+<a href="reference/environment-index.html">Environment variables</a>
+<a href="reference/assets.html">Upload asset inventory</a>
+<a href="reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (4)</summary><a href="#what-was-verified-for-this-guide">What was verified for this guide</a>
+<a href="#concrete-caveats-to-teach">Known differences and limitations</a>
+<a href="#how-to-interpret-the-generated-references">How to interpret the generated references</a>
+<a href="#keep-the-guide-useful">If the product or reference has changed</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="9-evidence-known-gaps-and-maintenance">Evidence and known limitations</h1>
+<p><a href="index.html">Start</a> &#xb7; <a href="07-qa-workflow-and-troubleshooting.html">Check results and report problems</a></p>
+<h2 id="what-was-verified-for-this-guide">What was verified for this guide</h2>
+<p>The audit reads tracked repository source at <code>a314c7b</code>, inspects configuration, managers, credentials/data paths, QR recipes, field setters and key integration helpers, and generates an inventory from TypeScript syntax trees. It does not import test modules or load populated <code>.env</code> / <code>.auth</code> files. Counts include opt-in tool specs as source, even when normal project collection ignores them.</p>
+<p>No live application, login, payment, database, email or scan flow was executed. No claim here establishes current deployment availability, passing status, actual database grants, secret validity or complete conformance with external Jira/Qase test cases. Existing reports in <code>docs/</code> remain historical evidence tied to their own dates/environments.</p>
+<p>Documentation checks cover local page and section links, packaged files, offline search, and the reader interface. These checks validate the documentation bundle; they do not establish whether application tests pass. The guide was prepared without running live login, payment, database, mail, or scan actions.</p>
+<h2 id="concrete-caveats-to-teach">Known differences and limitations</h2>
+<div class="table-wrap"><table>
+<tr><th>Finding</th><th>Evidence / implication</th></tr>
+<tr><td>Code and older guide differ on products</td><td><code>Product</code> includes QGC; QGC projects are restricted to two landing visual specs</td></tr>
+<tr><td>Factory implementation is partial</td><td>Login/Register/Account/EmailBody/DPF factories register OQG/QCI; unsupported access skips</td></tr>
+<tr><td>Legacy and typed product models coexist</td><td><code>DOMAIN</code>/<code>BASE_URL</code> helpers and product fixtures can select inconsistent behavior if mixed</td></tr>
+<tr><td>All required product URLs are evaluated early</td><td>OQG/QCI/QGA URL values needed at config import before project filtering</td></tr>
+<tr><td>Email exclusion in dev config is commented</td><td><code>test:dev</code> does not currently exclude all email specs despite older comments/docs</td></tr>
+<tr><td>Tools ignore has a legacy exception</td><td>Deprecated <code>chromium</code> project has <code>testIgnore: []</code>; broad legacy runs can collect generators</td></tr>
+<tr><td>Edge projects differ</td><td>OQG Edge explicitly requests msedge; other product Edge configs do not explicitly set channel</td></tr>
+<tr><td>Trace capture is not enabled by default</td><td>Main config&apos;s trace setting is commented out</td></tr>
+<tr><td>Global teardown file is not wired</td><td>No globalTeardown or teardown project registration in main config</td></tr>
+<tr><td>Credential logging exists</td><td>UserApi password login logs request and response data; sanitize actual logs before sharing</td></tr>
+<tr><td>Analytics uses embedded credentials/history</td><td>Source-defined account rather than common env-based fresh-user fixture; values intentionally not repeated here</td></tr>
+<tr><td>QR recipe names overstate completion</td><td>Most <code>...QrCreate()</code> helpers only fill Step 2 and return a name</td></tr>
+<tr><td>QR matrices are incomplete by design</td><td>Global array has 15 active rows vs 18 top-level type selectors / 20 variant paths</td></tr>
+<tr><td>vCard helper contains a Cyrillic character</td><td><code>v&#x421;ardQrCreate</code> capital &#x421; is not ASCII C; copy identifier from source</td></tr>
+<tr><td>Faker helpers differ from their apparent length contract</td><td><code>fakeString</code> can be shorter than requested; <code>fakeText</code> generates paragraphs, not exact characters</td></tr>
+<tr><td>DPF email-gate fallback bypasses normal handler</td><td>Native submission can let downstream tests proceed despite broken UI click handling</td></tr>
+<tr><td>Event edit helper restores lost dates</td><td>Passing downstream edits can coexist with date persistence bug documented in helper</td></tr>
+<tr><td>Event time setter is not general</td><td>Current <code>setEventTimes()</code> confirms picker defaults/selects fixed end control rather than parsing arbitrary strings</td></tr>
+<tr><td>Mailpit timestamp matching has tolerance</td><td>Two-minute skew allowance/unparseable-time fallback means old mail can match reused recipients</td></tr>
+<tr><td>DbApi includes mutations</td><td>Currency update and QR orphan/backdate change real test data</td></tr>
+<tr><td><code>nullQrUserId</code> also changes dates</td><td>Alias delegates to <code>orphanQrForArchivedPricing()</code></td></tr>
+<tr><td>DB email config is not a public mail reader</td><td>All current public DbApi operations target plan DB; transactional mail comes from Mailpit</td></tr>
+<tr><td>Cleanup response isn&apos;t inherently asserted</td><td><code>UserApi.deleteUser()</code> returns response; inspect whether caller verifies it</td></tr>
+<tr><td>Existing CI bindings lag newer config</td><td>Example login workflow exposes BASE_URL and MAILTRAP__; current runtime additionally requires product URLs and uses MAILPIT__ for mail</td></tr>
+</table></div>
+<p>Sources are linked in the relevant chapters and <a href="reference/index.html">generated reference</a>. These are documentation findings; application/test behavior was not changed as part of this task.</p>
+<h2 id="how-to-interpret-the-generated-references">How to interpret the generated references</h2>
+<ul>
+<li>Static test counts count declarations, not expanded parameter rows, browser projects, runtime passes or external test cases.</li>
+<li>Import consumers are direct TypeScript imports; files read through filesystem APIs and transitive imports need manual follow-through.</li>
+<li>Call lists include both sides of branches and calls inside callbacks in source order. They do not claim every call executes on every run.</li>
+<li>Per-file hook lists preserve source links; enclosing <code>describe</code> scope determines which tests each hook applies to.</li>
+<li>Long expressions are abbreviated with explicit source pointers. Dataset preview values are not a replacement for the full dataset.</li>
+<li>Private methods are included because they explain retry, polling and state behavior. Source comments may describe historical environments or defects.</li>
+<li>Credential-like literal values are omitted from references. Variable names, ownership, lookup sites and parameter wiring remain visible.</li>
+<li>Source links open bundled HTML snapshots at line anchors. Credential-like literals are redacted; binary fixtures open metadata pages with their repository paths and measured byte sizes.</li>
+</ul>
+<h2 id="keep-the-guide-useful">If the product or reference has changed</h2>
+
+<p>Record the guide page, the product and environment, the input used, and the behavior you observed. Send the mismatch to the person maintaining the tests so the expected behavior and the guide can be checked against the current source. A source snapshot explains the audited code; it is not a current test result.</p></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

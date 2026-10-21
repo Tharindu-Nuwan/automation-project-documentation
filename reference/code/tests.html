@@ -1,0 +1,2103 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/tests.html">
+<title>tests · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (33)</summary><a href="#tests-archived-plan-pricing-helpers-abandoned-qr-helper-ts">tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts</a>
+<a href="#tests-archived-plan-pricing-helpers-archived-pp-purchase-helper-ts">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts</a>
+<a href="#tests-archived-plan-pricing-helpers-stripe-customer-asserts-ts">tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts</a>
+<a href="#tests-data-constants-email-test-data-ts">tests/data/constants/email_test_data.ts</a>
+<a href="#tests-data-event-field-validation-data-ts">tests/data/event-field-validation.data.ts</a>
+<a href="#tests-data-eventsecuritypayloads-data-ts">tests/data/eventSecurityPayloads.data.ts</a>
+<a href="#tests-data-helpers-dpf-navigation-ts">tests/data/helpers/dpf-navigation.ts</a>
+<a href="#tests-data-pricing-integrity-official-stripe-prices-data-ts">tests/data/pricing-integrity/official-stripe-prices.data.ts</a>
+<a href="#tests-data-pricing-data-ts">tests/data/pricing.data.ts</a>
+<a href="#tests-data-striperetrystrategy-data-ts">tests/data/stripeRetryStrategy.data.ts</a>
+<a href="#tests-data-trial-translations-data-ts">tests/data/trial-translations.data.ts</a>
+<a href="#tests-helpers-create-from-folder-helper-ts">tests/helpers/create-from-folder.helper.ts</a>
+<a href="#tests-helpers-discountlinkhelpers-ts">tests/helpers/discountLinkHelpers.ts</a>
+<a href="#tests-helpers-dpf-fx-url-parameter-helper-ts">tests/helpers/dpf-fx-url-parameter.helper.ts</a>
+<a href="#tests-helpers-email-templates-helper-ts">tests/helpers/email-templates.helper.ts</a>
+<a href="#tests-helpers-emailqrbasicinfosetup-helper-ts">tests/helpers/emailQrBasicInfoSetup.helper.ts</a>
+<a href="#tests-helpers-eventlocalsetup-ts">tests/helpers/eventLocalSetup.ts</a>
+<a href="#tests-helpers-folder-file-counter-helper-ts">tests/helpers/folder-file-counter.helper.ts</a>
+<a href="#tests-helpers-layoutaudit-ts">tests/helpers/layoutAudit.ts</a>
+<a href="#tests-helpers-long-text-containment-helper-ts">tests/helpers/long-text-containment.helper.ts</a>
+<a href="#tests-helpers-oqg3-2211-helper-ts">tests/helpers/oqg3-2211.helper.ts</a>
+<a href="#tests-helpers-pricing-report-helper-ts">tests/helpers/pricing-report.helper.ts</a>
+<a href="#tests-helpers-pricing-ui-helper-ts">tests/helpers/pricing-ui.helper.ts</a>
+<a href="#tests-helpers-seoaudit-ts">tests/helpers/seoAudit.ts</a>
+<a href="#tests-helpers-striperetrystrategy-ts">tests/helpers/stripeRetryStrategy.ts</a>
+<a href="#tests-helpers-vcard-webp-upload-helper-ts">tests/helpers/vcard-webp-upload.helper.ts</a>
+<a href="#tests-helpers-visualqacapture-ts">tests/helpers/visualQaCapture.ts</a>
+<a href="#tests-helpers-visualqaconfig-ts">tests/helpers/visualQaConfig.ts</a>
+<a href="#tests-helpers-waitforvisualready-ts">tests/helpers/waitForVisualReady.ts</a>
+<a href="#tests-tools-event-field-validation-manifest-helper-ts">tests/tools/event-field-validation-manifest.helper.ts</a>
+<a href="#tests-tools-validation-account-helper-ts">tests/tools/validation-account.helper.ts</a>
+<a href="#tests-trial-day-count-helpers-completedpfpaidfullaccess-ts">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts</a>
+<a href="#tests-visual-screens-config-ts">tests/visual/screens.config.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="tests">tests</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="tests-archived-plan-pricing-helpers-abandoned-qr-helper-ts">tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts</h2>
+<p><a data-source="tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts.html#L1">tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts:1</a></p>
+<ul>
+<li><code>{ expect, type Browser, type Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>type { ApiManager }</code> &#x2190; <a data-source="base/APIManager.ts" href="../../sources/base/APIManager.ts.html#L1">base/APIManager.ts:1</a></li>
+<li><code>type { Product }</code> &#x2190; <a data-source="base/Product.ts" href="../../sources/base/Product.ts.html#L1">base/Product.ts:1</a></li>
+<li><code>{ completeDpfThroughPlanSelection }</code> &#x2190; <a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L1">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:1</a></li>
+</ul>
+<h3 id="createabandonedqr">createAbandonedQr</h3>
+<p><code>createAbandonedQr(options: { browser: Browser apiManager: ApiManager product: Product baseURL: string scanBaseURL: string | undefined seedEmail: string })</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts.html#L17">tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts:17</a></p>
+<p>Creates a DPF website QR and orphans it for Archived P&amp;P.</p>
+<ul>
+<li><code>createAbandonedQrs({ ...options, count: 1 })</code> &#x2014; line 25</li>
+</ul>
+<h3 id="createabandonedqrs">createAbandonedQrs</h3>
+<p><code>createAbandonedQrs(options: { browser: Browser apiManager: ApiManager product: Product baseURL: string scanBaseURL: string | undefined seedEmail: string count: number })</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts.html#L33">tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts:33</a></p>
+<p>Duplicate extra QRs on the dashboard, then orphan each copy before any scan.</p>
+<ul>
+<li><code>completeDpfThroughPlanSelection(page, pageManager, seedEmail)</code> &#x2014; line 68</li>
+<li><code>openDashboardFromDpfPlan(page, pageManager)</code> &#x2014; line 69</li>
+<li><code>expect( pageManager.myQrCodesPage.locator.createdQrCodesList ).toHaveCount(1, { timeout: 30_000 })</code> &#x2014; line 70</li>
+<li><code>pageManager.myQrCodesPage.duplicateFirstVisibleQrCode()</code> &#x2014; line 75</li>
+<li><code>expect( pageManager.myQrCodesPage.locator.createdQrCodesList ).toHaveCount(created + 1, { timeout: 30_000 })</code> &#x2014; line 76</li>
+<li><code>expect .poll( async () =&gt; { uids = extractQrUids( await apiManager.userApi.getQrCodesByEmail(seedEmail) ) return uids.length }, { timeout: 30_000, message: &#x2032;Expected &#x24;{count} QR uids for abandoned copies&#x2032;, } ) .toBe(count)</code> &#x2014; line 82</li>
+<li><code>extractQrUids(await apiManager.userApi.getQrCodesByEmail(seedEmail))</code> &#x2014; line 85</li>
+<li><code>apiManager.userApi.getQrCodesByEmail(seedEmail)</code> &#x2014; line 86</li>
+<li><code>apiManager.dbApi.orphanQrForArchivedPricing(qr.uid)</code> &#x2014; line 105</li>
+<li><code>apiManager.userApi.deleteUser([seedEmail])</code> &#x2014; line 107</li>
+</ul>
+<h3 id="scanurlforuid">scanUrlForUid</h3>
+<p><code>scanUrlForUid(scanBaseURL: string, uid: string)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts.html#L115">tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts:115</a></p>
+<h3 id="opendashboardfromdpfplan">openDashboardFromDpfPlan</h3>
+<p><code>openDashboardFromDpfPlan(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts.html#L119">tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts:119</a></p>
+<ul>
+<li><code>logo.click()</code> &#x2014; line 128</li>
+<li><code>page.goto(&apos;/qr-codes&apos;)</code> &#x2014; line 130</li>
+<li><code>expect(page).toHaveURL(/qr-codes/, { timeout: 60_000 })</code> &#x2014; line 133</li>
+</ul>
+<h3 id="dismissdownloadmodal">dismissDownloadModal</h3>
+<p><code>dismissDownloadModal(pageManager: PageManager)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts.html#L137">tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts:137</a></p>
+<ul>
+<li><code>pageManager.qrCreationPage.locator.closeDownloadModalButton.click()</code> &#x2014; line 144</li>
+</ul>
+<h3 id="extractqruids">extractQrUids</h3>
+<p><code>extractQrUids(payload: unknown)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts.html#L150">tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts:150</a></p>
+<h3 id="firststring">firstString</h3>
+<p><code>firstString(record: Record&lt;string, unknown&gt;, keys: string[])</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts.html#L159">tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts:159</a></p>
+<ul>
+<li><code>key.toLowerCase()</code> &#x2014; line 164</li>
+<li><code>key.toLowerCase()</code> &#x2014; line 167</li>
+</ul>
+<h3 id="flattenrecords">flattenRecords</h3>
+<p><code>flattenRecords(value: unknown)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts.html#L175">tests/archived-plan-pricing/helpers/abandoned-qr.helper.ts:175</a></p>
+<h2 id="tests-archived-plan-pricing-helpers-archived-pp-purchase-helper-ts">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts</h2>
+<p><a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L1">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:1</a></p>
+<ul>
+<li><code>{ expect, type Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { ApiManager }</code> &#x2190; <a data-source="base/APIManager.ts" href="../../sources/base/APIManager.ts.html#L1">base/APIManager.ts:1</a></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>{ stripeVisaValidCard, stripe_invalid_card, }</code> &#x2190; <a data-source="tests/data/payments_test_data.ts" href="../../sources/tests/data/payments_test_data.ts.html#L1">tests/data/payments_test_data.ts:1</a></li>
+<li><code>{ openMainPageNsf }</code> &#x2190; <a data-source="tests/data/helpers/dpf-navigation.ts" href="../../sources/tests/data/helpers/dpf-navigation.ts.html#L1">tests/data/helpers/dpf-navigation.ts:1</a></li>
+<li><code>{ completeDpfThroughPlanSelection }</code> &#x2190; <a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L1">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:1</a></li>
+<li><code>type { ArchivedPlan }</code> &#x2190; <a data-source="tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts" href="../../sources/tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts.html#L1">tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts:1</a></li>
+<li><code>{ waitForThankYou }</code> &#x2190; <a data-source="tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts" href="../../sources/tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts.html#L1">tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts:1</a></li>
+</ul>
+<h3 id="openarchivedplanandpricing">openArchivedPlanAndPricing</h3>
+<p><code>openArchivedPlanAndPricing(page: Page, pageManager: PageManager, scanUrl: string, options: OpenArchivedOptions = {})</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L42">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:42</a></p>
+<p>First scan of an already-orphaned QR. Do not scan before createAbandonedQr returns.</p>
+<ul>
+<li><code>page.goto(scanUrl)</code> &#x2014; line 48</li>
+<li><code>setTempUserCurrencyBeforePayment(page, tempCurrency)</code> &#x2014; line 62</li>
+<li><code>continueFromDeactivatedQrIfPresent(page)</code> &#x2014; line 64</li>
+<li><code>expectArchivedPlanUi(page, pageManager)</code> &#x2014; line 66</li>
+</ul>
+<h3 id="continuefromdeactivatedqrifpresent">continueFromDeactivatedQrIfPresent</h3>
+<p><code>continueFromDeactivatedQrIfPresent(page: Page)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L69">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:69</a></p>
+<h3 id="settempusercurrencybeforepayment">setTempUserCurrencyBeforePayment</h3>
+<p><code>setTempUserCurrencyBeforePayment(page: Page, options: NonNullable&lt;OpenArchivedOptions[&apos;tempUserCurrency&apos;]&gt;)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L84">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:84</a></p>
+<h3 id="clickarchivedpricinglink">clickArchivedPricingLink</h3>
+<p><code>clickArchivedPricingLink(page: Page)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L128">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:128</a></p>
+<ul>
+<li><code>expect(pricingLink).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 134</li>
+<li><code>pricingLink.click()</code> &#x2014; line 135</li>
+</ul>
+<h3 id="expectarchivedplanui">expectArchivedPlanUi</h3>
+<p><code>expectArchivedPlanUi(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L138">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:138</a></p>
+<ul>
+<li><code>expect(planUi.first().or(emailInput)).toBeVisible({ timeout: 60_000 })</code> &#x2014; line 154</li>
+</ul>
+<h3 id="buyonarchivedplanandpricing">buyOnArchivedPlanAndPricing</h3>
+<p><code>buyOnArchivedPlanAndPricing(page: Page, pageManager: PageManager, options: BuyArchivedOptions = {})</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L157">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:157</a></p>
+<ul>
+<li><code>expectArchivedPlanUi(page, pageManager)</code> &#x2014; line 167</li>
+<li><code>pageManager.paymentPage.continueAccountInformationIfPresent(options.guestEmail)</code> &#x2014; line 168</li>
+<li><code>selectArchivedPlan(pageManager, plan)</code> &#x2014; line 171</li>
+<li><code>continueButton.click()</code> &#x2014; line 175</li>
+<li><code>pageManager.paymentPage.clickSubmitPaymentIfCardOnFile()</code> &#x2014; line 178</li>
+<li><code>page .waitForURL([callback: see source], { timeout: 30_000 })</code> &#x2014; line 183</li>
+<li><code>pageManager.paymentPage.continueAccountInformationIfPresent(options.guestEmail)</code> &#x2014; line 193</li>
+<li><code>pageManager.paymentPage.selectPlanIfPickerPresent(plan)</code> &#x2014; line 196</li>
+<li><code>pageManager.paymentPage.clickSubmitPaymentIfCardOnFile()</code> &#x2014; line 198</li>
+<li><code>pageManager.paymentPage.fillBillingDetailsPaymentFrame()</code> &#x2014; line 203</li>
+<li><code>pageManager.paymentPage.makePayment(cardNumber, expDate, cvc)</code> &#x2014; line 206</li>
+<li><code>pageManager.paymentPage.acceptCheckoutConsentIfPresent()</code> &#x2014; line 207</li>
+<li><code>expect(submit).toBeEnabled({ timeout: 60_000 })</code> &#x2014; line 209</li>
+<li><code>submit.click({ force: true })</code> &#x2014; line 213</li>
+<li><code>pageManager.paymentPage.makePayment(cardNumber, expDate, cvc)</code> &#x2014; line 218</li>
+<li><code>expect(submit).toBeEnabled({ timeout: 60_000 })</code> &#x2014; line 221</li>
+<li><code>pageManager.paymentPage.clickOnSubmitPaymentButton()</code> &#x2014; line 224</li>
+</ul>
+<h3 id="selectarchivedplan">selectArchivedPlan</h3>
+<p><code>selectArchivedPlan(pageManager: PageManager, plan: ArchivedPlan)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L229">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:229</a></p>
+<ul>
+<li><code>pageManager.planAndPricesPage.clickOnPlanButton(buyNow)</code> &#x2014; line 245</li>
+</ul>
+<h3 id="buyarchivedplanwithdeclinedcard">buyArchivedPlanWithDeclinedCard</h3>
+<p><code>buyArchivedPlanWithDeclinedCard(page: Page, pageManager: PageManager, options: Omit&lt;BuyArchivedOptions, &apos;submitAsEntered&apos;&gt; = {})</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L252">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:252</a></p>
+<ul>
+<li><code>buyOnArchivedPlanAndPricing(page, pageManager, { ...options, cardNumber: stripe_invalid_card.cardNumber, expDate: stripe_invalid_card.expDate, cvc: stripe_invalid_card.cvc, submitAsEntered: true, })</code> &#x2014; line 257</li>
+</ul>
+<h3 id="registercffuser">registerCffUser</h3>
+<p><code>registerCffUser(page: Page, pageManager: PageManager, email: string)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L266">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:266</a></p>
+<ul>
+<li><code>completeDpfThroughPlanSelection(page, pageManager, email)</code> &#x2014; line 271</li>
+<li><code>pageManager.mainPage.locator.mainDPFHeaderLogo.click()</code> &#x2014; line 275</li>
+<li><code>expect(page).toHaveURL(/qr-codes/, { timeout: 60_000 })</code> &#x2014; line 276</li>
+<li><code>expect( pageManager.myQrCodesPage.locator.signUpSuccessImage ).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 277</li>
+<li><code>pageManager.qrCreationPage.locator.closeDownloadModalButton.click()</code> &#x2014; line 282</li>
+</ul>
+<h3 id="registernsfuser">registerNsfUser</h3>
+<p><code>registerNsfUser(page: Page, pageManager: PageManager, email: string)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L286">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:286</a></p>
+<ul>
+<li><code>pageManager.qrCreationPage.websiteQrCreate()</code> &#x2014; line 292</li>
+<li><code>pageManager.qrCreationPage.clickStep2NextButton()</code> &#x2014; line 293</li>
+<li><code>pageManager.qrCreationPage.clickStep3CreateButton()</code> &#x2014; line 294</li>
+<li><code>expect(emailInput).toBeVisible({ timeout: 60_000 })</code> &#x2014; line 296</li>
+<li><code>emailInput.fill(email)</code> &#x2014; line 297</li>
+<li><code>pageManager.qrCreationPage.locator.dpfFormSubmitButton.click()</code> &#x2014; line 298</li>
+<li><code>expect(page).toHaveURL(/qr-codes/, { timeout: 60_000 })</code> &#x2014; line 299</li>
+<li><code>pageManager.qrCreationPage.locator.closeDownloadModalButton.click()</code> &#x2014; line 302</li>
+</ul>
+<h2 id="tests-archived-plan-pricing-helpers-stripe-customer-asserts-ts">tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts</h2>
+<p><a data-source="tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts" href="../../sources/tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts.html#L1">tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts:1</a></p>
+<ul>
+<li><code>{ expect, type Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { StripeAPI, StripeCustomerRecord, }</code> &#x2190; <a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L1">api/StripeApi.ts:1</a></li>
+<li><code>type { ApiManager }</code> &#x2190; <a data-source="base/APIManager.ts" href="../../sources/base/APIManager.ts.html#L1">base/APIManager.ts:1</a></li>
+<li><code>{ ANNUALLY_PLAN_ID, MONTHLY_PLAN_ID, QUARTERLY_PLAN_ID, }</code> &#x2190; <a data-source="tests/data/constants/subscription-check-ids.ts" href="../../sources/tests/data/constants/subscription-check-ids.ts.html#L1">tests/data/constants/subscription-check-ids.ts:1</a></li>
+</ul>
+<h3 id="assertsinglestripecustomerafterarchivedpurchase">assertSingleStripeCustomerAfterArchivedPurchase</h3>
+<p><code>assertSingleStripeCustomerAfterArchivedPurchase(options: { apiManager: ApiManager realEmail: string tempEmail: string expectedPlan?: ArchivedPlan expectCharge?: boolean expectedFunnel?: string })</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts" href="../../sources/tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts.html#L25">tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts:25</a></p>
+<p>One live Stripe customer on the buyer email after Archived P&amp;P; none on the QR temp email.</p>
+<ul>
+<li><code>expect .poll( async () =&gt; (await stripe.listCustomersByEmail(realEmail)).length, { timeout: 60_000, message: &#x2032;Expected exactly one Stripe customer for &#x24;{realEmail}&#x2032;, } ) .toBe(1)</code> &#x2014; line 42</li>
+<li><code>expect( byEmail, &#x2032;Expected one Stripe customer for &#x24;{realEmail}&#x2032; ).toHaveLength(1)</code> &#x2014; line 63</li>
+<li><code>expect( tempByEmail, &#x2032;QR temp email &#x24;{tempEmail} must not have a Stripe customer (double-customer bug)&#x2032; ).toHaveLength(0)</code> &#x2014; line 67</li>
+<li><code>expectQrTempMatchesAreDeleted(stripe, tempEmail, tempByMetadata)</code> &#x2014; line 71</li>
+<li><code>expect( userEmail.toLowerCase(), &apos;Stripe metadata.user_email must be the real buyer, not the QR temp address&apos; ).not.toBe(tempEmail.toLowerCase())</code> &#x2014; line 79</li>
+<li><code>userEmail.toLowerCase()</code> &#x2014; line 80</li>
+<li><code>tempEmail.toLowerCase()</code> &#x2014; line 82</li>
+<li><code>expect(userEmail.toLowerCase()).toBe(realEmail.toLowerCase())</code> &#x2014; line 84</li>
+<li><code>userEmail.toLowerCase()</code> &#x2014; line 84</li>
+<li><code>realEmail.toLowerCase()</code> &#x2014; line 84</li>
+<li><code>expect( funnel, &#x2032;Expected onboarding_funnel=&#x24;{expectedFunnel} after Archived P&amp;P&#x2032; ).toBe(expectedFunnel)</code> &#x2014; line 88</li>
+<li><code>expect( liveSubs.length, &#x2032;Expected an active or trialing subscription on &#x24;{customer.id}&#x2032; ).toBeGreaterThan(0)</code> &#x2014; line 100</li>
+<li><code>expect( succeeded.length, &#x2032;Expected a successful charge on &#x24;{customer.id}&#x2032; ).toBeGreaterThan(0)</code> &#x2014; line 111</li>
+<li><code>expect(charge.customer).toBe(customer.id)</code> &#x2014; line 117</li>
+<li><code>expect( [actualPlanId, scheduledPlanId], &#x2032;Expected active or scheduled plan &#x24;{expectedId}&#x2032; ).toContain(expectedId)</code> &#x2014; line 126</li>
+<li><code>expect( invoice.customer, &apos;Invoices must reference the single customer&apos; ).toBe(customer.id)</code> &#x2014; line 135</li>
+</ul>
+<h3 id="assertdpffunneloncustomer">assertDpfFunnelOnCustomer</h3>
+<p><code>assertDpfFunnelOnCustomer(apiManager: ApiManager, email: string)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts" href="../../sources/tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts.html#L145">tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts:145</a></p>
+<ul>
+<li><code>expect .poll(async () =&gt; (await stripe.listCustomersByEmail(email)).length, { timeout: 60_000, }) .toBe(1)</code> &#x2014; line 150</li>
+<li><code>expect(customers).toHaveLength(1)</code> &#x2014; line 156</li>
+<li><code>expect(String(metadata.onboarding_funnel ?? &apos;&apos;)).toBe(ONBOARDING_FUNNEL_DPF)</code> &#x2014; line 158</li>
+</ul>
+<h3 id="assertnoduplicateortempcustomer">assertNoDuplicateOrTempCustomer</h3>
+<p><code>assertNoDuplicateOrTempCustomer(options: { apiManager: ApiManager realEmail: string tempEmail: string allowIncompleteCustomer?: boolean })</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts" href="../../sources/tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts.html#L163">tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts:163</a></p>
+<p>Temp email must not be charged. An unpaid Payment Element customer is checkout setup, not a duplicate.</p>
+<ul>
+<li><code>expect( tempByEmail.length, &#x2032;At most one unpaid Stripe customer for QR temp email &#x24;{tempEmail}&#x2032; ).toBeLessThanOrEqual(1)</code> &#x2014; line 181</li>
+<li><code>expect( succeeded, &#x2032;QR temp email &#x24;{tempEmail} must not have a succeeded charge&#x2032; ).toBe(0)</code> &#x2014; line 196</li>
+<li><code>expect(real.length).toBeLessThanOrEqual(1)</code> &#x2014; line 203</li>
+<li><code>expect( succeeded, &apos;Abandoned/declined checkout must not charge&apos; ).toBe(0)</code> &#x2014; line 206</li>
+</ul>
+<h3 id="countsucceededcharges">countSucceededCharges</h3>
+<p><code>countSucceededCharges(stripe: StripeAPI, customerId: string, limit = 20)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts" href="../../sources/tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts.html#L213">tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts:213</a></p>
+<h3 id="waitforthankyou">waitForThankYou</h3>
+<p><code>waitForThankYou(page: Page)</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts" href="../../sources/tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts.html#L225">tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts:225</a></p>
+<ul>
+<li><code>expect( congratulations.or(dashboard).or(downloadModal).first() ).toBeVisible({ timeout: 90_000 })</code> &#x2014; line 234</li>
+<li><code>dashboard.click()</code> &#x2014; line 239</li>
+<li><code>expect(page).toHaveURL(/qr-codes|login|register/, { timeout: 60_000, })</code> &#x2014; line 241</li>
+</ul>
+<h3 id="expectqrtempmatchesaredeleted">expectQrTempMatchesAreDeleted</h3>
+<p><code>expectQrTempMatchesAreDeleted(stripe: StripeAPI, tempEmail: string, matches: StripeCustomerRecord[])</code></p>
+<p><a data-source="tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts" href="../../sources/tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts.html#L250">tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts:250</a></p>
+<p>Customer Search can lag; fail only if retrieve() still has the temp email on a live customer.</p>
+<ul>
+<li><code>tempEmail.toLowerCase()</code> &#x2014; line 256</li>
+<li><code>(metadata.user_email ?? metadata.email ?? &apos;&apos;) .toLowerCase()</code> &#x2014; line 262</li>
+<li><code>expect( liveIds, &#x2032;QR temp email &#x24;{tempEmail} still has a live Stripe customer &#x2014; double-customer bug. Live ids: &#x24;{liveIds.join(&apos;, &apos;) || &apos;none&apos;}&#x2032; ).toEqual([])</code> &#x2014; line 268</li>
+</ul>
+<h2 id="tests-data-constants-email-test-data-ts">tests/data/constants/email_test_data.ts</h2>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L1">tests/data/constants/email_test_data.ts:1</a></p>
+<ul>
+<li><code>{ PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>type { Product }</code> &#x2190; <a data-source="base/Product.ts" href="../../sources/base/Product.ts.html#L1">base/Product.ts:1</a></li>
+</ul>
+<h3 id="getpasswordchangedlocalizedes">getPasswordChangedLocalizedEs</h3>
+<p><code>getPasswordChangedLocalizedEs(product: Product)</code></p>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L63">tests/data/constants/email_test_data.ts:63</a></p>
+<p>ES copy for Password Changed localization tests (product from fixture).</p>
+<h3 id="originfrombaseurl">originFromBaseURL</h3>
+<p><code>originFromBaseURL(baseURL: string)</code></p>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L99">tests/data/constants/email_test_data.ts:99</a></p>
+<p>Origin (protocol + host, no path) of a product <code>baseURL</code>. Must not throw: an invalid URL would prevent Playwright from discovering email specs (they disappear from --ui / --list).</p>
+<h3 id="productbaseurl">productBaseURL</h3>
+<p><code>productBaseURL(product: Product)</code></p>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L109">tests/data/constants/email_test_data.ts:109</a></p>
+<h3 id="resolveemaillinkorigin">resolveEmailLinkOrigin</h3>
+<p><code>resolveEmailLinkOrigin(product: Product = &apos;oqg&apos;)</code></p>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L119">tests/data/constants/email_test_data.ts:119</a></p>
+<p>Origin (protocol + host, no path) for the active product. Prefers product <code>*_BASE_URL</code> (Playwright product projects), then BASE_URL.</p>
+<h3 id="getexpectedemailsubjects">getExpectedEmailSubjects</h3>
+<p><code>getExpectedEmailSubjects(product: Product)</code></p>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L149">tests/data/constants/email_test_data.ts:149</a></p>
+<p>Subjects observed in Mailpit for the core transactional templates. Welcome (19) is brand-specific: OQG stays &quot;Welcome to Online-QR-Generator&quot;; QCI / QGA use their own product name. OTP (24) embeds a one-time code &#x2014; match prefix + digits only.</p>
+<h3 id="getexpectedfrenchemailsubjects">getExpectedFrenchEmailSubjects</h3>
+<p><code>getExpectedFrenchEmailSubjects(product: Product)</code></p>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L198">tests/data/constants/email_test_data.ts:198</a></p>
+<p>French subjects observed in Mailpit when the user registers / acts under the <code>/fr</code> locale (account language follows the URL locale). Welcome (19) uses the same brand token as the English subject.</p>
+<h3 id="baseexpectedemaillinksfor">baseExpectedEmailLinksFor</h3>
+<p><code>baseExpectedEmailLinksFor(product: Product)</code></p>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L225">tests/data/constants/email_test_data.ts:225</a></p>
+<p>Email CTA hrefs for the active product (EN locale).</p>
+<ul>
+<li><code>resolveEmailLinkOrigin(product)</code> &#x2014; line 226</li>
+</ul>
+<h3 id="expectedemaillinksforlocale">expectedEmailLinksForLocale</h3>
+<p><code>expectedEmailLinksForLocale(locale: string, product: Product = &apos;oqg&apos;)</code></p>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L245">tests/data/constants/email_test_data.ts:245</a></p>
+<p>Email footer / CTA hrefs for a given UI locale (e.g. <code>es</code> &#x2192; <code>/es/faq</code>).</p>
+<ul>
+<li><code>expectedEmailLinksFromBaseURL(productBaseURL(product) || process.env.BASE_URL || DEFAULT_EMAIL_LINK_ORIGIN, locale)</code> &#x2014; line 249</li>
+</ul>
+<h3 id="expectedemaillinksfrombaseurl">expectedEmailLinksFromBaseURL</h3>
+<p><code>expectedEmailLinksFromBaseURL(baseURL: string, locale = &apos;en&apos;)</code></p>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L262">tests/data/constants/email_test_data.ts:262</a></p>
+<p>Email footer / CTA hrefs for a product project&apos;s <code>env.baseURL</code>. Use this in migrated suites instead of <code>baseExpectedEmailLinks</code>, which still follows process <code>BASE_URL</code> for unmigrated specs.</p>
+<h3 id="emailinjectionpayload">emailInjectionPayload</h3>
+<p><code>emailInjectionPayload(marker: string)</code></p>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L371">tests/data/constants/email_test_data.ts:371</a></p>
+<p>XSS / HTML injection payload for security checks against transactional emails. <code>marker</code> must be unique per run so Mailpit asserts can tell our payload apart from template chrome.</p>
+<h3 id="findsensitivedataleaks">findSensitiveDataLeaks</h3>
+<p><code>findSensitiveDataLeaks(body: string)</code></p>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L428">tests/data/constants/email_test_data.ts:428</a></p>
+<p>Returns the names of secret patterns that match <code>body</code>.</p>
+<h3 id="getpasswordchangedlogoalt">getPasswordChangedLogoAlt</h3>
+<p><code>getPasswordChangedLogoAlt(product: Product)</code></p>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../../sources/tests/data/constants/email_test_data.ts.html#L437">tests/data/constants/email_test_data.ts:437</a></p>
+<p>EN logo alt for template #22 for the active product.</p>
+<h2 id="tests-data-event-field-validation-data-ts">tests/data/event-field-validation.data.ts</h2>
+<p><a data-source="tests/data/event-field-validation.data.ts" href="../../sources/tests/data/event-field-validation.data.ts.html#L1">tests/data/event-field-validation.data.ts:1</a></p>
+<ul>
+<li><code>masterDataset</code> &#x2190; <a data-source="tests/data/qr-field-validation-master-dataset.json" href="../../sources/tests/data/qr-field-validation-master-dataset.json.html#L1">tests/data/qr-field-validation-master-dataset.json:1</a></li>
+</ul>
+<h3 id="deterministictext">deterministicText</h3>
+<p><code>deterministicText(length: number)</code></p>
+<p><a data-source="tests/data/event-field-validation.data.ts" href="../../sources/tests/data/event-field-validation.data.ts.html#L63">tests/data/event-field-validation.data.ts:63</a></p>
+<h3 id="materializeinput">materializeInput</h3>
+<p><code>materializeInput(targetField: EventValidationField, scenario: SourceScenario)</code></p>
+<p><a data-source="tests/data/event-field-validation.data.ts" href="../../sources/tests/data/event-field-validation.data.ts.html#L68">tests/data/event-field-validation.data.ts:68</a></p>
+<h3 id="adaptscenario">adaptScenario</h3>
+<p><code>adaptScenario(targetField: EventValidationField, sourceFieldId: string, source: EventValidationScenario[&apos;source&apos;], scenario: SourceScenario)</code></p>
+<p><a data-source="tests/data/event-field-validation.data.ts" href="../../sources/tests/data/event-field-validation.data.ts.html#L87">tests/data/event-field-validation.data.ts:87</a></p>
+<h3 id="scenariosforfield">scenariosForField</h3>
+<p><code>scenariosForField(targetField: EventValidationField)</code></p>
+<p><a data-source="tests/data/event-field-validation.data.ts" href="../../sources/tests/data/event-field-validation.data.ts.html#L107">tests/data/event-field-validation.data.ts:107</a></p>
+<h2 id="tests-data-eventsecuritypayloads-data-ts">tests/data/eventSecurityPayloads.data.ts</h2>
+<p><a data-source="tests/data/eventSecurityPayloads.data.ts" href="../../sources/tests/data/eventSecurityPayloads.data.ts.html#L1">tests/data/eventSecurityPayloads.data.ts:1</a></p>
+<h3 id="maliciousupload">maliciousUpload</h3>
+<p><code>maliciousUpload(kind: MaliciousUploadKind)</code></p>
+<p><a data-source="tests/data/eventSecurityPayloads.data.ts" href="../../sources/tests/data/eventSecurityPayloads.data.ts.html#L104">tests/data/eventSecurityPayloads.data.ts:104</a></p>
+<p>In-memory malicious file for <code>locator.setInputFiles(...)</code> &#x2014; no fixture file needed. Covers MIME/extension mismatch, empty file, path-traversal names, and an oversized payload.</p>
+<h2 id="tests-data-helpers-dpf-navigation-ts">tests/data/helpers/dpf-navigation.ts</h2>
+<p><a data-source="tests/data/helpers/dpf-navigation.ts" href="../../sources/tests/data/helpers/dpf-navigation.ts.html#L1">tests/data/helpers/dpf-navigation.ts:1</a></p>
+<ul>
+<li><code>{ expect, Page }</code> &#x2190; <code>@playwright/test</code></li>
+</ul>
+<h3 id="openmainpagedpf">openMainPageDpf</h3>
+<p><code>openMainPageDpf(page: Page)</code></p>
+<p><a data-source="tests/data/helpers/dpf-navigation.ts" href="../../sources/tests/data/helpers/dpf-navigation.ts.html#L3">tests/data/helpers/dpf-navigation.ts:3</a></p>
+<ul>
+<li><code>page.goto(path)</code> &#x2014; line 5</li>
+<li><code>expect(page).toHaveURL(path)</code> &#x2014; line 6</li>
+</ul>
+<h3 id="openmainpagensf">openMainPageNsf</h3>
+<p><code>openMainPageNsf(page: Page)</code></p>
+<p><a data-source="tests/data/helpers/dpf-navigation.ts" href="../../sources/tests/data/helpers/dpf-navigation.ts.html#L10">tests/data/helpers/dpf-navigation.ts:10</a></p>
+<ul>
+<li><code>page.goto(path)</code> &#x2014; line 12</li>
+<li><code>expect(page).toHaveURL(path)</code> &#x2014; line 13</li>
+</ul>
+<h2 id="tests-data-pricing-integrity-official-stripe-prices-data-ts">tests/data/pricing-integrity/official-stripe-prices.data.ts</h2>
+<p><a data-source="tests/data/pricing-integrity/official-stripe-prices.data.ts" href="../../sources/tests/data/pricing-integrity/official-stripe-prices.data.ts.html#L1">tests/data/pricing-integrity/official-stripe-prices.data.ts:1</a></p>
+<ul>
+<li><code>{ readFileSync }</code> &#x2190; <code>node:fs</code></li>
+<li><code>{ resolve }</code> &#x2190; <code>node:path</code></li>
+<li><code>{ parse }</code> &#x2190; <code>csv-parse/sync</code></li>
+</ul>
+<h3 id="parseamount">parseAmount</h3>
+<p><code>parseAmount(value: string | undefined)</code></p>
+<p><a data-source="tests/data/pricing-integrity/official-stripe-prices.data.ts" href="../../sources/tests/data/pricing-integrity/official-stripe-prices.data.ts.html#L23">tests/data/pricing-integrity/official-stripe-prices.data.ts:23</a></p>
+<h3 id="requiredamount">requiredAmount</h3>
+<p><code>requiredAmount(row: string[], index: number, currency: string, label: string)</code></p>
+<p><a data-source="tests/data/pricing-integrity/official-stripe-prices.data.ts" href="../../sources/tests/data/pricing-integrity/official-stripe-prices.data.ts.html#L30">tests/data/pricing-integrity/official-stripe-prices.data.ts:30</a></p>
+<h3 id="asprice">asPrice</h3>
+<p><code>asPrice(value: number | null)</code></p>
+<p><a data-source="tests/data/pricing-integrity/official-stripe-prices.data.ts" href="../../sources/tests/data/pricing-integrity/official-stripe-prices.data.ts.html#L45">tests/data/pricing-integrity/official-stripe-prices.data.ts:45</a></p>
+<h3 id="roundmoney">roundMoney</h3>
+<p><code>roundMoney(amount: number)</code></p>
+<p><a data-source="tests/data/pricing-integrity/official-stripe-prices.data.ts" href="../../sources/tests/data/pricing-integrity/official-stripe-prices.data.ts.html#L50">tests/data/pricing-integrity/official-stripe-prices.data.ts:50</a></p>
+<p>2 dp after &#xf7; so sheet fallbacks never store float noise as plan value.</p>
+<h3 id="mapcurrencyrow">mapCurrencyRow</h3>
+<p><code>mapCurrencyRow(row: string[])</code></p>
+<p><a data-source="tests/data/pricing-integrity/official-stripe-prices.data.ts" href="../../sources/tests/data/pricing-integrity/official-stripe-prices.data.ts.html#L54">tests/data/pricing-integrity/official-stripe-prices.data.ts:54</a></p>
+<ul>
+<li><code>row[3].trim().toLowerCase()</code> &#x2014; line 55</li>
+</ul>
+<h3 id="comparablepricevalues">comparablePriceValues</h3>
+<p><code>comparablePriceValues(prices: OfficialPlanPrice[])</code></p>
+<p><a data-source="tests/data/pricing-integrity/official-stripe-prices.data.ts" href="../../sources/tests/data/pricing-integrity/official-stripe-prices.data.ts.html#L121">tests/data/pricing-integrity/official-stripe-prices.data.ts:121</a></p>
+<h3 id="parseofficialstripepricesheet">parseOfficialStripePriceSheet</h3>
+<p><code>parseOfficialStripePriceSheet(csv = readFileSync(CSV_PATH, &apos;utf8&apos;))</code></p>
+<p><a data-source="tests/data/pricing-integrity/official-stripe-prices.data.ts" href="../../sources/tests/data/pricing-integrity/official-stripe-prices.data.ts.html#L143">tests/data/pricing-integrity/official-stripe-prices.data.ts:143</a></p>
+<p>Parses the second, ISO-code-based table from the client-maintained sheet. Duplicate country rows sharing USD/EUR are accepted only when prices agree.</p>
+<ul>
+<li><code>row[3]?.trim().toLowerCase()</code> &#x2014; line 165</li>
+<li><code>currency.toUpperCase()</code> &#x2014; line 179</li>
+</ul>
+<h2 id="tests-data-pricing-data-ts">tests/data/pricing.data.ts</h2>
+<p><a data-source="tests/data/pricing.data.ts" href="../../sources/tests/data/pricing.data.ts.html#L1">tests/data/pricing.data.ts:1</a></p>
+<ul>
+<li><code>trialPriceData</code> &#x2190; <a data-source="tests/data/pricing-integrity/stripe_prices_trial.json" href="../../sources/tests/data/pricing-integrity/stripe_prices_trial.json.html#L1">tests/data/pricing-integrity/stripe_prices_trial.json:1</a></li>
+<li><code>{ OFFICIAL_STRIPE_PRICE_SHEET }</code> &#x2190; <a data-source="tests/data/pricing-integrity/official-stripe-prices.data.ts" href="../../sources/tests/data/pricing-integrity/official-stripe-prices.data.ts.html#L1">tests/data/pricing-integrity/official-stripe-prices.data.ts:1</a></li>
+</ul>
+<h3 id="issupportedpricingcurrency">isSupportedPricingCurrency</h3>
+<p><code>isSupportedPricingCurrency(currency: string)</code></p>
+<p><a data-source="tests/data/pricing.data.ts" href="../../sources/tests/data/pricing.data.ts.html#L52">tests/data/pricing.data.ts:52</a></p>
+<ul>
+<li><code>currency.toLowerCase()</code> &#x2014; line 53</li>
+</ul>
+<h3 id="hasofficialfixedpricing">hasOfficialFixedPricing</h3>
+<p><code>hasOfficialFixedPricing(currency: string)</code></p>
+<p><a data-source="tests/data/pricing.data.ts" href="../../sources/tests/data/pricing.data.ts.html#L57">tests/data/pricing.data.ts:57</a></p>
+<p>Currencies with one canonical numeric price in the official client sheet.</p>
+<ul>
+<li><code>currency.toLowerCase()</code> &#x2014; line 60</li>
+</ul>
+<h3 id="tostripeamount">toStripeAmount</h3>
+<p><code>toStripeAmount(currency: string, amount: number)</code></p>
+<p><a data-source="tests/data/pricing.data.ts" href="../../sources/tests/data/pricing.data.ts.html#L85">tests/data/pricing.data.ts:85</a></p>
+<p>Converts a JSON/DB major-unit amount to Stripe&apos;s integer minor units.</p>
+<ul>
+<li><code>currency.toLowerCase()</code> &#x2014; line 86</li>
+</ul>
+<h3 id="getplanprice">getPlanPrice</h3>
+<p><code>getPlanPrice(planId: PlanId, currency: string)</code></p>
+<p><a data-source="tests/data/pricing.data.ts" href="../../sources/tests/data/pricing.data.ts.html#L93">tests/data/pricing.data.ts:93</a></p>
+<p>Finds the expected row and fails clearly if the pricing source is incomplete.</p>
+<h3 id="expectedcouponamount">expectedCouponAmount</h3>
+<p><code>expectedCouponAmount(price: PlanPrice, discount: PromoDiscount)</code></p>
+<p><a data-source="tests/data/pricing.data.ts" href="../../sources/tests/data/pricing.data.ts.html#L106">tests/data/pricing.data.ts:106</a></p>
+<p>Expected Stripe Promo: full charge minus chargeable promo price.</p>
+<h2 id="tests-data-striperetrystrategy-data-ts">tests/data/stripeRetryStrategy.data.ts</h2>
+<p><a data-source="tests/data/stripeRetryStrategy.data.ts" href="../../sources/tests/data/stripeRetryStrategy.data.ts.html#L1">tests/data/stripeRetryStrategy.data.ts:1</a></p>
+<ul>
+<li><code>{ MONTHLY_PLAN_ID, QUARTERLY_PLAN_ID, ANNUALLY_PLAN_ID, }</code> &#x2190; <a data-source="tests/data/constants/subscription-check-ids.ts" href="../../sources/tests/data/constants/subscription-check-ids.ts.html#L1">tests/data/constants/subscription-check-ids.ts:1</a></li>
+<li><code>{ getExpiryDateOneYearAhead }</code> &#x2190; <a data-source="utils/test_data_generators.ts" href="../../sources/utils/test_data_generators.ts.html#L1">utils/test_data_generators.ts:1</a></li>
+</ul>
+<h3 id="tominorunits">toMinorUnits</h3>
+<p><code>toMinorUnits(listPrice: number, zeroDecimal = false)</code></p>
+<p><a data-source="tests/data/stripeRetryStrategy.data.ts" href="../../sources/tests/data/stripeRetryStrategy.data.ts.html#L123">tests/data/stripeRetryStrategy.data.ts:123</a></p>
+<p>Converts a major-unit list price to Stripe minor units. Zero-decimal currencies (JPY) stay as whole numbers.</p>
+<h3 id="discountedchargecents">discountedChargeCents</h3>
+<p><code>discountedChargeCents(fullCents: number, percentOff: 50 | 70 | 90)</code></p>
+<p><a data-source="tests/data/stripeRetryStrategy.data.ts" href="../../sources/tests/data/stripeRetryStrategy.data.ts.html#L134">tests/data/stripeRetryStrategy.data.ts:134</a></p>
+<p>Discounted charge for retry attempts #6/#7/#8.</p>
+<p>Stripe rounds the discount up, so the remaining charge is floored. Verified on dev for USD monthly (&#x24;49.95): 2497 / 1498 / 499 &#x2014; i.e. &#x24;24.97, not &#x24;24.98.</p>
+<h3 id="getplanmultiplier">getPlanMultiplier</h3>
+<p><code>getPlanMultiplier(key?: FullPricePlanKey)</code></p>
+<p><a data-source="tests/data/stripeRetryStrategy.data.ts" href="../../sources/tests/data/stripeRetryStrategy.data.ts.html#L141">tests/data/stripeRetryStrategy.data.ts:141</a></p>
+<h3 id="retryladderamountscents">retryLadderAmountsCents</h3>
+<p><code>retryLadderAmountsCents(listPrice: number, zeroDecimal = false, key?: FullPricePlanKey)</code></p>
+<p><a data-source="tests/data/stripeRetryStrategy.data.ts" href="../../sources/tests/data/stripeRetryStrategy.data.ts.html#L148">tests/data/stripeRetryStrategy.data.ts:148</a></p>
+<p>Expected charge amounts (minor units) for attempts #1..#8.</p>
+<ul>
+<li><code>getPlanMultiplier(key)</code> &#x2014; line 153</li>
+</ul>
+<h3 id="amountdueafterattempt">amountDueAfterAttempt</h3>
+<p><code>amountDueAfterAttempt(ladder: number[], attempt: number)</code></p>
+<p><a data-source="tests/data/stripeRetryStrategy.data.ts" href="../../sources/tests/data/stripeRetryStrategy.data.ts.html#L180">tests/data/stripeRetryStrategy.data.ts:180</a></p>
+<p><code>invoice.amount_due</code> as observed once attempt <code>attempt</code> has failed. The next tier&apos;s discount is applied immediately, so this is the amount attempt <code>attempt + 1</code> will charge; it stays at the #8 amount once the ladder ends.</p>
+<h3 id="retryscenariotitle">retryScenarioTitle</h3>
+<p><code>retryScenarioTitle(scenarioId: string, description: string)</code></p>
+<p><a data-source="tests/data/stripeRetryStrategy.data.ts" href="../../sources/tests/data/stripeRetryStrategy.data.ts.html#L194">tests/data/stripeRetryStrategy.data.ts:194</a></p>
+<p>Builds a Playwright test title and matching qase.title() from a merged scenario id and the description in <code>implementation_plan.md</code>.</p>
+<h2 id="tests-data-trial-translations-data-ts">tests/data/trial-translations.data.ts</h2>
+<p><a data-source="tests/data/trial-translations.data.ts" href="../../sources/tests/data/trial-translations.data.ts.html#L1">tests/data/trial-translations.data.ts:1</a></p>
+<h3 id="formatdaysremaining">formatDaysRemaining</h3>
+<p><code>formatDaysRemaining(template: string, days: number)</code></p>
+<p><a data-source="tests/data/trial-translations.data.ts" href="../../sources/tests/data/trial-translations.data.ts.html#L43">tests/data/trial-translations.data.ts:43</a></p>
+<p>Strip the PHP <code>&lt;span&gt;%s&lt;/span&gt;</code> markup into plain UI text for a day count.</p>
+<h3 id="dpfcreateentryforlocale">dpfCreateEntryForLocale</h3>
+<p><code>dpfCreateEntryForLocale(locale: TrialLocaleCode)</code></p>
+<p><a data-source="tests/data/trial-translations.data.ts" href="../../sources/tests/data/trial-translations.data.ts.html#L55">tests/data/trial-translations.data.ts:55</a></p>
+<p>DPF create entry under a locale path (sets guest language before pay).</p>
+<h2 id="tests-helpers-create-from-folder-helper-ts">tests/helpers/create-from-folder.helper.ts</h2>
+<p><a data-source="tests/helpers/create-from-folder.helper.ts" href="../../sources/tests/helpers/create-from-folder.helper.ts.html#L1">tests/helpers/create-from-folder.helper.ts:1</a></p>
+<ul>
+<li><code>{ expect }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+</ul>
+<h3 id="waitforloggedincreatecompletion">waitForLoggedInCreateCompletion</h3>
+<p><code>waitForLoggedInCreateCompletion(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/create-from-folder.helper.ts" href="../../sources/tests/helpers/create-from-folder.helper.ts.html#L9">tests/helpers/create-from-folder.helper.ts:9</a></p>
+<p>Waits until a logged-in create has completed, then dismisses its download modal. This can follow either a mouse click or keyboard activation.</p>
+<ul>
+<li><code>expect .poll( async () =&gt; Boolean((await isModalOpen()) || /\/qr-codes/.test(page.url())), { timeout: 20_000 } ) .toBe(true)</code> &#x2014; line 18</li>
+<li><code>expect .poll(async () =&gt; Boolean(await isModalOpen()), { timeout: 8_000 }) .toBe(true)</code> &#x2014; line 26</li>
+<li><code>pageManager.myQrCodesPage.dismissDownloadModal()</code> &#x2014; line 31</li>
+</ul>
+<h3 id="finishloggedincreate">finishLoggedInCreate</h3>
+<p><code>finishLoggedInCreate(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/create-from-folder.helper.ts" href="../../sources/tests/helpers/create-from-folder.helper.ts.html#L34">tests/helpers/create-from-folder.helper.ts:34</a></p>
+<ul>
+<li><code>pageManager.qrCreationPage.clickStep2NextButton()</code> &#x2014; line 37</li>
+<li><code>pageManager.qrCreationPage.clickStep3CreateButton()</code> &#x2014; line 38</li>
+</ul>
+<h3 id="createqrfromcurrentfolder">createQrFromCurrentFolder</h3>
+<p><code>createQrFromCurrentFolder(pageManager: PageManager, configureQr: () =&gt; Promise&lt;string&gt;)</code></p>
+<p><a data-source="tests/helpers/create-from-folder.helper.ts" href="../../sources/tests/helpers/create-from-folder.helper.ts.html#L46">tests/helpers/create-from-folder.helper.ts:46</a></p>
+<p>Creates any supported QR type from the currently open folder. Product and QR-type setup stays in the supplied Page Object callback.</p>
+<ul>
+<li><code>pageManager.myQrCodesPage.dismissDownloadModal()</code> &#x2014; line 50</li>
+<li><code>pageManager.myQrCodesPage.locator.createQrHeaderButton.click()</code> &#x2014; line 51</li>
+<li><code>configureQr()</code> &#x2014; line 52</li>
+</ul>
+<h3 id="createwebsiteqrfromcurrentfolder">createWebsiteQrFromCurrentFolder</h3>
+<p><code>createWebsiteQrFromCurrentFolder(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/create-from-folder.helper.ts" href="../../sources/tests/helpers/create-from-folder.helper.ts.html#L63">tests/helpers/create-from-folder.helper.ts:63</a></p>
+<p>Creates a Website QR from the My QR Codes header create button (use after openFolder() so project_id is in the URL).</p>
+<ul>
+<li><code>createQrFromCurrentFolder(pageManager, [callback: see source])</code> &#x2014; line 66</li>
+<li><code>pageManager.qrCreationPage.websiteQrCreate()</code> &#x2014; line 67</li>
+</ul>
+<h3 id="createwebsiteqratroot">createWebsiteQrAtRoot</h3>
+<p><code>createWebsiteQrAtRoot(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/create-from-folder.helper.ts" href="../../sources/tests/helpers/create-from-folder.helper.ts.html#L74">tests/helpers/create-from-folder.helper.ts:74</a></p>
+<p>Creates a Website QR from the My QR Codes root (no folder open).</p>
+<ul>
+<li><code>pageManager.myQrCodesPage.goToRootMyQrCodes()</code> &#x2014; line 77</li>
+<li><code>createWebsiteQrFromCurrentFolder(pageManager)</code> &#x2014; line 78</li>
+</ul>
+<h3 id="createfolderandwebsiteqr">createFolderAndWebsiteQr</h3>
+<p><code>createFolderAndWebsiteQr(pageManager: PageManager, folderName?: string)</code></p>
+<p><a data-source="tests/helpers/create-from-folder.helper.ts" href="../../sources/tests/helpers/create-from-folder.helper.ts.html#L84">tests/helpers/create-from-folder.helper.ts:84</a></p>
+<p>Creates a folder, opens it, creates a Website QR inside, returns names.</p>
+<ul>
+<li><code>pageManager.myQrCodesPage.fakeString(8)</code> &#x2014; line 88</li>
+<li><code>pageManager.myQrCodesPage.goToRootMyQrCodes()</code> &#x2014; line 89</li>
+<li><code>pageManager.myQrCodesPage.createNewFolder(name)</code> &#x2014; line 90</li>
+<li><code>pageManager.myQrCodesPage.openFolder(name)</code> &#x2014; line 91</li>
+<li><code>createWebsiteQrFromCurrentFolder(pageManager)</code> &#x2014; line 92</li>
+</ul>
+<h3 id="expectqrinfolder">expectQrInFolder</h3>
+<p><code>expectQrInFolder(pageManager: PageManager, folderName: string, qrName: string)</code></p>
+<p><a data-source="tests/helpers/create-from-folder.helper.ts" href="../../sources/tests/helpers/create-from-folder.helper.ts.html#L99">tests/helpers/create-from-folder.helper.ts:99</a></p>
+<p>Re-opens a folder from root and asserts the QR is listed inside.</p>
+<ul>
+<li><code>pageManager.myQrCodesPage.goToRootMyQrCodes()</code> &#x2014; line 104</li>
+<li><code>pageManager.myQrCodesPage.openFolder(folderName)</code> &#x2014; line 105</li>
+<li><code>pageManager.myQrCodesPage.expectQrVisibleInList(qrName)</code> &#x2014; line 106</li>
+</ul>
+<h3 id="expectqrnotinfolder">expectQrNotInFolder</h3>
+<p><code>expectQrNotInFolder(pageManager: PageManager, folderName: string, qrName: string)</code></p>
+<p><a data-source="tests/helpers/create-from-folder.helper.ts" href="../../sources/tests/helpers/create-from-folder.helper.ts.html#L112">tests/helpers/create-from-folder.helper.ts:112</a></p>
+<p>Asserts the QR is not listed when viewing the given folder.</p>
+<ul>
+<li><code>pageManager.myQrCodesPage.goToRootMyQrCodes()</code> &#x2014; line 117</li>
+<li><code>pageManager.myQrCodesPage.openFolder(folderName)</code> &#x2014; line 118</li>
+<li><code>pageManager.myQrCodesPage.expectQrNotVisibleInList(qrName)</code> &#x2014; line 119</li>
+</ul>
+<h3 id="expectfoldercount">expectFolderCount</h3>
+<p><code>expectFolderCount(pageManager: PageManager, folderName: string, expected: number)</code></p>
+<p><a data-source="tests/helpers/create-from-folder.helper.ts" href="../../sources/tests/helpers/create-from-folder.helper.ts.html#L125">tests/helpers/create-from-folder.helper.ts:125</a></p>
+<p>Asserts a folder file counter equals the expected number.</p>
+<ul>
+<li><code>pageManager.myQrCodesPage.goToRootMyQrCodes()</code> &#x2014; line 130</li>
+<li><code>expect( pageManager.myQrCodesPage.getFolderFileCountLocator(folderName) ).toContainText(String(expected), { timeout: 15_000 })</code> &#x2014; line 131</li>
+<li><code>pageManager.myQrCodesPage.getFolderFileCountLocator(folderName)</code> &#x2014; line 132</li>
+</ul>
+<h2 id="tests-helpers-discountlinkhelpers-ts">tests/helpers/discountLinkHelpers.ts</h2>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L1">tests/helpers/discountLinkHelpers.ts:1</a></p>
+<ul>
+<li><code>{ expect, Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>type { AdminAuth }</code> &#x2190; <a data-source="fixtures/baseFixture.ts" href="../../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></li>
+<li><code>{ stripeVisaValidCard }</code> &#x2190; <a data-source="tests/data/payments_test_data.ts" href="../../sources/tests/data/payments_test_data.ts.html#L1">tests/data/payments_test_data.ts:1</a></li>
+</ul>
+<h3 id="isstripetestmodeconfigured">isStripeTestModeConfigured</h3>
+<p><code>isStripeTestModeConfigured()</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L10">tests/helpers/discountLinkHelpers.ts:10</a></p>
+<p>True when Stripe TEST mode is configured (never live keys).</p>
+<h3 id="stripetestskipreason">stripeTestSkipReason</h3>
+<p><code>stripeTestSkipReason()</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L15">tests/helpers/discountLinkHelpers.ts:15</a></p>
+<h3 id="completestripetestcheckout">completeStripeTestCheckout</h3>
+<p><code>completeStripeTestCheckout(pageManager: PageManager, plan: &apos;Monthly&apos; | &apos;Annually&apos; | &apos;Quarterly&apos; = &apos;Monthly&apos;)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L30">tests/helpers/discountLinkHelpers.ts:30</a></p>
+<p>Click Buy Now for a plan, fill the Stripe TEST card, and wait for thank-you. Requires <code>STRIPE_SECRET_KEY=sk_test_&#x2026;</code>.</p>
+<ul>
+<li><code>pageManager.planAndPricesPage.clickOnPlanButton(buyButton)</code> &#x2014; line 41</li>
+<li><code>page .waitForURL([callback: see source], { timeout: 30_000 })</code> &#x2014; line 43</li>
+<li><code>pageManager.paymentPage.selectPlanIfPickerPresent(plan)</code> &#x2014; line 54</li>
+<li><code>pageManager.paymentPage.fillBillingDetailsPaymentFrame()</code> &#x2014; line 55</li>
+<li><code>pageManager.paymentPage.makePayment(stripeVisaValidCard.cardNumber, stripeVisaValidCard.expDate, stripeVisaValidCard.cvc)</code> &#x2014; line 56</li>
+<li><code>pageManager.paymentPage.clickOnSubmitPaymentButton()</code> &#x2014; line 61</li>
+<li><code>expect( pageManager.paymentPage.locator.thankYouForYourPurchaseButton ).toBeVisible({ timeout: 90_000 })</code> &#x2014; line 62</li>
+<li><code>pageManager.paymentPage.locator.thankYouForYourPurchaseButton.click()</code> &#x2014; line 65</li>
+</ul>
+<h3 id="loginasadmin">loginAsAdmin</h3>
+<p><code>loginAsAdmin(page: Page, pageManager: PageManager, admin: AdminAuth)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L73">tests/helpers/discountLinkHelpers.ts:73</a></p>
+<p>Logs into the selected product&apos;s admin using credentials from the <code>adminAuth</code> fixture. Navigation is relative so Playwright <code>baseURL</code> (oqg-chromium / qci-chromium) stays the source of truth.</p>
+<ul>
+<li><code>page.goto(&apos;/login&apos;, { waitUntil: &apos;domcontentloaded&apos; })</code> &#x2014; line 78</li>
+<li><code>pageManager.loginPage.logIn(admin.email, admin.password)</code> &#x2014; line 79</li>
+<li><code>page.waitForURL(&apos;**/qr-codes**&apos;)</code> &#x2014; line 80</li>
+<li><code>page.goto(&apos;/admin/users&apos;, { waitUntil: &apos;domcontentloaded&apos; })</code> &#x2014; line 81</li>
+<li><code>pageManager.adminPage.locator.globalSearchInput.waitFor({ state: &apos;visible&apos;, })</code> &#x2014; line 82</li>
+</ul>
+<h3 id="loginasuser">loginAsUser</h3>
+<p><code>loginAsUser(page: Page, pageManager: PageManager, user: Creds)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L87">tests/helpers/discountLinkHelpers.ts:87</a></p>
+<ul>
+<li><code>page.goto(&apos;/login&apos;, { waitUntil: &apos;domcontentloaded&apos; })</code> &#x2014; line 92</li>
+<li><code>pageManager.loginPage.logIn(user.email, user.password)</code> &#x2014; line 93</li>
+<li><code>page.waitForURL(&apos;**/qr-codes**&apos;)</code> &#x2014; line 94</li>
+</ul>
+<h3 id="admingeneratelinks">adminGenerateLinks</h3>
+<p><code>adminGenerateLinks(page: Page, pageManager: PageManager, email: string, types: LinkType[], admin: AdminAuth)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L98">tests/helpers/discountLinkHelpers.ts:98</a></p>
+<p>Self-contained admin session: log in, generate the given link types, log out.</p>
+<ul>
+<li><code>pageManager.adminPage.findUserByEmail(email)</code> &#x2014; line 106</li>
+<li><code>pageManager.adminPage.openGenerateDiscountModal()</code> &#x2014; line 108</li>
+<li><code>pageManager.adminPage.pickDiscountLink(type)</code> &#x2014; line 111</li>
+<li><code>pageManager.adminPage.logout()</code> &#x2014; line 114</li>
+</ul>
+<h3 id="craftlink">craftLink</h3>
+<p><code>craftLink(base: string, remove: string[], set: Record&lt;string, string&gt;)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L119">tests/helpers/discountLinkHelpers.ts:119</a></p>
+<p>Rewrite a discount URL: remove some params, set others (for tampering).</p>
+<ul>
+<li><code>url.toString()</code> &#x2014; line 127</li>
+</ul>
+<h3 id="referralkey">referralKey</h3>
+<p><code>referralKey(url: string)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L134">tests/helpers/discountLinkHelpers.ts:134</a></p>
+<p>Binding token in a discount URL. OQG uses <code>referral_key</code>; QCI redirects to <code>/plan?id=&#x2026;</code>.</p>
+<h3 id="bindkeyparamname">bindKeyParamName</h3>
+<p><code>bindKeyParamName(url: string)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L140">tests/helpers/discountLinkHelpers.ts:140</a></p>
+<p>Query name that binds the link to a user on this URL.</p>
+<h3 id="promoparamname">promoParamName</h3>
+<p><code>promoParamName(url: string)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L147">tests/helpers/discountLinkHelpers.ts:147</a></p>
+<p>Query name for the 70% promo on this URL.</p>
+<h3 id="craft70offheist">craft70OffHeist</h3>
+<p><code>craft70OffHeist(base: string)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L154">tests/helpers/discountLinkHelpers.ts:154</a></p>
+<p>Turn a granted discount URL into a 70% heist (OQG <code>promo_code</code> / QCI <code>promo</code>).</p>
+<h3 id="withlocalepath">withLocalePath</h3>
+<p><code>withLocalePath(url: string, locale: string)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L178">tests/helpers/discountLinkHelpers.ts:178</a></p>
+<p>Rewrite a discount URL onto a locale prefix (<code>/es/plans-and-prices?&#x2026;</code>). Dev often omits <code>/en/</code>; this still inserts the requested locale.</p>
+<ul>
+<li><code>parsed.toString()</code> &#x2014; line 185</li>
+</ul>
+<h3 id="expect70discountapplied">expect70DiscountApplied</h3>
+<p><code>expect70DiscountApplied(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L192">tests/helpers/discountLinkHelpers.ts:192</a></p>
+<p>The 70%-OFF discount is applied &#x2014; the &quot;Special Deal&quot; offer is shown. Currency-agnostic: 1899 is about WHO the link works for, not amounts.</p>
+<ul>
+<li><code>expect( pageManager.planAndPricesPage.locator.specialDealBanner.first() ).toBeVisible()</code> &#x2014; line 196</li>
+<li><code>pageManager.planAndPricesPage.locator.specialDealBanner.first()</code> &#x2014; line 197</li>
+</ul>
+<h3 id="expect70discountplanamounts">expect70DiscountPlanAmounts</h3>
+<p><code>expect70DiscountPlanAmounts(page: Page, pageManager: PageManager, prices: { monthly: string annually: string quarterly: string } = USD_70_OFF_PRICES)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L205">tests/helpers/discountLinkHelpers.ts:205</a></p>
+<p>70% Special Deal is applied AND Monthly / Annually / Quarterly show the expected discounted amounts (DOM order from default-pricing.spec).</p>
+<ul>
+<li><code>expect(promoPrices.nth(0)).toContainText(prices.monthly)</code> &#x2014; line 216</li>
+<li><code>expect(promoPrices.nth(1)).toContainText(prices.annually)</code> &#x2014; line 217</li>
+<li><code>expect(promoPrices.nth(2)).toContainText(prices.quarterly)</code> &#x2014; line 218</li>
+<li><code>expect( pageManager.planAndPricesPage.locator.monthlyBuyNowButton.first() ).toBeVisible()</code> &#x2014; line 219</li>
+<li><code>pageManager.planAndPricesPage.locator.monthlyBuyNowButton.first()</code> &#x2014; line 220</li>
+<li><code>expect( pageManager.planAndPricesPage.locator.annuallyBuyNowButton.first() ).toBeVisible()</code> &#x2014; line 222</li>
+<li><code>pageManager.planAndPricesPage.locator.annuallyBuyNowButton.first()</code> &#x2014; line 223</li>
+<li><code>expect( pageManager.planAndPricesPage.locator.quarterlyBuyNowButton.first() ).toBeVisible()</code> &#x2014; line 225</li>
+<li><code>pageManager.planAndPricesPage.locator.quarterlyBuyNowButton.first()</code> &#x2014; line 226</li>
+</ul>
+<h3 id="expectno70discount">expectNo70Discount</h3>
+<p><code>expectNo70Discount(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L231">tests/helpers/discountLinkHelpers.ts:231</a></p>
+<p>The 70%-OFF discount is NOT applied &#x2014; no &quot;Special Deal&quot; banner.</p>
+<ul>
+<li><code>expect( pageManager.planAndPricesPage.locator.specialDealBanner.first() ).toBeHidden()</code> &#x2014; line 235</li>
+<li><code>pageManager.planAndPricesPage.locator.specialDealBanner.first()</code> &#x2014; line 236</li>
+</ul>
+<h3 id="expectdiscountcardapplied">expectDiscountCardApplied</h3>
+<p><code>expectDiscountCardApplied(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L241">tests/helpers/discountLinkHelpers.ts:241</a></p>
+<p>A single-card discount page (&#x24;8.99 / &#x24;50) is shown (vs the normal plans page).</p>
+<ul>
+<li><code>expect( pageManager.planAndPricesPage.locator.discountPlanHeader ).toBeVisible()</code> &#x2014; line 245</li>
+</ul>
+<h3 id="expectnormalplanspricing">expectNormalPlansPricing</h3>
+<p><code>expectNormalPlansPricing(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L254">tests/helpers/discountLinkHelpers.ts:254</a></p>
+<p>Standard / default Plans &amp; Pricing UI &#x2014; multi-card prices present and no 70% Special Deal banner. Prefer this over URL-only checks.</p>
+<ul>
+<li><code>expect( pageManager.planAndPricesPage.locator.plansPricingHeader ).toBeVisible()</code> &#x2014; line 259</li>
+<li><code>expect( pageManager.planAndPricesPage.locator.mainPriceHeadings.first() ).toBeVisible()</code> &#x2014; line 262</li>
+<li><code>pageManager.planAndPricesPage.locator.mainPriceHeadings.first()</code> &#x2014; line 263</li>
+</ul>
+<h3 id="expectloggedoutdiscountlinkcontract">expectLoggedOutDiscountLinkContract</h3>
+<p><code>expectLoggedOutDiscountLinkContract(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/discountLinkHelpers.ts" href="../../sources/tests/helpers/discountLinkHelpers.ts.html#L272">tests/helpers/discountLinkHelpers.ts:272</a></p>
+<p>Logged-out contract for an admin discount link (OQG3-1899-TC03): either the login form, or normal Plans &amp; Pricing without a discount. Rejects the weak &quot;any page&quot; case by requiring one of these two UI states.</p>
+<ul>
+<li><code>pageManager.planAndPricesPage.locator.specialDealBanner.first()</code> &#x2014; line 278</li>
+<li><code>expect(loginEmail).toBeVisible()</code> &#x2014; line 291</li>
+<li><code>expect( pageManager.loginPage.locator.logInConfirmButton ).toBeVisible()</code> &#x2014; line 292</li>
+<li><code>expect(specialDeal).toBeHidden()</code> &#x2014; line 299</li>
+<li><code>expect(mainPrice).toBeVisible()</code> &#x2014; line 300</li>
+</ul>
+<h2 id="tests-helpers-dpf-fx-url-parameter-helper-ts">tests/helpers/dpf-fx-url-parameter.helper.ts</h2>
+<p><a data-source="tests/helpers/dpf-fx-url-parameter.helper.ts" href="../../sources/tests/helpers/dpf-fx-url-parameter.helper.ts.html#L1">tests/helpers/dpf-fx-url-parameter.helper.ts:1</a></p>
+<ul>
+<li><code>{ expect, type Locator, type Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>AxeBuilder</code> &#x2190; <code>@axe-core/playwright</code></li>
+</ul>
+<h3 id="expectvalidnormalcontent">expectValidNormalContent</h3>
+<p><code>expectValidNormalContent(texts: string[])</code></p>
+<p><a data-source="tests/helpers/dpf-fx-url-parameter.helper.ts" href="../../sources/tests/helpers/dpf-fx-url-parameter.helper.ts.html#L5">tests/helpers/dpf-fx-url-parameter.helper.ts:5</a></p>
+<p>Checks that normal page content is present and has no broken template values.</p>
+<ul>
+<li><code>expect(text).not.toBe(&apos;&apos;)</code> &#x2014; line 10</li>
+<li><code>expect(text).not.toMatch(brokenContentPattern)</code> &#x2014; line 11</li>
+</ul>
+<h3 id="expectfxonlyinexpectedlocations">expectFxOnlyInExpectedLocations</h3>
+<p><code>expectFxOnlyInExpectedLocations(page: Page, expectedLocations: Locator[], fxValue: string)</code></p>
+<p><a data-source="tests/helpers/dpf-fx-url-parameter.helper.ts" href="../../sources/tests/helpers/dpf-fx-url-parameter.helper.ts.html#L19">tests/helpers/dpf-fx-url-parameter.helper.ts:19</a></p>
+<p>Removes the intended fx locations and checks the remaining visible page text.</p>
+<ul>
+<li><code>expect(remainingVisibleText.toLocaleLowerCase()).not.toContain(fxValue.toLocaleLowerCase())</code> &#x2014; line 32</li>
+<li><code>remainingVisibleText.toLocaleLowerCase()</code> &#x2014; line 32</li>
+<li><code>fxValue.toLocaleLowerCase()</code> &#x2014; line 33</li>
+</ul>
+<h3 id="trackdialogs">trackDialogs</h3>
+<p><code>trackDialogs(page: Page)</code></p>
+<p><a data-source="tests/helpers/dpf-fx-url-parameter.helper.ts" href="../../sources/tests/helpers/dpf-fx-url-parameter.helper.ts.html#L38">tests/helpers/dpf-fx-url-parameter.helper.ts:38</a></p>
+<p>Records browser dialogs so security tests can confirm that scripts stay inert.</p>
+<h3 id="expectfxlocationsdonotoverflow">expectFxLocationsDoNotOverflow</h3>
+<p><code>expectFxLocationsDoNotOverflow(fxLocations: Locator[])</code></p>
+<p><a data-source="tests/helpers/dpf-fx-url-parameter.helper.ts" href="../../sources/tests/helpers/dpf-fx-url-parameter.helper.ts.html#L50">tests/helpers/dpf-fx-url-parameter.helper.ts:50</a></p>
+<p>Checks that fx text does not create visible horizontal or vertical overflow.</p>
+<ul>
+<li><code>expect( layout, &#x2032;fx location &#x24;{index + 1} must stay inside its visible boundaries&#x2032; ).toEqual({ pageHasHorizontalOverflow: false, textOverflowsHorizontally: false, textOverflowsVertically: false, })</code> &#x2014; line 71</li>
+</ul>
+<h3 id="expectdocumentlocale">expectDocumentLocale</h3>
+<p><code>expectDocumentLocale(page: Page, locale: string)</code></p>
+<p><a data-source="tests/helpers/dpf-fx-url-parameter.helper.ts" href="../../sources/tests/helpers/dpf-fx-url-parameter.helper.ts.html#L83">tests/helpers/dpf-fx-url-parameter.helper.ts:83</a></p>
+<p>Checks that the document language matches the requested locale.</p>
+<ul>
+<li><code>expect(page.locator(&apos;html&apos;)).toHaveAttribute(&apos;lang&apos;, new RegExp(&#x2032;^&#x24;{locale}(?:-|&#x24;)&#x2032;, &apos;i&apos;))</code> &#x2014; line 87</li>
+</ul>
+<h3 id="expectlocalizedsurroundingtext">expectLocalizedSurroundingText</h3>
+<p><code>expectLocalizedSurroundingText(englishTexts: string[], localizedTexts: string[], fxValue: string)</code></p>
+<p><a data-source="tests/helpers/dpf-fx-url-parameter.helper.ts" href="../../sources/tests/helpers/dpf-fx-url-parameter.helper.ts.html#L94">tests/helpers/dpf-fx-url-parameter.helper.ts:94</a></p>
+<p>Checks that surrounding text is localized while the fx value stays unchanged.</p>
+<ul>
+<li><code>expect(localizedTexts).toHaveLength(englishTexts.length)</code> &#x2014; line 99</li>
+<li><code>expect( localizedTexts.some((text, index) =&gt; text !== englishTexts[index]) ).toBe(true)</code> &#x2014; line 100</li>
+<li><code>expect(text.toLocaleLowerCase()).toContain(fxValue.toLocaleLowerCase())</code> &#x2014; line 105</li>
+<li><code>text.toLocaleLowerCase()</code> &#x2014; line 105</li>
+<li><code>fxValue.toLocaleLowerCase()</code> &#x2014; line 106</li>
+</ul>
+<h3 id="expectfxlocationsusedirection">expectFxLocationsUseDirection</h3>
+<p><code>expectFxLocationsUseDirection(fxLocations: Locator[], direction: &apos;ltr&apos; | &apos;rtl&apos;)</code></p>
+<p><a data-source="tests/helpers/dpf-fx-url-parameter.helper.ts" href="../../sources/tests/helpers/dpf-fx-url-parameter.helper.ts.html#L112">tests/helpers/dpf-fx-url-parameter.helper.ts:112</a></p>
+<p>Checks that every fx location uses the expected text direction.</p>
+<ul>
+<li><code>expect .poll( () =&gt; location.evaluate( (element) =&gt; window.getComputedStyle(element).direction ), { message: &#x2032;fx location &#x24;{index + 1} must use &#x24;{direction} text direction&#x2032;, } ) .toBe(direction)</code> &#x2014; line 117</li>
+</ul>
+<h3 id="expectfxvalueisnotalivelink">expectFxValueIsNotALiveLink</h3>
+<p><code>expectFxValueIsNotALiveLink(fxLocations: Locator[], fxValue: string)</code></p>
+<p><a data-source="tests/helpers/dpf-fx-url-parameter.helper.ts" href="../../sources/tests/helpers/dpf-fx-url-parameter.helper.ts.html#L132">tests/helpers/dpf-fx-url-parameter.helper.ts:132</a></p>
+<p>Checks that unsafe fx values remain text and do not become live links.</p>
+<ul>
+<li><code>value.toLocaleLowerCase()</code> &#x2014; line 144</li>
+<li><code>link.textContent?.toLocaleLowerCase()</code> &#x2014; line 149</li>
+<li><code>expect( linksCreatedFromFx, &#x2032;fx location &#x24;{index + 1} must show the unsafe value as text, not as a link&#x2032; ).toEqual([])</code> &#x2014; line 161</li>
+</ul>
+<h3 id="expectfxlocationshavereadablecontrast">expectFxLocationsHaveReadableContrast</h3>
+<p><code>expectFxLocationsHaveReadableContrast(page: Page, fxLocations: Locator[])</code></p>
+<p><a data-source="tests/helpers/dpf-fx-url-parameter.helper.ts" href="../../sources/tests/helpers/dpf-fx-url-parameter.helper.ts.html#L169">tests/helpers/dpf-fx-url-parameter.helper.ts:169</a></p>
+<p>Checks the color contrast of every fx location with Axe.</p>
+<ul>
+<li><code>locationNumber.toString()</code> &#x2014; line 177</li>
+<li><code>expect(accessibilityScanResults.violations).toEqual([])</code> &#x2014; line 187</li>
+</ul>
+<h2 id="tests-helpers-email-templates-helper-ts">tests/helpers/email-templates.helper.ts</h2>
+<p><a data-source="tests/helpers/email-templates.helper.ts" href="../../sources/tests/helpers/email-templates.helper.ts.html#L1">tests/helpers/email-templates.helper.ts:1</a></p>
+<ul>
+<li><code>{ expect }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>{ test }</code> &#x2190; <a data-source="fixtures/baseFixture.ts" href="../../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></li>
+<li><code>{ REQUIRED_BASIC_INFO_NAME }</code> &#x2190; <a data-source="tests/data/email-templates.data.ts" href="../../sources/tests/data/email-templates.data.ts.html#L1">tests/data/email-templates.data.ts:1</a></li>
+<li><code>{ finishLoggedInCreate }</code> &#x2190; <a data-source="tests/helpers/create-from-folder.helper.ts" href="../../sources/tests/helpers/create-from-folder.helper.ts.html#L1">tests/helpers/create-from-folder.helper.ts:1</a></li>
+</ul>
+<h3 id="openemailtemplateseditor">openEmailTemplatesEditor</h3>
+<p><code>openEmailTemplatesEditor(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/email-templates.helper.ts" href="../../sources/tests/helpers/email-templates.helper.ts.html#L12">tests/helpers/email-templates.helper.ts:12</a></p>
+<p>Opens Email QR Step 2 and waits for the Email Templates section. Skips when the Email type card is not present on the current product.</p>
+<ul>
+<li><code>test.skip(true, &#x2032;Email QR type is not available on product &quot;&#x24;{pageManager.product}&quot;&#x2032;)</code> &#x2014; line 21</li>
+<li><code>pageManager.step1Page.selectEmailQrType()</code> &#x2014; line 26</li>
+<li><code>pageManager.emailTemplatesPage.waitUntilReady()</code> &#x2014; line 27</li>
+</ul>
+<h3 id="fillrequiredtemplatefields">fillRequiredTemplateFields</h3>
+<p><code>fillRequiredTemplateFields(pageManager: PageManager, fields: { title: string; email: string })</code></p>
+<p><a data-source="tests/helpers/email-templates.helper.ts" href="../../sources/tests/helpers/email-templates.helper.ts.html#L34">tests/helpers/email-templates.helper.ts:34</a></p>
+<p>Fills Basic Information name plus the first template&apos;s required title and recipient so unrelated required-field errors stay out of the assertion.</p>
+<ul>
+<li><code>pageManager.emailTemplatesPage.fillRequiredBasicInformation(REQUIRED_BASIC_INFO_NAME)</code> &#x2014; line 38</li>
+<li><code>pageManager.emailTemplatesPage.fillTemplate(0, fields)</code> &#x2014; line 41</li>
+</ul>
+<h3 id="saveemailqr">saveEmailQr</h3>
+<p><code>saveEmailQr(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/email-templates.helper.ts" href="../../sources/tests/helpers/email-templates.helper.ts.html#L47">tests/helpers/email-templates.helper.ts:47</a></p>
+<p>Saves the current Email QR and returns to My QR Codes.</p>
+<h3 id="reopensavedemailqr">reopenSavedEmailQr</h3>
+<p><code>reopenSavedEmailQr(pageManager: PageManager, qrName: string)</code></p>
+<p><a data-source="tests/helpers/email-templates.helper.ts" href="../../sources/tests/helpers/email-templates.helper.ts.html#L54">tests/helpers/email-templates.helper.ts:54</a></p>
+<p>Reopens the named saved QR on Step 2 and waits for Email Templates.</p>
+<ul>
+<li><code>pageManager.myQrCodesPage.openEditForQr(qrName)</code> &#x2014; line 58</li>
+<li><code>pageManager.step2Page.dismissHelpIfOpen()</code> &#x2014; line 59</li>
+<li><code>pageManager.emailTemplatesPage.waitUntilReady()</code> &#x2014; line 60</li>
+</ul>
+<h3 id="expectstillonstep2">expectStillOnStep2</h3>
+<p><code>expectStillOnStep2(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/email-templates.helper.ts" href="../../sources/tests/helpers/email-templates.helper.ts.html#L66">tests/helpers/email-templates.helper.ts:66</a></p>
+<p>Asserts the funnel did not advance to Step 3.</p>
+<ul>
+<li><code>expect(pageManager.emailTemplatesPage.page).toHaveURL(/[?&amp;]step=2(?:&amp;|&#x24;)/)</code> &#x2014; line 69</li>
+</ul>
+<h2 id="tests-helpers-emailqrbasicinfosetup-helper-ts">tests/helpers/emailQrBasicInfoSetup.helper.ts</h2>
+<p><a data-source="tests/helpers/emailQrBasicInfoSetup.helper.ts" href="../../sources/tests/helpers/emailQrBasicInfoSetup.helper.ts.html#L1">tests/helpers/emailQrBasicInfoSetup.helper.ts:1</a></p>
+<ul>
+<li><code>{ expect, type Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+</ul>
+<h3 id="waitforqrbackdrophidden">waitForQrBackdropHidden</h3>
+<p><code>waitForQrBackdropHidden(page: Page)</code></p>
+<p><a data-source="tests/helpers/emailQrBasicInfoSetup.helper.ts" href="../../sources/tests/helpers/emailQrBasicInfoSetup.helper.ts.html#L6">tests/helpers/emailQrBasicInfoSetup.helper.ts:6</a></p>
+<p>Waits for the onboarding backdrop to finish fading (blocks clicks if left open).</p>
+<h3 id="openemailqrstep2">openEmailQrStep2</h3>
+<p><code>openEmailQrStep2(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/emailQrBasicInfoSetup.helper.ts" href="../../sources/tests/helpers/emailQrBasicInfoSetup.helper.ts.html#L18">tests/helpers/emailQrBasicInfoSetup.helper.ts:18</a></p>
+<p>Logged-in Email QR Step 2 entry &#x2014; mirrors Event QR <code>openEventStep2</code>: navigate, select type, dismiss help, wait for a clean interactive surface.</p>
+<ul>
+<li><code>page.goto(&apos;/qr?step=1&apos;)</code> &#x2014; line 22</li>
+<li><code>pageManager.step1Page.selectEmailQrType()</code> &#x2014; line 23</li>
+<li><code>pageManager.step2Page.dismissHelpIfOpen()</code> &#x2014; line 24</li>
+<li><code>waitForQrBackdropHidden(page)</code> &#x2014; line 25</li>
+<li><code>pageManager.step2Page.locator.emailBasicInfoAccordionTrigger.waitFor({ state: &apos;visible&apos; })</code> &#x2014; line 26</li>
+</ul>
+<h3 id="publishemailqrfromstep2">publishEmailQrFromStep2</h3>
+<p><code>publishEmailQrFromStep2(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/emailQrBasicInfoSetup.helper.ts" href="../../sources/tests/helpers/emailQrBasicInfoSetup.helper.ts.html#L32">tests/helpers/emailQrBasicInfoSetup.helper.ts:32</a></p>
+<p>Step 2 &#x2192; Step 3 Create &#x2192; dashboard listing (shared by scanner/edit flows).</p>
+<ul>
+<li><code>pageManager.qrCreationPage.clickStep2NextButton()</code> &#x2014; line 36</li>
+<li><code>expect(page).toHaveURL(/step=3/)</code> &#x2014; line 37</li>
+<li><code>pageManager.qrCreationPage.clickStep3CreateButton()</code> &#x2014; line 38</li>
+<li><code>pageManager.qrCreationPage.closeDownloadModalIfPresent()</code> &#x2014; line 39</li>
+<li><code>waitForQrBackdropHidden(page)</code> &#x2014; line 40</li>
+<li><code>page.goto(&apos;/qr-codes&apos;)</code> &#x2014; line 41</li>
+<li><code>pageManager.myQrCodesPage.locator.createdQrCodesList .first() .waitFor({ state: &apos;visible&apos;, timeout: 30_000 })</code> &#x2014; line 42</li>
+<li><code>pageManager.myQrCodesPage.locator.createdQrCodesList .first()</code> &#x2014; line 42</li>
+</ul>
+<h2 id="tests-helpers-eventlocalsetup-ts">tests/helpers/eventLocalSetup.ts</h2>
+<p><a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L1">tests/helpers/eventLocalSetup.ts:1</a></p>
+<ul>
+<li><code>type { Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>{ ScannedPage }</code> &#x2190; <a data-source="pages/ScannedPage/ScannedPage.ts" href="../../sources/pages/ScannedPage/ScannedPage.ts.html#L1">pages/ScannedPage/ScannedPage.ts:1</a></li>
+</ul>
+<h3 id="dismissstep2helppopup">dismissStep2HelpPopup</h3>
+<p><code>dismissStep2HelpPopup(page: Page)</code></p>
+<p><a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L13">tests/helpers/eventLocalSetup.ts:13</a></p>
+<p>Local Event stack note:</p>
+<ul>
+<li>Event is available on guest /create?step=1</li>
+<li>/register redirects home on this local setup</li>
+<li>Step 2 help popup + temp-user creation temporarily disable Next</li>
+<li>Step 3 requires POST /api/steps/qr/content (and preview on :3000)</li>
+</ul>
+<ul>
+<li><code>candidate.click({ force: true })</code> &#x2014; line 30</li>
+</ul>
+<h3 id="waitforstep2nextenabled">waitForStep2NextEnabled</h3>
+<p><code>waitForStep2NextEnabled(page: Page)</code></p>
+<p><a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L44">tests/helpers/eventLocalSetup.ts:44</a></p>
+<h3 id="selecteventcard">selectEventCard</h3>
+<p><code>selectEventCard(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L64">tests/helpers/eventLocalSetup.ts:64</a></p>
+<p>Clicks the Event card on Step 1 and waits for Step 2.</p>
+<p>A freshly-registered user&apos;s first click can select the card without navigating (onboarding state), so the click is retried once.</p>
+<ul>
+<li><code>eventCard.click()</code> &#x2014; line 70</li>
+<li><code>page .waitForURL(/step=2/, { timeout: 15_000 })</code> &#x2014; line 71</li>
+<li><code>eventCard.click()</code> &#x2014; line 76</li>
+<li><code>page.waitForURL(/step=2/, { timeout: 30_000 })</code> &#x2014; line 77</li>
+</ul>
+<h3 id="openeventcreatestep1">openEventCreateStep1</h3>
+<p><code>openEventCreateStep1(page: Page, pageManager: PageManager, options: { locale?: string } = {})</code></p>
+<p><a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L81">tests/helpers/eventLocalSetup.ts:81</a></p>
+<ul>
+<li><code>page.goto(path)</code> &#x2014; line 88</li>
+<li><code>pageManager.step1Page.locator.eventQrType.waitFor({ state: &apos;visible&apos;, timeout: 30000, })</code> &#x2014; line 89</li>
+</ul>
+<h3 id="openeventstep2">openEventStep2</h3>
+<p><code>openEventStep2(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L95">tests/helpers/eventLocalSetup.ts:95</a></p>
+<ul>
+<li><code>pageManager.step1Page.selectEventQrType()</code> &#x2014; line 100</li>
+</ul>
+<h3 id="loginlocaluser">loginLocalUser</h3>
+<p><code>loginLocalUser(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L113">tests/helpers/eventLocalSetup.ts:113</a></p>
+<p>Logs in with the local persistent account (LOCAL_USER_LOGIN / _PASSWORD).</p>
+<p>Unlike the guest <code>/create</code> funnel, a logged-in session persists the QR to the dashboard, which is what the edit / scan-page / dashboard suites need. <code>authorizeUser()</code> cannot be used on the local stack (<code>/register</code> is disabled), so these suites log in instead.</p>
+<ul>
+<li><code>page.goto(&apos;/login&apos;)</code> &#x2014; line 124</li>
+<li><code>pageManager.loginPage.logIn(login, password)</code> &#x2014; line 125</li>
+<li><code>page.waitForURL(/qr-codes/, { timeout: 30000 })</code> &#x2014; line 126</li>
+</ul>
+<h3 id="opencreatewizardloggedin">openCreateWizardLoggedIn</h3>
+<p><code>openCreateWizardLoggedIn(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L133">tests/helpers/eventLocalSetup.ts:133</a></p>
+<p>Opens the create-QR wizard for a logged-in user via the dashboard sidebar link and waits for Step 1 (the Event card) to be interactive.</p>
+<ul>
+<li><code>page.getByTestId(&apos;sidebar-create-qr-link&apos;).click()</code> &#x2014; line 137</li>
+<li><code>pageManager.step1Page.locator.eventQrType.waitFor({ state: &apos;visible&apos;, timeout: 30000, })</code> &#x2014; line 138</li>
+</ul>
+<h3 id="logincreateandpublisheventqr">loginCreateAndPublishEventQr</h3>
+<p><code>loginCreateAndPublishEventQr(page: Page, pageManager: PageManager, options: { setQrName?: boolean user?: { email: string; password: string } } = {})</code></p>
+<p><a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L170">tests/helpers/eventLocalSetup.ts:170</a></p>
+<p>Registers a fresh user, then creates and publishes an Event QR through the logged-in route.</p>
+<p>Uses <code>authorizeUser()</code> rather than the <code>LOCAL_USER_*</code> account: that account belongs to the local Event stack and its login never advances past the email step on devii. Registration works there, and the logged-in Event flow saves correctly (the DEV-EVENT-STEP3-422 rejection is guest-funnel only).</p>
+<p>Returns the event title *and* the QR name &#x2014; they are different fields, and the dashboard card is keyed on the QR name.</p>
+<ul>
+<li><code>pageManager.registerPage.authorizeUser()</code> &#x2014; line 181</li>
+<li><code>page.goto(&apos;/qr-codes&apos;)</code> &#x2014; line 183</li>
+<li><code>pageManager.menuPage.goToCreateQrCode()</code> &#x2014; line 184</li>
+<li><code>pageManager.step1Page.locator.websiteQrType.waitFor({ state: &apos;visible&apos;, timeout: 30_000, })</code> &#x2014; line 185</li>
+<li><code>pageManager.step2Page .ensureHelpClosedBeforeUpload() .catch([callback: see source])</code> &#x2014; line 193</li>
+<li><code>pageManager.step2Page .ensureHelpClosedBeforeUpload()</code> &#x2014; line 193</li>
+<li><code>pageManager.step2Page.fillEventRequiredFields(title)</code> &#x2014; line 203</li>
+<li><code>pageManager.step2Page.locator.qrCodeNameTab.click()</code> &#x2014; line 208</li>
+<li><code>pageManager.step2Page.locator.qrCodeNameInput.fill(qrName)</code> &#x2014; line 209</li>
+<li><code>pageManager.qrCreationPage.clickStep2NextButton()</code> &#x2014; line 212</li>
+<li><code>page.waitForURL(&apos;**step=3**&apos;, { timeout: 60_000 })</code> &#x2014; line 213</li>
+<li><code>pageManager.qrCreationPage.clickStep3CreateButton()</code> &#x2014; line 214</li>
+<li><code>pageManager.qrCreationPage.closeDownloadModalIfPresent()</code> &#x2014; line 215</li>
+</ul>
+<h3 id="logincreateandediteventqr">loginCreateAndEditEventQr</h3>
+<p><code>loginCreateAndEditEventQr(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L223">tests/helpers/eventLocalSetup.ts:223</a></p>
+<ul>
+<li><code>loginCreateAndPublishEventQr(page, pageManager)</code> &#x2014; line 227</li>
+<li><code>pageManager.myQrCodesPage.locator.qrKebabButton.click()</code> &#x2014; line 228</li>
+<li><code>pageManager.myQrCodesPage.locator.editQrContentButton.click()</code> &#x2014; line 229</li>
+<li><code>page.waitForURL(/\/edit\/.*step=2/, { timeout: 30_000 })</code> &#x2014; line 230</li>
+</ul>
+<h3 id="restoreeventdatesinedit">restoreEventDatesInEdit</h3>
+<p><code>restoreEventDatesInEdit(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L247">tests/helpers/eventLocalSetup.ts:247</a></p>
+<p>Re-enters the Event date/time that edit mode drops.</p>
+<p>OQG3-2533: opening a saved Event QR in edit mode restores the title but leaves start date, start time and end time empty. Save is then blocked *silently* &#x2014; no validation message is shown and no request is sent. Re-typing the date makes the save fire (<code>PUT /api/steps/qr/{uid}/content</code>).</p>
+<p>This is a workaround so edit-mode assertions about *other* fields can run. The defect itself is asserted by its own <code>test.fail()</code> case &#x2014; do not treat this helper as evidence the bug is fixed.</p>
+<ul>
+<li><code>pageManager.step2Page.setEventStartDate()</code> &#x2014; line 250</li>
+<li><code>pageManager.step2Page.setEventEndDate()</code> &#x2014; line 251</li>
+<li><code>pageManager.step2Page.toggleEventAllDay()</code> &#x2014; line 252</li>
+</ul>
+<h3 id="openeventscanpage">openEventScanPage</h3>
+<p><code>openEventScanPage(page: Page, pageManager: PageManager, options: { password?: string } = {})</code></p>
+<p><a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L267">tests/helpers/eventLocalSetup.ts:267</a></p>
+<p>Opens a published QR&apos;s public scan page and returns the ScannedPage plus the URL used.</p>
+<p>The dashboard card&apos;s href is <code>{scan-origin}/p/{uid}</code>. The uid form is built here as well because that is what the transactional-email suite uses for other QR types; the server redirects it to the <code>/p/</code> form.</p>
+<p>The password gate is only submitted when it is actually present: <code>ScannedPage.authorize()</code> fills <code>input#password</code> unconditionally and would hang on an unprotected QR.</p>
+<ul>
+<li><code>scanPage.goto(url, { waitUntil: &apos;domcontentloaded&apos; })</code> &#x2014; line 284</li>
+</ul>
+<h2 id="tests-helpers-folder-file-counter-helper-ts">tests/helpers/folder-file-counter.helper.ts</h2>
+<p><a data-source="tests/helpers/folder-file-counter.helper.ts" href="../../sources/tests/helpers/folder-file-counter.helper.ts.html#L1">tests/helpers/folder-file-counter.helper.ts:1</a></p>
+<ul>
+<li><code>type { Page, Route }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>{ QR_DELETE_POST_ACTION }</code> &#x2190; <a data-source="tests/data/folder-file-counter.data.ts" href="../../sources/tests/data/folder-file-counter.data.ts.html#L1">tests/data/folder-file-counter.data.ts:1</a></li>
+</ul>
+<h3 id="dismissdownloadmodalifvisible">dismissDownloadModalIfVisible</h3>
+<p><code>dismissDownloadModalIfVisible(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/folder-file-counter.helper.ts" href="../../sources/tests/helpers/folder-file-counter.helper.ts.html#L5">tests/helpers/folder-file-counter.helper.ts:5</a></p>
+<ul>
+<li><code>pageManager.qrCreationPage.page.locator(&apos;#DownloadModal.show&apos;)</code> &#x2014; line 8</li>
+<li><code>closeDownloadModalButton.click()</code> &#x2014; line 17</li>
+</ul>
+<h3 id="createwebsiteqrincurrentfolder">createWebsiteQrInCurrentFolder</h3>
+<p><code>createWebsiteQrInCurrentFolder(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/folder-file-counter.helper.ts" href="../../sources/tests/helpers/folder-file-counter.helper.ts.html#L22">tests/helpers/folder-file-counter.helper.ts:22</a></p>
+<ul>
+<li><code>pageManager.myQrCodesPage.startQrCreationFromCurrentView()</code> &#x2014; line 25</li>
+<li><code>pageManager.qrCreationPage.websiteQrCreate()</code> &#x2014; line 26</li>
+<li><code>pageManager.qrCreationPage.clickStep2NextButton()</code> &#x2014; line 27</li>
+<li><code>pageManager.qrCreationPage.clickStep3CreateButton()</code> &#x2014; line 28</li>
+<li><code>pageManager.qrCreationPage.page.waitForURL(&apos;**/qr-codes&apos;)</code> &#x2014; line 31</li>
+</ul>
+<h3 id="createfolderwithwebsiteqrs">createFolderWithWebsiteQrs</h3>
+<p><code>createFolderWithWebsiteQrs(pageManager: PageManager, folderName: string, qrCount: number)</code></p>
+<p><a data-source="tests/helpers/folder-file-counter.helper.ts" href="../../sources/tests/helpers/folder-file-counter.helper.ts.html#L36">tests/helpers/folder-file-counter.helper.ts:36</a></p>
+<ul>
+<li><code>pageManager.myQrCodesPage.createNewFolder(folderName)</code> &#x2014; line 41</li>
+<li><code>pageManager.myQrCodesPage.clickFolder(folderName)</code> &#x2014; line 43</li>
+<li><code>createWebsiteQrInCurrentFolder(pageManager)</code> &#x2014; line 44</li>
+<li><code>pageManager.myQrCodesPage.expectFolderFileCount(folderName, qrCount)</code> &#x2014; line 46</li>
+</ul>
+<h3 id="isqrcodedeleterequest">isQrCodeDeleteRequest</h3>
+<p><code>isQrCodeDeleteRequest(route: Route)</code></p>
+<p><a data-source="tests/helpers/folder-file-counter.helper.ts" href="../../sources/tests/helpers/folder-file-counter.helper.ts.html#L49">tests/helpers/folder-file-counter.helper.ts:49</a></p>
+<h3 id="mockqrdeletefailure">mockQrDeleteFailure</h3>
+<p><code>mockQrDeleteFailure(page: Page, mode: &apos;server-error&apos; | &apos;timeout&apos;)</code></p>
+<p><a data-source="tests/helpers/folder-file-counter.helper.ts" href="../../sources/tests/helpers/folder-file-counter.helper.ts.html#L57">tests/helpers/folder-file-counter.helper.ts:57</a></p>
+<ul>
+<li><code>page.route(&apos;**/api/auth_data**&apos;, [callback: see source])</code> &#x2014; line 61</li>
+<li><code>isQrCodeDeleteRequest(route)</code> &#x2014; line 62</li>
+</ul>
+<h3 id="findqrcoderecords">findQrCodeRecords</h3>
+<p><code>findQrCodeRecords(payload: unknown)</code></p>
+<p><a data-source="tests/helpers/folder-file-counter.helper.ts" href="../../sources/tests/helpers/folder-file-counter.helper.ts.html#L80">tests/helpers/folder-file-counter.helper.ts:80</a></p>
+<ul>
+<li><code>findQrCodeRecords(item)</code> &#x2014; line 94</li>
+<li><code>findQrCodeRecords(value)</code> &#x2014; line 101</li>
+</ul>
+<h2 id="tests-helpers-layoutaudit-ts">tests/helpers/layoutAudit.ts</h2>
+<p><a data-source="tests/helpers/layoutAudit.ts" href="../../sources/tests/helpers/layoutAudit.ts.html#L1">tests/helpers/layoutAudit.ts:1</a></p>
+<ul>
+<li><code>type { Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>* as fs</code> &#x2190; <code>fs</code></li>
+<li><code>* as path</code> &#x2190; <code>path</code></li>
+</ul>
+<h3 id="auditlayout">auditLayout</h3>
+<p><code>auditLayout(page: Page)</code></p>
+<p><a data-source="tests/helpers/layoutAudit.ts" href="../../sources/tests/helpers/layoutAudit.ts.html#L55">tests/helpers/layoutAudit.ts:55</a></p>
+<p>Run a single in-page layout audit at the current viewport.</p>
+<ul>
+<li><code>el.tagName.toLowerCase()</code> &#x2014; line 59</li>
+</ul>
+<h3 id="sweepwidths">sweepWidths</h3>
+<p><code>sweepWidths(page: Page, options: { minWidth: number maxWidth: number step: number height: number onBreak?: (width: number, issues: LayoutIssue[]) =&gt; Promise&lt;void&gt; })</code></p>
+<p><a data-source="tests/helpers/layoutAudit.ts" href="../../sources/tests/helpers/layoutAudit.ts.html#L151">tests/helpers/layoutAudit.ts:151</a></p>
+<p>Sweep widths from min&#x2192;max and collect layout issues. Returns both the raw per-width issues and collapsed contiguous ranges for the report.</p>
+<h3 id="collapsetoranges">collapseToRanges</h3>
+<p><code>collapseToRanges(issues: LayoutIssue[], step: number)</code></p>
+<p><a data-source="tests/helpers/layoutAudit.ts" href="../../sources/tests/helpers/layoutAudit.ts.html#L216">tests/helpers/layoutAudit.ts:216</a></p>
+<p>Collapse consecutive same-fingerprint issues into from&#x2192;to width ranges.</p>
+<h3 id="writesweepreport">writeSweepReport</h3>
+<p><code>writeSweepReport(report: SweepReport, outDir: string)</code></p>
+<p><a data-source="tests/helpers/layoutAudit.ts" href="../../sources/tests/helpers/layoutAudit.ts.html#L276">tests/helpers/layoutAudit.ts:276</a></p>
+<h3 id="printsweepsummary">printSweepSummary</h3>
+<p><code>printSweepSummary(report: SweepReport)</code></p>
+<p><a data-source="tests/helpers/layoutAudit.ts" href="../../sources/tests/helpers/layoutAudit.ts.html#L287">tests/helpers/layoutAudit.ts:287</a></p>
+<h2 id="tests-helpers-long-text-containment-helper-ts">tests/helpers/long-text-containment.helper.ts</h2>
+<p><a data-source="tests/helpers/long-text-containment.helper.ts" href="../../sources/tests/helpers/long-text-containment.helper.ts.html#L1">tests/helpers/long-text-containment.helper.ts:1</a></p>
+<ul>
+<li><code>{ expect, type Locator, type Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>{ LONG_TEXT, MP3_WITH_COVER }</code> &#x2190; <a data-source="tests/data/long-text-containment.data.ts" href="../../sources/tests/data/long-text-containment.data.ts.html#L1">tests/data/long-text-containment.data.ts:1</a></li>
+</ul>
+<h3 id="expecttextcontained">expectTextContained</h3>
+<p><code>expectTextContained(text: Locator)</code></p>
+<p><a data-source="tests/helpers/long-text-containment.helper.ts" href="../../sources/tests/helpers/long-text-containment.helper.ts.html#L25">tests/helpers/long-text-containment.helper.ts:25</a></p>
+<p>Verifies rendered text remains inside its immediate layout container and does not create its own horizontal overflow. The assertion is retried while the preview iframe finishes reflowing.</p>
+<ul>
+<li><code>expect(text).toBeVisible()</code> &#x2014; line 26</li>
+<li><code>expect .poll( async (): Promise&lt;boolean&gt; =&gt; text.evaluate((element) =&gt; { const container = element.parentElement if (!container) { throw new Error(&apos;Preview text has no parent container&apos;) } const elementRect = element.getBoundingClientRect() const containerRect = container.getBoundingClientRect() const htmlElement = element as HTMLElement return ( elementRect.left &gt;= containerRect.left - 1 &amp;&amp; elementRect.right &lt;= containerRect.right + 1 &amp;&amp; htmlElement.scrollWidth &lt;= htmlElement.clientWidth + 1 ) }), { message: &apos;preview text should finish reflowing inside its container&apos;, } ) .toBe(true)</code> &#x2014; line 28</li>
+<li><code>expect(metrics.elementLeft).toBeGreaterThanOrEqual(metrics.containerLeft - 1)</code> &#x2014; line 70</li>
+<li><code>expect(metrics.elementRight).toBeLessThanOrEqual(metrics.containerRight + 1)</code> &#x2014; line 73</li>
+<li><code>expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth + 1)</code> &#x2014; line 74</li>
+</ul>
+<h3 id="fillandassertcontained">fillAndAssertContained</h3>
+<p><code>fillAndAssertContained(input: Locator, preview: Locator, requestedValue: string)</code></p>
+<p><a data-source="tests/helpers/long-text-containment.helper.ts" href="../../sources/tests/helpers/long-text-containment.helper.ts.html#L78">tests/helpers/long-text-containment.helper.ts:78</a></p>
+<p>Fills a field, uses the accepted value (including maxlength truncation), and checks its preview.</p>
+<ul>
+<li><code>input.fill(requestedValue)</code> &#x2014; line 83</li>
+<li><code>expect(acceptedValue.length).toBeGreaterThan(0)</code> &#x2014; line 85</li>
+<li><code>expect(preview).toContainText(acceptedValue)</code> &#x2014; line 86</li>
+</ul>
+<h3 id="openlongtextqrcreation">openLongTextQrCreation</h3>
+<p><code>openLongTextQrCreation(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/long-text-containment.helper.ts" href="../../sources/tests/helpers/long-text-containment.helper.ts.html#L92">tests/helpers/long-text-containment.helper.ts:92</a></p>
+<p>Opens the logged-in QR creation flow used by the OQG3-2222 suites.</p>
+<ul>
+<li><code>page.goto(&apos;/qr-codes&apos;)</code> &#x2014; line 96</li>
+<li><code>pageManager.menuPage.goToCreateQrCode()</code> &#x2014; line 97</li>
+</ul>
+<h3 id="openmp3step2">openMp3Step2</h3>
+<p><code>openMp3Step2(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/long-text-containment.helper.ts" href="../../sources/tests/helpers/long-text-containment.helper.ts.html#L101">tests/helpers/long-text-containment.helper.ts:101</a></p>
+<p>Opens the MP3 content step, retrying the existing selection once if needed.</p>
+<ul>
+<li><code>pageManager.step1Page.selectMp3QrType()</code> &#x2014; line 102</li>
+<li><code>pageManager.step1Page.locator.mp3QrType.click()</code> &#x2014; line 112</li>
+</ul>
+<h3 id="openmp3withcontent">openMp3WithContent</h3>
+<p><code>openMp3WithContent(pageManager: PageManager, title = LONG_TEXT.title, description = LONG_TEXT.description)</code></p>
+<p><a data-source="tests/helpers/long-text-containment.helper.ts" href="../../sources/tests/helpers/long-text-containment.helper.ts.html#L118">tests/helpers/long-text-containment.helper.ts:118</a></p>
+<p>Opens MP3 content, uploads the fixture, and returns the values accepted by the fields.</p>
+<ul>
+<li><code>pageManager.step2Page.uploadMp3(MP3_WITH_COVER)</code> &#x2014; line 124</li>
+<li><code>pageManager.step2Page.checkValidMp3Uploaded()</code> &#x2014; line 125</li>
+</ul>
+<h3 id="publishcurrentmp3">publishCurrentMp3</h3>
+<p><code>publishCurrentMp3(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/long-text-containment.helper.ts" href="../../sources/tests/helpers/long-text-containment.helper.ts.html#L142">tests/helpers/long-text-containment.helper.ts:142</a></p>
+<p>Publishes the MP3 QR code using the existing OQG3-2222 flow.</p>
+<ul>
+<li><code>pageManager.step2Page.setMp3Website()</code> &#x2014; line 145</li>
+<li><code>pageManager.qrCreationPage.setQrCodeFont()</code> &#x2014; line 146</li>
+<li><code>pageManager.qrCreationPage.setWelcomeScreenImage()</code> &#x2014; line 147</li>
+<li><code>pageManager.qrCreationPage.setQrCodePassword()</code> &#x2014; line 148</li>
+<li><code>pageManager.step2Page.setQrCodeName()</code> &#x2014; line 149</li>
+<li><code>pageManager.qrCreationPage.clickStep2NextButton()</code> &#x2014; line 150</li>
+<li><code>pageManager.qrCreationPage.clickStep3CreateButton()</code> &#x2014; line 151</li>
+<li><code>expect( pageManager.qrCreationPage.locator.closeDownloadModalButton ).toBeVisible()</code> &#x2014; line 152</li>
+<li><code>pageManager.qrCreationPage.locator.closeDownloadModalButton.click()</code> &#x2014; line 155</li>
+</ul>
+<h3 id="expectnopageoverflow">expectNoPageOverflow</h3>
+<p><code>expectNoPageOverflow(page: Page)</code></p>
+<p><a data-source="tests/helpers/long-text-containment.helper.ts" href="../../sources/tests/helpers/long-text-containment.helper.ts.html#L159">tests/helpers/long-text-containment.helper.ts:159</a></p>
+<p>Verifies that the document has no horizontal viewport overflow.</p>
+<ul>
+<li><code>expect .poll(() =&gt; page.evaluate( () =&gt; document.documentElement.scrollWidth &lt;= window.innerWidth + 1 ) ) .toBe(true)</code> &#x2014; line 160</li>
+</ul>
+<h3 id="expectpublishedtext">expectPublishedText</h3>
+<p><code>expectPublishedText(page: Page, accepted: AcceptedText)</code></p>
+<p><a data-source="tests/helpers/long-text-containment.helper.ts" href="../../sources/tests/helpers/long-text-containment.helper.ts.html#L172">tests/helpers/long-text-containment.helper.ts:172</a></p>
+<p>Verifies the published title and description match the accepted preview text.</p>
+<ul>
+<li><code>expect(title).toContainText(accepted.title)</code> &#x2014; line 178</li>
+<li><code>expect(description).toContainText(accepted.description)</code> &#x2014; line 179</li>
+</ul>
+<h2 id="tests-helpers-oqg3-2211-helper-ts">tests/helpers/oqg3-2211.helper.ts</h2>
+<p><a data-source="tests/helpers/oqg3-2211.helper.ts" href="../../sources/tests/helpers/oqg3-2211.helper.ts.html#L1">tests/helpers/oqg3-2211.helper.ts:1</a></p>
+<ul>
+<li><code>{ devices, expect, type Locator, type Page, type Route, type TestInfo, }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ qase }</code> &#x2190; <code>playwright-qase-reporter</code></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>{ test }</code> &#x2190; <a data-source="fixtures/baseFixture.ts" href="../../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></li>
+<li><code>{ IMAGE_FIXTURE, MP3_FIXTURE, OQG3_2211_SUITE, PDF_FIXTURE, QR_CODES_URL, YOUTUBE_FIXTURE, WHATSAPP_PHONE_FIXTURE, type Oqg32211QrType, }</code> &#x2190; <a data-source="tests/data/oqg3-2211.data.ts" href="../../sources/tests/data/oqg3-2211.data.ts.html#L1">tests/data/oqg3-2211.data.ts:1</a></li>
+</ul>
+<h3 id="annotateoqg32211">annotateOqg32211</h3>
+<p><code>annotateOqg32211(title: string)</code></p>
+<p><a data-source="tests/helpers/oqg3-2211.helper.ts" href="../../sources/tests/helpers/oqg3-2211.helper.ts.html#L23">tests/helpers/oqg3-2211.helper.ts:23</a></p>
+<ul>
+<li><code>qase.id(0)</code> &#x2014; line 24</li>
+<li><code>qase.title(title)</code> &#x2014; line 25</li>
+<li><code>qase.suite(OQG3_2211_SUITE)</code> &#x2014; line 26</li>
+</ul>
+<h3 id="deviceemulation">deviceEmulation</h3>
+<p><code>deviceEmulation(device: (typeof devices)[string])</code></p>
+<p><a data-source="tests/helpers/oqg3-2211.helper.ts" href="../../sources/tests/helpers/oqg3-2211.helper.ts.html#L34">tests/helpers/oqg3-2211.helper.ts:34</a></p>
+<p>Viewport / UA / touch only. Playwright forbids <code>defaultBrowserType</code> inside a nested <code>test.describe</code> (it forces a new worker). These specs stay on the Chromium product project and emulate the device chrome.</p>
+<h3 id="skipunlessoqgorqcichromium">skipUnlessOqgOrQciChromium</h3>
+<p><code>skipUnlessOqgOrQciChromium(testInfo: TestInfo)</code></p>
+<p><a data-source="tests/helpers/oqg3-2211.helper.ts" href="../../sources/tests/helpers/oqg3-2211.helper.ts.html#L54">tests/helpers/oqg3-2211.helper.ts:54</a></p>
+<p>OQG3-2211 overlay cases run on OQG and QCI Chromium. Viewport is set in the spec via <code>test.use({ ...OQG3_2211_PIXEL_5 })</code> (or left desktop for TC05/TC46). Legacy <code>chromium</code> is OQG (product fixture default).</p>
+<ul>
+<li><code>test.skip(!OQG3_2211_CHROMIUM_PROJECTS.has(testInfo.project.name), &apos;OQG3-2211 runs on chromium / oqg-chromium / qci-chromium; mobile overlay uses Pixel 5 emulation in the spec&apos;)</code> &#x2014; line 55</li>
+</ul>
+<h3 id="skipeventifunavailable">skipEventIfUnavailable</h3>
+<p><code>skipEventIfUnavailable(pageManager: PageManager, qrType: Oqg32211QrType)</code></p>
+<p><a data-source="tests/helpers/oqg3-2211.helper.ts" href="../../sources/tests/helpers/oqg3-2211.helper.ts.html#L61">tests/helpers/oqg3-2211.helper.ts:61</a></p>
+<ul>
+<li><code>test.skip(true, &apos;Event QR is not on this environment (local Event stack only; /register is disabled there so authorizeUser cannot seed it)&apos;)</code> &#x2014; line 68</li>
+</ul>
+<h3 id="openqrtypeonstep2">openQrTypeOnStep2</h3>
+<p><code>openQrTypeOnStep2(page: Page, pageManager: PageManager, qrType: Oqg32211QrType)</code></p>
+<p><a data-source="tests/helpers/oqg3-2211.helper.ts" href="../../sources/tests/helpers/oqg3-2211.helper.ts.html#L75">tests/helpers/oqg3-2211.helper.ts:75</a></p>
+<ul>
+<li><code>test.skip(true, &#x2032;&#x24;{qrType.label} is not available on this product (Step 1 card missing)&#x2032;)</code> &#x2014; line 83</li>
+<li><code>pageManager.step1Page.selectQrTypeAndOpenStep2(card, menuOption)</code> &#x2014; line 91</li>
+<li><code>expect(page).toHaveURL(/[?&amp;]step=2(?:&amp;|&#x24;)/)</code> &#x2014; line 92</li>
+<li><code>test.skip(true, &#x2032;&#x24;{qrType.label} has no Step 2 Preview button on this product&#x2032;)</code> &#x2014; line 99</li>
+<li><code>pageManager.step2Page.dismissHelpIfOpen()</code> &#x2014; line 107</li>
+</ul>
+<h3 id="markerlocator">markerLocator</h3>
+<p><code>markerLocator(pageManager: PageManager, qrType: Oqg32211QrType)</code></p>
+<p><a data-source="tests/helpers/oqg3-2211.helper.ts" href="../../sources/tests/helpers/oqg3-2211.helper.ts.html#L111">tests/helpers/oqg3-2211.helper.ts:111</a></p>
+<h3 id="fillmarker">fillMarker</h3>
+<p><code>fillMarker(pageManager: PageManager, qrType: Oqg32211QrType, value: string)</code></p>
+<p><a data-source="tests/helpers/oqg3-2211.helper.ts" href="../../sources/tests/helpers/oqg3-2211.helper.ts.html#L123">tests/helpers/oqg3-2211.helper.ts:123</a></p>
+<p>Fills the type&apos;s persistence marker without asserting the preview iframe (the iframe is 0&#xd7;0 while the mobile overlay is closed). Returns the value that should still be present after Back/Forward.</p>
+<ul>
+<li><code>pageManager.step2Page.ensureHelpClosedBeforeUpload()</code> &#x2014; line 132</li>
+<li><code>pageManager.step2Page.uploadPdf(PDF_FIXTURE)</code> &#x2014; line 133</li>
+<li><code>loc.pdfFileName.fill(value)</code> &#x2014; line 134</li>
+<li><code>pageManager.step2Page.ensureHelpClosedBeforeUpload()</code> &#x2014; line 137</li>
+<li><code>pageManager.step2Page.uploadImage(IMAGE_FIXTURE)</code> &#x2014; line 138</li>
+<li><code>loc.imageTitleInput.fill(value)</code> &#x2014; line 139</li>
+<li><code>pageManager.step2Page.ensureHelpClosedBeforeUpload()</code> &#x2014; line 142</li>
+<li><code>pageManager.step2Page.uploadMp3(MP3_FIXTURE)</code> &#x2014; line 143</li>
+<li><code>pageManager.step2Page.checkValidMp3Uploaded()</code> &#x2014; line 144</li>
+<li><code>loc.mp3FileTitle.fill(value)</code> &#x2014; line 145</li>
+<li><code>pageManager.step2Page.ensureHelpClosedBeforeUpload()</code> &#x2014; line 148</li>
+<li><code>pageManager.step2Page.addYoutubeVideo(YOUTUBE_FIXTURE)</code> &#x2014; line 149</li>
+<li><code>loc.videoVideoTitleInput.fill(value)</code> &#x2014; line 150</li>
+<li><code>loc.facebookUrlInput.fill(url)</code> &#x2014; line 154</li>
+<li><code>pageManager.step2Page.fillWhatsappPhoneForSubmit(WHATSAPP_PHONE_FIXTURE)</code> &#x2014; line 158</li>
+<li><code>pageManager.step2Page.fillEventRequiredFields(value)</code> &#x2014; line 162</li>
+<li><code>loc.menuDigitalRestaurantNameInput.fill(value)</code> &#x2014; line 165</li>
+<li><code>loc.menuDigitalSectionNameInput.fill(&apos;Section 2211&apos;)</code> &#x2014; line 166</li>
+<li><code>loc.menuDigitalProductNameInput.fill(&apos;Product 2211&apos;)</code> &#x2014; line 167</li>
+<li><code>loc.vcardFirstNameInput.fill(value)</code> &#x2014; line 170</li>
+<li><code>loc.vcardLastNameInput.fill(&apos;Backnav&apos;)</code> &#x2014; line 171</li>
+<li><code>loc[qrType.marker].fill(value)</code> &#x2014; line 174</li>
+</ul>
+<h3 id="gotostep3">goToStep3</h3>
+<p><code>goToStep3(page: Page, pageManager: PageManager, qrType: Oqg32211QrType, markerValue: string)</code></p>
+<p><a data-source="tests/helpers/oqg3-2211.helper.ts" href="../../sources/tests/helpers/oqg3-2211.helper.ts.html#L179">tests/helpers/oqg3-2211.helper.ts:179</a></p>
+<ul>
+<li><code>pageManager.step2Page.dismissHelpIfOpen()</code> &#x2014; line 186</li>
+<li><code>pageManager.qrCreationPage.clickStep2NextButton()</code> &#x2014; line 187</li>
+<li><code>page.waitForURL(&apos;**step=3**&apos;)</code> &#x2014; line 188</li>
+<li><code>pageManager.step2Page.dismissHelpIfOpen()</code> &#x2014; line 189</li>
+</ul>
+<h3 id="seedfunnelfromqrcodes">seedFunnelFromQrCodes</h3>
+<p><code>seedFunnelFromQrCodes(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/oqg3-2211.helper.ts" href="../../sources/tests/helpers/oqg3-2211.helper.ts.html#L193">tests/helpers/oqg3-2211.helper.ts:193</a></p>
+<ul>
+<li><code>page.goto(&apos;/qr-codes&apos;)</code> &#x2014; line 197</li>
+<li><code>expect(page).toHaveURL(QR_CODES_URL)</code> &#x2014; line 198</li>
+<li><code>pageManager.myQrCodesPage.startQrCreationFromCurrentView()</code> &#x2014; line 199</li>
+<li><code>pageManager.step2Page.expectOnStep(1)</code> &#x2014; line 200</li>
+</ul>
+<h3 id="interceptpost">interceptPost</h3>
+<p><code>interceptPost(page: Page, urlGlob: string, handler: (route: Route) =&gt; Promise&lt;void&gt;)</code></p>
+<p><a data-source="tests/helpers/oqg3-2211.helper.ts" href="../../sources/tests/helpers/oqg3-2211.helper.ts.html#L203">tests/helpers/oqg3-2211.helper.ts:203</a></p>
+<ul>
+<li><code>page.route(urlGlob, [callback: see source])</code> &#x2014; line 208</li>
+</ul>
+<h3 id="holdgate">holdGate</h3>
+<p><code>holdGate()</code></p>
+<p><a data-source="tests/helpers/oqg3-2211.helper.ts" href="../../sources/tests/helpers/oqg3-2211.helper.ts.html#L217">tests/helpers/oqg3-2211.helper.ts:217</a></p>
+<h2 id="tests-helpers-pricing-report-helper-ts">tests/helpers/pricing-report.helper.ts</h2>
+<p><a data-source="tests/helpers/pricing-report.helper.ts" href="../../sources/tests/helpers/pricing-report.helper.ts.html#L1">tests/helpers/pricing-report.helper.ts:1</a></p>
+<ul>
+<li><code>type { Page, TestInfo }</code> &#x2190; <code>@playwright/test</code></li>
+</ul>
+<h3 id="display">display</h3>
+<p><code>display(value: unknown)</code></p>
+<p><a data-source="tests/helpers/pricing-report.helper.ts" href="../../sources/tests/helpers/pricing-report.helper.ts.html#L11">tests/helpers/pricing-report.helper.ts:11</a></p>
+<h3 id="reportplanname">reportPlanName</h3>
+<p><code>reportPlanName(mismatch: PricingMismatch)</code></p>
+<p><a data-source="tests/helpers/pricing-report.helper.ts" href="../../sources/tests/helpers/pricing-report.helper.ts.html#L27">tests/helpers/pricing-report.helper.ts:27</a></p>
+<ul>
+<li><code>mismatch.field.toLowerCase()</code> &#x2014; line 30</li>
+</ul>
+<h3 id="reportfieldlabel">reportFieldLabel</h3>
+<p><code>reportFieldLabel(mismatch: PricingMismatch)</code></p>
+<p><a data-source="tests/helpers/pricing-report.helper.ts" href="../../sources/tests/helpers/pricing-report.helper.ts.html#L60">tests/helpers/pricing-report.helper.ts:60</a></p>
+<ul>
+<li><code>mismatch.field.toLowerCase()</code> &#x2014; line 61</li>
+</ul>
+<h3 id="alignedtable">alignedTable</h3>
+<p><code>alignedTable(headers: string[], rows: string[][])</code></p>
+<p><a data-source="tests/helpers/pricing-report.helper.ts" href="../../sources/tests/helpers/pricing-report.helper.ts.html#L72">tests/helpers/pricing-report.helper.ts:72</a></p>
+<h3 id="screenshotattachmentname">screenshotAttachmentName</h3>
+<p><code>screenshotAttachmentName(mismatch: PricingMismatch)</code></p>
+<p><a data-source="tests/helpers/pricing-report.helper.ts" href="../../sources/tests/helpers/pricing-report.helper.ts.html#L88">tests/helpers/pricing-report.helper.ts:88</a></p>
+<ul>
+<li><code>[ mismatch.currency, mismatch.field, &#x2032;exp-&#x24;{mismatch.expected}&#x2032;, &#x2032;act-&#x24;{mismatch.actual}&#x2032;, ] .join(&apos;-&apos;) .toLowerCase()</code> &#x2014; line 89</li>
+</ul>
+<h3 id="attachpricingmismatchscreenshot">attachPricingMismatchScreenshot</h3>
+<p><code>attachPricingMismatchScreenshot(testInfo: TestInfo, page: Page, mismatch: PricingMismatch)</code></p>
+<p><a data-source="tests/helpers/pricing-report.helper.ts" href="../../sources/tests/helpers/pricing-report.helper.ts.html#L108">tests/helpers/pricing-report.helper.ts:108</a></p>
+<p>Attaches a full-page PNG of the failing UI so the HTML report shows the mismatch visually next to the markdown summary.</p>
+<h3 id="formatpricingmismatchreport">formatPricingMismatchReport</h3>
+<p><code>formatPricingMismatchReport(title: string, mismatches: PricingMismatch[], checkedCurrencyCount?: number)</code></p>
+<p><a data-source="tests/helpers/pricing-report.helper.ts" href="../../sources/tests/helpers/pricing-report.helper.ts.html#L131">tests/helpers/pricing-report.helper.ts:131</a></p>
+<p>Builds a compact Markdown audit grouped by plan name and currency.</p>
+<ul>
+<li><code>reportPlanName(mismatch)</code> &#x2014; line 153</li>
+<li><code>reportPlanName(left)</code> &#x2014; line 162</li>
+<li><code>reportPlanName(right)</code> &#x2014; line 162</li>
+<li><code>reportPlanName(mismatch)</code> &#x2014; line 168</li>
+<li><code>mismatch.currency.toUpperCase()</code> &#x2014; line 169</li>
+</ul>
+<h3 id="attachpricingmismatchreport">attachPricingMismatchReport</h3>
+<p><code>attachPricingMismatchReport(testInfo: TestInfo, title: string, mismatches: PricingMismatch[], checkedCurrencyCount?: number)</code></p>
+<p><a data-source="tests/helpers/pricing-report.helper.ts" href="../../sources/tests/helpers/pricing-report.helper.ts.html#L208">tests/helpers/pricing-report.helper.ts:208</a></p>
+<p>Adds the full Markdown audit to the Playwright HTML report.</p>
+<ul>
+<li><code>title .toLowerCase()</code> &#x2014; line 219</li>
+</ul>
+<h2 id="tests-helpers-pricing-ui-helper-ts">tests/helpers/pricing-ui.helper.ts</h2>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L1">tests/helpers/pricing-ui.helper.ts:1</a></p>
+<ul>
+<li><code>{ getPlanPrice, hasOfficialFixedPricing, PLAN_PRICES, STRIPE_PLAN_INTERVAL_MONTHS, type PlanId, type StripePlanId, }</code> &#x2190; <a data-source="tests/data/pricing.data.ts" href="../../sources/tests/data/pricing.data.ts.html#L1">tests/data/pricing.data.ts:1</a></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>type { Page, TestInfo }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ expect }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ attachPricingMismatchScreenshot, type PricingMismatch, }</code> &#x2190; <a data-source="tests/helpers/pricing-report.helper.ts" href="../../sources/tests/helpers/pricing-report.helper.ts.html#L1">tests/helpers/pricing-report.helper.ts:1</a></li>
+</ul>
+<h3 id="fixedpricingcurrencies">fixedPricingCurrencies</h3>
+<p><code>fixedPricingCurrencies()</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L32">tests/helpers/pricing-ui.helper.ts:32</a></p>
+<p>Fixed-price ISO codes from the official sheet (lowercase), sorted.</p>
+<ul>
+<li><code>price.code.toLowerCase()</code> &#x2014; line 37</li>
+</ul>
+<h3 id="formatuiamount">formatUiAmount</h3>
+<p><code>formatUiAmount(amount: number)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L46">tests/helpers/pricing-ui.helper.ts:46</a></p>
+<ul>
+<li><code>amount.toFixed(2)</code> &#x2014; line 51</li>
+<li><code>Math.round(amount) .toString()</code> &#x2014; line 54</li>
+</ul>
+<h3 id="parseuiamount">parseUiAmount</h3>
+<p><code>parseUiAmount(text: string)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L62">tests/helpers/pricing-ui.helper.ts:62</a></p>
+<p>Extracts the first numeric amount from UI text (<code>&#x24; 49.95 /mo</code>, <code>71.88</code>, &#x2026;).</p>
+<h3 id="amountsmatch">amountsMatch</h3>
+<p><code>amountsMatch(expected: number, actual: number, epsilon = 0.005)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L69">tests/helpers/pricing-ui.helper.ts:69</a></p>
+<h3 id="roundmoney-1">roundMoney</h3>
+<p><code>roundMoney(amount: number)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L81">tests/helpers/pricing-ui.helper.ts:81</a></p>
+<p>Round money to 2 dp after &#xd7; / &#xf7; so expected UI amounts never carry IEEE noise (e.g. <code>47.85 / 3</code> &#x2192; <code>15.950000000000001</code>).</p>
+<h3 id="promomonthlyprice">promoMonthlyPrice</h3>
+<p><code>promoMonthlyPrice(periodTotal: number, planId: StripePlanId)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L86">tests/helpers/pricing-ui.helper.ts:86</a></p>
+<p>Period total &#xf7; interval months, rounded like PHP <code>promoMonthlyPrice</code>.</p>
+<h3 id="expectedcardandtotals">expectedCardAndTotals</h3>
+<p><code>expectedCardAndTotals(currency: string)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L100">tests/helpers/pricing-ui.helper.ts:100</a></p>
+<p>Default (non-promo) card monthly rates and checkout period totals.</p>
+<ul>
+<li><code>currency.toLowerCase()</code> &#x2014; line 103</li>
+<li><code>getPlanPrice(planId, code)</code> &#x2014; line 109</li>
+</ul>
+<h3 id="expecteddiscountamounts">expectedDiscountAmounts</h3>
+<p><code>expectedDiscountAmounts(currency: string)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L131">tests/helpers/pricing-ui.helper.ts:131</a></p>
+<p>Admin Generate URL expected amounts. 70% quarterly/annual cards show period-total &#xf7; 3 / &#xf7; 12 (PHP <code>promoMonthlyPrice</code>).</p>
+<ul>
+<li><code>currency.toLowerCase()</code> &#x2014; line 134</li>
+<li><code>getPlanPrice(planId, code)</code> &#x2014; line 140</li>
+<li><code>getPlanPrice(4, code)</code> &#x2014; line 154</li>
+<li><code>getPlanPrice(5, code)</code> &#x2014; line 155</li>
+</ul>
+<h3 id="expectedcancelpromo90monthlyrate">expectedCancelPromo90MonthlyRate</h3>
+<p><code>expectedCancelPromo90MonthlyRate(currency: string, plan: BillingPlanName)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L164">tests/helpers/pricing-ui.helper.ts:164</a></p>
+<p>Cancel-retention 90% offer shows a monthly rate (PHP <code>promoMonthlyPrice</code> with 90). Sheet <code>price_after_90_discount</code> is the <strong>period total</strong> (e.g. Annually 23.88), not the /mo figure. Divide by interval months, then round to 2 dp.</p>
+<ul>
+<li><code>currency.toLowerCase()</code> &#x2014; line 168</li>
+<li><code>getPlanPrice(planId, code)</code> &#x2014; line 170</li>
+</ul>
+<h3 id="pushamountmismatch">pushAmountMismatch</h3>
+<p><code>pushAmountMismatch(mismatches: PricingMismatch[], options: AmountMismatchOptions)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L199">tests/helpers/pricing-ui.helper.ts:199</a></p>
+<p>Records a mismatch when expected &#x2260; parsed UI amount.</p>
+<h3 id="recordamountmismatch">recordAmountMismatch</h3>
+<p><code>recordAmountMismatch(mismatches: PricingMismatch[], options: AmountMismatchOptions, visual?: MismatchVisualCapture)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L216">tests/helpers/pricing-ui.helper.ts:216</a></p>
+<p>Records a mismatch and attaches a full-page PNG when one is found.</p>
+<h3 id="navigatetodashboard">navigateToDashboard</h3>
+<p><code>navigateToDashboard(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L233">tests/helpers/pricing-ui.helper.ts:233</a></p>
+<p>Opens the logged-in dashboard where sidebar Billing is available.</p>
+<ul>
+<li><code>page.goto(&apos;/qr-codes&apos;, { waitUntil: &apos;domcontentloaded&apos; })</code> &#x2014; line 237</li>
+<li><code>pageManager.myQrCodesPage.locator.sidebarBillingButton.waitFor({ state: &apos;visible&apos;, timeout: 60_000, })</code> &#x2014; line 238</li>
+</ul>
+<h3 id="purchasesubscriptionplan">purchaseSubscriptionPlan</h3>
+<p><code>purchaseSubscriptionPlan(page: Page, pageManager: PageManager, plan: BillingPlanName)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L245">tests/helpers/pricing-ui.helper.ts:245</a></p>
+<p>Buys a subscription on <code>/plan</code> with the default Stripe test card.</p>
+<ul>
+<li><code>pageManager.myQrCodesPage.locator.sidebarBillingButton.click()</code> &#x2014; line 251</li>
+<li><code>page.waitForURL(&apos;**/plan**&apos;, { timeout: 60_000 })</code> &#x2014; line 252</li>
+<li><code>pageManager.paymentPage.selectMonthlyPlan()</code> &#x2014; line 255</li>
+<li><code>pageManager.paymentPage.selectAnnualPlan()</code> &#x2014; line 257</li>
+<li><code>pageManager.paymentPage.selectQuarterlyPlan()</code> &#x2014; line 259</li>
+<li><code>pageManager.paymentPage.fillBillingDetailsPaymentFrame()</code> &#x2014; line 262</li>
+<li><code>pageManager.paymentPage.makePayment()</code> &#x2014; line 263</li>
+<li><code>pageManager.paymentPage.locator.submitPaymentButton.click()</code> &#x2014; line 264</li>
+<li><code>pageManager.paymentPage.locator.thankYouForYourPurchaseButton.click({ timeout: 90_000, })</code> &#x2014; line 265</li>
+</ul>
+<h3 id="changeactiveplantoannual">changeActivePlanToAnnual</h3>
+<p><code>changeActivePlanToAnnual(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L271">tests/helpers/pricing-ui.helper.ts:271</a></p>
+<p>Changes an active monthly subscription to annually (required before annual cancel promos).</p>
+<ul>
+<li><code>pageManager.paymentPage.navigateToSubscriptionsWithFallback()</code> &#x2014; line 274</li>
+<li><code>expect(pageManager.paymentPage.locator.changePlanButton).toBeEnabled({ timeout: 30_000, })</code> &#x2014; line 275</li>
+<li><code>pageManager.paymentPage.locator.changePlanButton.click()</code> &#x2014; line 278</li>
+<li><code>pageManager.paymentPage.selectAnnualPlan()</code> &#x2014; line 279</li>
+<li><code>pageManager.paymentPage.locator.updateSubscriptionButton.click()</code> &#x2014; line 280</li>
+<li><code>pageManager.paymentPage.locator.thankYouForYourPurchaseButton.click({ timeout: 90_000, })</code> &#x2014; line 281</li>
+</ul>
+<h3 id="assertcancelpromo90priceforcurrency">assertCancelPromo90PriceForCurrency</h3>
+<p><code>assertCancelPromo90PriceForCurrency(page: Page, pageManager: PageManager, apiManager: { dbApi: { updateUserCurrency: ( email: string, currency: string, paymentCurrency?: string ) =&gt; Promise&lt;void&gt; } }, email: string, currency: string, plan: BillingPlanName, mismatches: PricingMismatch[], testInfo: TestInfo)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L287">tests/helpers/pricing-ui.helper.ts:287</a></p>
+<p>Reads the 90% cancel-retention price for a currency without accepting the offer.</p>
+<ul>
+<li><code>apiManager.dbApi.updateUserCurrency(email, currency, currency)</code> &#x2014; line 305</li>
+<li><code>pageManager.paymentPage.navigateToSubscriptionsWithFallback()</code> &#x2014; line 307</li>
+<li><code>pageManager.paymentPage.openCancelPromo90Offer()</code> &#x2014; line 308</li>
+<li><code>pageManager.paymentPage.readCancelPromo90Price()</code> &#x2014; line 309</li>
+</ul>
+<h3 id="expecteddpf14dayprices">expectedDpf14DayPrices</h3>
+<p><code>expectedDpf14DayPrices(currency: string)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L337">tests/helpers/pricing-ui.helper.ts:337</a></p>
+<p>Official sheet 14-day DPF plan totals shown on <code>/plan-dpf</code>.</p>
+<ul>
+<li><code>currency.toLowerCase()</code> &#x2014; line 338</li>
+<li><code>getPlanPrice(7, code)</code> &#x2014; line 341</li>
+<li><code>getPlanPrice(6, code)</code> &#x2014; line 342</li>
+</ul>
+<h3 id="assertdpf14daypricesforcurrency">assertDpf14DayPricesForCurrency</h3>
+<p><code>assertDpf14DayPricesForCurrency(page: Page, pageManager: PageManager, apiManager: { dbApi: { updateUserCurrency: ( email: string, currency: string, paymentCurrency?: string ) =&gt; Promise&lt;void&gt; } }, email: string, currency: string, mismatches: PricingMismatch[], testInfo: TestInfo)</code></p>
+<p><a data-source="tests/helpers/pricing-ui.helper.ts" href="../../sources/tests/helpers/pricing-ui.helper.ts.html#L350">tests/helpers/pricing-ui.helper.ts:350</a></p>
+<p>Updates the temp DPF user currency in DB, reloads <code>/plan-dpf</code>, and records Limited + Full Access price mismatches against the official sheet.</p>
+<ul>
+<li><code>apiManager.dbApi.updateUserCurrency(email, currency, currency)</code> &#x2014; line 367</li>
+<li><code>page.goto(&apos;/plan-dpf?qr_onboarding=active_dpf&apos;, { waitUntil: &apos;domcontentloaded&apos;, })</code> &#x2014; line 369</li>
+<li><code>expect( pageManager.paymentPage.locator.days14LimitedAccessPrice ).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 372</li>
+<li><code>expect( pageManager.paymentPage.locator.days14FullAccessPrice ).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 375</li>
+<li><code>pageManager.paymentPage.locator.days14LimitedAccessPrice.textContent()</code> &#x2014; line 381</li>
+<li><code>pageManager.paymentPage.locator.days14FullAccessPrice.textContent()</code> &#x2014; line 385</li>
+</ul>
+<h2 id="tests-helpers-seoaudit-ts">tests/helpers/seoAudit.ts</h2>
+<p><a data-source="tests/helpers/seoAudit.ts" href="../../sources/tests/helpers/seoAudit.ts.html#L1">tests/helpers/seoAudit.ts:1</a></p>
+<ul>
+<li><code>type { Page, TestInfo }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ DEFAULT_SEO_CONFIG, SEO_RULES, SeoAuditConfig, }</code> &#x2190; <a data-source="tests/data/seoAuditConfig.data.ts" href="../../sources/tests/data/seoAuditConfig.data.ts.html#L1">tests/data/seoAuditConfig.data.ts:1</a></li>
+</ul>
+<h3 id="collectdomfacts">collectDomFacts</h3>
+<p><code>collectDomFacts(page: Page)</code></p>
+<p><a data-source="tests/helpers/seoAudit.ts" href="../../sources/tests/helpers/seoAudit.ts.html#L64">tests/helpers/seoAudit.ts:64</a></p>
+<ul>
+<li><code>(a.textContent || &apos;&apos;).trim().toLowerCase()</code> &#x2014; line 99</li>
+</ul>
+<h3 id="auditcurrentpage">auditCurrentPage</h3>
+<p><code>auditCurrentPage(page: Page, overrides: Partial&lt;SeoAuditConfig&gt; = {})</code></p>
+<p><a data-source="tests/helpers/seoAudit.ts" href="../../sources/tests/helpers/seoAudit.ts.html#L113">tests/helpers/seoAudit.ts:113</a></p>
+<p>Audits the page currently loaded in <code>page</code>. Assumes navigation + networkidle done.</p>
+<ul>
+<li><code>lang.split(&apos;-&apos;)[0].toLowerCase()</code> &#x2014; line 239</li>
+<li><code>(bytes / 1024).toFixed(1)</code> &#x2014; line 434</li>
+</ul>
+<h3 id="auditurl">auditUrl</h3>
+<p><code>auditUrl(page: Page, url: string, overrides: Partial&lt;SeoAuditConfig&gt; = {})</code></p>
+<p><a data-source="tests/helpers/seoAudit.ts" href="../../sources/tests/helpers/seoAudit.ts.html#L455">tests/helpers/seoAudit.ts:455</a></p>
+<p>Navigates to <code>url</code>, waits for network idle, then audits it.</p>
+<ul>
+<li><code>page.goto(url, { waitUntil: &apos;domcontentloaded&apos; })</code> &#x2014; line 460</li>
+</ul>
+<h3 id="describereport">describeReport</h3>
+<p><code>describeReport(report: SeoReport)</code></p>
+<p><a data-source="tests/helpers/seoAudit.ts" href="../../sources/tests/helpers/seoAudit.ts.html#L466">tests/helpers/seoAudit.ts:466</a></p>
+<p>Human-readable failure list for assertion messages / CI logs.</p>
+<h3 id="attachreport">attachReport</h3>
+<p><code>attachReport(testInfo: TestInfo, report: SeoReport)</code></p>
+<p><a data-source="tests/helpers/seoAudit.ts" href="../../sources/tests/helpers/seoAudit.ts.html#L478">tests/helpers/seoAudit.ts:478</a></p>
+<p>Attaches the structured report to the test as seo-report.json for CI.</p>
+<h2 id="tests-helpers-striperetrystrategy-ts">tests/helpers/stripeRetryStrategy.ts</h2>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L1">tests/helpers/stripeRetryStrategy.ts:1</a></p>
+<ul>
+<li><code>{ expect, Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ StripeAPI }</code> &#x2190; <a data-source="api/StripeApi.ts" href="../../sources/api/StripeApi.ts.html#L1">api/StripeApi.ts:1</a></li>
+<li><code>{ PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>{ RETRY_ATTEMPT_COUNT, RetryPlanFixture, stripeValidCardToken, toMinorUnits, USD_MONTHLY_LADDER_CENTS, retryLadderAmountsCents, getPlanMultiplier, }</code> &#x2190; <a data-source="tests/data/stripeRetryStrategy.data.ts" href="../../sources/tests/data/stripeRetryStrategy.data.ts.html#L1">tests/data/stripeRetryStrategy.data.ts:1</a></li>
+<li><code>{ stripeDeclinedCard }</code> &#x2190; <a data-source="tests/data/payments_test_data.ts" href="../../sources/tests/data/payments_test_data.ts.html#L1">tests/data/payments_test_data.ts:1</a></li>
+</ul>
+<h3 id="createandattachcard">createAndAttachCard</h3>
+<p><code>createAndAttachCard(stripeApi: StripeAPI, customerId: string, cardToken: string)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L61">tests/helpers/stripeRetryStrategy.ts:61</a></p>
+<p>Creates a PaymentMethod from a Stripe test token, attaches it, and makes it the customer&apos;s default. Tokens (not raw PANs) are required &#x2014; see <code>stripeRetryStrategy.data.ts</code>.</p>
+<h3 id="selectplaninui">selectPlanInUi</h3>
+<p><code>selectPlanInUi(pageManager: PageManager, plan: RetryPlanFixture)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L72">tests/helpers/stripeRetryStrategy.ts:72</a></p>
+<ul>
+<li><code>pageManager.paymentPage.selectMonthlyPlan()</code> &#x2014; line 77</li>
+<li><code>pageManager.paymentPage.selectQuarterlyPlan()</code> &#x2014; line 79</li>
+<li><code>pageManager.paymentPage.selectAnnualPlan()</code> &#x2014; line 81</li>
+</ul>
+<h3 id="payforplansubscription">payForPlanSubscription</h3>
+<p><code>payForPlanSubscription(page: Page, pageManager: PageManager, plan: RetryPlanFixture)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L89">tests/helpers/stripeRetryStrategy.ts:89</a></p>
+<p>Step 3 &#x2014; Pay for Monthly / Quarterly / Annually on the billing UI (valid card). Caller must already be logged in (e.g. <code>authorizeUser()</code>).</p>
+<ul>
+<li><code>page.goto(&apos;/plan&apos;)</code> &#x2014; line 94</li>
+<li><code>expect(page).toHaveURL(/plan/)</code> &#x2014; line 95</li>
+<li><code>selectPlanInUi(pageManager, plan)</code> &#x2014; line 97</li>
+<li><code>pageManager.paymentPage.fillBillingDetailsPaymentFrame()</code> &#x2014; line 98</li>
+<li><code>pageManager.paymentPage.makePayment()</code> &#x2014; line 99</li>
+<li><code>pageManager.paymentPage.locator.submitPaymentButton.click()</code> &#x2014; line 100</li>
+<li><code>pageManager.paymentPage.locator.thankYouForYourPurchaseButton.click()</code> &#x2014; line 101</li>
+</ul>
+<h3 id="attachtestclocktocustomer">attachTestClockToCustomer</h3>
+<p><code>attachTestClockToCustomer(stripeApi: StripeAPI, email: string, plan: RetryPlanFixture)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L109">tests/helpers/stripeRetryStrategy.ts:109</a></p>
+<p>Step 2 &#x2014; Attach a Test Clock immediately after registration, before creating the subscription. <code>createTestClock()</code> waits for <code>ready</code>, because Stripe blocks all customer/subscription modifications while attachment is <code>advancing</code>.</p>
+<h3 id="setupretrysubscription">setupRetrySubscription</h3>
+<p><code>setupRetrySubscription(page: Page, pageManager: PageManager, stripeApi: StripeAPI, email: string, plan: RetryPlanFixture)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L140">tests/helpers/stripeRetryStrategy.ts:140</a></p>
+<p>Full OQG3-1721 setup used by every related test. Registration happens in the spec&apos;s <code>beforeEach</code>, then this runs:  1. Attach clock + await <code>ready</code>  2. UI plan payment  3. Update to decline card</p>
+<ul>
+<li><code>attachTestClockToCustomer(stripeApi, email, plan)</code> &#x2014; line 147</li>
+<li><code>payForPlanSubscription(page, pageManager, plan)</code> &#x2014; line 154</li>
+<li><code>pageManager.paymentPage.navigateToSubscriptionsWithFallback()</code> &#x2014; line 163</li>
+<li><code>pageManager.billingPage.updatePaymentMethod(stripeDeclinedCard.cardNumber, stripeDeclinedCard.expDate, stripeDeclinedCard.cvc)</code> &#x2014; line 164</li>
+<li><code>getPlanMultiplier(plan.key)</code> &#x2014; line 172</li>
+</ul>
+<h3 id="advancedays">advanceDays</h3>
+<p><code>advanceDays(stripeApi: StripeAPI, ctx: RetryClockContext, days: number)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L205">tests/helpers/stripeRetryStrategy.ts:205</a></p>
+<p>Advance the clock by <code>days</code> and return the new frozen_time.</p>
+<ul>
+<li><code>advanceClockTo(stripeApi, ctx, ctx.frozenTime + days * 24 * 60 * 60)</code> &#x2014; line 210</li>
+</ul>
+<h3 id="advanceclockto">advanceClockTo</h3>
+<p><code>advanceClockTo(stripeApi: StripeAPI, ctx: RetryClockContext, targetUnixSeconds: number)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L214">tests/helpers/stripeRetryStrategy.ts:214</a></p>
+<p>Advance the Test Clock to an absolute unix timestamp (must be ahead).</p>
+<h3 id="triggertestclockintodunning">triggerTestClockIntoDunning</h3>
+<p><code>triggerTestClockIntoDunning(stripeApi: StripeAPI, ctx: RetryClockContext)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L229">tests/helpers/stripeRetryStrategy.ts:229</a></p>
+<p>Step 5 &#x2014; Advance the Test Clock just past the subscription period end so the renewal invoice fails on the decline card (<code>past_due</code>).</p>
+<ul>
+<li><code>advanceClockTo(stripeApi, ctx, target)</code> &#x2014; line 237</li>
+</ul>
+<h3 id="getfailedinvoiceretrystate">getFailedInvoiceRetryState</h3>
+<p><code>getFailedInvoiceRetryState(stripeApi: StripeAPI, customerId: string)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L251">tests/helpers/stripeRetryStrategy.ts:251</a></p>
+<p>Reads the open/failed renewal invoice and returns Stripe&apos;s retry counters. Prefer this over guessing schedule offsets &#x2014; <code>attempt_count</code> and <code>next_payment_attempt</code> are the source of truth for the dunning ladder.</p>
+<h3 id="waitfornextpaymentattempt">waitForNextPaymentAttempt</h3>
+<p><code>waitForNextPaymentAttempt(stripeApi: StripeAPI, customerId: string, timeoutMs = 90_000)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L275">tests/helpers/stripeRetryStrategy.ts:275</a></p>
+<p>Polls until the failed renewal invoice has a scheduled <code>next_payment_attempt</code>. Stripe sets this asynchronously after each failed retry on a Test Clock.</p>
+<h3 id="advancetonextpaymentattempt">advanceToNextPaymentAttempt</h3>
+<p><code>advanceToNextPaymentAttempt(stripeApi: StripeAPI, ctx: RetryClockContext)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L305">tests/helpers/stripeRetryStrategy.ts:305</a></p>
+<p>Advance the Test Clock to just after the failed invoice&apos;s <code>next_payment_attempt</code>. Returns the invoice retry state after the advance.</p>
+<ul>
+<li><code>waitForNextPaymentAttempt(stripeApi, ctx.customerId)</code> &#x2014; line 309</li>
+<li><code>advanceClockTo(stripeApi, ctx, state.nextPaymentAttempt! + ONE_DAY_SECONDS)</code> &#x2014; line 310</li>
+</ul>
+<h3 id="advancetosubscriptionrenewal">advanceToSubscriptionRenewal</h3>
+<p><code>advanceToSubscriptionRenewal(stripeApi: StripeAPI, ctx: RetryClockContext)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L323">tests/helpers/stripeRetryStrategy.ts:323</a></p>
+<p>Advance the Test Clock just past the subscription&apos;s <code>current_period_end</code> so the next billing cycle invoice is generated. Use after recovery when the dunning invoice is closed and <code>next_payment_attempt</code> is no longer available.</p>
+<ul>
+<li><code>advanceClockTo(stripeApi, ctx, periodEnd + ONE_DAY_SECONDS)</code> &#x2014; line 331</li>
+</ul>
+<h3 id="waitforpaidsubscriptioncycleinvoice">waitForPaidSubscriptionCycleInvoice</h3>
+<p><code>waitForPaidSubscriptionCycleInvoice(stripeApi: StripeAPI, customerId: string, expectedAmountPaid: number, timeoutMs = 90_000)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L335">tests/helpers/stripeRetryStrategy.ts:335</a></p>
+<p>Poll until a paid <code>subscription_cycle</code> invoice matches <code>expectedAmountPaid</code>.</p>
+<h3 id="waitforcancelafterfinalretry">waitForCancelAfterFinalRetry</h3>
+<p><code>waitForCancelAfterFinalRetry(stripeApi: StripeAPI, ctx: RetryClockContext)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L365">tests/helpers/stripeRetryStrategy.ts:365</a></p>
+<p>After the 8-attempt ladder, advance using the failed invoice&apos;s <code>next_payment_attempt</code> (when still set) and wait until the subscription is canceled / unpaid.</p>
+<ul>
+<li><code>expect( before.attemptCount, &#x2032;Expected at least &#x24;{RETRY_ATTEMPT_COUNT} failed attempts before cancel&#x2032; ).toBeGreaterThanOrEqual(RETRY_ATTEMPT_COUNT)</code> &#x2014; line 370</li>
+<li><code>advanceClockTo(stripeApi, ctx, before.nextPaymentAttempt + 3600 * 24)</code> &#x2014; line 376</li>
+</ul>
+<h3 id="waitforinvoiceattemptcount">waitForInvoiceAttemptCount</h3>
+<p><code>waitForInvoiceAttemptCount(stripeApi: StripeAPI, customerId: string, minAttempt: number, timeoutMs = 90_000)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L396">tests/helpers/stripeRetryStrategy.ts:396</a></p>
+<p>Polls the failed invoice until <code>attempt_count</code> is at least <code>minAttempt</code>, or until timeout (webhook / clock processing lag).</p>
+<h3 id="waitforinvoicechargeamounts">waitForInvoiceChargeAmounts</h3>
+<p><code>waitForInvoiceChargeAmounts(stripeApi: StripeAPI, customerId: string, invoiceId: string, expectedCount: number, timeoutMs = 60_000)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L427">tests/helpers/stripeRetryStrategy.ts:427</a></p>
+<p>Polls the dunning invoice&apos;s charges until at least <code>expectedCount</code> attempts have been recorded, and returns their amounts oldest-first.</p>
+<h3 id="advancefullretryladder">advanceFullRetryLadder</h3>
+<p><code>advanceFullRetryLadder(stripeApi: StripeAPI, ctx: RetryClockContext, attempts: number = RETRY_ATTEMPT_COUNT)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L458">tests/helpers/stripeRetryStrategy.ts:458</a></p>
+<p>Walks the dunning ladder by reading the failed invoice&apos;s <code>attempt_count</code> and <code>next_payment_attempt</code>, advancing the Test Clock to each scheduled retry.</p>
+<p>Returns the amount <strong>charged</strong> on each attempt (minor units), oldest first, taken from the invoice&apos;s charges. <code>amount_due</code> cannot be used here: the next tier&apos;s discount is applied the moment an attempt fails, so the value read after attempt #N is what attempt #N+1 will charge.</p>
+<ul>
+<li><code>triggerTestClockIntoDunning(stripeApi, ctx)</code> &#x2014; line 463</li>
+<li><code>advanceToNextPaymentAttempt(stripeApi, ctx)</code> &#x2014; line 483</li>
+</ul>
+<h3 id="expectretryladderamounts">expectRetryLadderAmounts</h3>
+<p><code>expectRetryLadderAmounts(actual: number[], expected: number[])</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L496">tests/helpers/stripeRetryStrategy.ts:496</a></p>
+<p>Assert the collected retry amounts match the expected ladder.</p>
+<ul>
+<li><code>expect( actual.length, &#x2032;Expected &#x24;{expected.length} retry attempt amounts, got &#x24;{actual.length}: [&#x24;{actual.join(&apos;, &apos;)}]&#x2032; ).toBe(expected.length)</code> &#x2014; line 500</li>
+<li><code>expect(actual[i], &#x2032;Retry #&#x24;{i + 1} amount mismatch&#x2032;).toBe(expected[i])</code> &#x2014; line 505</li>
+</ul>
+<h3 id="attachvalidcardforrecovery">attachValidCardForRecovery</h3>
+<p><code>attachValidCardForRecovery(stripeApi: StripeAPI, ctx: Pick&lt;RetryClockContext, &apos;customerId&apos; | &apos;subscriptionId&apos;&gt;)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L514">tests/helpers/stripeRetryStrategy.ts:514</a></p>
+<p>Swap customer + subscription default PMs to a valid Visa so the next retry succeeds. UI dunning setup sets the subscription PM to a decline card; both defaults must be updated for Smart Retry to charge the recovery card.</p>
+<h3 id="recoveronnextpaymentattempt">recoverOnNextPaymentAttempt</h3>
+<p><code>recoverOnNextPaymentAttempt(stripeApi: StripeAPI, ctx: RetryClockContext, timeoutMs = 180_000)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L534">tests/helpers/stripeRetryStrategy.ts:534</a></p>
+<p>Attach a valid card and advance the Test Clock to the invoice&apos;s scheduled <code>next_payment_attempt + 1 day</code>, then wait until the subscription recovers.</p>
+<ul>
+<li><code>waitForNextPaymentAttempt(stripeApi, ctx.customerId)</code> &#x2014; line 539</li>
+<li><code>advanceClockTo(stripeApi, ctx, state.nextPaymentAttempt! + ONE_DAY_SECONDS)</code> &#x2014; line 541</li>
+</ul>
+<h3 id="cleanupretryclock">cleanupRetryClock</h3>
+<p><code>cleanupRetryClock(stripeApi: StripeAPI, ctx: RetryClockContext | undefined)</code></p>
+<p><a data-source="tests/helpers/stripeRetryStrategy.ts" href="../../sources/tests/helpers/stripeRetryStrategy.ts.html#L553">tests/helpers/stripeRetryStrategy.ts:553</a></p>
+<h2 id="tests-helpers-vcard-webp-upload-helper-ts">tests/helpers/vcard-webp-upload.helper.ts</h2>
+<p><a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L1">tests/helpers/vcard-webp-upload.helper.ts:1</a></p>
+<ul>
+<li><code>{ expect, type Locator, type Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>{ VALID_WEBP }</code> &#x2190; <a data-source="tests/data/vcard-webp-upload.data.ts" href="../../sources/tests/data/vcard-webp-upload.data.ts.html#L1">tests/data/vcard-webp-upload.data.ts:1</a></li>
+</ul>
+<h3 id="openvcardpersonalinfo">openVcardPersonalInfo</h3>
+<p><code>openVcardPersonalInfo(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L7">tests/helpers/vcard-webp-upload.helper.ts:7</a></p>
+<p>Open logged-in Step 1 &#x2192; vCard Step 2 (Personal Information).</p>
+<ul>
+<li><code>pageManager.menuPage.goToCreateQrCode()</code> &#x2014; line 10</li>
+<li><code>pageManager.step1Page.selectVcardQrType()</code> &#x2014; line 11</li>
+</ul>
+<h3 id="openguestvcardpersonalinfo">openGuestVcardPersonalInfo</h3>
+<p><code>openGuestVcardPersonalInfo(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L15">tests/helpers/vcard-webp-upload.helper.ts:15</a></p>
+<p>Guest / temporary-user create funnel &#x2192; vCard Step 2.</p>
+<ul>
+<li><code>page.goto(&apos;/create?step=1&apos;)</code> &#x2014; line 19</li>
+<li><code>pageManager.step1Page.selectVcardQrType()</code> &#x2014; line 20</li>
+</ul>
+<h3 id="vcardimageuploadregion">vcardImageUploadRegion</h3>
+<p><code>vcardImageUploadRegion(page: Page)</code></p>
+<p><a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L23">tests/helpers/vcard-webp-upload.helper.ts:23</a></p>
+<h3 id="vcardimagedeletebutton">vcardImageDeleteButton</h3>
+<p><code>vcardImageDeleteButton(page: Page)</code></p>
+<p><a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L29">tests/helpers/vcard-webp-upload.helper.ts:29</a></p>
+<h3 id="vcardimageuploadloader">vcardImageUploadLoader</h3>
+<p><code>vcardImageUploadLoader(page: Page)</code></p>
+<p><a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L38">tests/helpers/vcard-webp-upload.helper.ts:38</a></p>
+<p>Loader inside the vCard Personal Information upload tile.</p>
+<h3 id="expectvcardimageuploaded">expectVcardImageUploaded</h3>
+<p><code>expectVcardImageUploaded(page: Page)</code></p>
+<p><a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L47">tests/helpers/vcard-webp-upload.helper.ts:47</a></p>
+<p>Successful upload: loading ends, delete control appears, tile is not in error.</p>
+<ul>
+<li><code>expect(vcardImageUploadLoader(page)).toBeHidden({ timeout: 15_000 })</code> &#x2014; line 48</li>
+<li><code>expect(vcardImageDeleteButton(page)).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 49</li>
+<li><code>expect(vcardImageUploadRegion(page)).not.toHaveClass(/border-danger/)</code> &#x2014; line 50</li>
+<li><code>expect( page.getByText(&apos;Upload Failed!&apos;, { exact: false }) ).toHaveCount(0)</code> &#x2014; line 51</li>
+</ul>
+<h3 id="expectvcardavatarpreview">expectVcardAvatarPreview</h3>
+<p><code>expectVcardAvatarPreview(avatar: Locator)</code></p>
+<p><a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L56">tests/helpers/vcard-webp-upload.helper.ts:56</a></p>
+<ul>
+<li><code>expect(avatar).toBeVisible({ timeout: 15_000 })</code> &#x2014; line 57</li>
+</ul>
+<h3 id="expectvcardimageuploadrejected">expectVcardImageUploadRejected</h3>
+<p><code>expectVcardImageUploadRejected(page: Page)</code></p>
+<p><a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L64">tests/helpers/vcard-webp-upload.helper.ts:64</a></p>
+<p>Rejected upload: danger border on the upload tile, no delete control, loading finished (no stuck spinner).</p>
+<ul>
+<li><code>expect(vcardImageUploadRegion(page)).toHaveClass(/border-danger/, { timeout: 20_000, })</code> &#x2014; line 67</li>
+<li><code>expect(vcardImageDeleteButton(page)).toBeHidden()</code> &#x2014; line 70</li>
+<li><code>expect(vcardImageUploadLoader(page)).toBeHidden({ timeout: 15_000 })</code> &#x2014; line 71</li>
+</ul>
+<h3 id="uploadvcardimage">uploadVcardImage</h3>
+<p><code>uploadVcardImage(pageManager: PageManager, imagePath: string)</code></p>
+<p><a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L74">tests/helpers/vcard-webp-upload.helper.ts:74</a></p>
+<ul>
+<li><code>pageManager.step2Page.locator.vcardImageInput.setInputFiles(imagePath)</code> &#x2014; line 78</li>
+</ul>
+<h3 id="createminimalvcard">createMinimalVcard</h3>
+<p><code>createMinimalVcard(pageManager: PageManager, avatarPath: string = VALID_WEBP)</code></p>
+<p><a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L82">tests/helpers/vcard-webp-upload.helper.ts:82</a></p>
+<p>Create a persisted vCard so the edit flow can reopen content.</p>
+<ul>
+<li><code>pageManager.step2Page.setVcardCompanyLogo(avatarPath)</code> &#x2014; line 87</li>
+<li><code>pageManager.step2Page.setVcardPersonalName()</code> &#x2014; line 88</li>
+<li><code>pageManager.qrCreationPage.setQrCodeFont()</code> &#x2014; line 89</li>
+<li><code>pageManager.qrCreationPage.setWelcomeScreenImage()</code> &#x2014; line 90</li>
+<li><code>pageManager.qrCreationPage.setQrCodePassword()</code> &#x2014; line 91</li>
+<li><code>pageManager.step2Page.setQrCodeName()</code> &#x2014; line 92</li>
+<li><code>pageManager.qrCreationPage.clickStep2NextButton()</code> &#x2014; line 93</li>
+<li><code>pageManager.qrCreationPage.clickStep3CreateButton()</code> &#x2014; line 94</li>
+<li><code>pageManager.qrCreationPage.locator.closeDownloadModalButton.click()</code> &#x2014; line 95</li>
+<li><code>pageManager.qrCreationPage.page .locator(&apos;#DownloadModal&apos;) .waitFor({ state: &apos;hidden&apos;, timeout: 15_000 })</code> &#x2014; line 96</li>
+<li><code>pageManager.qrCreationPage.page .locator(&apos;#DownloadModal&apos;)</code> &#x2014; line 96</li>
+</ul>
+<h3 id="openfirstqrforedit">openFirstQrForEdit</h3>
+<p><code>openFirstQrForEdit(pageManager: PageManager)</code></p>
+<p><a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L101">tests/helpers/vcard-webp-upload.helper.ts:101</a></p>
+<ul>
+<li><code>pageManager.myQrCodesPage.locator.qrKebabButton.click()</code> &#x2014; line 104</li>
+<li><code>pageManager.myQrCodesPage.locator.editQrContentButton.click()</code> &#x2014; line 105</li>
+</ul>
+<h2 id="tests-helpers-visualqacapture-ts">tests/helpers/visualQaCapture.ts</h2>
+<p><a data-source="tests/helpers/visualQaCapture.ts" href="../../sources/tests/helpers/visualQaCapture.ts.html#L1">tests/helpers/visualQaCapture.ts:1</a></p>
+<ul>
+<li><code>* as fs</code> &#x2190; <code>fs</code></li>
+<li><code>* as path</code> &#x2190; <code>path</code></li>
+<li><code>{ expect, type Page, type TestInfo }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>type { VisualQaLanguage, VisualQaScreen, VisualQaViewport, }</code> &#x2190; <a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L1">tests/helpers/visualQaConfig.ts:1</a></li>
+<li><code>{ visualQaSnapshotName }</code> &#x2190; <a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L1">tests/helpers/visualQaConfig.ts:1</a></li>
+</ul>
+<h3 id="expectnohorizontaloverflowforviewport">expectNoHorizontalOverflowForViewport</h3>
+<p><code>expectNoHorizontalOverflowForViewport(page: Page, viewport: VisualQaViewport)</code></p>
+<p><a data-source="tests/helpers/visualQaCapture.ts" href="../../sources/tests/helpers/visualQaCapture.ts.html#L14">tests/helpers/visualQaCapture.ts:14</a></p>
+<ul>
+<li><code>expect( overflow, &apos;Horizontal overflow detected &#x2014; layout breaks at this viewport&apos; ).toBe(false)</code> &#x2014; line 24</li>
+</ul>
+<h3 id="readpngdimensions">readPngDimensions</h3>
+<p><code>readPngDimensions(filePath: string)</code></p>
+<p><a data-source="tests/helpers/visualQaCapture.ts" href="../../sources/tests/helpers/visualQaCapture.ts.html#L30">tests/helpers/visualQaCapture.ts:30</a></p>
+<ul>
+<li><code>buf.toString(&apos;ascii&apos;, 1, 4)</code> &#x2014; line 34</li>
+</ul>
+<h3 id="baselinematchesclip">baselineMatchesClip</h3>
+<p><code>baselineMatchesClip(filePath: string, clip: CaptureClip)</code></p>
+<p><a data-source="tests/helpers/visualQaCapture.ts" href="../../sources/tests/helpers/visualQaCapture.ts.html#L40">tests/helpers/visualQaCapture.ts:40</a></p>
+<h3 id="isupdatingsnapshots">isUpdatingSnapshots</h3>
+<p><code>isUpdatingSnapshots(testInfo: TestInfo)</code></p>
+<p><a data-source="tests/helpers/visualQaCapture.ts" href="../../sources/tests/helpers/visualQaCapture.ts.html#L46">tests/helpers/visualQaCapture.ts:46</a></p>
+<h3 id="saveorcomparelandingpagevisual">saveOrCompareLandingPageVisual</h3>
+<p><code>saveOrCompareLandingPageVisual(page: Page, pageManager: PageManager, screen: VisualQaScreen, lang: VisualQaLanguage, viewport: VisualQaViewport, testInfo: TestInfo)</code></p>
+<p><a data-source="tests/helpers/visualQaCapture.ts" href="../../sources/tests/helpers/visualQaCapture.ts.html#L51">tests/helpers/visualQaCapture.ts:51</a></p>
+<ul>
+<li><code>pageManager.visualLandingPage.resolveCaptureClip(screen, viewport)</code> &#x2014; line 59</li>
+<li><code>expect(page).toHaveScreenshot(snapshotName, screenshotOptions)</code> &#x2014; line 75</li>
+<li><code>expect(page).toHaveScreenshot(snapshotName, screenshotOptions)</code> &#x2014; line 91</li>
+</ul>
+<h2 id="tests-helpers-visualqaconfig-ts">tests/helpers/visualQaConfig.ts</h2>
+<p><a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L1">tests/helpers/visualQaConfig.ts:1</a></p>
+<ul>
+<li><code>{ CREATE_PAGE_VISUAL_LANGUAGES, VIEWPORTS as SCREEN_VIEWPORTS, }</code> &#x2190; <a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L1">tests/visual/screens.config.ts:1</a></li>
+</ul>
+<h3 id="viewportdisplayname">viewportDisplayName</h3>
+<p><code>viewportDisplayName(id: string, width: number, height: number)</code></p>
+<p><a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L22">tests/helpers/visualQaConfig.ts:22</a></p>
+<h3 id="loadalllanguages">loadAllLanguages</h3>
+<p><code>loadAllLanguages()</code></p>
+<p><a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L38">tests/helpers/visualQaConfig.ts:38</a></p>
+<h3 id="loadallviewports">loadAllViewports</h3>
+<p><code>loadAllViewports()</code></p>
+<p><a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L47">tests/helpers/visualQaConfig.ts:47</a></p>
+<h3 id="parsecsvenv">parseCsvEnv</h3>
+<p><code>parseCsvEnv(name: string)</code></p>
+<p><a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L58">tests/helpers/visualQaConfig.ts:58</a></p>
+<h3 id="loadlanguagesforrun">loadLanguagesForRun</h3>
+<p><code>loadLanguagesForRun()</code></p>
+<p><a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L67">tests/helpers/visualQaConfig.ts:67</a></p>
+<h3 id="loadviewportsforrun">loadViewportsForRun</h3>
+<p><code>loadViewportsForRun()</code></p>
+<p><a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L76">tests/helpers/visualQaConfig.ts:76</a></p>
+<h3 id="createstep1visualurl">createStep1VisualUrl</h3>
+<p><code>createStep1VisualUrl(langId: string)</code></p>
+<p><a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L85">tests/helpers/visualQaConfig.ts:85</a></p>
+<h3 id="generatevisualurl">generateVisualUrl</h3>
+<p><code>generateVisualUrl(langId: string)</code></p>
+<p><a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L89">tests/helpers/visualQaConfig.ts:89</a></p>
+<h3 id="visualqasnapshotname">visualQaSnapshotName</h3>
+<p><code>visualQaSnapshotName(lang: VisualQaLanguage, viewport: VisualQaViewport)</code></p>
+<p><a data-source="tests/helpers/visualQaConfig.ts" href="../../sources/tests/helpers/visualQaConfig.ts.html#L93">tests/helpers/visualQaConfig.ts:93</a></p>
+<h2 id="tests-helpers-waitforvisualready-ts">tests/helpers/waitForVisualReady.ts</h2>
+<p><a data-source="tests/helpers/waitForVisualReady.ts" href="../../sources/tests/helpers/waitForVisualReady.ts.html#L1">tests/helpers/waitForVisualReady.ts:1</a></p>
+<ul>
+<li><code>type { Locator, Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+</ul>
+<h3 id="waitforvisualready">waitForVisualReady</h3>
+<p><code>waitForVisualReady(page: Page, options: WaitForVisualReadyOptions = {})</code></p>
+<p><a data-source="tests/helpers/waitForVisualReady.ts" href="../../sources/tests/helpers/waitForVisualReady.ts.html#L35">tests/helpers/waitForVisualReady.ts:35</a></p>
+<p>Wait until the page is stable enough for a visual snapshot: fonts ready, loaders gone, optional ready locators visible, layout paint settled.</p>
+<h3 id="settlelayout">settleLayout</h3>
+<p><code>settleLayout(page: Page)</code></p>
+<p><a data-source="tests/helpers/waitForVisualReady.ts" href="../../sources/tests/helpers/waitForVisualReady.ts.html#L68">tests/helpers/waitForVisualReady.ts:68</a></p>
+<p>Double rAF &#x2014; cheap layout settle after viewport resize (no fixed sleep).</p>
+<h3 id="waitforloadershidden">waitForLoadersHidden</h3>
+<p><code>waitForLoadersHidden(page: Page, timeout: number)</code></p>
+<p><a data-source="tests/helpers/waitForVisualReady.ts" href="../../sources/tests/helpers/waitForVisualReady.ts.html#L81">tests/helpers/waitForVisualReady.ts:81</a></p>
+<h3 id="hideall">hideAll</h3>
+<p><code>hideAll(page: Page, selectors: readonly string[], timeout: number)</code></p>
+<p><a data-source="tests/helpers/waitForVisualReady.ts" href="../../sources/tests/helpers/waitForVisualReady.ts.html#L89">tests/helpers/waitForVisualReady.ts:89</a></p>
+<h3 id="waitforqrlistready">waitForQrListReady</h3>
+<p><code>waitForQrListReady(page: Page, pageManager: PageManager, timeout = DEFAULT_TIMEOUT)</code></p>
+<p><a data-source="tests/helpers/waitForVisualReady.ts" href="../../sources/tests/helpers/waitForVisualReady.ts.html#L110">tests/helpers/waitForVisualReady.ts:110</a></p>
+<p>QR codes list shell + loaders &#x2014; use after login /goto / per-page change.</p>
+<h3 id="waitforaccountlanguageready">waitForAccountLanguageReady</h3>
+<p><code>waitForAccountLanguageReady(page: Page, pageManager: PageManager, timeout = DEFAULT_TIMEOUT)</code></p>
+<p><a data-source="tests/helpers/waitForVisualReady.ts" href="../../sources/tests/helpers/waitForVisualReady.ts.html#L124">tests/helpers/waitForVisualReady.ts:124</a></p>
+<p>Account language controls visible after navigation / language switch.</p>
+<h2 id="tests-tools-event-field-validation-manifest-helper-ts">tests/tools/event-field-validation-manifest.helper.ts</h2>
+<p><a data-source="tests/tools/event-field-validation-manifest.helper.ts" href="../../sources/tests/tools/event-field-validation-manifest.helper.ts.html#L1">tests/tools/event-field-validation-manifest.helper.ts:1</a></p>
+<ul>
+<li><code>type { TestInfo }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ mkdir, readFile, writeFile }</code> &#x2190; <code>node:fs/promises</code></li>
+<li><code>path</code> &#x2190; <code>node:path</code></li>
+<li><code>type { EventValidationField, EventValidationScenario, }</code> &#x2190; <a data-source="tests/data/event-field-validation.data.ts" href="../../sources/tests/data/event-field-validation.data.ts.html#L1">tests/data/event-field-validation.data.ts:1</a></li>
+</ul>
+<h3 id="displaysafe">displaySafe</h3>
+<p><code>displaySafe(value: string)</code></p>
+<p><a data-source="tests/tools/event-field-validation-manifest.helper.ts" href="../../sources/tests/tools/event-field-validation-manifest.helper.ts.html#L41">tests/tools/event-field-validation-manifest.helper.ts:41</a></p>
+<ul>
+<li><code>code.toString(16)</code> &#x2014; line 53</li>
+</ul>
+<h3 id="csvcell">csvCell</h3>
+<p><code>csvCell(value: unknown)</code></p>
+<p><a data-source="tests/tools/event-field-validation-manifest.helper.ts" href="../../sources/tests/tools/event-field-validation-manifest.helper.ts.html#L61">tests/tools/event-field-validation-manifest.helper.ts:61</a></p>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(private readonly runId: string, private readonly field: EventValidationField)</code></p>
+<p><a data-source="tests/tools/event-field-validation-manifest.helper.ts" href="../../sources/tests/tools/event-field-validation-manifest.helper.ts.html#L76">tests/tools/event-field-validation-manifest.helper.ts:76</a></p>
+<h3 id="add">add</h3>
+<p><code>add(record: EventValidationManifestRecord)</code></p>
+<p><a data-source="tests/tools/event-field-validation-manifest.helper.ts" href="../../sources/tests/tools/event-field-validation-manifest.helper.ts.html#L97">tests/tools/event-field-validation-manifest.helper.ts:97</a></p>
+<ul>
+<li><code>this.records.findIndex([callback: see source])</code> &#x2014; line 98</li>
+<li><code>this.records.push(record)</code> &#x2014; line 106</li>
+<li><code>this.write()</code> &#x2014; line 108</li>
+</ul>
+<h3 id="load">load</h3>
+<p><code>load()</code></p>
+<p><a data-source="tests/tools/event-field-validation-manifest.helper.ts" href="../../sources/tests/tools/event-field-validation-manifest.helper.ts.html#L111">tests/tools/event-field-validation-manifest.helper.ts:111</a></p>
+<ul>
+<li><code>this.records.splice(0, this.records.length, ...(existing.records ?? []))</code> &#x2014; line 119</li>
+</ul>
+<h3 id="attach">attach</h3>
+<p><code>attach(testInfo: TestInfo)</code></p>
+<p><a data-source="tests/tools/event-field-validation-manifest.helper.ts" href="../../sources/tests/tools/event-field-validation-manifest.helper.ts.html#L131">tests/tools/event-field-validation-manifest.helper.ts:131</a></p>
+<ul>
+<li><code>this.write()</code> &#x2014; line 132</li>
+</ul>
+<h3 id="summary">summary</h3>
+<p><code>summary()</code></p>
+<p><a data-source="tests/tools/event-field-validation-manifest.helper.ts" href="../../sources/tests/tools/event-field-validation-manifest.helper.ts.html#L143">tests/tools/event-field-validation-manifest.helper.ts:143</a></p>
+<h3 id="write">write</h3>
+<p><code>write()</code></p>
+<p><a data-source="tests/tools/event-field-validation-manifest.helper.ts" href="../../sources/tests/tools/event-field-validation-manifest.helper.ts.html#L174">tests/tools/event-field-validation-manifest.helper.ts:174</a></p>
+<ul>
+<li><code>new Date().toISOString()</code> &#x2014; line 183</li>
+<li><code>this.toCsv()</code> &#x2014; line 189</li>
+</ul>
+<h3 id="tocsv">toCsv</h3>
+<p><code>toCsv()</code></p>
+<p><a data-source="tests/tools/event-field-validation-manifest.helper.ts" href="../../sources/tests/tools/event-field-validation-manifest.helper.ts.html#L198">tests/tools/event-field-validation-manifest.helper.ts:198</a></p>
+<ul>
+<li><code>this.records.map([callback: see source])</code> &#x2014; line 222</li>
+</ul>
+<h2 id="tests-tools-validation-account-helper-ts">tests/tools/validation-account.helper.ts</h2>
+<p><a data-source="tests/tools/validation-account.helper.ts" href="../../sources/tests/tools/validation-account.helper.ts.html#L1">tests/tools/validation-account.helper.ts:1</a></p>
+<ul>
+<li><code>{ closeSync, existsSync, mkdirSync, openSync, readFileSync, unlinkSync, writeFileSync, }</code> &#x2190; <code>node:fs</code></li>
+<li><code>path</code> &#x2190; <code>node:path</code></li>
+<li><code>type { Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+</ul>
+<h3 id="parseaccount">parseAccount</h3>
+<p><code>parseAccount(filePath: string)</code></p>
+<p><a data-source="tests/tools/validation-account.helper.ts" href="../../sources/tests/tools/validation-account.helper.ts.html#L23">tests/tools/validation-account.helper.ts:23</a></p>
+<h3 id="readstoredaccount">readStoredAccount</h3>
+<p><code>readStoredAccount()</code></p>
+<p><a data-source="tests/tools/validation-account.helper.ts" href="../../sources/tests/tools/validation-account.helper.ts.html#L38">tests/tools/validation-account.helper.ts:38</a></p>
+<h3 id="persistaccount">persistAccount</h3>
+<p><code>persistAccount(account: ValidationAccount)</code></p>
+<p><a data-source="tests/tools/validation-account.helper.ts" href="../../sources/tests/tools/validation-account.helper.ts.html#L42">tests/tools/validation-account.helper.ts:42</a></p>
+<h3 id="delay">delay</h3>
+<p><code>delay(ms: number)</code></p>
+<p><a data-source="tests/tools/validation-account.helper.ts" href="../../sources/tests/tools/validation-account.helper.ts.html#L51">tests/tools/validation-account.helper.ts:51</a></p>
+<h3 id="waitforstoredaccount">waitForStoredAccount</h3>
+<p><code>waitForStoredAccount(timeoutMs = 120_000)</code></p>
+<p><a data-source="tests/tools/validation-account.helper.ts" href="../../sources/tests/tools/validation-account.helper.ts.html#L55">tests/tools/validation-account.helper.ts:55</a></p>
+<h3 id="loginwith">loginWith</h3>
+<p><code>loginWith(page: Page, pageManager: PageManager, account: ValidationAccount)</code></p>
+<p><a data-source="tests/tools/validation-account.helper.ts" href="../../sources/tests/tools/validation-account.helper.ts.html#L67">tests/tools/validation-account.helper.ts:67</a></p>
+<ul>
+<li><code>page.goto(&apos;/login&apos;)</code> &#x2014; line 72</li>
+<li><code>pageManager.loginPage.logIn(account.email, account.password)</code> &#x2014; line 73</li>
+<li><code>page.waitForURL(/qr-codes/, { timeout: 60_000 })</code> &#x2014; line 74</li>
+</ul>
+<h3 id="loginvalidationaccount">loginValidationAccount</h3>
+<p><code>loginValidationAccount(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/tools/validation-account.helper.ts" href="../../sources/tests/tools/validation-account.helper.ts.html#L84">tests/tools/validation-account.helper.ts:84</a></p>
+<p>Logs into the shared validation-generator account.</p>
+<p>Reuses <code>.auth/validation_account.json</code> (or a legacy repo-root <code>validation_account.json</code>) when present; otherwise registers a user and persists it so later workers and runs share the same dashboard.</p>
+<ul>
+<li><code>pageManager.registerPage.authorizeUser()</code> &#x2014; line 116</li>
+</ul>
+<h2 id="tests-trial-day-count-helpers-completedpfpaidfullaccess-ts">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts</h2>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L1">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:1</a></p>
+<ul>
+<li><code>{ expect, Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ PageManager }</code> &#x2190; <a data-source="fixtures/baseFixture.ts" href="../../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></li>
+<li><code>{ openMainPageDpf }</code> &#x2190; <a data-source="tests/data/helpers/dpf-navigation.ts" href="../../sources/tests/data/helpers/dpf-navigation.ts.html#L1">tests/data/helpers/dpf-navigation.ts:1</a></li>
+<li><code>{ stripeVisaValidCard, stripe_invalid_card, }</code> &#x2190; <a data-source="tests/data/payments_test_data.ts" href="../../sources/tests/data/payments_test_data.ts.html#L1">tests/data/payments_test_data.ts:1</a></li>
+</ul>
+<h3 id="isgenerateentry">isGenerateEntry</h3>
+<p><code>isGenerateEntry(entryPath?: string)</code></p>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L35">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:35</a></p>
+<h3 id="clickstep3createfordpf">clickStep3CreateForDpf</h3>
+<p><code>clickStep3CreateForDpf(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L43">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:43</a></p>
+<p>Dismiss Step 3 help popup (X closes the whole tour; Continue only advances), then click Create and wait for the DPF email form.</p>
+<ul>
+<li><code>closeIcon.click({ timeout: 5_000 })</code> &#x2014; line 58</li>
+<li><code>pageManager.qrCreationPage.locator.qrBackdrop .waitFor({ state: &apos;hidden&apos;, timeout: 5_000 }) .catch([callback: see source])</code> &#x2014; line 65</li>
+<li><code>pageManager.qrCreationPage.locator.qrBackdrop .waitFor({ state: &apos;hidden&apos;, timeout: 5_000 })</code> &#x2014; line 65</li>
+<li><code>pageManager.qrCreationPage.locator.createButton.click()</code> &#x2014; line 70</li>
+<li><code>expect(pageManager.qrCreationPage.locator.emailInput).toBeVisible({ timeout: 60_000, })</code> &#x2014; line 71</li>
+</ul>
+<h3 id="submitdpfemailandreachplan">submitDpfEmailAndReachPlan</h3>
+<p><code>submitDpfEmailAndReachPlan(page: Page, pageManager: PageManager, email: string)</code></p>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L81">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:81</a></p>
+<p>Submits the DPF email form and waits for the plan step. The submit handler is bound after the form paints, so an early click is silently dropped and the page stays on the email step &#x2014; retry until the plan step renders.</p>
+<ul>
+<li><code>emailInput.fill(email)</code> &#x2014; line 97</li>
+<li><code>submitButton.click({ timeout: 30_000 })</code> &#x2014; line 99</li>
+<li><code>expect(planContinue).toBeVisible({ timeout: 30_000 })</code> &#x2014; line 109</li>
+</ul>
+<h3 id="createwebsiteqrviagenerate">createWebsiteQrViaGenerate</h3>
+<p><code>createWebsiteQrViaGenerate(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L116">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:116</a></p>
+<p>/generate uses generate-qr-type-* cards (not step1-*-card). Clicking Website lands on step=2 with the URL field &#x2014; same Step 2/3 path as /create after that.</p>
+<ul>
+<li><code>expect(generateWebsite).toBeVisible({ timeout: 60_000 })</code> &#x2014; line 121</li>
+<li><code>generateWebsite.click()</code> &#x2014; line 122</li>
+<li><code>expect(page).toHaveURL(/step=2/)</code> &#x2014; line 123</li>
+<li><code>pageManager.step2Page.setWebsiteQrUrl()</code> &#x2014; line 124</li>
+<li><code>pageManager.step2Page.setQrCodeName()</code> &#x2014; line 125</li>
+<li><code>pageManager.qrCreationPage.clickStep2NextButton()</code> &#x2014; line 126</li>
+</ul>
+<h3 id="createqrfordpf">createQrForDpf</h3>
+<p><code>createQrForDpf(page: Page, pageManager: PageManager, qrType: DpfQrType, entryPath?: string)</code></p>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L129">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:129</a></p>
+<ul>
+<li><code>createWebsiteQrViaGenerate(page, pageManager)</code> &#x2014; line 143</li>
+<li><code>pageManager.qrCreationPage.wifiQrCreate()</code> &#x2014; line 149</li>
+<li><code>pageManager.qrCreationPage.instagramQrCreate()</code> &#x2014; line 152</li>
+<li><code>pageManager.qrCreationPage.websiteQrCreate()</code> &#x2014; line 156</li>
+<li><code>pageManager.qrCreationPage.clickStep2NextButton()</code> &#x2014; line 159</li>
+</ul>
+<h3 id="selectdpfplan">selectDpfPlan</h3>
+<p><code>selectDpfPlan(pageManager: PageManager, plan: DpfPlanOption)</code></p>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L162">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:162</a></p>
+<ul>
+<li><code>pageManager.qrCreationPage.select14LimitedDpfPlan()</code> &#x2014; line 168</li>
+<li><code>pageManager.qrCreationPage.selectDpfAnnualPlan()</code> &#x2014; line 171</li>
+<li><code>pageManager.qrCreationPage.select14FullDpfPlan()</code> &#x2014; line 175</li>
+</ul>
+<h3 id="completedpfthroughpayment">completeDpfThroughPayment</h3>
+<p><code>completeDpfThroughPayment(page: Page, pageManager: PageManager, email: string, options?: DpfFlowOptions)</code></p>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L184">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:184</a></p>
+<p>Runs DPF create &#x2192; email &#x2192; plan &#x2192; Stripe payment fill + submit. Stops after submit (does not wait for thank-you).</p>
+<ul>
+<li><code>page.goto(options.entryPath)</code> &#x2014; line 199</li>
+<li><code>createQrForDpf(page, pageManager, qrType, options?.entryPath)</code> &#x2014; line 204</li>
+<li><code>submitDpfEmailAndReachPlan(page, pageManager, email)</code> &#x2014; line 207</li>
+<li><code>selectDpfPlan(pageManager, plan)</code> &#x2014; line 209</li>
+<li><code>pageManager.paymentPage.selectCountryAndZipInPaymentFrame()</code> &#x2014; line 212</li>
+<li><code>pageManager.paymentPage.makePayment(cardNumber, expDate, cvc)</code> &#x2014; line 213</li>
+<li><code>pageManager.paymentPage.makePayment(cardNumber, expDate, cvc)</code> &#x2014; line 216</li>
+<li><code>submitAsEnteredBtn.click({ force: true })</code> &#x2014; line 222</li>
+<li><code>submit.click()</code> &#x2014; line 237</li>
+<li><code>expect(page).toHaveURL(/pay-thank-you-dpf/, { timeout: 90_000 })</code> &#x2014; line 240</li>
+</ul>
+<h3 id="completedpfpaidfullaccess">completeDpfPaidFullAccess</h3>
+<p><code>completeDpfPaidFullAccess(page: Page, pageManager: PageManager, email: string, options?: DpfFlowOptions)</code></p>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L246">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:246</a></p>
+<p>Full paid DPF path: pay with Visa test card, open post-payment download modal.</p>
+<ul>
+<li><code>completeDpfThroughPayment(page, pageManager, email, options)</code> &#x2014; line 252</li>
+<li><code>expect(thankYouCta).toBeVisible({ timeout: 90_000 })</code> &#x2014; line 255</li>
+<li><code>thankYouCta.click()</code> &#x2014; line 256</li>
+<li><code>expect(page).toHaveURL(/qr-codes/)</code> &#x2014; line 257</li>
+<li><code>expect(pageManager.myQrCodesPage.locator.downloadModal).toBeVisible()</code> &#x2014; line 258</li>
+</ul>
+<h3 id="completedpfthroughplanselection">completeDpfThroughPlanSelection</h3>
+<p><code>completeDpfThroughPlanSelection(page: Page, pageManager: PageManager, email: string, options?: Pick&lt;DpfFlowOptions, &apos;entryPath&apos; | &apos;qrType&apos;&gt;)</code></p>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L264">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:264</a></p>
+<p>DPF through plan selection only (no payment) &#x2014; lands on /plan-dpf.</p>
+<ul>
+<li><code>page.goto(options.entryPath)</code> &#x2014; line 271</li>
+<li><code>createQrForDpf(page, pageManager, options?.qrType ?? &apos;website&apos;, options?.entryPath)</code> &#x2014; line 276</li>
+<li><code>submitDpfEmailAndReachPlan(page, pageManager, email)</code> &#x2014; line 284</li>
+</ul>
+<h3 id="attemptdpfpaymentwithdeclinedcard">attemptDpfPaymentWithDeclinedCard</h3>
+<p><code>attemptDpfPaymentWithDeclinedCard(page: Page, pageManager: PageManager, email: string)</code></p>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L290">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:290</a></p>
+<p>DPF through pay page with declining Stripe card (does not expect success).</p>
+<ul>
+<li><code>completeDpfThroughPayment(page, pageManager, email, { cardNumber: stripe_invalid_card.cardNumber, expDate: stripe_invalid_card.expDate, cvc: stripe_invalid_card.cvc, submitAsEntered: true, })</code> &#x2014; line 295</li>
+</ul>
+<h3 id="completedpfthroughpaypage">completeDpfThroughPayPage</h3>
+<p><code>completeDpfThroughPayPage(page: Page, pageManager: PageManager, email: string)</code></p>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L306">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:306</a></p>
+<p>DPF through plan continue onto /pay-dpf &#x2014; does not fill or submit payment.</p>
+<ul>
+<li><code>completeDpfThroughPlanSelection(page, pageManager, email)</code> &#x2014; line 311</li>
+<li><code>pageManager.qrCreationPage.select14FullDpfPlan()</code> &#x2014; line 312</li>
+<li><code>expect(page).toHaveURL(/pay-dpf/)</code> &#x2014; line 313</li>
+<li><code>expect(pageManager.paymentPage.locator.paymentElement).toBeVisible()</code> &#x2014; line 314</li>
+</ul>
+<h3 id="expectpaidtrialstateondashboard">expectPaidTrialStateOnDashboard</h3>
+<p><code>expectPaidTrialStateOnDashboard(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L318">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:318</a></p>
+<p>Close download modal (if open) and assert paid user has no free/CFF chrome.</p>
+<ul>
+<li><code>pageManager.qrCreationPage.locator.closeDownloadModalButton.click()</code> &#x2014; line 324</li>
+<li><code>expect(modal).toBeHidden()</code> &#x2014; line 325</li>
+<li><code>expect(page).toHaveURL(/\/qr-codes/)</code> &#x2014; line 327</li>
+<li><code>pageManager.myQrCodesPage.expectPaidTrialUpgradeControlsAbsent()</code> &#x2014; line 328</li>
+</ul>
+<h2 id="tests-visual-screens-config-ts">tests/visual/screens.config.ts</h2>
+<p><a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L1">tests/visual/screens.config.ts:1</a></p>
+<ul>
+<li><code>type { Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>type { PageManager }</code> &#x2190; <a data-source="base/PageManager.ts" href="../../sources/base/PageManager.ts.html#L1">base/PageManager.ts:1</a></li>
+<li><code>{ openEventCreateStep1, dismissStep2HelpPopup, waitForStep2NextEnabled, }</code> &#x2190; <a data-source="tests/helpers/eventLocalSetup.ts" href="../../sources/tests/helpers/eventLocalSetup.ts.html#L1">tests/helpers/eventLocalSetup.ts:1</a></li>
+<li><code>{ waitForVisualReady }</code> &#x2190; <a data-source="tests/helpers/waitForVisualReady.ts" href="../../sources/tests/helpers/waitForVisualReady.ts.html#L1">tests/helpers/waitForVisualReady.ts:1</a></li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor()</code></p>
+<p><a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L19">tests/visual/screens.config.ts:19</a></p>
+<h3 id="dismissanyopendialog">dismissAnyOpenDialog</h3>
+<p><code>dismissAnyOpenDialog(page: Page)</code></p>
+<p><a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L120">tests/visual/screens.config.ts:120</a></p>
+<h3 id="expandaccordions">expandAccordions</h3>
+<p><code>expandAccordions(page: Page, testIds: readonly string[])</code></p>
+<p><a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L152">tests/visual/screens.config.ts:152</a></p>
+<ul>
+<li><code>trigger.click({ timeout: 10_000, force: true })</code> &#x2014; line 170</li>
+</ul>
+<h3 id="dismissstep3helppopup">dismissStep3HelpPopup</h3>
+<p><code>dismissStep3HelpPopup(page: Page)</code></p>
+<p><a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L174">tests/visual/screens.config.ts:174</a></p>
+<ul>
+<li><code>candidate.click({ force: true })</code> &#x2014; line 191</li>
+</ul>
+<h3 id="trynavigatetoeventstep3">tryNavigateToEventStep3</h3>
+<p><code>tryNavigateToEventStep3(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L209">tests/visual/screens.config.ts:209</a></p>
+<p>Navigate from filled Step 2 to Step 3. Returns false if Step 3 is unreachable on this environment (local host currently only works up to Step 2).</p>
+<ul>
+<li><code>pageManager.step2Page.locator.nextButton.click()</code> &#x2014; line 217</li>
+</ul>
+<h3 id="preparelongestlocalesession">prepareLongestLocaleSession</h3>
+<p><code>prepareLongestLocaleSession(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L316">tests/visual/screens.config.ts:316</a></p>
+<p>Prepare a visual session under the longest-string locale.</p>
+<p>Default (guest): open nothing yet &#x2014; screens open <code>/ts-lg/...</code> directly. Optional login (<code>VISUAL_REQUIRE_LOGIN=true</code>): log in and switch language via /account. Use this on staging when TEST_ACCOUNT credentials are valid.</p>
+<ul>
+<li><code>page.goto(&apos;/login&apos;)</code> &#x2014; line 339</li>
+<li><code>pageManager.loginPage.logIn(email, password)</code> &#x2014; line 340</li>
+<li><code>page.waitForURL(&apos;**/qr-codes**&apos;, { timeout: 30_000 })</code> &#x2014; line 341</li>
+</ul>
+<h3 id="switchtolongestlocale">switchToLongestLocale</h3>
+<p><code>switchToLongestLocale(page: Page, pageManager: PageManager)</code></p>
+<p><a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L351">tests/visual/screens.config.ts:351</a></p>
+<p>Switch the logged-in account language to the longest-string test locale. Throws if the option is missing (ts-lg not registered on this host).</p>
+<ul>
+<li><code>page.goto(&apos;/account&apos;)</code> &#x2014; line 356</li>
+<li><code>languageSelect.selectOption({ value: LANGUAGE.code })</code> &#x2014; line 370</li>
+<li><code>pageManager.accountPage.locator.languageUpdateButton.click()</code> &#x2014; line 371</li>
+</ul>
+<h3 id="resetlocaletoenglish">resetLocaleToEnglish</h3>
+<p><code>resetLocaleToEnglish(page: Page, pageManager: PageManager, loggedIn = true)</code></p>
+<p><a data-source="tests/visual/screens.config.ts" href="../../sources/tests/visual/screens.config.ts.html#L376">tests/visual/screens.config.ts:376</a></p>
+<p>Reset account language back to English (no-op if not logged in).</p>
+<ul>
+<li><code>page.goto(&apos;/account&apos;)</code> &#x2014; line 383</li>
+<li><code>pageManager.accountPage.locator.languageSelect.selectOption({ value: &apos;en&apos;, })</code> &#x2014; line 385</li>
+<li><code>pageManager.accountPage.locator.languageUpdateButton.click()</code> &#x2014; line 388</li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

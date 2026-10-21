@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/qrcreationpage.html">
+<title>QrCreationPage · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-qrcreationpage-qrcreationflowlocators-ts">pages/QrCreationPage/QrCreationFlowLocators.ts</a>
+<a href="#pages-qrcreationpage-qrcreationflowpage-ts">pages/QrCreationPage/QrCreationFlowPage.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="qrcreationpage">QrCreationPage</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-qrcreationpage-qrcreationflowlocators-ts">pages/QrCreationPage/QrCreationFlowLocators.ts</h2>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L1">pages/QrCreationPage/QrCreationFlowLocators.ts:1</a></p>
+<ul>
+<li><code>{ Page, Locator }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BaseLocators }</code> &#x2190; <a data-source="pages/BaseLocators.ts" href="../../sources/pages/BaseLocators.ts.html#L1">pages/BaseLocators.ts:1</a></li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L196">pages/QrCreationPage/QrCreationFlowLocators.ts:196</a></p>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.step1BreadcrumbsSectionToVerifyPage</code> &#x2190; <code>page.locator( &quot;//span[@id=&apos;tab1text&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L199">pages/QrCreationPage/QrCreationFlowLocators.ts:199</a></li>
+<li><code>this.step3FrameTab</code> &#x2190; <code>page.locator(&quot;button[data-target=&apos;#acc_frame&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L202">pages/QrCreationPage/QrCreationFlowLocators.ts:202</a></li>
+<li><code>this.crossCloseBtn</code> &#x2190; <code>page.locator(&quot;//button[@id=&apos;closeBtn&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L203">pages/QrCreationPage/QrCreationFlowLocators.ts:203</a></li>
+<li><code>this.customNameQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_nameOfQrCode&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L204">pages/QrCreationPage/QrCreationFlowLocators.ts:204</a></li>
+<li><code>this.setupPasswordQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_password&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L207">pages/QrCreationPage/QrCreationFlowLocators.ts:207</a></li>
+<li><code>this.setupNewFolderQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_folder&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L210">pages/QrCreationPage/QrCreationFlowLocators.ts:210</a></li>
+<li><code>this.updateFontsQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_nameOfFonts&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L213">pages/QrCreationPage/QrCreationFlowLocators.ts:213</a></li>
+<li><code>this.uploadWelcomeScreenQrCodeDropdown</code> &#x2190; <code>page.getByTestId( &apos;step2-welcome-screen-accordion-trigger&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L216">pages/QrCreationPage/QrCreationFlowLocators.ts:216</a></li>
+<li><code>this.updateColorThemeQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_Design&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L219">pages/QrCreationPage/QrCreationFlowLocators.ts:219</a></li>
+<li><code>this.socialNetworkQrCodeDropdown</code> &#x2190; <code>page.getByRole(&apos;button&apos;, { name: &apos;Social Networks Add social&apos;, })</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L222">pages/QrCreationPage/QrCreationFlowLocators.ts:222</a></li>
+<li><code>this.contactDetailsQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_contactInfo&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L225">pages/QrCreationPage/QrCreationFlowLocators.ts:225</a></li>
+<li><code>this.locationQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#add_website-dis&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L228">pages/QrCreationPage/QrCreationFlowLocators.ts:228</a></li>
+<li><code>this.createNewFolderButton</code> &#x2190; <code>page.getByTestId( &apos;step2-folder-dropdown-create-option&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L231">pages/QrCreationPage/QrCreationFlowLocators.ts:231</a></li>
+<li><code>this.folderNameInput</code> &#x2190; <code>page.getByTestId( &apos;step2-folder-create-name-input&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L234">pages/QrCreationPage/QrCreationFlowLocators.ts:234</a></li>
+<li><code>this.createFolderButton</code> &#x2190; <code>page.getByTestId( &apos;step2-folder-create-submit-button&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L237">pages/QrCreationPage/QrCreationFlowLocators.ts:237</a></li>
+<li><code>this.fontsTitleDropdown</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;dropdown_title&apos;]/../div/button[@class=&apos;drp-icon-btn-open&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L240">pages/QrCreationPage/QrCreationFlowLocators.ts:240</a></li>
+<li><code>this.fontsTextsDropdown</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;dropdown_text&apos;]/../div/button[@class=&apos;drp-icon-btn-open&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L243">pages/QrCreationPage/QrCreationFlowLocators.ts:243</a></li>
+<li><code>this.socialNetworkTextInput</code> &#x2190; <code>page.locator( &quot;//input[@name=&apos;social_icon_text[]&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L246">pages/QrCreationPage/QrCreationFlowLocators.ts:246</a></li>
+<li><code>this.contactDetailsQrCodeAddPhoneBtn</code> &#x2190; <code>page.locator( &quot;//button[@id=&apos;addPhone&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L249">pages/QrCreationPage/QrCreationFlowLocators.ts:249</a></li>
+<li><code>this.contactDetailsQrCodeAddPhoneLabel</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;vcard_phoneLabel&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L252">pages/QrCreationPage/QrCreationFlowLocators.ts:252</a></li>
+<li><code>this.contactDetailsQrCodeAddPhoneNumber</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;vcard_phone&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L255">pages/QrCreationPage/QrCreationFlowLocators.ts:255</a></li>
+<li><code>this.contactDetailsQrCodeDeletePhoneBtn</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;phoneBlock&apos;]//button[contains(@class,&apos;delete-btn vcard-remove&apos;)]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L258">pages/QrCreationPage/QrCreationFlowLocators.ts:258</a></li>
+<li><code>this.contactDetailsQrCodeAddEmailBtn</code> &#x2190; <code>page.locator( &quot;//button[@id=&apos;addEmail&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L261">pages/QrCreationPage/QrCreationFlowLocators.ts:261</a></li>
+<li><code>this.contactDetailsQrCodeAddEmailLabel</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;vcard_emailLabel&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L264">pages/QrCreationPage/QrCreationFlowLocators.ts:264</a></li>
+<li><code>this.contactDetailsQrCodeAddEmailAddress</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;vcard_email&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L267">pages/QrCreationPage/QrCreationFlowLocators.ts:267</a></li>
+<li><code>this.contactDetailsQrCodeDeleteEmailBtn</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;emailBlock&apos;]//button[contains(@class,&apos;delete-btn vcard-remove&apos;)]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L270">pages/QrCreationPage/QrCreationFlowLocators.ts:270</a></li>
+<li><code>this.contactDetailsQrCodeAddWebsiteBtn</code> &#x2190; <code>page.locator( &quot;//button[@id=&apos;addWebsite&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L273">pages/QrCreationPage/QrCreationFlowLocators.ts:273</a></li>
+<li><code>this.contactDetailsQrCodeAddWebsiteLabel</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;vcard_website_title&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L276">pages/QrCreationPage/QrCreationFlowLocators.ts:276</a></li>
+<li><code>this.contactDetailsQrCodeAddWebsiteUrl</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;vcard_website&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L279">pages/QrCreationPage/QrCreationFlowLocators.ts:279</a></li>
+<li><code>this.contactDetailsQrCodeDeleteWebsiteBtn</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;websiteBlock&apos;]//button[contains(@class,&apos;delete-btn vcard-remove&apos;)]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L282">pages/QrCreationPage/QrCreationFlowLocators.ts:282</a></li>
+<li><code>this.addButtonWithLink</code> &#x2190; <code>page.locator(&quot;//button[@id=&apos;add&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L285">pages/QrCreationPage/QrCreationFlowLocators.ts:285</a></li>
+<li><code>this.addButtonWithLinkName</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;businessButtons&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L286">pages/QrCreationPage/QrCreationFlowLocators.ts:286</a></li>
+<li><code>this.addButtonWithLinkUrl</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;businessButtonUrls&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L289">pages/QrCreationPage/QrCreationFlowLocators.ts:289</a></li>
+<li><code>this.addButton2ImageWithLink</code> &#x2190; <code>page.locator(&quot;//button[@id=&apos;add2&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L292">pages/QrCreationPage/QrCreationFlowLocators.ts:292</a></li>
+<li><code>this.setupWebsiteQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_nameOfUrl&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L294">pages/QrCreationPage/QrCreationFlowLocators.ts:294</a></li>
+<li><code>this.uploadPdfQrTypeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_nameOfQrPdf&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L297">pages/QrCreationPage/QrCreationFlowLocators.ts:297</a></li>
+<li><code>this.uploadPdfQrTypeButton</code> &#x2190; <code>page.locator(&quot;//div[@id=&apos;pdf&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L300">pages/QrCreationPage/QrCreationFlowLocators.ts:300</a></li>
+<li><code>this.uploadPdfQrTypeDropArea</code> &#x2190; <code>page.locator(&apos;#pdf&apos;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L301">pages/QrCreationPage/QrCreationFlowLocators.ts:301</a></li>
+<li><code>this.directlyShowPdfCheckbox</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;direct_pdf&apos;]/following-sibling::label&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L302">pages/QrCreationPage/QrCreationFlowLocators.ts:302</a></li>
+<li><code>this.addPdfInformationQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_pdfInformation&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L305">pages/QrCreationPage/QrCreationFlowLocators.ts:305</a></li>
+<li><code>this.pdfTitleInput</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;pdftitle&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L308">pages/QrCreationPage/QrCreationFlowLocators.ts:308</a></li>
+<li><code>this.basicInfoLinksQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_listInfo&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L309">pages/QrCreationPage/QrCreationFlowLocators.ts:309</a></li>
+<li><code>this.basicInfoLinksQrCodeTitleInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;list_title&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L312">pages/QrCreationPage/QrCreationFlowLocators.ts:312</a></li>
+<li><code>this.basicInfoLinksQrCodeDescriptionInput</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;list_description&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L315">pages/QrCreationPage/QrCreationFlowLocators.ts:315</a></li>
+<li><code>this.listOfLinksQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_link&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L318">pages/QrCreationPage/QrCreationFlowLocators.ts:318</a></li>
+<li><code>this.listOfLinksQrCodeDeleteButton</code> &#x2190; <code>page.locator( &quot;//div[@class=&apos;links-delete-wrap&apos;]/button&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L321">pages/QrCreationPage/QrCreationFlowLocators.ts:321</a></li>
+<li><code>this.listOfLinksQrCodeImageInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;linkImages1&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L324">pages/QrCreationPage/QrCreationFlowLocators.ts:324</a></li>
+<li><code>this.listOfLinksQrCodeLinkTextInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;list_text&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L327">pages/QrCreationPage/QrCreationFlowLocators.ts:327</a></li>
+<li><code>this.listOfLinksQrCodeLinkUrlInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;list_URL&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L330">pages/QrCreationPage/QrCreationFlowLocators.ts:330</a></li>
+<li><code>this.linksQrCodeSocialNetworkUrlInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;socialUrl&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L333">pages/QrCreationPage/QrCreationFlowLocators.ts:333</a></li>
+<li><code>this.linksQrCodeSocialNetworkTextInput</code> &#x2190; <code>page.locator( &quot;//input[@name=&apos;social_icon_text[]&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L336">pages/QrCreationPage/QrCreationFlowLocators.ts:336</a></li>
+<li><code>this.vCardQrCodeImageInput</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;companyLogo&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L339">pages/QrCreationPage/QrCreationFlowLocators.ts:339</a></li>
+<li><code>this.vCardQrCodeFirstNameInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;vcard_first_name&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L340">pages/QrCreationPage/QrCreationFlowLocators.ts:340</a></li>
+<li><code>this.vCardQrCodeLastNameInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;vcard_last_name&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L343">pages/QrCreationPage/QrCreationFlowLocators.ts:343</a></li>
+<li><code>this.vCardQrCodeCompanyDetailsDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_companyInfo&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L346">pages/QrCreationPage/QrCreationFlowLocators.ts:346</a></li>
+<li><code>this.vCardQrCodeCompanyDetailsCompanyInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;vcard_company&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L349">pages/QrCreationPage/QrCreationFlowLocators.ts:349</a></li>
+<li><code>this.vCardQrCodeCompanyDetailsProfessionInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;vcard_profession&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L352">pages/QrCreationPage/QrCreationFlowLocators.ts:352</a></li>
+<li><code>this.vCardQrCodeCompanyDetailsSummaryInput</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;vcard_note&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L355">pages/QrCreationPage/QrCreationFlowLocators.ts:355</a></li>
+<li><code>this.businessInfoBusinessQrTypeImageInput</code> &#x2190; <code>page .getByTestId(&apos;step2-business-information-image-input&apos;) .locator(&apos;xpath=following-sibling::input&apos;) .first()</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L358">pages/QrCreationPage/QrCreationFlowLocators.ts:358</a></li>
+<li><code>this.businessInfoBusinessQrTypeCompanyInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;company&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L362">pages/QrCreationPage/QrCreationFlowLocators.ts:362</a></li>
+<li><code>this.businessInfoBusinessQrTypeTitleInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;companyTitle&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L365">pages/QrCreationPage/QrCreationFlowLocators.ts:365</a></li>
+<li><code>this.businessInfoBusinessQrTypeSubtitleInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;companySubtitle&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L368">pages/QrCreationPage/QrCreationFlowLocators.ts:368</a></li>
+<li><code>this.businessInfoBusinessQrTypeAddButton</code> &#x2190; <code>page.locator( &quot;//button[@id=&apos;add&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L371">pages/QrCreationPage/QrCreationFlowLocators.ts:371</a></li>
+<li><code>this.aboutCompanyBusinessQrTypeDropdown</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;aboutCompany&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L374">pages/QrCreationPage/QrCreationFlowLocators.ts:374</a></li>
+<li><code>this.aboutCompanyBusinessQrTypeTextarea</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;aboutCompany&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L377">pages/QrCreationPage/QrCreationFlowLocators.ts:377</a></li>
+<li><code>this.uploadImageQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_images&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L380">pages/QrCreationPage/QrCreationFlowLocators.ts:380</a></li>
+<li><code>this.uploadImageQrCodeButton</code> &#x2190; <code>page.locator(&quot;//div[@id=&apos;files&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L383">pages/QrCreationPage/QrCreationFlowLocators.ts:383</a></li>
+<li><code>this.uploadImageQrCodeDropArea</code> &#x2190; <code>page.locator(&apos;#files&apos;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L384">pages/QrCreationPage/QrCreationFlowLocators.ts:384</a></li>
+<li><code>this.verticalImageQrCodeCheckbox</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;uploadCheckbox&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L385">pages/QrCreationPage/QrCreationFlowLocators.ts:385</a></li>
+<li><code>this.imageInformationQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_imageInfo&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L388">pages/QrCreationPage/QrCreationFlowLocators.ts:388</a></li>
+<li><code>this.imageInformationQrCodeGalleryTitleInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;image_title&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L391">pages/QrCreationPage/QrCreationFlowLocators.ts:391</a></li>
+<li><code>this.imageInformationQrCodeGalleryDescriptionInput</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;image_description&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L394">pages/QrCreationPage/QrCreationFlowLocators.ts:394</a></li>
+<li><code>this.imageInformationQrCodeWebsiteInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;website&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L397">pages/QrCreationPage/QrCreationFlowLocators.ts:397</a></li>
+<li><code>this.uploadVideoQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_videoUpload&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L400">pages/QrCreationPage/QrCreationFlowLocators.ts:400</a></li>
+<li><code>this.uploadVideoQrCodeUrlInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;youTubeUrl&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L403">pages/QrCreationPage/QrCreationFlowLocators.ts:403</a></li>
+<li><code>this.uploadVideoQrCodeButton</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;files&apos;]//button&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L406">pages/QrCreationPage/QrCreationFlowLocators.ts:406</a></li>
+<li><code>this.uploadVideoQrCodeDropArea</code> &#x2190; <code>page.locator(&apos;#files&apos;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L409">pages/QrCreationPage/QrCreationFlowLocators.ts:409</a></li>
+<li><code>this.videoShowDirectlyQrCodeCheckbox</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;direct_video&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L410">pages/QrCreationPage/QrCreationFlowLocators.ts:410</a></li>
+<li><code>this.videoInfoQrCodeDropdown</code> &#x2190; <code>page.getByRole(&apos;button&apos;, { name: &apos;Video Information Add some&apos;, })</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L413">pages/QrCreationPage/QrCreationFlowLocators.ts:413</a></li>
+<li><code>this.videoInfoQrCodeCompanyInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;companyName&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L416">pages/QrCreationPage/QrCreationFlowLocators.ts:416</a></li>
+<li><code>this.videoInfoQrCodeVideoTitleInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;videoTitle&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L419">pages/QrCreationPage/QrCreationFlowLocators.ts:419</a></li>
+<li><code>this.videoInfoQrCodeVideoDescriptionInput</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;videoDescription&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L422">pages/QrCreationPage/QrCreationFlowLocators.ts:422</a></li>
+<li><code>this.appGooglePlayButton</code> &#x2190; <code>page.getByTestId( &apos;step2-app-platforms-add-playStore-button&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L425">pages/QrCreationPage/QrCreationFlowLocators.ts:425</a></li>
+<li><code>this.appAppleStoreButton</code> &#x2190; <code>page.getByTestId( &apos;step2-app-platforms-add-apple-button&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L428">pages/QrCreationPage/QrCreationFlowLocators.ts:428</a></li>
+<li><code>this.appAmazonStoreButton</code> &#x2190; <code>page.getByTestId( &apos;step2-app-platforms-add-amazon-button&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L431">pages/QrCreationPage/QrCreationFlowLocators.ts:431</a></li>
+<li><code>this.appInfoQrCodeDropdown</code> &#x2190; <code>page.getByTestId( &apos;step2-app-information-accordion-trigger&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L434">pages/QrCreationPage/QrCreationFlowLocators.ts:434</a></li>
+<li><code>this.appInfoQrCodeAppNameInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;app_title&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L437">pages/QrCreationPage/QrCreationFlowLocators.ts:437</a></li>
+<li><code>this.linksToPlatformsQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_imageInfo&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L441">pages/QrCreationPage/QrCreationFlowLocators.ts:441</a></li>
+<li><code>this.linksToPlatformsQrCodeGoogleAddButton</code> &#x2190; <code>page.locator( &quot;//button[contains(@class,&apos;google_btn&apos;)]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L444">pages/QrCreationPage/QrCreationFlowLocators.ts:444</a></li>
+<li><code>this.linksToPlatformsQrCodeGoogleInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;google&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L447">pages/QrCreationPage/QrCreationFlowLocators.ts:447</a></li>
+<li><code>this.linksToPlatformsQrCodeAppleAddButton</code> &#x2190; <code>page.locator( &quot;//button[contains(@class,&apos;apple_btn&apos;)]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L450">pages/QrCreationPage/QrCreationFlowLocators.ts:450</a></li>
+<li><code>this.linksToPlatformsQrCodeAppleInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;apple&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L453">pages/QrCreationPage/QrCreationFlowLocators.ts:453</a></li>
+<li><code>this.linksToPlatformsQrCodeAmazonAddButton</code> &#x2190; <code>page.locator( &quot;//button[contains(@class,&apos;amazone_btn&apos;)]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L456">pages/QrCreationPage/QrCreationFlowLocators.ts:456</a></li>
+<li><code>this.linksToPlatformsQrCodeAmazonInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;amazon&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L459">pages/QrCreationPage/QrCreationFlowLocators.ts:459</a></li>
+<li><code>this.offerInfoQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_imageInfo&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L462">pages/QrCreationPage/QrCreationFlowLocators.ts:462</a></li>
+<li><code>this.offerInfoQrCodeImgInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;companyLogo&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L465">pages/QrCreationPage/QrCreationFlowLocators.ts:465</a></li>
+<li><code>this.offerInfoQrCodeCompanyInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;company&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L468">pages/QrCreationPage/QrCreationFlowLocators.ts:468</a></li>
+<li><code>this.offerInfoQrCodeTitleInput</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;title&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L471">pages/QrCreationPage/QrCreationFlowLocators.ts:471</a></li>
+<li><code>this.offerInfoQrCodeDescriptionInput</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;description&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L472">pages/QrCreationPage/QrCreationFlowLocators.ts:472</a></li>
+<li><code>this.offerInfoQrCodeBadgeInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;salesBadge&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L475">pages/QrCreationPage/QrCreationFlowLocators.ts:475</a></li>
+<li><code>this.offerInfoQrCodeSeeCodeButton</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;buttonToSeeCode&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L478">pages/QrCreationPage/QrCreationFlowLocators.ts:478</a></li>
+<li><code>this.couponInfoQrCodeDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_couponInfo&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L481">pages/QrCreationPage/QrCreationFlowLocators.ts:481</a></li>
+<li><code>this.couponInfoQrCodeBarcodeToggle</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;couponTgl&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L485">pages/QrCreationPage/QrCreationFlowLocators.ts:485</a></li>
+<li><code>this.couponInfoQrCodeCodeInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;couponCode&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L488">pages/QrCreationPage/QrCreationFlowLocators.ts:488</a></li>
+<li><code>this.couponInfoQrCodeTermsInput</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;terms&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L491">pages/QrCreationPage/QrCreationFlowLocators.ts:491</a></li>
+<li><code>this.couponInfoQrCodeButtonInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;buttonText&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L494">pages/QrCreationPage/QrCreationFlowLocators.ts:494</a></li>
+<li><code>this.couponInfoQrCodeWebsiteInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;buttonUrl&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L497">pages/QrCreationPage/QrCreationFlowLocators.ts:497</a></li>
+<li><code>this.mp3UploadDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_nameOfMp3&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L500">pages/QrCreationPage/QrCreationFlowLocators.ts:500</a></li>
+<li><code>this.mp3UploadAddOptionCheckbox</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;addDownloadOption&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L503">pages/QrCreationPage/QrCreationFlowLocators.ts:503</a></li>
+<li><code>this.mp3InfoImgInput</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;companyLogo&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L506">pages/QrCreationPage/QrCreationFlowLocators.ts:506</a></li>
+<li><code>this.mp3InfoTitleInput</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;mp3_title&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L507">pages/QrCreationPage/QrCreationFlowLocators.ts:507</a></li>
+<li><code>this.mp3InfoDescriptionInput</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;mp3_description&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L508">pages/QrCreationPage/QrCreationFlowLocators.ts:508</a></li>
+<li><code>this.mp3InfoWebsiteInput</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;mp3_website&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L511">pages/QrCreationPage/QrCreationFlowLocators.ts:511</a></li>
+<li><code>this.mp3InfoAddButton</code> &#x2190; <code>page.locator(&quot;//div[@id=&apos;btn-item&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L512">pages/QrCreationPage/QrCreationFlowLocators.ts:512</a></li>
+<li><code>this.mp3InfoButtonTextInput</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;button_text&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L513">pages/QrCreationPage/QrCreationFlowLocators.ts:513</a></li>
+<li><code>this.mp3InfoButtonWebsiteInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;button_url&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L514">pages/QrCreationPage/QrCreationFlowLocators.ts:514</a></li>
+<li><code>this.mp3InfoButtonRemoveButton</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;add-btn&apos;]//button[contains(@class,&apos;removeBtn&apos;)]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L517">pages/QrCreationPage/QrCreationFlowLocators.ts:517</a></li>
+<li><code>this.menuVarPopupModalTitle</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;helpCarousel1&apos;]//h5&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L520">pages/QrCreationPage/QrCreationFlowLocators.ts:520</a></li>
+<li><code>this.menuVarPopupMenuTypeButton</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;menuModal&apos;]//button[@value=&apos;menu&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L523">pages/QrCreationPage/QrCreationFlowLocators.ts:523</a></li>
+<li><code>this.menuVarPopupPdfTypeButton</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;menuModal&apos;]//button[@value=&apos;pdf&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L526">pages/QrCreationPage/QrCreationFlowLocators.ts:526</a></li>
+<li><code>this.menuVarPopupWebTypeButton</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;menuModal&apos;]//button[@value=&apos;url&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L529">pages/QrCreationPage/QrCreationFlowLocators.ts:529</a></li>
+<li><code>this.menuVarPopupCrossButton</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;menuModal&apos;]//button[@value=&apos;url&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L532">pages/QrCreationPage/QrCreationFlowLocators.ts:532</a></li>
+<li><code>this.menuMenuTypeRestaurantDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_menuInfo&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L535">pages/QrCreationPage/QrCreationFlowLocators.ts:535</a></li>
+<li><code>this.menuMenuTypeRestaurantImgInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;companyLogo&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L538">pages/QrCreationPage/QrCreationFlowLocators.ts:538</a></li>
+<li><code>this.menuMenuTypeRestaurantNameInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;companyTitle&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L541">pages/QrCreationPage/QrCreationFlowLocators.ts:541</a></li>
+<li><code>this.menuMenuTypeRestaurantDescriptionInput</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;companyDescription&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L544">pages/QrCreationPage/QrCreationFlowLocators.ts:544</a></li>
+<li><code>this.menuMenuTypeMenuDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_product&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L547">pages/QrCreationPage/QrCreationFlowLocators.ts:547</a></li>
+<li><code>this.menuMenuTypeSection1Dropdown</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;add_section&apos;]//button[contains(@class,&apos;section-btn&apos;) and @data-target=&apos;#menu_section_1&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L550">pages/QrCreationPage/QrCreationFlowLocators.ts:550</a></li>
+<li><code>this.menuMenuTypeSection1NameInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;sectionNames&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L553">pages/QrCreationPage/QrCreationFlowLocators.ts:553</a></li>
+<li><code>this.menuMenuTypeSection1DescriptionOfSectionInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;sectionDescriptions&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L556">pages/QrCreationPage/QrCreationFlowLocators.ts:556</a></li>
+<li><code>this.menuMenuTypeSection1ImageInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;productImages1&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L559">pages/QrCreationPage/QrCreationFlowLocators.ts:559</a></li>
+<li><code>this.menuMenuTypeSection1ProductNameInput</code> &#x2190; <code>page.locator( &quot;//div[@class=&apos;row&apos;]//input[contains(@name,&apos;productNames&apos;) and contains(@class,&apos;pName&apos;)]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L562">pages/QrCreationPage/QrCreationFlowLocators.ts:562</a></li>
+<li><code>this.menuMenuTypeSection1NameTranslatedInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;productNamesTranslated&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L565">pages/QrCreationPage/QrCreationFlowLocators.ts:565</a></li>
+<li><code>this.menuMenuTypeSection1DescriptionInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;productDescriptions&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L568">pages/QrCreationPage/QrCreationFlowLocators.ts:568</a></li>
+<li><code>this.menuMenuTypeSection1PriceInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;productPrices&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L571">pages/QrCreationPage/QrCreationFlowLocators.ts:571</a></li>
+<li><code>this.menuLinkTypeUrlInput</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;url&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L574">pages/QrCreationPage/QrCreationFlowLocators.ts:574</a></li>
+<li><code>this.wiFiInfoDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_WiFi_Information&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L575">pages/QrCreationPage/QrCreationFlowLocators.ts:575</a></li>
+<li><code>this.wiFiInfoNetworkNameInput</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;wifi_ssid&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L578">pages/QrCreationPage/QrCreationFlowLocators.ts:578</a></li>
+<li><code>this.wiFiInfoNetworkPasswordInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;wifi_password&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L579">pages/QrCreationPage/QrCreationFlowLocators.ts:579</a></li>
+<li><code>this.wiFiInfoEncryptingTypeDropdown</code> &#x2190; <code>page.locator( &quot;//select[@id=&apos;wifi_encryption&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L582">pages/QrCreationPage/QrCreationFlowLocators.ts:582</a></li>
+<li><code>this.facebookDesignDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#facebook-bg&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L585">pages/QrCreationPage/QrCreationFlowLocators.ts:585</a></li>
+<li><code>this.facebookDesignImage0</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;facebook-bg&apos;]//div[@data-image_id=&apos;0&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L588">pages/QrCreationPage/QrCreationFlowLocators.ts:588</a></li>
+<li><code>this.facebookDesignImage1</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;facebook-bg&apos;]//div[@data-image_id=&apos;1&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L591">pages/QrCreationPage/QrCreationFlowLocators.ts:591</a></li>
+<li><code>this.facebookDesignImage2</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;facebook-bg&apos;]//div[@data-image_id=&apos;2&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L594">pages/QrCreationPage/QrCreationFlowLocators.ts:594</a></li>
+<li><code>this.facebookDesignBackgroundInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;fbBgImage&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L597">pages/QrCreationPage/QrCreationFlowLocators.ts:597</a></li>
+<li><code>this.facebookProfileImgDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#facebook-profile&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L600">pages/QrCreationPage/QrCreationFlowLocators.ts:600</a></li>
+<li><code>this.facebookProfileImgInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;companyLogo&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L603">pages/QrCreationPage/QrCreationFlowLocators.ts:603</a></li>
+<li><code>this.facebookBasicInfoDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#facebook-details&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L606">pages/QrCreationPage/QrCreationFlowLocators.ts:606</a></li>
+<li><code>this.facebookBasicInfoFacebookUrl</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;facebook_url&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L609">pages/QrCreationPage/QrCreationFlowLocators.ts:609</a></li>
+<li><code>this.facebookBasicInfoFacebookTitle</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;facebook_title&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L612">pages/QrCreationPage/QrCreationFlowLocators.ts:612</a></li>
+<li><code>this.facebookBasicInfoFacebookDescription</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;facebook_description&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L615">pages/QrCreationPage/QrCreationFlowLocators.ts:615</a></li>
+<li><code>this.instagramBasicInfoDropdown</code> &#x2190; <code>page.getByTestId( &apos;step2-instagram-basic-information-accordion-trigger&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L618">pages/QrCreationPage/QrCreationFlowLocators.ts:618</a></li>
+<li><code>this.instagramBasicInfoUsernameInput</code> &#x2190; <code>page.getByTestId( &apos;step2-instagram-basic-information-username-input&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L621">pages/QrCreationPage/QrCreationFlowLocators.ts:621</a></li>
+<li><code>this.socialMediaDesignDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_Design&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L624">pages/QrCreationPage/QrCreationFlowLocators.ts:624</a></li>
+<li><code>this.socialMediaBasicInfoDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#social-media&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L627">pages/QrCreationPage/QrCreationFlowLocators.ts:627</a></li>
+<li><code>this.socialMediaBasicInfoTitle</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;social_title&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L630">pages/QrCreationPage/QrCreationFlowLocators.ts:630</a></li>
+<li><code>this.socialMediaBasicInfoDescription</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;social_description&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L633">pages/QrCreationPage/QrCreationFlowLocators.ts:633</a></li>
+<li><code>this.whatsAppInformationCountryCodeButton</code> &#x2190; <code>page.locator( &quot;//button[@class=&apos;iti__selected-country&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L636">pages/QrCreationPage/QrCreationFlowLocators.ts:636</a></li>
+<li><code>this.whatsAppInformationUsCodeOption</code> &#x2190; <code>page.locator( &quot;//li[@id=&apos;iti-0__item-us&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L639">pages/QrCreationPage/QrCreationFlowLocators.ts:639</a></li>
+<li><code>this.whatsAppInformationDropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#whatsapp_no&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L642">pages/QrCreationPage/QrCreationFlowLocators.ts:642</a></li>
+<li><code>this.whatsAppInformationPhoneInput</code> &#x2190; <code>page.locator( &quot;//input[@id=&apos;phone&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L645">pages/QrCreationPage/QrCreationFlowLocators.ts:645</a></li>
+<li><code>this.whatsAppInformationMessageInput</code> &#x2190; <code>page.locator( &quot;//textarea[@id=&apos;whatsapp_body&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L648">pages/QrCreationPage/QrCreationFlowLocators.ts:648</a></li>
+<li><code>this.frameStep3Dropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_frame&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L651">pages/QrCreationPage/QrCreationFlowLocators.ts:651</a></li>
+<li><code>this.qrcodePatternsStep3Dropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_patterns&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L654">pages/QrCreationPage/QrCreationFlowLocators.ts:654</a></li>
+<li><code>this.qrcodeCornersStep3Dropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_corners&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L657">pages/QrCreationPage/QrCreationFlowLocators.ts:657</a></li>
+<li><code>this.qrcodeAddLogoStep3Dropdown</code> &#x2190; <code>page.locator( &quot;//button[@data-target=&apos;#acc_addLogo&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L660">pages/QrCreationPage/QrCreationFlowLocators.ts:660</a></li>
+<li><code>this.qrcodeUploadLogoInput</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;qr_code_logo&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L663">pages/QrCreationPage/QrCreationFlowLocators.ts:663</a></li>
+<li><code>this.closeDownloadModalButton</code> &#x2190; <code>page.locator( &quot;//div[@id=&apos;DownloadModal&apos;]//button[@aria-label=&apos;Close&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L664">pages/QrCreationPage/QrCreationFlowLocators.ts:664</a></li>
+<li><code>this.dpfFormTitle</code> &#x2190; <code>page.locator( &quot;//form[@id=&apos;register-dpf-form&apos;]/div[@class=&apos;-form-title&apos;]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L667">pages/QrCreationPage/QrCreationFlowLocators.ts:667</a></li>
+<li><code>this.dpfFormSubmitButton</code> &#x2190; <code>page.locator( &quot;//button[contains(@class,&apos;-btn-submit&apos;)]&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L670">pages/QrCreationPage/QrCreationFlowLocators.ts:670</a></li>
+<li><code>this.congratsTitleH2</code> &#x2190; <code>page.locator(&quot;//div[@class=&apos;thank-you&apos;]/h2&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L673">pages/QrCreationPage/QrCreationFlowLocators.ts:673</a></li>
+<li><code>this.congratsDownloadButton</code> &#x2190; <code>page.locator( &quot;//div[@class=&apos;thank-you&apos;]/div[@class=&apos;thank-btn-area&apos;]/a&quot; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L674">pages/QrCreationPage/QrCreationFlowLocators.ts:674</a></li>
+<li><code>this.qrBackdrop</code> &#x2190; <code>page.locator(&apos;.qr-backdrop&apos;).first()</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L677">pages/QrCreationPage/QrCreationFlowLocators.ts:677</a></li>
+<li><code>this.overlay</code> &#x2190; <code>page.locator(&apos;#overlay_img&apos;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L678">pages/QrCreationPage/QrCreationFlowLocators.ts:678</a></li>
+<li><code>this.setupWebsiteQrCodeInput</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;url&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L679">pages/QrCreationPage/QrCreationFlowLocators.ts:679</a></li>
+<li><code>this.nextButtonStep1</code> &#x2190; <code>page.locator(&quot;//button[@id=&apos;temp_next&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L680">pages/QrCreationPage/QrCreationFlowLocators.ts:680</a></li>
+<li><code>this.closeCarouselButtonSt1</code> &#x2190; <code>page.getByTestId( &apos;help-popup-step-1-close-icon-button&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L681">pages/QrCreationPage/QrCreationFlowLocators.ts:681</a></li>
+<li><code>this.closeCarouselButtonSt2</code> &#x2190; <code>page.getByTestId( &apos;help-popup-step-2-close-icon-button&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L684">pages/QrCreationPage/QrCreationFlowLocators.ts:684</a></li>
+<li><code>this.closeCarouselButtonSt3</code> &#x2190; <code>page.getByTestId( &apos;help-popup-step-3-close-icon-button&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L687">pages/QrCreationPage/QrCreationFlowLocators.ts:687</a></li>
+<li><code>this.step2OnboardingCarousel</code> &#x2190; <code>page.locator(&apos;div.step-2-slides&apos;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L690">pages/QrCreationPage/QrCreationFlowLocators.ts:690</a></li>
+<li><code>this.step3OnboardingCarousel</code> &#x2190; <code>page.getByTestId(&apos;help-popup-step-3&apos;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L691">pages/QrCreationPage/QrCreationFlowLocators.ts:691</a></li>
+<li><code>this.createButtonStep3</code> &#x2190; <code>page.locator(&quot;//button[@id=&apos;temp_submit&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L692">pages/QrCreationPage/QrCreationFlowLocators.ts:692</a></li>
+<li><code>this.dpfFormEmailInput</code> &#x2190; <code>page.locator(&quot;//input[@id=&apos;input-email&apos;]&quot;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L693">pages/QrCreationPage/QrCreationFlowLocators.ts:693</a></li>
+<li><code>this.fontsTab</code> &#x2190; <code>page.getByTestId(&apos;step2-fonts-accordion-trigger&apos;)</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L694">pages/QrCreationPage/QrCreationFlowLocators.ts:694</a></li>
+<li><code>this.titleFontStyleInput</code> &#x2190; <code>page.getByTestId( &apos;step2-fonts-title-dropdown-button&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L695">pages/QrCreationPage/QrCreationFlowLocators.ts:695</a></li>
+<li><code>this.textFontStyleInput</code> &#x2190; <code>page.getByTestId( &apos;step2-fonts-text-dropdown-button&apos; )</code> &#x2014; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L698">pages/QrCreationPage/QrCreationFlowLocators.ts:698</a></li>
+</ul>
+<h2 id="pages-qrcreationpage-qrcreationflowpage-ts">pages/QrCreationPage/QrCreationFlowPage.ts</h2>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L1">pages/QrCreationPage/QrCreationFlowPage.ts:1</a></p>
+<ul>
+<li><code>{ Locator, Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>type { Product }</code> &#x2190; <a data-source="base/Product.ts" href="../../sources/base/Product.ts.html#L1">base/Product.ts:1</a></li>
+<li><code>{ QrCreationFlowLocators }</code> &#x2190; <a data-source="pages/QrCreationPage/QrCreationFlowLocators.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowLocators.ts.html#L1">pages/QrCreationPage/QrCreationFlowLocators.ts:1</a></li>
+<li><code>{ Step1Page }</code> &#x2190; <a data-source="pages/Step1Page/Step1Page.ts" href="../../sources/pages/Step1Page/Step1Page.ts.html#L1">pages/Step1Page/Step1Page.ts:1</a></li>
+<li><code>{ Step2Page }</code> &#x2190; <a data-source="pages/Step2Page/Step2Page.ts" href="../../sources/pages/Step2Page/Step2Page.ts.html#L1">pages/Step2Page/Step2Page.ts:1</a></li>
+<li><code>{ Step3Page }</code> &#x2190; <a data-source="pages/Step3Page/Step3Page.ts" href="../../sources/pages/Step3Page/Step3Page.ts.html#L1">pages/Step3Page/Step3Page.ts:1</a></li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page, product: Product = &apos;oqg&apos;)</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L16">pages/QrCreationPage/QrCreationFlowPage.ts:16</a></p>
+<h3 id="submitdpfemailregistration">submitDpfEmailRegistration</h3>
+<p><code>submitDpfEmailRegistration(email: string)</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L35">pages/QrCreationPage/QrCreationFlowPage.ts:35</a></p>
+<p>Fills and submits the DPF email gate (&quot;Download Your QR Code&quot;).</p>
+<p>Product bug (dev): Sign Up/Submit uses onclick=&quot;submitForm()&quot; but <code>submitForm</code> is often missing at click time (ReferenceError), so the page never advances to Plans &amp; Pricing. Prefer the global when present; otherwise native HTMLFormElement.submit() (bypasses the jQuery preventDefault).</p>
+<ul>
+<li><code>this.expect( this.locator.emailInput, &#x2032;DPF email gate (#input-email) did not appear after Create. URL=&#x24;{this.page.url()}&#x2032; ).toBeVisible({ timeout: 60_000 })</code> &#x2014; line 36</li>
+<li><code>this.page.url()</code> &#x2014; line 38</li>
+<li><code>this.locator.emailInput.fill(email)</code> &#x2014; line 40</li>
+<li><code>this.page.on(&apos;pageerror&apos;, onError)</code> &#x2014; line 44</li>
+<li><code>this.locator.dpfFormSubmitButton.click()</code> &#x2014; line 47</li>
+<li><code>this.locator.days14FullAccessButton .waitFor({ state: &apos;visible&apos;, timeout: 8_000 }) .then(() =&gt; true) .catch([callback: see source])</code> &#x2014; line 49</li>
+<li><code>this.locator.days14FullAccessButton .waitFor({ state: &apos;visible&apos;, timeout: 8_000 }) .then([callback: see source])</code> &#x2014; line 49</li>
+<li><code>this.locator.days14FullAccessButton .waitFor({ state: &apos;visible&apos;, timeout: 8_000 })</code> &#x2014; line 49</li>
+<li><code>this.page.evaluate([callback: see source])</code> &#x2014; line 57</li>
+<li><code>this.page.off(&apos;pageerror&apos;, onError)</code> &#x2014; line 77</li>
+<li><code>this.locator.days14FullAccessButton.waitFor({ state: &apos;visible&apos;, timeout: 60_000, })</code> &#x2014; line 80</li>
+</ul>
+<h3 id="selectdpfannualplan">selectDpfAnnualPlan</h3>
+<p><code>selectDpfAnnualPlan()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L86">pages/QrCreationPage/QrCreationFlowPage.ts:86</a></p>
+<ul>
+<li><code>this.locator.annualPlanButton.check({ force: true })</code> &#x2014; line 87</li>
+<li><code>this.expect(this.locator.annualPlanButton).toBeChecked()</code> &#x2014; line 88</li>
+<li><code>this.locator.continueUserPlanButton.click()</code> &#x2014; line 89</li>
+</ul>
+<h3 id="select14limiteddpfplan">select14LimitedDpfPlan</h3>
+<p><code>select14LimitedDpfPlan()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L92">pages/QrCreationPage/QrCreationFlowPage.ts:92</a></p>
+<ul>
+<li><code>this.locator.days14LimitedAccessButton.click()</code> &#x2014; line 93</li>
+<li><code>this.locator.continueUserPlanButton.click()</code> &#x2014; line 94</li>
+</ul>
+<h3 id="select14fulldpfplan">select14FullDpfPlan</h3>
+<p><code>select14FullDpfPlan()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L97">pages/QrCreationPage/QrCreationFlowPage.ts:97</a></p>
+<ul>
+<li><code>this.locator.days14FullAccessButton.click()</code> &#x2014; line 98</li>
+<li><code>this.locator.continueUserPlanButton.click()</code> &#x2014; line 99</li>
+</ul>
+<h3 id="websiteqrcreate">websiteQrCreate</h3>
+<p><code>websiteQrCreate(url: string = &apos;google.com&apos;)</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L112">pages/QrCreationPage/QrCreationFlowPage.ts:112</a></p>
+<ul>
+<li><code>this.step1.selectWebsiteQrType()</code> &#x2014; line 113</li>
+<li><code>this.step2.setWebsiteQrUrl(url)</code> &#x2014; line 114</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 115</li>
+</ul>
+<h3 id="quickwebsitecreate">quickWebsiteCreate</h3>
+<p><code>quickWebsiteCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L119">pages/QrCreationPage/QrCreationFlowPage.ts:119</a></p>
+<ul>
+<li><code>this.page.waitForLoadState(&apos;networkidle&apos;)</code> &#x2014; line 120</li>
+<li><code>this.locator.websiteQrType.click()</code> &#x2014; line 121</li>
+<li><code>this.locator.setupWebsiteQrCodeInput.fill(this.fakeUrl())</code> &#x2014; line 122</li>
+<li><code>this.fakeUrl()</code> &#x2014; line 122</li>
+<li><code>this.clickStep2NextButton()</code> &#x2014; line 123</li>
+<li><code>this.clickStep3CreateButton()</code> &#x2014; line 124</li>
+</ul>
+<h3 id="closedownloadmodalifpresent">closeDownloadModalIfPresent</h3>
+<p><code>closeDownloadModalIfPresent()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L133">pages/QrCreationPage/QrCreationFlowPage.ts:133</a></p>
+<p>Dismisses the post-create <code>#DownloadModal</code> when it is open. Bootstrap keeps the Close control in the DOM; wait for <code>.show</code> to drop rather than asserting the button itself is hidden. Retry + Escape covers the first-download handler not reacting to a single click.</p>
+<ul>
+<li><code>this.page.locator(&apos;#DownloadModal.show&apos;)</code> &#x2014; line 135</li>
+<li><code>close.click({ force: true })</code> &#x2014; line 152</li>
+<li><code>this.page.keyboard.press(&apos;Escape&apos;)</code> &#x2014; line 154</li>
+<li><code>this.page.keyboard.press(&apos;Escape&apos;)</code> &#x2014; line 163</li>
+<li><code>this.expect(openModal).toBeHidden({ timeout: 10_000 })</code> &#x2014; line 166</li>
+</ul>
+<h3 id="quickwebsitecreatedpf">quickWebsiteCreateDPF</h3>
+<p><code>quickWebsiteCreateDPF()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L169">pages/QrCreationPage/QrCreationFlowPage.ts:169</a></p>
+<ul>
+<li><code>this.step1.selectWebsiteQrType()</code> &#x2014; line 170</li>
+<li><code>this.locator.setupWebsiteQrCodeInput.fill(this.fakeUrl())</code> &#x2014; line 171</li>
+<li><code>this.fakeUrl()</code> &#x2014; line 171</li>
+<li><code>this.clickStep2NextButton()</code> &#x2014; line 172</li>
+<li><code>this.clickStep3CreateButtonDPF()</code> &#x2014; line 173</li>
+</ul>
+<h3 id="pdfqrcreate">pdfQrCreate</h3>
+<p><code>pdfQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L178">pages/QrCreationPage/QrCreationFlowPage.ts:178</a></p>
+<ul>
+<li><code>this.step1.selectPdfQrType()</code> &#x2014; line 179</li>
+<li><code>this.step2.uploadPdf()</code> &#x2014; line 180</li>
+<li><code>this.step2.checkPdfFileUploaded()</code> &#x2014; line 181</li>
+<li><code>this.step2.setPdfCompanyName(this.fakeCompany())</code> &#x2014; line 182</li>
+<li><code>this.fakeCompany()</code> &#x2014; line 182</li>
+<li><code>this.step2.setPdfFileName(this.fakeString(10))</code> &#x2014; line 183</li>
+<li><code>this.fakeString(10)</code> &#x2014; line 183</li>
+<li><code>this.step2.setPdfDescription(this.fakeString(200))</code> &#x2014; line 184</li>
+<li><code>this.fakeString(200)</code> &#x2014; line 184</li>
+<li><code>this.step2.setPdfWebsite()</code> &#x2014; line 185</li>
+<li><code>this.step2.setPdfButtonText(this.fakeWord())</code> &#x2014; line 186</li>
+<li><code>this.fakeWord()</code> &#x2014; line 186</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 187</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 188</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 189</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 190</li>
+</ul>
+<h3 id="linksqrcreate">linksQrCreate</h3>
+<p><code>linksQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L196">pages/QrCreationPage/QrCreationFlowPage.ts:196</a></p>
+<ul>
+<li><code>this.step1.selectLinksQrType()</code> &#x2014; line 197</li>
+<li><code>this.step2.setLinksLogo()</code> &#x2014; line 199</li>
+<li><code>this.step2.setLinksImage()</code> &#x2014; line 200</li>
+<li><code>this.step2.setLinksCompanyTitle()</code> &#x2014; line 201</li>
+<li><code>this.step2.setLinksCompanyDescription()</code> &#x2014; line 202</li>
+<li><code>this.step2.setLinksText()</code> &#x2014; line 203</li>
+<li><code>this.step2.setLinksUrl()</code> &#x2014; line 204</li>
+<li><code>this.step2.addSocialMediaLink()</code> &#x2014; line 205</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 206</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 207</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 208</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 209</li>
+</ul>
+<h3 id="v-ardqrcreate">v&#x421;ardQrCreate</h3>
+<p><code>v&#x421;ardQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L215">pages/QrCreationPage/QrCreationFlowPage.ts:215</a></p>
+<ul>
+<li><code>this.step1.selectVcardQrType()</code> &#x2014; line 216</li>
+<li><code>this.step2.setVcardCompanyLogo()</code> &#x2014; line 218</li>
+<li><code>this.step2.setVcardPersonalName()</code> &#x2014; line 219</li>
+<li><code>this.step2.setContactInfoPhoneNumber()</code> &#x2014; line 220</li>
+<li><code>this.step2.setContactInfoEmail()</code> &#x2014; line 221</li>
+<li><code>this.step2.setContactInfoWebsite()</code> &#x2014; line 222</li>
+<li><code>this.step2.setShipAddress()</code> &#x2014; line 223</li>
+<li><code>this.step2.setVcardCompanyName(this.fakeCompany())</code> &#x2014; line 224</li>
+<li><code>this.fakeCompany()</code> &#x2014; line 224</li>
+<li><code>this.step2.setVcardCompanyProfession(this.fakeWord())</code> &#x2014; line 225</li>
+<li><code>this.fakeWord()</code> &#x2014; line 225</li>
+<li><code>this.step2.setVcardCompanyNotes(this.fakeString(250))</code> &#x2014; line 226</li>
+<li><code>this.fakeString(250)</code> &#x2014; line 226</li>
+<li><code>this.step2.addSocialMediaLink()</code> &#x2014; line 227</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 228</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 229</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 230</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 231</li>
+</ul>
+<h3 id="businessqrcreate">businessQrCreate</h3>
+<p><code>businessQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L237">pages/QrCreationPage/QrCreationFlowPage.ts:237</a></p>
+<ul>
+<li><code>this.step1.selectBusinessQrType()</code> &#x2014; line 238</li>
+<li><code>this.step2.setBusinessCompanyLogo()</code> &#x2014; line 240</li>
+<li><code>this.step2.setBusinessCompanyName(this.fakeCompany())</code> &#x2014; line 241</li>
+<li><code>this.fakeCompany()</code> &#x2014; line 241</li>
+<li><code>this.step2.setBusinessCompanyTitle(this.fakeString(20))</code> &#x2014; line 242</li>
+<li><code>this.fakeString(20)</code> &#x2014; line 242</li>
+<li><code>this.step2.setBusinessCompanySubTitle(this.fakeString(50))</code> &#x2014; line 243</li>
+<li><code>this.fakeString(50)</code> &#x2014; line 243</li>
+<li><code>this.step2.setOpeningHours()</code> &#x2014; line 244</li>
+<li><code>this.step2.addMondayAdditionalHours()</code> &#x2014; line 245</li>
+<li><code>this.step2.setBusinessShipAddress()</code> &#x2014; line 246</li>
+<li><code>this.step2.setBusinessContactName()</code> &#x2014; line 247</li>
+<li><code>this.step2.setContactInfoPhoneNumber()</code> &#x2014; line 248</li>
+<li><code>this.step2.setContactInfoEmail()</code> &#x2014; line 249</li>
+<li><code>this.step2.setContactInfoWebsite()</code> &#x2014; line 250</li>
+<li><code>this.step2.addSocialMediaLink()</code> &#x2014; line 251</li>
+<li><code>this.step2.setAboutCompany(this.fakeString(100))</code> &#x2014; line 252</li>
+<li><code>this.fakeString(100)</code> &#x2014; line 252</li>
+<li><code>this.step2.setBusinessFacility()</code> &#x2014; line 253</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 254</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 255</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 256</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 257</li>
+</ul>
+<h3 id="imageqrcreate">imageQrCreate</h3>
+<p><code>imageQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L263">pages/QrCreationPage/QrCreationFlowPage.ts:263</a></p>
+<ul>
+<li><code>this.step1.selectImagesQrType()</code> &#x2014; line 264</li>
+<li><code>this.step2.uploadImage()</code> &#x2014; line 266</li>
+<li><code>this.step2.checkValidImageUploaded()</code> &#x2014; line 267</li>
+<li><code>this.step2.setImageTitle(this.fakeString(20))</code> &#x2014; line 268</li>
+<li><code>this.fakeString(20)</code> &#x2014; line 268</li>
+<li><code>this.step2.setImageDescription(this.fakeString(100))</code> &#x2014; line 269</li>
+<li><code>this.fakeString(100)</code> &#x2014; line 269</li>
+<li><code>this.step2.setImageWebsite()</code> &#x2014; line 270</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 271</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 272</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 273</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 274</li>
+</ul>
+<h3 id="videoqrcreate">videoQrCreate</h3>
+<p><code>videoQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L280">pages/QrCreationPage/QrCreationFlowPage.ts:280</a></p>
+<ul>
+<li><code>this.step1.selectVideoQrType()</code> &#x2014; line 281</li>
+<li><code>this.step2.setYoutubeVideo()</code> &#x2014; line 283</li>
+<li><code>this.step2.checkValidVideoUploaded()</code> &#x2014; line 284</li>
+<li><code>this.step2.uploadVideo()</code> &#x2014; line 285</li>
+<li><code>this.step2.setUploadedVideoDescription()</code> &#x2014; line 286</li>
+<li><code>this.step2.setVideoCompanyName(this.fakeCompany())</code> &#x2014; line 287</li>
+<li><code>this.fakeCompany()</code> &#x2014; line 287</li>
+<li><code>this.step2.setVideoTitle(this.fakeString(30))</code> &#x2014; line 288</li>
+<li><code>this.fakeString(30)</code> &#x2014; line 288</li>
+<li><code>this.step2.setVideoDescription(this.fakeString(100))</code> &#x2014; line 289</li>
+<li><code>this.fakeString(100)</code> &#x2014; line 289</li>
+<li><code>this.locator.socialNetworkQrCodeDropdown.click()</code> &#x2014; line 290</li>
+<li><code>this.step2.addSocialMediaLink()</code> &#x2014; line 291</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 292</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 293</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 294</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 295</li>
+</ul>
+<h3 id="appsqrcreate">appsQrCreate</h3>
+<p><code>appsQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L301">pages/QrCreationPage/QrCreationFlowPage.ts:301</a></p>
+<ul>
+<li><code>this.step1.selectAppsQrType()</code> &#x2014; line 302</li>
+<li><code>this.step2.setAppName(this.fakeWord())</code> &#x2014; line 304</li>
+<li><code>this.fakeWord()</code> &#x2014; line 304</li>
+<li><code>this.step2.setAppDeveloper(this.fakeCompany())</code> &#x2014; line 305</li>
+<li><code>this.fakeCompany()</code> &#x2014; line 305</li>
+<li><code>this.step2.setAppLogo()</code> &#x2014; line 306</li>
+<li><code>this.step2.setAppDescription(this.fakeString(200))</code> &#x2014; line 307</li>
+<li><code>this.fakeString(200)</code> &#x2014; line 307</li>
+<li><code>this.step2.setAppWebsite()</code> &#x2014; line 308</li>
+<li><code>this.locator.appGooglePlayButton.click()</code> &#x2014; line 309</li>
+<li><code>this.locator.appAppleStoreButton.click()</code> &#x2014; line 310</li>
+<li><code>this.locator.appAmazonStoreButton.click()</code> &#x2014; line 311</li>
+<li><code>this.step2.setAppGooglePlayUrl()</code> &#x2014; line 312</li>
+<li><code>this.step2.setAppAppleStoreUrl()</code> &#x2014; line 313</li>
+<li><code>this.step2.setAppAmazonStoreUrl()</code> &#x2014; line 314</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 315</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 316</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 317</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 318</li>
+</ul>
+<h3 id="couponqrcreate">couponQrCreate</h3>
+<p><code>couponQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L324">pages/QrCreationPage/QrCreationFlowPage.ts:324</a></p>
+<ul>
+<li><code>this.step1.selectCouponQrType()</code> &#x2014; line 325</li>
+<li><code>this.step2.setCouponLogo()</code> &#x2014; line 327</li>
+<li><code>this.step2.setCouponCompanyName()</code> &#x2014; line 328</li>
+<li><code>this.step2.setCouponCompanyTitle()</code> &#x2014; line 329</li>
+<li><code>this.step2.setCouponCompanyDescription()</code> &#x2014; line 330</li>
+<li><code>this.step2.unfoldCoupon()</code> &#x2014; line 331</li>
+<li><code>this.step2.setCouponCode()</code> &#x2014; line 332</li>
+<li><code>this.step2.setCouponTerms()</code> &#x2014; line 333</li>
+<li><code>this.step2.setCouponButtonText()</code> &#x2014; line 334</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 335</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 336</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 337</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 338</li>
+</ul>
+<h3 id="mp3qrcreate">mp3QrCreate</h3>
+<p><code>mp3QrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L344">pages/QrCreationPage/QrCreationFlowPage.ts:344</a></p>
+<ul>
+<li><code>this.step1.selectMp3QrType()</code> &#x2014; line 345</li>
+<li><code>this.step2.uploadMp3()</code> &#x2014; line 347</li>
+<li><code>this.step2.checkValidMp3Uploaded()</code> &#x2014; line 348</li>
+<li><code>this.step2.setMp3Logo()</code> &#x2014; line 349</li>
+<li><code>this.step2.setMp3Title()</code> &#x2014; line 350</li>
+<li><code>this.step2.setMp3Description()</code> &#x2014; line 351</li>
+<li><code>this.step2.setMp3Website()</code> &#x2014; line 352</li>
+<li><code>this.step2.locator.socialLinksTabButton.click()</code> &#x2014; line 353</li>
+<li><code>this.step2.addSocialMediaLink()</code> &#x2014; line 354</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 355</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 356</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 357</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 358</li>
+</ul>
+<h3 id="menudigitalqrcreate">menuDigitalQrCreate</h3>
+<p><code>menuDigitalQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L364">pages/QrCreationPage/QrCreationFlowPage.ts:364</a></p>
+<ul>
+<li><code>this.step1.selectMenuDigitalQrType()</code> &#x2014; line 365</li>
+<li><code>this.step2.setMenuDigitalSectionTitle()</code> &#x2014; line 367</li>
+<li><code>this.step2.setMenuDigitalSectionDescription()</code> &#x2014; line 368</li>
+<li><code>this.step2.setMenuDigitalLogo()</code> &#x2014; line 369</li>
+<li><code>this.step2.setMenuDigitalRestaurantName()</code> &#x2014; line 370</li>
+<li><code>this.step2.setMenuDigitalRestaurantDescription()</code> &#x2014; line 371</li>
+<li><code>this.step2.setMenuDigitalProductImage()</code> &#x2014; line 372</li>
+<li><code>this.step2.setMenuDigitalProductName()</code> &#x2014; line 373</li>
+<li><code>this.step2.setMenuDigitalProductTranslatedName()</code> &#x2014; line 374</li>
+<li><code>this.step2.setMenuDigitalProductDescription()</code> &#x2014; line 375</li>
+<li><code>this.step2.setMenuDigitalProductPrice()</code> &#x2014; line 376</li>
+<li><code>this.step2.setMenuDigitalProductAllergen()</code> &#x2014; line 377</li>
+<li><code>this.step2.setContactInfoPhoneNumber()</code> &#x2014; line 378</li>
+<li><code>this.step2.setContactInfoEmail()</code> &#x2014; line 379</li>
+<li><code>this.step2.setContactInfoWebsite()</code> &#x2014; line 380</li>
+<li><code>this.step2.addSocialMediaLink()</code> &#x2014; line 381</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 382</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 383</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 384</li>
+<li><code>this.step2.setOpeningHours()</code> &#x2014; line 385</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 386</li>
+</ul>
+<h3 id="menupdfqrcreate">menuPdfQrCreate</h3>
+<p><code>menuPdfQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L392">pages/QrCreationPage/QrCreationFlowPage.ts:392</a></p>
+<ul>
+<li><code>this.step1.selectPdfMenuQrType()</code> &#x2014; line 393</li>
+<li><code>this.step2.uploadPdf()</code> &#x2014; line 395</li>
+<li><code>this.step2.checkPdfFileUploaded()</code> &#x2014; line 396</li>
+<li><code>this.step2.setPdfCompanyName(this.fakeCompany())</code> &#x2014; line 397</li>
+<li><code>this.fakeCompany()</code> &#x2014; line 397</li>
+<li><code>this.step2.setPdfFileName(this.fakeString(10))</code> &#x2014; line 398</li>
+<li><code>this.fakeString(10)</code> &#x2014; line 398</li>
+<li><code>this.step2.setPdfDescription(this.fakeString(200))</code> &#x2014; line 399</li>
+<li><code>this.fakeString(200)</code> &#x2014; line 399</li>
+<li><code>this.step2.setPdfWebsite()</code> &#x2014; line 400</li>
+<li><code>this.step2.setPdfButtonText(this.fakeWord())</code> &#x2014; line 401</li>
+<li><code>this.fakeWord()</code> &#x2014; line 401</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 402</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 403</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 404</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 405</li>
+</ul>
+<h3 id="menulinkqrcreate">menuLinkQrCreate</h3>
+<p><code>menuLinkQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L411">pages/QrCreationPage/QrCreationFlowPage.ts:411</a></p>
+<ul>
+<li><code>this.step1.selectWebsiteMenuQrType()</code> &#x2014; line 412</li>
+<li><code>this.step2.setWebsiteQrUrl()</code> &#x2014; line 413</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 414</li>
+</ul>
+<h3 id="wifiqrcreate">wifiQrCreate</h3>
+<p><code>wifiQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L420">pages/QrCreationPage/QrCreationFlowPage.ts:420</a></p>
+<ul>
+<li><code>this.step1.selectWifiQrType()</code> &#x2014; line 421</li>
+<li><code>this.step2.setWifiNetworkName()</code> &#x2014; line 422</li>
+<li><code>this.step2.setWifiNetworkPassword()</code> &#x2014; line 423</li>
+<li><code>this.step2.selectWifiNetworkEncryption()</code> &#x2014; line 424</li>
+<li><code>this.step2.selectWifiNetworkHide()</code> &#x2014; line 425</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 426</li>
+</ul>
+<h3 id="facebookqrcreate">facebookQrCreate</h3>
+<p><code>facebookQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L432">pages/QrCreationPage/QrCreationFlowPage.ts:432</a></p>
+<ul>
+<li><code>this.step1.selectFacebookQrType()</code> &#x2014; line 433</li>
+<li><code>this.step2.setFacebookLogo()</code> &#x2014; line 435</li>
+<li><code>this.step2.setFacebookUrl()</code> &#x2014; line 436</li>
+<li><code>this.step2.setFacebookTitle(this.fakeString(10))</code> &#x2014; line 437</li>
+<li><code>this.fakeString(10)</code> &#x2014; line 437</li>
+<li><code>this.step2.setFacebookDescription(this.fakeString(100))</code> &#x2014; line 438</li>
+<li><code>this.fakeString(100)</code> &#x2014; line 438</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 439</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 440</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 441</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 442</li>
+</ul>
+<h3 id="instagramqrcreate">instagramQrCreate</h3>
+<p><code>instagramQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L448">pages/QrCreationPage/QrCreationFlowPage.ts:448</a></p>
+<ul>
+<li><code>this.step1.selectInstagramQrType()</code> &#x2014; line 449</li>
+<li><code>this.locator.instagramBasicInfoUsernameInput.fill(this.fakeUserName())</code> &#x2014; line 450</li>
+<li><code>this.fakeUserName()</code> &#x2014; line 451</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 453</li>
+</ul>
+<h3 id="socialmediaqrcreate">socialMediaQrCreate</h3>
+<p><code>socialMediaQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L459">pages/QrCreationPage/QrCreationFlowPage.ts:459</a></p>
+<ul>
+<li><code>this.step1.selectSocialMediaQrType()</code> &#x2014; line 460</li>
+<li><code>this.step2.setSocialMediaTitle()</code> &#x2014; line 462</li>
+<li><code>this.step2.setSocialMediaTitleDescription()</code> &#x2014; line 463</li>
+<li><code>this.step2.uploadImage()</code> &#x2014; line 464</li>
+<li><code>this.step2.checkValidImageUploaded()</code> &#x2014; line 465</li>
+<li><code>this.step2.addSocialMediaLink()</code> &#x2014; line 466</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 467</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 468</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 469</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 470</li>
+</ul>
+<h3 id="whatsappqrcreate">whatsappQrCreate</h3>
+<p><code>whatsappQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L476">pages/QrCreationPage/QrCreationFlowPage.ts:476</a></p>
+<ul>
+<li><code>this.step1.selectWhatsappQrType()</code> &#x2014; line 477</li>
+<li><code>this.step2.setWhatsappPhoneNumber()</code> &#x2014; line 478</li>
+<li><code>this.step2.setWhatsappMessage()</code> &#x2014; line 479</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 480</li>
+</ul>
+<h3 id="eventqrcreate">eventQrCreate</h3>
+<p><code>eventQrCreate()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L490">pages/QrCreationPage/QrCreationFlowPage.ts:490</a></p>
+<p>Creates an Event QR with representative Step 2 content filled. Folder UI is not yet present on the Event form (FE gap vs Business).</p>
+<ul>
+<li><code>this.step1.selectEventQrType()</code> &#x2014; line 491</li>
+<li><code>this.step2.setEventTitle(this.fakeString(20))</code> &#x2014; line 493</li>
+<li><code>this.fakeString(20)</code> &#x2014; line 493</li>
+<li><code>this.step2.setEventSummary(this.fakeString(80))</code> &#x2014; line 494</li>
+<li><code>this.fakeString(80)</code> &#x2014; line 494</li>
+<li><code>this.step2.setEventImage()</code> &#x2014; line 495</li>
+<li><code>this.step2.setEventStartDate()</code> &#x2014; line 496</li>
+<li><code>this.step2.setEventEndDate()</code> &#x2014; line 499</li>
+<li><code>this.step2.setEventTimes(&apos;09:00&apos;, &apos;17:00&apos;)</code> &#x2014; line 500</li>
+<li><code>this.step2.setEventDetails(this.fakeString(100))</code> &#x2014; line 501</li>
+<li><code>this.fakeString(100)</code> &#x2014; line 501</li>
+<li><code>this.step2.setEventLink()</code> &#x2014; line 502</li>
+<li><code>this.step2.setEventManualLocation()</code> &#x2014; line 503</li>
+<li><code>this.step2.setEventContactName()</code> &#x2014; line 504</li>
+<li><code>this.step2.setEventFacility()</code> &#x2014; line 505</li>
+<li><code>this.page .getByTestId(&apos;step2-social-networks-accordion-trigger&apos;) .click()</code> &#x2014; line 506</li>
+<li><code>this.page .getByTestId(&apos;step2-social-networks-accordion-trigger&apos;)</code> &#x2014; line 506</li>
+<li><code>this.step2.addSocialMediaLink()</code> &#x2014; line 509</li>
+<li><code>this.setQrCodeFont()</code> &#x2014; line 510</li>
+<li><code>this.setWelcomeScreenImage()</code> &#x2014; line 511</li>
+<li><code>this.setQrCodePassword()</code> &#x2014; line 512</li>
+<li><code>this.step2.setQrCodeName()</code> &#x2014; line 513</li>
+</ul>
+<h3 id="setqrcodepassword">setQrCodePassword</h3>
+<p><code>setQrCodePassword(qrCodePassword: string = &quot;&lt;literal omitted; see source&gt;&quot;)</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L519">pages/QrCreationPage/QrCreationFlowPage.ts:519</a></p>
+<ul>
+<li><code>this.locator.qrPasswordButton.click()</code> &#x2014; line 522</li>
+<li><code>this.locator.qrPasswordCheckbox.check()</code> &#x2014; line 523</li>
+<li><code>this.locator.qrPasswordInput.fill(qrCodePassword)</code> &#x2014; line 524</li>
+</ul>
+<h3 id="setqrcodefolder">setQrCodeFolder</h3>
+<p><code>setQrCodeFolder(qrFolderName: string = this.fakeString())</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L528">pages/QrCreationPage/QrCreationFlowPage.ts:528</a></p>
+<ul>
+<li><code>this.page .getByRole(&apos;button&apos;, { name: /Link this QR to an existing or a new folder/i, }) .or(this.locator.qrFolderButton)</code> &#x2014; line 532</li>
+<li><code>this.page .getByRole(&apos;button&apos;, { name: /Link this QR to an existing or a new folder/i, })</code> &#x2014; line 532</li>
+<li><code>this.expect(async () =&gt; { if (!(await this.locator.noQrFolderButton.isVisible())) { await folderAccordion.first().click({ timeout: 5_000 }) } await this.expect(this.locator.noQrFolderButton).toBeVisible({ timeout: 2_000, }) }).toPass({ timeout: 30_000 })</code> &#x2014; line 541</li>
+<li><code>this.locator.noQrFolderButton.isVisible()</code> &#x2014; line 542</li>
+<li><code>folderAccordion.first().click({ timeout: 5_000 })</code> &#x2014; line 543</li>
+<li><code>this.expect(this.locator.noQrFolderButton).toBeVisible({ timeout: 2_000, })</code> &#x2014; line 545</li>
+<li><code>this.expect(async () =&gt; { await this.locator.noQrFolderButton.click({ timeout: 5_000 }) await this.expect(this.locator.createNewFolderButton).toBeVisible({ timeout: 3_000, }) }).toPass({ timeout: 30_000 })</code> &#x2014; line 551</li>
+<li><code>this.locator.noQrFolderButton.click({ timeout: 5_000 })</code> &#x2014; line 552</li>
+<li><code>this.expect(this.locator.createNewFolderButton).toBeVisible({ timeout: 3_000, })</code> &#x2014; line 553</li>
+<li><code>this.locator.createNewFolderButton.click()</code> &#x2014; line 558</li>
+<li><code>this.locator.folderNameInput.fill(qrFolderName)</code> &#x2014; line 559</li>
+<li><code>this.locator.createFolderButton.click()</code> &#x2014; line 560</li>
+</ul>
+<h3 id="openfolderaccordion">openFolderAccordion</h3>
+<p><code>openFolderAccordion()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L565">pages/QrCreationPage/QrCreationFlowPage.ts:565</a></p>
+<p>Opens the Step 2 Folder accordion and waits until the dropdown is usable.</p>
+<ul>
+<li><code>this.locator.noQrFolderButton.isVisible()</code> &#x2014; line 568</li>
+<li><code>trigger.click()</code> &#x2014; line 569</li>
+<li><code>this.expect(this.locator.noQrFolderButton).toBeVisible({ timeout: 15_000, })</code> &#x2014; line 571</li>
+</ul>
+<h3 id="selectexistingfolder">selectExistingFolder</h3>
+<p><code>selectExistingFolder(folderName: string)</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L577">pages/QrCreationPage/QrCreationFlowPage.ts:577</a></p>
+<p>Selects an existing folder from the Step 2 folder dropdown.</p>
+<ul>
+<li><code>this.openFolderAccordion()</code> &#x2014; line 578</li>
+<li><code>this.locator.noQrFolderButton.click({ force: true })</code> &#x2014; line 579</li>
+<li><code>this.page .getByRole(&apos;option&apos;, { name: folderName }) .or(this.page.getByRole(&apos;menuitem&apos;, { name: folderName })) .or(this.page .locator(&apos;[data-slot=&quot;popover-content&quot;], [role=&quot;dialog&quot;]&apos;) .getByText(folderName, { exact: true }))</code> &#x2014; line 580</li>
+<li><code>this.page .getByRole(&apos;option&apos;, { name: folderName }) .or(this.page.getByRole(&apos;menuitem&apos;, { name: folderName }))</code> &#x2014; line 580</li>
+<li><code>this.page .getByRole(&apos;option&apos;, { name: folderName })</code> &#x2014; line 580</li>
+<li><code>this.page.getByRole(&apos;menuitem&apos;, { name: folderName })</code> &#x2014; line 582</li>
+<li><code>this.page .locator(&apos;[data-slot=&quot;popover-content&quot;], [role=&quot;dialog&quot;]&apos;) .getByText(folderName, { exact: true })</code> &#x2014; line 584</li>
+<li><code>this.page .locator(&apos;[data-slot=&quot;popover-content&quot;], [role=&quot;dialog&quot;]&apos;)</code> &#x2014; line 584</li>
+<li><code>option.first().click()</code> &#x2014; line 588</li>
+</ul>
+<h3 id="selectnofolder">selectNoFolder</h3>
+<p><code>selectNoFolder()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L592">pages/QrCreationPage/QrCreationFlowPage.ts:592</a></p>
+<p>Sets the Step 2 folder selector to No folder / Dashboard.</p>
+<ul>
+<li><code>this.openFolderAccordion()</code> &#x2014; line 593</li>
+<li><code>this.locator.noQrFolderButton.click({ force: true })</code> &#x2014; line 594</li>
+<li><code>this.page .getByRole(&apos;option&apos;, { name: /no folder/i }) .or(this.page.getByRole(&apos;menuitem&apos;, { name: /no folder/i })) .or(this.page .locator(&apos;[data-slot=&quot;popover-content&quot;], [role=&quot;dialog&quot;]&apos;) .getByText(/no folder/i))</code> &#x2014; line 595</li>
+<li><code>this.page .getByRole(&apos;option&apos;, { name: /no folder/i }) .or(this.page.getByRole(&apos;menuitem&apos;, { name: /no folder/i }))</code> &#x2014; line 595</li>
+<li><code>this.page .getByRole(&apos;option&apos;, { name: /no folder/i })</code> &#x2014; line 595</li>
+<li><code>this.page.getByRole(&apos;menuitem&apos;, { name: /no folder/i })</code> &#x2014; line 597</li>
+<li><code>this.page .locator(&apos;[data-slot=&quot;popover-content&quot;], [role=&quot;dialog&quot;]&apos;) .getByText(/no folder/i)</code> &#x2014; line 599</li>
+<li><code>this.page .locator(&apos;[data-slot=&quot;popover-content&quot;], [role=&quot;dialog&quot;]&apos;)</code> &#x2014; line 599</li>
+<li><code>noFolder.first().click()</code> &#x2014; line 603</li>
+</ul>
+<h3 id="clickwizardback">clickWizardBack</h3>
+<p><code>clickWizardBack()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L607">pages/QrCreationPage/QrCreationFlowPage.ts:607</a></p>
+<p>Clicks the wizard Back control (<code>data-qa-id=footer-back-button</code>).</p>
+<ul>
+<li><code>this.locator.backButton.click()</code> &#x2014; line 608</li>
+</ul>
+<h3 id="setqrcodefont">setQrCodeFont</h3>
+<p><code>setQrCodeFont(titleFont: string = &apos;Lato&apos;, textFont: string = &apos;Roboto&apos;)</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L611">pages/QrCreationPage/QrCreationFlowPage.ts:611</a></p>
+<ul>
+<li><code>this.locator.fontsTab.click()</code> &#x2014; line 615</li>
+<li><code>this.pickFontFromDropdown(this.locator.titleFontStyleInput, titleFont)</code> &#x2014; line 616</li>
+<li><code>this.pickFontFromDropdown(this.locator.textFontStyleInput, textFont)</code> &#x2014; line 620</li>
+</ul>
+<h3 id="pickfontfromdropdown">pickFontFromDropdown</h3>
+<p><code>pickFontFromDropdown(trigger: Locator, font: string)</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L641">pages/QrCreationPage/QrCreationFlowPage.ts:641</a></p>
+<p>Selects a font from the Radix <code>cmdk</code> command-menu font picker.</p>
+<p>The old <code>getByRole(&apos;option&apos;, { name }).first().click()</code> was flaky: both the title and text pickers expose a same-named option, so <code>.first()</code> could grab the just-closed title menu&apos;s option while it detached (&quot;element was detached from the DOM&quot;), and the live mobile-preview re-render made the item &quot;not stable&quot; for the full action timeout. Instead: open the menu, type the font into the cmdk search box (it autofocuses on open) to filter the list down, then click the exact option by its <code>data-qa-id</code>. <code>force</code> skips the popover enter-animation stability wait and the whole click is retried until the menu closes (selection applied), so a transient re-render can&apos;t fail it.</p>
+<ul>
+<li><code>trigger.click()</code> &#x2014; line 645</li>
+<li><code>this.page .getByTestId(&#x2032;step2-font-option-&#x24;{font.toLowerCase()}&#x2032;) .first()</code> &#x2014; line 646</li>
+<li><code>this.page .getByTestId(&#x2032;step2-font-option-&#x24;{font.toLowerCase()}&#x2032;)</code> &#x2014; line 646</li>
+<li><code>font.toLowerCase()</code> &#x2014; line 647</li>
+<li><code>this.page.keyboard.type(font)</code> &#x2014; line 650</li>
+<li><code>this.expect(async () =&gt; { await option.click({ force: true, timeout: 3_000 }) await this.expect(option).toBeHidden({ timeout: 2_000 }) }).toPass({ timeout: 20_000 })</code> &#x2014; line 651</li>
+<li><code>option.click({ force: true, timeout: 3_000 })</code> &#x2014; line 652</li>
+<li><code>this.expect(option).toBeHidden({ timeout: 2_000 })</code> &#x2014; line 653</li>
+</ul>
+<h3 id="setwelcomescreenimage">setWelcomeScreenImage</h3>
+<p><code>setWelcomeScreenImage(imagePath: string = &apos;tests/data/test_files/image_files/vscode_logo.png&apos;)</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L657">pages/QrCreationPage/QrCreationFlowPage.ts:657</a></p>
+<ul>
+<li><code>this.locator.uploadWelcomeScreenQrCodeDropdown.click()</code> &#x2014; line 660</li>
+<li><code>this.locator.qrWelcomeScreenImageInput.setInputFiles(imagePath)</code> &#x2014; line 661</li>
+</ul>
+<h3 id="qronboardingparam">qrOnboardingParam</h3>
+<p><code>qrOnboardingParam()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L665">pages/QrCreationPage/QrCreationFlowPage.ts:665</a></p>
+<ul>
+<li><code>this.page.url()</code> &#x2014; line 667</li>
+</ul>
+<h3 id="dismissstep3helppopupifpresent">dismissStep3HelpPopupIfPresent</h3>
+<p><code>dismissStep3HelpPopupIfPresent()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L679">pages/QrCreationPage/QrCreationFlowPage.ts:679</a></p>
+<p>DPF and NSF both mount the Step 3 help modal. The dialog root (<code>help-popup-step-3</code>) is often not Playwright-visible (Radix), but <code>help-popup-step-3-close-icon-button</code> is. Clicking Create while it is open is a no-op &#x2014; the overlay eats the pointer.</p>
+<ul>
+<li><code>this.qrOnboardingParam()</code> &#x2014; line 681</li>
+<li><code>close.click()</code> &#x2014; line 689</li>
+</ul>
+<h3 id="waitforstep3createready">waitForStep3CreateReady</h3>
+<p><code>waitForStep3CreateReady()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L694">pages/QrCreationPage/QrCreationFlowPage.ts:694</a></p>
+<p>Same enable-wait as Step 2 &#x2014; the old 7s help-popup wait was masking this.</p>
+<ul>
+<li><code>this.page.url()</code> &#x2014; line 695</li>
+<li><code>this.page.waitForURL(/[?&amp;]step=3\b/, { timeout: 30_000 })</code> &#x2014; line 696</li>
+<li><code>this.page.waitForFunction([callback: see source], { timeout: 60_000 })</code> &#x2014; line 700</li>
+</ul>
+<h3 id="clickstep3createbutton">clickStep3CreateButton</h3>
+<p><code>clickStep3CreateButton()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L711">pages/QrCreationPage/QrCreationFlowPage.ts:711</a></p>
+<ul>
+<li><code>this.dismissStep3HelpPopupIfPresent()</code> &#x2014; line 712</li>
+<li><code>this.waitForStep3CreateReady()</code> &#x2014; line 713</li>
+<li><code>this.locator.createButton.click()</code> &#x2014; line 714</li>
+</ul>
+<h3 id="dismissstep3onboardingwithkeyboardifpresent">dismissStep3OnboardingWithKeyboardIfPresent</h3>
+<p><code>dismissStep3OnboardingWithKeyboardIfPresent()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L722">pages/QrCreationPage/QrCreationFlowPage.ts:722</a></p>
+<p>Dismisses the Step 3 onboarding dialog using only keyboard input. New users may receive this dialog after Step 2, where it owns focus and otherwise consumes the Enter intended for the Create button.</p>
+<ul>
+<li><code>this.page.url().includes(&apos;qr_onboarding=active&apos;)</code> &#x2014; line 723</li>
+<li><code>this.page.url()</code> &#x2014; line 723</li>
+<li><code>this.expect(this.locator.step3OnboardingCarousel).toBeVisible({ timeout: 7_000, })</code> &#x2014; line 725</li>
+<li><code>this.locator.closeCarouselButtonSt3.focus()</code> &#x2014; line 728</li>
+<li><code>this.expect(this.locator.closeCarouselButtonSt3).toBeFocused()</code> &#x2014; line 729</li>
+<li><code>this.page.keyboard.press(&apos;Enter&apos;)</code> &#x2014; line 730</li>
+<li><code>this.expect(this.locator.step3OnboardingCarousel).toBeHidden({ timeout: 7_000, })</code> &#x2014; line 731</li>
+</ul>
+<h3 id="clickstep3createbuttondpf">clickStep3CreateButtonDPF</h3>
+<p><code>clickStep3CreateButtonDPF()</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L737">pages/QrCreationPage/QrCreationFlowPage.ts:737</a></p>
+<ul>
+<li><code>this.dismissStep3HelpPopupIfPresent()</code> &#x2014; line 738</li>
+<li><code>this.waitForStep3CreateReady()</code> &#x2014; line 739</li>
+<li><code>this.locator.createButton.click()</code> &#x2014; line 740</li>
+</ul>
+<h3 id="clickstep2nextbutton">clickStep2NextButton</h3>
+<p><code>clickStep2NextButton(options: { waitForEnabled?: boolean } = {})</code></p>
+<p><a data-source="pages/QrCreationPage/QrCreationFlowPage.ts" href="../../sources/pages/QrCreationPage/QrCreationFlowPage.ts.html#L751">pages/QrCreationPage/QrCreationFlowPage.ts:751</a></p>
+<p>Clicks the Step 2 footer primary control (<code>footer-step2-next-button</code>). Visible label may be &quot;Next&quot; or &quot;Save&quot; depending on funnel; qa-id is stable. Pass <code>{ waitForEnabled: false }</code> for negative validation cases where the footer may stay disabled (do not hang waiting for enable). Closes Help if it remounted, then waits 1s so the overlay cannot intercept Next (mobile onboarding; confirmed as a flake source).</p>
+<ul>
+<li><code>this.page.waitForFunction([callback: see source], { timeout: 60000 })</code> &#x2014; line 758</li>
+<li><code>this.wait(1000)</code> &#x2014; line 770</li>
+<li><code>this.step2.dismissHelpIfOpen()</code> &#x2014; line 771</li>
+<li><code>nextButton.click()</code> &#x2014; line 773</li>
+<li><code>nextButton.click({ force: true })</code> &#x2014; line 776</li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

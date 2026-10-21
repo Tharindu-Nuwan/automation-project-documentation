@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/code/dpfgeneratepage.html">
+<title>DpfGeneratePage · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (2)</summary><a href="#pages-dpfgeneratepage-dpfgeneratepage-ts">pages/DpfGeneratePage/DpfGeneratePage.ts</a>
+<a href="#pages-dpfgeneratepage-dpfgeneratepagelocators-ts">pages/DpfGeneratePage/DpfGeneratePageLocators.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="dpfgeneratepage">DpfGeneratePage</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<h2 id="pages-dpfgeneratepage-dpfgeneratepage-ts">pages/DpfGeneratePage/DpfGeneratePage.ts</h2>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePage.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePage.ts.html#L1">pages/DpfGeneratePage/DpfGeneratePage.ts:1</a></p>
+<ul>
+<li><code>{ type Locator, type Page }</code> &#x2190; <code>@playwright/test</code></li>
+<li><code>{ BasePage }</code> &#x2190; <a data-source="base/BasePage.ts" href="../../sources/base/BasePage.ts.html#L1">base/BasePage.ts:1</a></li>
+<li><code>{ PageFactory }</code> &#x2190; <a data-source="base/PageFactory.ts" href="../../sources/base/PageFactory.ts.html#L1">base/PageFactory.ts:1</a></li>
+<li><code>{ DpfGeneratePageLocators, OqgDpfGeneratePageLocators, QciDpfGeneratePageLocators, }</code> &#x2190; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L1">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:1</a></li>
+</ul>
+<h3 id="open">open</h3>
+<p><code>open(options: OpenOptions = {})</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePage.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePage.ts.html#L23">pages/DpfGeneratePage/DpfGeneratePage.ts:23</a></p>
+<ul>
+<li><code>searchParams.toString()</code> &#x2014; line 42</li>
+<li><code>this.page.goto(url)</code> &#x2014; line 47</li>
+</ul>
+<h3 id="getfxlocationtexts">getFxLocationTexts</h3>
+<p><code>getFxLocationTexts()</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePage.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePage.ts.html#L50">pages/DpfGeneratePage/DpfGeneratePage.ts:50</a></p>
+<ul>
+<li><code>this.getExpectedFxLocations()</code> &#x2014; line 51</li>
+</ul>
+<h3 id="expectfxvalueinalllocations">expectFxValueInAllLocations</h3>
+<p><code>expectFxValueInAllLocations(fxValue: string)</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePage.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePage.ts.html#L60">pages/DpfGeneratePage/DpfGeneratePage.ts:60</a></p>
+<ul>
+<li><code>this.getExpectedFxLocations()</code> &#x2014; line 61</li>
+<li><code>this.expect(location).toBeVisible()</code> &#x2014; line 66</li>
+<li><code>this.expect(location).toContainText(fxValue, { ignoreCase: true, })</code> &#x2014; line 69</li>
+</ul>
+<h3 id="expectfxvaluerenderedasplaintext">expectFxValueRenderedAsPlainText</h3>
+<p><code>expectFxValueRenderedAsPlainText(fxValue: string)</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePage.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePage.ts.html#L75">pages/DpfGeneratePage/DpfGeneratePage.ts:75</a></p>
+<ul>
+<li><code>this.expectFxValueInAllLocations(fxValue)</code> &#x2014; line 76</li>
+<li><code>this.expect(this.locators.fxHtmlInjectionMarker).toHaveCount(0)</code> &#x2014; line 77</li>
+</ul>
+<h3 id="expectfxscriptpayloadisinert">expectFxScriptPayloadIsInert</h3>
+<p><code>expectFxScriptPayloadIsInert(fxValue: string)</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePage.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePage.ts.html#L80">pages/DpfGeneratePage/DpfGeneratePage.ts:80</a></p>
+<ul>
+<li><code>this.expectFxValueInAllLocations(fxValue)</code> &#x2014; line 81</li>
+<li><code>this.expect(this.locators.fxScriptInjectionMarker).toHaveCount(0)</code> &#x2014; line 82</li>
+</ul>
+<h3 id="constructor">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePage.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePage.ts.html#L89">pages/DpfGeneratePage/DpfGeneratePage.ts:89</a></p>
+<h3 id="getexpectedfxlocations">getExpectedFxLocations</h3>
+<p><code>getExpectedFxLocations()</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePage.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePage.ts.html#L94">pages/DpfGeneratePage/DpfGeneratePage.ts:94</a></p>
+<ul>
+<li><code>this.locators.phoneMockupWiFiButton.click()</code> &#x2014; line 95</li>
+<li><code>this.expect(this.locators.phoneMockupFxText).toBeVisible()</code> &#x2014; line 96</li>
+<li><code>this.locators.designAndCreationFxText.isVisible()</code> &#x2014; line 98</li>
+<li><code>this.locators.designAndCreationButton.click()</code> &#x2014; line 99</li>
+<li><code>this.expect(this.locators.designAndCreationFxText).toBeVisible()</code> &#x2014; line 102</li>
+<li><code>this.locators.printQrAccordionFxText.isVisible()</code> &#x2014; line 104</li>
+<li><code>this.locators.printQrAccordionButton.click()</code> &#x2014; line 105</li>
+<li><code>this.expect(this.locators.printQrAccordionFxText).toBeVisible()</code> &#x2014; line 108</li>
+</ul>
+<h3 id="constructor-1">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePage.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePage.ts.html#L124">pages/DpfGeneratePage/DpfGeneratePage.ts:124</a></p>
+<h3 id="getexpectedfxlocations-1">getExpectedFxLocations</h3>
+<p><code>getExpectedFxLocations()</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePage.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePage.ts.html#L129">pages/DpfGeneratePage/DpfGeneratePage.ts:129</a></p>
+<ul>
+<li><code>this.revealPrintAccordion()</code> &#x2014; line 130</li>
+</ul>
+<h3 id="revealprintaccordion">revealPrintAccordion</h3>
+<p><code>revealPrintAccordion()</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePage.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePage.ts.html#L141">pages/DpfGeneratePage/DpfGeneratePage.ts:141</a></p>
+<ul>
+<li><code>this.activate(this.locators.scanningAndPrintingTab, &apos;aria-selected&apos;)</code> &#x2014; line 142</li>
+<li><code>this.activate(this.locators.printQrAccordionButton, &apos;aria-expanded&apos;)</code> &#x2014; line 146</li>
+<li><code>this.expect(this.locators.printQrAccordionFxText).toBeVisible()</code> &#x2014; line 150</li>
+</ul>
+<h3 id="activate">activate</h3>
+<p><code>activate(control: Locator, stateAttribute: &apos;aria-selected&apos; | &apos;aria-expanded&apos;)</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePage.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePage.ts.html#L153">pages/DpfGeneratePage/DpfGeneratePage.ts:153</a></p>
+<ul>
+<li><code>control.click()</code> &#x2014; line 160</li>
+<li><code>this.expect(control).toHaveAttribute(stateAttribute, &apos;true&apos;)</code> &#x2014; line 163</li>
+</ul>
+<h2 id="pages-dpfgeneratepage-dpfgeneratepagelocators-ts">pages/DpfGeneratePage/DpfGeneratePageLocators.ts</h2>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L1">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:1</a></p>
+<ul>
+<li><code>{ type Locator, type Page }</code> &#x2190; <code>@playwright/test</code></li>
+</ul>
+<h3 id="constructor-2">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L8">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:8</a></p>
+<h3 id="constructor-3">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L33">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:33</a></p>
+<h3 id="constructor-4">constructor</h3>
+<p><code>constructor(page: Page)</code></p>
+<p><a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L81">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:81</a></p>
+<h3 id="locator-assignments-including-inherited-base-definitions-in-their-own-file">Locator assignments (including inherited base definitions in their own file)</h3>
+<ul>
+<li><code>this.fxHeaderTitle</code> &#x2190; <code>page .locator(&apos;main h1&apos;) .filter({ visible: true }) .first()</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L9">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:9</a></li>
+<li><code>this.fxHtmlInjectionMarker</code> &#x2190; <code>page.locator( &apos;[data-fx-test=&quot;tc24-html-marker&quot;]&apos; )</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L14">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:14</a></li>
+<li><code>this.fxScriptInjectionMarker</code> &#x2190; <code>page.locator( &apos;[data-fx-test=&quot;tc23-script-marker&quot;]&apos; )</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L18">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:18</a></li>
+<li><code>this.phoneMockupWiFiButton</code> &#x2190; <code>page.getByTestId( &apos;home-fit-your-needs-wifi-card&apos; )</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L36">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:36</a></li>
+<li><code>this.designAndCreationButton</code> &#x2190; <code>page .getByTestId(&apos;home-design-faq-question-button-question_12-desktop&apos;) .or(page.getByTestId(&apos;home-design-faq-question-button-question_12&apos;)) .filter({ visible: true })</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L40">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:40</a></li>
+<li><code>this.designAndCreationFxText</code> &#x2190; <code>page .getByTestId(&apos;home-design-faq-answer-content-question_12-desktop&apos;) .or(page.getByTestId(&apos;home-design-faq-answer-content-question_12&apos;)) .filter({ visible: true })</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L45">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:45</a></li>
+<li><code>this.printQrAccordionButton</code> &#x2190; <code>page.getByTestId( &apos;home-design-faq-question-button-question_14&apos; )</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L50">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:50</a></li>
+<li><code>this.printQrAccordionFxText</code> &#x2190; <code>page.getByTestId( &apos;home-design-faq-answer-content-question_14&apos; )</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L54">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:54</a></li>
+<li><code>this.highConversionFxText</code> &#x2190; <code>advancedFeaturesSection .locator(&apos;p.align-middle&apos;) .filter({ visible: true }) .nth(1)</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L62">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:62</a></li>
+<li><code>this.phoneMockupFxText</code> &#x2190; <code>page.locator( &apos;[data-qa-id=&quot;fit-your-needs-wifi-preview&quot;] h3 + p&apos; )</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L67">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:67</a></li>
+<li><code>this.createTodayFxText</code> &#x2190; <code>page .locator(&apos;main p.text-sm.leading-6&apos;) .or(page.locator(&apos;main p.text-primary-100.text-base&apos;)) .filter({ visible: true })</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L84">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:84</a></li>
+<li><code>this.compactTestimonialFxText</code> &#x2190; <code>page .locator(&apos;main p.min-h-25.text-xs.leading-5&apos;) .last()</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L89">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:89</a></li>
+<li><code>this.featuredTestimonialFxText</code> &#x2190; <code>page .locator(&apos;main p.text-base.leading-6.font-medium&apos;) .last()</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L93">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:93</a></li>
+<li><code>this.scanningAndPrintingTab</code> &#x2190; <code>page.getByRole(&apos;tab&apos;).last()</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L101">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:101</a></li>
+<li><code>this.printQrAccordionButton</code> &#x2190; <code>faqSection .locator(&apos;button[aria-expanded]&apos;) .nth(2)</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L103">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:103</a></li>
+<li><code>this.printQrAccordionFxText</code> &#x2190; <code>faqSection.locator( &apos;#accordion-content-sp-3&apos; )</code> &#x2014; <a data-source="pages/DpfGeneratePage/DpfGeneratePageLocators.ts" href="../../sources/pages/DpfGeneratePage/DpfGeneratePageLocators.ts.html#L107">pages/DpfGeneratePage/DpfGeneratePageLocators.ts:107</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

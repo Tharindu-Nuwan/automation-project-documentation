@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>utils/productEnv.ts · QA reference</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script defer src="../../assets/search-index.js"></script><script defer src="../../assets/app.js"></script>
+</head><body data-root-prefix="../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../index.html">Start here</a>
+<a href="../../00-qa-quick-start.html">Your first check</a>
+<a href="../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../03-qr-creation.html">QR types and creation</a>
+<a href="../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../05-other-flows.html">Other product flows</a>
+<a href="../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../reference/index.html">Reference overview</a>
+<a href="../../reference/spec-index.html">Complete spec map</a>
+<a href="../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../reference/environment-index.html">Environment variables</a>
+<a href="../../reference/assets.html">Upload asset inventory</a>
+<a href="../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical detail · bundled source snapshot · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../glossary.html">glossary</a>.</p>
+
+<article id="doc-content" tabindex="-1"><h1>utils/productEnv.ts</h1><p class="source-note">Bundled source snapshot. Credential-like literals are omitted. Line numbers correspond to the audited repository file; this page is for reading and is not executable test code.</p><pre class="source-code"><code><span class="source-line" id="L1"><a class="line-number" href="#L1" aria-label="Line 1">1</a> import type { Product } from &#39;../base/Product&#39;</span>
+<span class="source-line" id="L2"><a class="line-number" href="#L2" aria-label="Line 2">2</a> </span>
+<span class="source-line" id="L3"><a class="line-number" href="#L3" aria-label="Line 3">3</a> const PRODUCT_BASE_URL_ENV: Record&lt;</span>
+<span class="source-line" id="L4"><a class="line-number" href="#L4" aria-label="Line 4">4</a>     Product,</span>
+<span class="source-line" id="L5"><a class="line-number" href="#L5" aria-label="Line 5">5</a>     &#39;OQG_BASE_URL&#39; | &#39;QCI_BASE_URL&#39; | &#39;QGA_BASE_URL&#39; | &#39;QGC_BASE_URL&#39;</span>
+<span class="source-line" id="L6"><a class="line-number" href="#L6" aria-label="Line 6">6</a> &gt; = {</span>
+<span class="source-line" id="L7"><a class="line-number" href="#L7" aria-label="Line 7">7</a>     oqg: &#39;OQG_BASE_URL&#39;,</span>
+<span class="source-line" id="L8"><a class="line-number" href="#L8" aria-label="Line 8">8</a>     qci: &#39;QCI_BASE_URL&#39;,</span>
+<span class="source-line" id="L9"><a class="line-number" href="#L9" aria-label="Line 9">9</a>     qga: &#39;QGA_BASE_URL&#39;,</span>
+<span class="source-line" id="L10"><a class="line-number" href="#L10" aria-label="Line 10">10</a>     qgc: &#39;QGC_BASE_URL&#39;,</span>
+<span class="source-line" id="L11"><a class="line-number" href="#L11" aria-label="Line 11">11</a> }</span>
+<span class="source-line" id="L12"><a class="line-number" href="#L12" aria-label="Line 12">12</a> </span>
+<span class="source-line" id="L13"><a class="line-number" href="#L13" aria-label="Line 13">13</a> function normalizeUrl(raw: string, envName: string): URL {</span>
+<span class="source-line" id="L14"><a class="line-number" href="#L14" aria-label="Line 14">14</a>     const value = /^https?:\/\//i.test(raw.trim())</span>
+<span class="source-line" id="L15"><a class="line-number" href="#L15" aria-label="Line 15">15</a>         ? raw.trim()</span>
+<span class="source-line" id="L16"><a class="line-number" href="#L16" aria-label="Line 16">16</a>         : `https://${raw.trim()}`</span>
+<span class="source-line" id="L17"><a class="line-number" href="#L17" aria-label="Line 17">17</a>     try {</span>
+<span class="source-line" id="L18"><a class="line-number" href="#L18" aria-label="Line 18">18</a>         return new URL(value)</span>
+<span class="source-line" id="L19"><a class="line-number" href="#L19" aria-label="Line 19">19</a>     } catch {</span>
+<span class="source-line" id="L20"><a class="line-number" href="#L20" aria-label="Line 20">20</a>         throw new Error(`Invalid ${envName}: ${raw}`)</span>
+<span class="source-line" id="L21"><a class="line-number" href="#L21" aria-label="Line 21">21</a>     }</span>
+<span class="source-line" id="L22"><a class="line-number" href="#L22" aria-label="Line 22">22</a> }</span>
+<span class="source-line" id="L23"><a class="line-number" href="#L23" aria-label="Line 23">23</a> </span>
+<span class="source-line" id="L24"><a class="line-number" href="#L24" aria-label="Line 24">24</a> /**</span>
+<span class="source-line" id="L25"><a class="line-number" href="#L25" aria-label="Line 25">25</a>  * Resolves the app base URL for a product.</span>
+<span class="source-line" id="L26"><a class="line-number" href="#L26" aria-label="Line 26">26</a>  * Product-specific configuration wins; `BASE_URL` supports legacy runs.</span>
+<span class="source-line" id="L27"><a class="line-number" href="#L27" aria-label="Line 27">27</a>  */</span>
+<span class="source-line" id="L28"><a class="line-number" href="#L28" aria-label="Line 28">28</a> export function getProductBaseUrl(product: Product): string {</span>
+<span class="source-line" id="L29"><a class="line-number" href="#L29" aria-label="Line 29">29</a>     const envKey = PRODUCT_BASE_URL_ENV[product]</span>
+<span class="source-line" id="L30"><a class="line-number" href="#L30" aria-label="Line 30">30</a>     const raw = process.env[envKey]?.trim() || process.env.BASE_URL?.trim()</span>
+<span class="source-line" id="L31"><a class="line-number" href="#L31" aria-label="Line 31">31</a>     if (!raw) {</span>
+<span class="source-line" id="L32"><a class="line-number" href="#L32" aria-label="Line 32">32</a>         throw new Error(</span>
+<span class="source-line" id="L33"><a class="line-number" href="#L33" aria-label="Line 33">33</a>             `Missing product URL: set ${envKey} (preferred) or BASE_URL`</span>
+<span class="source-line" id="L34"><a class="line-number" href="#L34" aria-label="Line 34">34</a>         )</span>
+<span class="source-line" id="L35"><a class="line-number" href="#L35" aria-label="Line 35">35</a>     }</span>
+<span class="source-line" id="L36"><a class="line-number" href="#L36" aria-label="Line 36">36</a>     return normalizeUrl(raw, process.env[envKey] ? envKey : &#39;BASE_URL&#39;)</span>
+<span class="source-line" id="L37"><a class="line-number" href="#L37" aria-label="Line 37">37</a>         .toString()</span>
+<span class="source-line" id="L38"><a class="line-number" href="#L38" aria-label="Line 38">38</a>         .replace(/\/+$/, &#39;&#39;)</span>
+<span class="source-line" id="L39"><a class="line-number" href="#L39" aria-label="Line 39">39</a> }</span>
+<span class="source-line" id="L40"><a class="line-number" href="#L40" aria-label="Line 40">40</a> </span>
+<span class="source-line" id="L41"><a class="line-number" href="#L41" aria-label="Line 41">41</a> /**</span>
+<span class="source-line" id="L42"><a class="line-number" href="#L42" aria-label="Line 42">42</a>  * Product origin (protocol + host, without locale/path).</span>
+<span class="source-line" id="L43"><a class="line-number" href="#L43" aria-label="Line 43">43</a>  */</span>
+<span class="source-line" id="L44"><a class="line-number" href="#L44" aria-label="Line 44">44</a> export function getProductOrigin(product: Product): string {</span>
+<span class="source-line" id="L45"><a class="line-number" href="#L45" aria-label="Line 45">45</a>     return new URL(getProductBaseUrl(product)).origin</span>
+<span class="source-line" id="L46"><a class="line-number" href="#L46" aria-label="Line 46">46</a> }</span>
+<span class="source-line" id="L47"><a class="line-number" href="#L47" aria-label="Line 47">47</a> </span>
+<span class="source-line" id="L48"><a class="line-number" href="#L48" aria-label="Line 48">48</a> /** Admin panel URL for the active product (`{origin}/admin`). */</span>
+<span class="source-line" id="L49"><a class="line-number" href="#L49" aria-label="Line 49">49</a> export function getAdminUrl(product: Product): string {</span>
+<span class="source-line" id="L50"><a class="line-number" href="#L50" aria-label="Line 50">50</a>     return `${getProductOrigin(product)}/admin`</span>
+<span class="source-line" id="L51"><a class="line-number" href="#L51" aria-label="Line 51">51</a> }</span>
+<span class="source-line" id="L52"><a class="line-number" href="#L52" aria-label="Line 52">52</a> </span>
+<span class="source-line" id="L53"><a class="line-number" href="#L53" aria-label="Line 53">53</a> /** Admin Users list URL for the active product. */</span>
+<span class="source-line" id="L54"><a class="line-number" href="#L54" aria-label="Line 54">54</a> export function getAdminUsersUrl(product: Product): string {</span>
+<span class="source-line" id="L55"><a class="line-number" href="#L55" aria-label="Line 55">55</a>     return `${getAdminUrl(product)}/users`</span>
+<span class="source-line" id="L56"><a class="line-number" href="#L56" aria-label="Line 56">56</a> }</span>
+<span class="source-line" id="L57"><a class="line-number" href="#L57" aria-label="Line 57">57</a> </span>
+<span class="source-line" id="L58"><a class="line-number" href="#L58" aria-label="Line 58">58</a> /**</span>
+<span class="source-line" id="L59"><a class="line-number" href="#L59" aria-label="Line 59">59</a>  * DPF create URL for the active product.</span>
+<span class="source-line" id="L60"><a class="line-number" href="#L60" aria-label="Line 60">60</a>  * Defaults to step 3 to preserve the former hardcoded create-step behaviour.</span>
+<span class="source-line" id="L61"><a class="line-number" href="#L61" aria-label="Line 61">61</a>  */</span>
+<span class="source-line" id="L62"><a class="line-number" href="#L62" aria-label="Line 62">62</a> export function getDpfCreateUrl(product: Product, step: 1 | 2 | 3 = 3): string {</span>
+<span class="source-line" id="L63"><a class="line-number" href="#L63" aria-label="Line 63">63</a>     return `${getProductOrigin(product)}/create?step=${step}&amp;qr_onboarding=active_dpf`</span>
+<span class="source-line" id="L64"><a class="line-number" href="#L64" aria-label="Line 64">64</a> }</span>
+<span class="source-line" id="L65"><a class="line-number" href="#L65" aria-label="Line 65">65</a> </span>
+<span class="source-line" id="L66"><a class="line-number" href="#L66" aria-label="Line 66">66</a> /** DPF pricing URL for the active product. */</span>
+<span class="source-line" id="L67"><a class="line-number" href="#L67" aria-label="Line 67">67</a> export function getDpfPricingUrl(product: Product): string {</span>
+<span class="source-line" id="L68"><a class="line-number" href="#L68" aria-label="Line 68">68</a>     return `${getProductOrigin(product)}/plan-dpf?qr_onboarding=active_dpf`</span>
+<span class="source-line" id="L69"><a class="line-number" href="#L69" aria-label="Line 69">69</a> }</span>
+<span class="source-line" id="L70"><a class="line-number" href="#L70" aria-label="Line 70">70</a> </span>
+<span class="source-line" id="L71"><a class="line-number" href="#L71" aria-label="Line 71">71</a> /** Origin used by product-branded email links. */</span>
+<span class="source-line" id="L72"><a class="line-number" href="#L72" aria-label="Line 72">72</a> export function getEmailLinkOrigin(product: Product): string {</span>
+<span class="source-line" id="L73"><a class="line-number" href="#L73" aria-label="Line 73">73</a>     return getProductOrigin(product)</span>
+<span class="source-line" id="L74"><a class="line-number" href="#L74" aria-label="Line 74">74</a> }</span>
+<span class="source-line" id="L75"><a class="line-number" href="#L75" aria-label="Line 75">75</a> </span>
+<span class="source-line" id="L76"><a class="line-number" href="#L76" aria-label="Line 76">76</a> /** @deprecated Use {@link getAdminUrl}. */</span>
+<span class="source-line" id="L77"><a class="line-number" href="#L77" aria-label="Line 77">77</a> export const getAdminLink = getAdminUrl</span>
+<span class="source-line" id="L78"><a class="line-number" href="#L78" aria-label="Line 78">78</a> </span></code></pre></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

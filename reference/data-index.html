@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="reference/data-index.html">
+<title>Data sources and their consumers · QA reference</title>
+<link rel="stylesheet" href="../assets/styles.css">
+<script defer src="../assets/search-index.js"></script><script defer src="../assets/app.js"></script>
+</head><body data-root-prefix="../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../index.html">Start here</a>
+<a href="../00-qa-quick-start.html">Your first check</a>
+<a href="../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../03-qr-creation.html">QR types and creation</a>
+<a href="../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../05-other-flows.html">Other product flows</a>
+<a href="../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../reference/index.html">Reference overview</a>
+<a href="../reference/spec-index.html">Complete spec map</a>
+<a href="../reference/code-index.html">Shared helpers and locators</a>
+<a href="../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../reference/data-index.html" class="active" aria-current="page">Data sources and consumers</a>
+<a href="../reference/environment-index.html">Environment variables</a>
+<a href="../reference/assets.html">Upload asset inventory</a>
+<a href="../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical reference · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../glossary.html">glossary</a>.</p>
+<details class="toc"><summary>Jump to a section (52)</summary><a href="#tests-data-constants-analytics-tests-ts">tests/data/constants/analytics-tests.ts</a>
+<a href="#tests-data-constants-download-tests-ts">tests/data/constants/download-tests.ts</a>
+<a href="#tests-data-constants-edit-tests-ts">tests/data/constants/edit-tests.ts</a>
+<a href="#tests-data-constants-email-test-data-ts">tests/data/constants/email_test_data.ts</a>
+<a href="#tests-data-constants-global-constants-ts">tests/data/constants/global-constants.ts</a>
+<a href="#tests-data-constants-homepage-test-data-ts">tests/data/constants/homepage_test_data.ts</a>
+<a href="#tests-data-constants-qr-preview-preload-data-ts">tests/data/constants/qr-preview-preload.data.ts</a>
+<a href="#tests-data-constants-step3-tests-ts">tests/data/constants/step3-tests.ts</a>
+<a href="#tests-data-constants-subscription-check-ids-ts">tests/data/constants/subscription-check-ids.ts</a>
+<a href="#tests-data-default-pricing-test-data-ts">tests/data/default-pricing-test-data.ts</a>
+<a href="#tests-data-download-test-data-ts">tests/data/download_test_data.ts</a>
+<a href="#tests-data-dpf-fx-url-parameter-data-ts">tests/data/dpf-fx-url-parameter.data.ts</a>
+<a href="#tests-data-dpf-pricing-test-data-ts">tests/data/dpf-pricing-test-data.ts</a>
+<a href="#tests-data-email-templates-data-ts">tests/data/email-templates.data.ts</a>
+<a href="#tests-data-event-acceptance-criteria-data-ts">tests/data/event-acceptance-criteria.data.ts</a>
+<a href="#tests-data-event-field-validation-data-ts">tests/data/event-field-validation.data.ts</a>
+<a href="#tests-data-eventqrscenarios-data-ts">tests/data/eventQrScenarios.data.ts</a>
+<a href="#tests-data-eventsecuritypayloads-data-ts">tests/data/eventSecurityPayloads.data.ts</a>
+<a href="#tests-data-fit-your-needs-preview-translations-ts">tests/data/fit-your-needs-preview-translations.ts</a>
+<a href="#tests-data-fit-your-needs-preview-data-ts">tests/data/fit-your-needs-preview.data.ts</a>
+<a href="#tests-data-folder-file-counter-data-ts">tests/data/folder-file-counter.data.ts</a>
+<a href="#tests-data-helpers-dpf-navigation-ts">tests/data/helpers/dpf-navigation.ts</a>
+<a href="#tests-data-iceland-dpf-payment-data-ts">tests/data/iceland-dpf-payment.data.ts</a>
+<a href="#tests-data-long-text-containment-data-ts">tests/data/long-text-containment.data.ts</a>
+<a href="#tests-data-oqg3-2211-data-ts">tests/data/oqg3-2211.data.ts</a>
+<a href="#tests-data-payments-test-data-ts">tests/data/payments_test_data.ts</a>
+<a href="#tests-data-pricing-integrity-official-stripe-prices-data-ts">tests/data/pricing-integrity/official-stripe-prices.data.ts</a>
+<a href="#tests-data-pricing-data-ts">tests/data/pricing.data.ts</a>
+<a href="#tests-data-promo-70-pricing-annually-pricing-ts">tests/data/promo-70-pricing/annually-pricing.ts</a>
+<a href="#tests-data-promo-70-pricing-monthly-pricing-ts">tests/data/promo-70-pricing/monthly-pricing.ts</a>
+<a href="#tests-data-promo-70-pricing-quarterly-pricing-ts">tests/data/promo-70-pricing/quarterly-pricing.ts</a>
+<a href="#tests-data-promo-90-pricing-annually-pricing-ts">tests/data/promo-90-pricing/annually-pricing.ts</a>
+<a href="#tests-data-promo-90-pricing-monthly-pricing-ts">tests/data/promo-90-pricing/monthly-pricing.ts</a>
+<a href="#tests-data-promo-90-pricing-quarterly-pricing-ts">tests/data/promo-90-pricing/quarterly-pricing.ts</a>
+<a href="#tests-data-seoauditconfig-data-ts">tests/data/seoAuditConfig.data.ts</a>
+<a href="#tests-data-static-preview-translations-index-ts">tests/data/static-preview-translations/index.ts</a>
+<a href="#tests-data-static-preview-translations-oqg-preview-string-sources-ts">tests/data/static-preview-translations/oqg-preview-string-sources.ts</a>
+<a href="#tests-data-static-preview-translations-oqg-static-preview-texts-data-ts">tests/data/static-preview-translations/oqg-static-preview-texts.data.ts</a>
+<a href="#tests-data-static-preview-translations-qci-preview-string-sources-ts">tests/data/static-preview-translations/qci-preview-string-sources.ts</a>
+<a href="#tests-data-static-preview-translations-qci-static-preview-texts-data-ts">tests/data/static-preview-translations/qci-static-preview-texts.data.ts</a>
+<a href="#tests-data-static-preview-translations-qga-preview-string-sources-ts">tests/data/static-preview-translations/qga-preview-string-sources.ts</a>
+<a href="#tests-data-static-preview-translations-qga-static-preview-texts-data-ts">tests/data/static-preview-translations/qga-static-preview-texts.data.ts</a>
+<a href="#tests-data-striperetrystrategy-data-ts">tests/data/stripeRetryStrategy.data.ts</a>
+<a href="#tests-data-translation-test-data-ts">tests/data/translation_test_data.ts</a>
+<a href="#tests-data-trial-translations-data-ts">tests/data/trial-translations.data.ts</a>
+<a href="#tests-data-uploadsecuritypayloads-data-ts">tests/data/uploadSecurityPayloads.data.ts</a>
+<a href="#tests-data-vcard-webp-upload-data-ts">tests/data/vcard-webp-upload.data.ts</a>
+<a href="#utils-defineenv-ts">utils/defineEnv.ts</a>
+<a href="#utils-domainenv-ts">utils/domainEnv.ts</a>
+<a href="#utils-getenv-ts">utils/getEnv.ts</a>
+<a href="#utils-productenv-ts">utils/productEnv.ts</a>
+<a href="#utils-test-data-generators-ts">utils/test_data_generators.ts</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="data-sources-and-their-consumers">Data sources and their consumers</h1>
+<p>Generated from tracked source at commit a314c7b. Static evidence only; this is not a run report. Regenerate with <code>node scripts/generate-qa-kt-reference.cjs</code>.</p>
+<p>Only tracked data is indexed; private .env and .auth files are never read. Large values are linked instead of duplicated. Follow consumer imports to see which subset is used.</p>
+<h2 id="tests-data-constants-analytics-tests-ts">tests/data/constants/analytics-tests.ts</h2>
+<p><a data-source="tests/data/constants/analytics-tests.ts" href="../sources/tests/data/constants/analytics-tests.ts.html#L1">tests/data/constants/analytics-tests.ts:1</a></p>
+<p>Direct consumers: No direct TypeScript import found (may be read as a file or referenced indirectly).</p>
+<h2 id="tests-data-constants-download-tests-ts">tests/data/constants/download-tests.ts</h2>
+<p><a data-source="tests/data/constants/download-tests.ts" href="../sources/tests/data/constants/download-tests.ts.html#L1">tests/data/constants/download-tests.ts:1</a></p>
+<ul>
+<li><code>downloadCases</code> = <code>[ { format: &apos;png&apos;, size: &apos;default&apos;, ext: &apos;.png&apos;, expectedSize: 1024, }, { format: &apos;png&apos;, size: &apos;size_512&apos;, ext: &apos;.png&apos;, expectedSize: 512, }, { format: &apos;png&apos;, size: &apos;size_1024&apos;, ext: &apos;.png&apos;, expectedSize: 1024, }, { format: &apos;png&apos;, size: &apos;size_2048&apos;, ext: &apos;.png &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-in-user/qr-code-details/download/download.spec.ts" href="../sources/tests/logged-in-user/qr-code-details/download/download.spec.ts.html#L1">tests/logged-in-user/qr-code-details/download/download.spec.ts:1</a></p>
+<h2 id="tests-data-constants-edit-tests-ts">tests/data/constants/edit-tests.ts</h2>
+<p><a data-source="tests/data/constants/edit-tests.ts" href="../sources/tests/data/constants/edit-tests.ts.html#L1">tests/data/constants/edit-tests.ts:1</a></p>
+<ul>
+<li><code>campaignMediums</code> = <code>[ &apos;Art&apos;, &apos;Badges&apos;, &apos;Banners&apos;, &apos;Billboards&apos;, &apos;Books&apos;, &apos;Bottles and cans&apos;, &apos;Catalogues&apos;, &apos;Clothing&apos;, &apos;Digital signage&apos;, &apos;Displays&apos;, &apos;Ebooks&apos;, &apos;Emails&apos;, &apos;Flyers&apos;, &apos;Food packaging&apos;, &apos;Gifts&apos;, &apos;Infographics&apos;, &apos;Labels and stickers&apos;, &apos;Menus&apos;, &apos;Movie advertising&apos;, &apos;New &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-in-user/qr-code-details/website-qr-edit.spec.ts" href="../sources/tests/logged-in-user/qr-code-details/website-qr-edit.spec.ts.html#L1">tests/logged-in-user/qr-code-details/website-qr-edit.spec.ts:1</a></p>
+<h2 id="tests-data-constants-email-test-data-ts">tests/data/constants/email_test_data.ts</h2>
+<p><a data-source="tests/data/constants/email_test_data.ts" href="../sources/tests/data/constants/email_test_data.ts.html#L1">tests/data/constants/email_test_data.ts:1</a></p>
+<ul>
+<li><code>EMAIL_LOGO_ALT_BY_PRODUCT</code> = <code>{ oqg: &apos;Online QR Generator logo&apos;, qci: &apos;QR Code.io logo&apos;, qga: &apos;Website Logo&apos;, }</code> &#x2014; line 4</li>
+<li><code>getPasswordChangedLocalizedEs</code> &#x2014; line 63</li>
+<li><code>PASSWORD_CHANGED_EN_LOGO_ALT_NEGATIVE</code> = <code>EMAIL_LOGO_ALT_BY_PRODUCT.oqg</code> &#x2014; line 76</li>
+<li><code>EMAIL_LOGO_ALT_BY_DOMAIN</code> = <code>EMAIL_LOGO_ALT_BY_PRODUCT</code> &#x2014; line 80</li>
+<li><code>expectedEmailTemplates</code> = <code>{ &apos;5&apos;: { templateId: &apos;5&apos; }, &apos;7&apos;: { templateId: &apos;7&apos; }, &apos;8&apos;: { templateId: &apos;8&apos; }, &apos;18&apos;: { templateId: &apos;18&apos; }, &apos;20&apos;: { templateId: &apos;20&apos; }, &apos;23&apos;: { templateId: &apos;23&apos; }, &apos;24&apos;: { templateId: &apos;24&apos; }, &apos;25&apos;: { templateId: &apos;25&apos; }, &apos;28&apos;: { templateId: &apos;28&apos; }, &apos;17&apos;: { temp &#x2026; [open source for complete dataset]</code> &#x2014; line 127</li>
+<li><code>getExpectedEmailSubjects</code> &#x2014; line 149</li>
+<li><code>expectedEmailContent</code> = <code>{ &apos;17&apos;: [ &apos;Reset Your Password&apos;, &apos;There was recently a request to change the password on your account&apos;, &apos;Click here to change your password&apos;, ], &apos;18&apos;: [ &apos;Your subscription has been confirmed&apos;, &apos;Your paid subscription has been confirmed and is now active&apos;, &apos;Cre &#x2026; [open source for complete dataset]</code> &#x2014; line 165</li>
+<li><code>getExpectedFrenchEmailSubjects</code> &#x2014; line 198</li>
+<li><code>expectedFrenchEmailContent</code> = <code>{ &apos;17&apos;: [ &apos;R&#xe9;initialisez votre mot de passe&apos;, &apos;Il y a eu r&#xe9;cemment une demande de modification du mot de passe de votre compte&apos;, &apos;Cliquez ici pour changer votre mot de passe&apos;, ], &apos;19&apos;: [ &apos;Votre compte est pr&#xea;t !&apos;, &apos;Cr&#xe9;ez votre premier code QR&apos;, &apos;Suivez les per &#x2026; [open source for complete dataset]</code> &#x2014; line 211</li>
+<li><code>baseExpectedEmailLinksFor</code> &#x2014; line 225</li>
+<li><code>baseExpectedEmailLinks</code> = <code>expectedEmailLinksFromBaseURL( process.env.BASE_URL || DEFAULT_EMAIL_LINK_ORIGIN )</code> &#x2014; line 240</li>
+<li><code>expectedEmailLinksForLocale</code> &#x2014; line 245</li>
+<li><code>expectedEmailLinksFromBaseURL</code> &#x2014; line 262</li>
+<li><code>passwordChangedEmail</code> = <code>{ templateId: expectedEmailTemplates[&apos;22&apos;].templateId, subject: &apos;Password Changed&apos;, /** Visible title / body copy that states the password was reset. */ bodyTitle: &apos;Your password was just reset&apos;, previewSnippet: &apos;Your password has been successfully updated&apos;, / &#x2026; [open source for complete dataset]</code> &#x2014; line 274</li>
+<li><code>emailInjectionPayload</code> &#x2014; line 371</li>
+<li><code>emailSensitiveDataPatterns</code> = <code>[ { name: &apos;Stripe secret key&apos;, pattern: /\bsk_(?:live|test)_[A-Za-z0-9]+/ }, { name: &apos;Stripe restricted key&apos;, pattern: /\brk_(?:live|test)_[A-Za-z0-9]+/, }, { name: &apos;Stripe webhook secret&apos;, pattern: /\bwhsec_[A-Za-z0-9]+/ }, { name: &apos;JWT&apos;, pattern: /\beyJ[A-Za &#x2026; [open source for complete dataset]</code> &#x2014; line 382</li>
+<li><code>findSensitiveDataLeaks</code> &#x2014; line 428</li>
+<li><code>getPasswordChangedLogoAlt</code> &#x2014; line 437</li>
+<li><code>dpfPlans</code> = <code>{ limited_14: (pm: PageManager) =&gt; pm.qrCreationPage.select14LimitedDpfPlan(), full_14: (pm: PageManager) =&gt; pm.qrCreationPage.select14FullDpfPlan(), }</code> &#x2014; line 443</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/archived-plan-pricing/oqg3-2458-core-automations.spec.ts" href="../sources/tests/archived-plan-pricing/oqg3-2458-core-automations.spec.ts.html#L1">tests/archived-plan-pricing/oqg3-2458-core-automations.spec.ts:1</a>, <a data-source="tests/emails/emails-default.spec.ts" href="../sources/tests/emails/emails-default.spec.ts.html#L1">tests/emails/emails-default.spec.ts:1</a>, <a data-source="tests/emails/emails-trigered-by-user.spec.ts" href="../sources/tests/emails/emails-trigered-by-user.spec.ts.html#L1">tests/emails/emails-trigered-by-user.spec.ts:1</a>, <a data-source="tests/emails/password-changed-automations.spec.ts" href="../sources/tests/emails/password-changed-automations.spec.ts.html#L1">tests/emails/password-changed-automations.spec.ts:1</a>, <a data-source="tests/emails/transactional-email-delivery-automations.spec.ts" href="../sources/tests/emails/transactional-email-delivery-automations.spec.ts.html#L1">tests/emails/transactional-email-delivery-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/qr-code-details/download/unique-qr-download-page/unique-qr-download-page.spec.ts" href="../sources/tests/logged-in-user/qr-code-details/download/unique-qr-download-page/unique-qr-download-page.spec.ts.html#L1">tests/logged-in-user/qr-code-details/download/unique-qr-download-page/unique-qr-download-page.spec.ts:1</a>, <a data-source="tests/trial-day-count/paid-trial-dashboard.spec.ts" href="../sources/tests/trial-day-count/paid-trial-dashboard.spec.ts.html#L1">tests/trial-day-count/paid-trial-dashboard.spec.ts:1</a></p>
+<h2 id="tests-data-constants-global-constants-ts">tests/data/constants/global-constants.ts</h2>
+<p><a data-source="tests/data/constants/global-constants.ts" href="../sources/tests/data/constants/global-constants.ts.html#L1">tests/data/constants/global-constants.ts:1</a></p>
+<ul>
+<li><code>allPlans</code> = <code>{ monthly: (PageManager: PageManager) =&gt; PageManager.planAndPricesPage.locator.monthlyBuyNowButton, annually: (PageManager: PageManager) =&gt; PageManager.planAndPricesPage.locator.annuallyBuyNowButton, quarterly: (PageManager: PageManager) =&gt; PageManager.planAnd &#x2026; [open source for complete dataset]</code> &#x2014; line 3</li>
+<li><code>qrTypes</code> = <code>[ { type: &apos;PDF&apos;, action: (PageManager: PageManager) =&gt; PageManager.qrCreationPage.pdfQrCreate(), }, { type: &apos;List_of_Links&apos;, action: (PageManager: PageManager) =&gt; PageManager.qrCreationPage.linksQrCreate(), }, { type: &apos;vCard&apos;, action: (PageManager: PageManager &#x2026; [open source for complete dataset]</code> &#x2014; line 14</li>
+<li><code>flows</code> = <code>[&apos;DPF&apos;, &apos;CFF&apos;] as const</code> &#x2014; line 97</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/emails/emails-default.spec.ts" href="../sources/tests/emails/emails-default.spec.ts.html#L1">tests/emails/emails-default.spec.ts:1</a>, <a data-source="tests/emails/emails-trigered-by-user.spec.ts" href="../sources/tests/emails/emails-trigered-by-user.spec.ts.html#L1">tests/emails/emails-trigered-by-user.spec.ts:1</a>, <a data-source="tests/logged-in-user/qr-code-details/website-qr-edit.spec.ts" href="../sources/tests/logged-in-user/qr-code-details/website-qr-edit.spec.ts.html#L1">tests/logged-in-user/qr-code-details/website-qr-edit.spec.ts:1</a></p>
+<h2 id="tests-data-constants-homepage-test-data-ts">tests/data/constants/homepage_test_data.ts</h2>
+<p><a data-source="tests/data/constants/homepage_test_data.ts" href="../sources/tests/data/constants/homepage_test_data.ts.html#L1">tests/data/constants/homepage_test_data.ts:1</a></p>
+<ul>
+<li><code>FAQ_TEXTS</code> = <code>[ &apos;You can add QR codes to pretty much anything you can think of, from physical goods and locations to digital properties like websites, applications, emails and social media profiles. People will be able to scan it with any compatible device.&apos;, &apos;The majority &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+</ul>
+<p>Direct consumers: No direct TypeScript import found (may be read as a file or referenced indirectly).</p>
+<h2 id="tests-data-constants-qr-preview-preload-data-ts">tests/data/constants/qr-preview-preload.data.ts</h2>
+<p><a data-source="tests/data/constants/qr-preview-preload.data.ts" href="../sources/tests/data/constants/qr-preview-preload.data.ts.html#L1">tests/data/constants/qr-preview-preload.data.ts:1</a></p>
+<ul>
+<li><code>Step1QrPreviewType</code> &#x2014; line 8</li>
+<li><code>STEP1_QR_PREVIEW_TYPES</code> = <code>[ { key: &apos;website&apos;, cardTestId: &apos;step1-website-card&apos;, // Prefer inner marker: outer &#x2032;.website-url-container&#x2032; also carries CSS &#x2032;zoom&#x2032;, // which can make Playwright treat the node as missing/not visible. previewMarker: &apos;.website-url&apos;, locatorKey: &apos;websiteQrType&apos; &#x2026; [open source for complete dataset]</code> &#x2014; line 32</li>
+<li><code>HOMEPAGE_FIT_NEEDS_TYPES</code> = <code>[ &apos;vcard&apos;, &apos;website&apos;, &apos;pdf&apos;, &apos;images&apos;, &apos;video&apos;, &apos;wifi&apos;, &apos;menu&apos;, &apos;business&apos;, &apos;mp3&apos;, &apos;apps&apos;, &apos;links&apos;, &apos;coupon&apos;, &apos;facebook&apos;, &apos;whatsapp&apos;, &apos;social&apos;, &apos;instagram&apos;, ] as const</code> &#x2014; line 134</li>
+<li><code>INSTANT_PREVIEW_TIMEOUT_MS</code> = <code>1_500</code> &#x2014; line 154</li>
+<li><code>ACCEPTABLE_STEP1_LOAD_MS</code> = <code>30_000</code> &#x2014; line 157</li>
+<li><code>LOCALE_PREVIEW_TIMEOUT_MS</code> = <code>10_000</code> &#x2014; line 160</li>
+<li><code>MIN_PARTIAL_TEXT_MATCH_LENGTH</code> = <code>3</code> &#x2014; line 167</li>
+<li><code>STEP1_CREATE_PATH</code> = <code>&apos;/create?step=1&apos;</code> &#x2014; line 169</li>
+<li><code>DESKTOP_VIEWPORT</code> = <code>{ width: 1280, height: 720 } as const</code> &#x2014; line 170</li>
+<li><code>TABLET_VIEWPORT</code> = <code>{ width: 1280, height: 900 } as const</code> &#x2014; line 171</li>
+<li><code>MOBILE_VIEWPORT</code> = <code>{ width: 375, height: 812 } as const</code> &#x2014; line 172</li>
+<li><code>NARROW_MOBILE_VIEWPORT</code> = <code>{ width: 320, height: 568 } as const</code> &#x2014; line 173</li>
+<li><code>DEFERRED_BELOW_FOLD_PREVIEW_ASSET_PATHS</code> = <code>[ &apos;/media/shared/preview/youtube.svg&apos;, &apos;/media/oqg/preview/mp3/spotify.svg&apos;, // Menu allergen strip sits below the mockup fold. The set is domain-specific: // OQG uses cereals/crustaceans/peanuts/soy/milk/fruits/eggs/fish, QCI adds // mustard + sulfur, QGA add &#x2026; [open source for complete dataset]</code> &#x2014; line 181</li>
+<li><code>isDeferredBelowFoldPreviewAsset</code> = <code>( url: string, product: Product = &apos;oqg&apos; ): boolean =&gt; DEFERRED_BELOW_FOLD_PREVIEW_ASSET_PATHS.some((path) =&gt; { const productPath = product === &apos;oqg&apos; ? path : path.replace(&apos;/media/oqg/&apos;, &#x2032;/media/&#x24;{product}/&#x2032;) return url.includes(productPath) })</code> &#x2014; line 204</li>
+<li><code>STATIC_PREVIEW_TO_STEP1_KEY</code> = <code>{ website: &apos;website&apos;, pdf: &apos;pdf&apos;, facebook: &apos;facebook&apos;, images: &apos;images&apos;, mp3: &apos;mp3&apos;, video: &apos;video&apos;, social: &apos;social&apos;, links: &apos;links&apos;, vcard: &apos;vcard&apos;, business: &apos;business&apos;, coupon: &apos;coupon&apos;, apps: &apos;app&apos;, menu: &apos;menu&apos;, instagram: &apos;instagram&apos;, whatsapp: &apos;whatsa &#x2026; [open source for complete dataset]</code> &#x2014; line 220</li>
+<li><code>getStep1QrTypeByKey</code> = <code>( key: string ): Step1QrPreviewType | undefined =&gt; STEP1_QR_PREVIEW_TYPES.find((t) =&gt; t.key === key)</code> &#x2014; line 239</li>
+</ul>
+<p>Direct consumers: <a data-source="pages/MainPage/MainPage.ts" href="../sources/pages/MainPage/MainPage.ts.html#L1">pages/MainPage/MainPage.ts:1</a>, <a data-source="pages/MainPage/MainPageLocators.ts" href="../sources/pages/MainPage/MainPageLocators.ts.html#L1">pages/MainPage/MainPageLocators.ts:1</a>, <a data-source="pages/Step1Page/Step1Page.ts" href="../sources/pages/Step1Page/Step1Page.ts.html#L1">pages/Step1Page/Step1Page.ts:1</a>, <a data-source="tests/static-previews/homepage-preview-preload.spec.ts" href="../sources/tests/static-previews/homepage-preview-preload.spec.ts.html#L1">tests/static-previews/homepage-preview-preload.spec.ts:1</a>, <a data-source="tests/static-previews/network-preview-preload.spec.ts" href="../sources/tests/static-previews/network-preview-preload.spec.ts.html#L1">tests/static-previews/network-preview-preload.spec.ts:1</a>, <a data-source="tests/static-previews/step1-preview-preload.spec.ts" href="../sources/tests/static-previews/step1-preview-preload.spec.ts.html#L1">tests/static-previews/step1-preview-preload.spec.ts:1</a></p>
+<h2 id="tests-data-constants-step3-tests-ts">tests/data/constants/step3-tests.ts</h2>
+<p><a data-source="tests/data/constants/step3-tests.ts" href="../sources/tests/data/constants/step3-tests.ts.html#L1">tests/data/constants/step3-tests.ts:1</a></p>
+<ul>
+<li><code>onboardingUrls</code> = <code>{ dpf: () =&gt; &apos;https://oqg.dev.test-qr.com/create?step=1&amp;qr_onboarding=active_dpf&amp;gaid=CA-EN-C-DPF&amp;fx=create+qr&amp;order=video&apos;, nsf: () =&gt; &apos;https://oqg.dev.test-qr.com/create?step=1&amp;qr_onboarding=active_nsf&amp;gaid=CA-EN-C-DPF&amp;fx=create+qr&amp;order=video&apos;, }</code> &#x2014; line 1</li>
+<li><code>step4Cases</code> = <code>{ dpf: { startUrl: onboardingUrls.dpf, expectedUrl: &apos;https://oqg.dev.test-qr.com/create?step=3&amp;qr_onboarding=active_dpf&amp;gaid=CA-EN-C-DPF&amp;fx=create+qr&amp;order=video&apos;, }, nsf: { startUrl: onboardingUrls.nsf, expectedUrl: &apos;https://oqg.dev.test-qr.com/create?step=3&amp; &#x2026; [open source for complete dataset]</code> &#x2014; line 9</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/requirements-3-steps/requirements_3_steps.spec.ts" href="../sources/tests/requirements-3-steps/requirements_3_steps.spec.ts.html#L1">tests/requirements-3-steps/requirements_3_steps.spec.ts:1</a></p>
+<h2 id="tests-data-constants-subscription-check-ids-ts">tests/data/constants/subscription-check-ids.ts</h2>
+<p><a data-source="tests/data/constants/subscription-check-ids.ts" href="../sources/tests/data/constants/subscription-check-ids.ts.html#L1">tests/data/constants/subscription-check-ids.ts:1</a></p>
+<ul>
+<li><code>MONTHLY_PLAN_ID</code> = <code>&apos;price_1U3pEmJTTRdkvAWvgKec28F2&apos;</code> &#x2014; line 1</li>
+<li><code>QUARTERLY_PLAN_ID</code> = <code>&apos;price_1U3pEnJTTRdkvAWvzb0iI2tT&apos;</code> &#x2014; line 2</li>
+<li><code>ANNUALLY_PLAN_ID</code> = <code>&apos;price_1U3pEnJTTRdkvAWvfuh40jTD&apos;</code> &#x2014; line 3</li>
+<li><code>DPF_MONTHLY_PLAN_ID</code> = <code>&apos;1&apos;</code> &#x2014; line 4</li>
+<li><code>DPF_QUARTERLY_PLAN_ID</code> = <code>&apos;3&apos;</code> &#x2014; line 5</li>
+<li><code>DPF_ANNUALLY_PLAN_ID</code> = <code>&apos;2&apos;</code> &#x2014; line 6</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts" href="../sources/tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts.html#L1">tests/archived-plan-pricing/helpers/stripe-customer-asserts.ts:1</a>, <a data-source="tests/data/stripeRetryStrategy.data.ts" href="../sources/tests/data/stripeRetryStrategy.data.ts.html#L1">tests/data/stripeRetryStrategy.data.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/default/active-account/stripe.spec.ts" href="../sources/tests/logged-in-user/billing-page/default/active-account/stripe.spec.ts.html#L1">tests/logged-in-user/billing-page/default/active-account/stripe.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/default/fully-cancelled-account/stripe-full-canc-account.spec.ts" href="../sources/tests/logged-in-user/billing-page/default/fully-cancelled-account/stripe-full-canc-account.spec.ts.html#L1">tests/logged-in-user/billing-page/default/fully-cancelled-account/stripe-full-canc-account.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/default/subscription-check/subscription-check.spec.ts" href="../sources/tests/logged-in-user/billing-page/default/subscription-check/subscription-check.spec.ts.html#L1">tests/logged-in-user/billing-page/default/subscription-check/subscription-check.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/dpf/annual-plan/stripe-annual.spec.ts" href="../sources/tests/logged-in-user/billing-page/dpf/annual-plan/stripe-annual.spec.ts.html#L1">tests/logged-in-user/billing-page/dpf/annual-plan/stripe-annual.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/dpf/full-access/stripe-dpf-full-access.spec.ts" href="../sources/tests/logged-in-user/billing-page/dpf/full-access/stripe-dpf-full-access.spec.ts.html#L1">tests/logged-in-user/billing-page/dpf/full-access/stripe-dpf-full-access.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/dpf/limited-access/stripe-dpf-limited-access.spec.ts" href="../sources/tests/logged-in-user/billing-page/dpf/limited-access/stripe-dpf-limited-access.spec.ts.html#L1">tests/logged-in-user/billing-page/dpf/limited-access/stripe-dpf-limited-access.spec.ts:1</a></p>
+<h2 id="tests-data-default-pricing-test-data-ts">tests/data/default-pricing-test-data.ts</h2>
+<p><a data-source="tests/data/default-pricing-test-data.ts" href="../sources/tests/data/default-pricing-test-data.ts.html#L1">tests/data/default-pricing-test-data.ts:1</a></p>
+<ul>
+<li><code>defaultPricingData</code> = <code>[ { country: &apos;us&apos;, currency: &apos;USD&apos;, monthly: &apos;49.95&apos;, quarterly: &apos;29.95&apos;, annually: &apos;19.95&apos;, promo_70_monthly: &apos;14.99&apos;, promo_70_quarterly: &apos;8.99&apos;, promo_70_annually: &apos;5.99&apos;, promo_8_99: &apos;8.99&apos;, promo_50_onetime: &apos;50&apos;, }, { country: &apos;ca&apos;, currency: &apos;USD&apos;, mont &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-out-user/prices/default-pricing.spec.ts" href="../sources/tests/logged-out-user/prices/default-pricing.spec.ts.html#L1">tests/logged-out-user/prices/default-pricing.spec.ts:1</a></p>
+<h2 id="tests-data-download-test-data-ts">tests/data/download_test_data.ts</h2>
+<p><a data-source="tests/data/download_test_data.ts" href="../sources/tests/data/download_test_data.ts.html#L1">tests/data/download_test_data.ts:1</a></p>
+<ul>
+<li><code>formatLocators</code> = <code>[ &apos;png_file_download&apos;, &apos;jpeg_file_download&apos;, &apos;svg_file_download&apos;, &apos;pdf_file_download&apos;, &apos;eps_file_download&apos;, ]</code> &#x2014; line 1</li>
+<li><code>sizeLocators</code> = <code>[ &apos;size_default_of_qr_file_download&apos;, &apos;size_512_of_qr_file_download&apos;, &apos;size_1024_of_qr_file_download&apos;, &apos;size_2048_of_qr_file_download&apos;, &apos;size_4096_of_qr_file_download&apos;, &apos;size_a4_of_pdf_qr_file_download&apos;, &apos;size_a3_of_pdf_qr_file_download&apos;, &apos;size_a2_of_pdf_qr_fi &#x2026; [open source for complete dataset]</code> &#x2014; line 9</li>
+<li><code>imgFileParametersForDownload</code> = <code>{ PNG: [ { Extension: &apos;png&apos;, &apos;Size locator&apos;: &apos;size_default_of_qr_file_download&apos;, &apos;Expected width&apos;: 1024, &apos;Expected height&apos;: 1024, &apos;Verify method&apos;: &apos;_verify_image_size&apos;, }, { Extension: &apos;png&apos;, &apos;Size locator&apos;: &apos;size_512_of_qr_file_download&apos;, &apos;Expected width&apos;: 51 &#x2026; [open source for complete dataset]</code> &#x2014; line 22</li>
+<li><code>pdfFileParametersForDownload</code> = <code>{ PDF: [ { Extension: &apos;pdf&apos;, &apos;Size locator&apos;: &apos;size_default_of_qr_file_download&apos;, &apos;Expected width&apos;: 595, &apos;Expected height&apos;: 842, &apos;Verify method&apos;: &apos;_verify_pdf_size&apos;, }, { Extension: &apos;pdf&apos;, &apos;Size locator&apos;: &apos;size_a4_of_pdf_qr_file_download&apos;, &apos;Expected width&apos;: 595 &#x2026; [open source for complete dataset]</code> &#x2014; line 173</li>
+</ul>
+<p>Direct consumers: No direct TypeScript import found (may be read as a file or referenced indirectly).</p>
+<h2 id="tests-data-dpf-fx-url-parameter-data-ts">tests/data/dpf-fx-url-parameter.data.ts</h2>
+<p><a data-source="tests/data/dpf-fx-url-parameter.data.ts" href="../sources/tests/data/dpf-fx-url-parameter.data.ts.html#L1">tests/data/dpf-fx-url-parameter.data.ts:1</a></p>
+<ul>
+<li><code>FX_VALUE</code> = <code>&apos;wmeLLAy^d4*3ZcdFRBkydG!wGO55Ic&apos;</code> &#x2014; line 1</li>
+<li><code>GOOGLEBOT_USER_AGENT</code> = <code>&apos;Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Chrome/W.X.Y.Z Safari/537.36&apos;</code> &#x2014; line 3</li>
+<li><code>FX_VALUE_CASES</code> = <code>[ { testCaseId: &apos;TC07&apos;, description: &apos;a normal value with spaces&apos;, value: &apos;summer campaign&apos;, priority: &apos;@Medium&apos;, }, { testCaseId: &apos;TC07&apos;, description: &apos;a hyphenated normal value&apos;, value: &apos;winter-sale-2026&apos;, priority: &apos;@Medium&apos;, }, { testCaseId: &apos;TC07&apos;, descri &#x2026; [open source for complete dataset]</code> &#x2014; line 6</li>
+<li><code>IGNORED_FX_CASES</code> = <code>[ { testCaseId: &apos;TC15&apos;, description: &apos;an empty fx value&apos;, value: &apos;&apos;, priority: &apos;@Medium&apos;, }, { testCaseId: &apos;TC18&apos;, description: &apos;a whitespace-only fx value&apos;, value: &apos; &apos;, priority: &apos;@Low&apos;, }, ] as const</code> &#x2014; line 51</li>
+<li><code>MALFORMED_FX_VALUE</code> = <code>&apos;%E0%A4%A&apos;</code> &#x2014; line 66</li>
+<li><code>HTML_FX_VALUE</code> = <code>&apos;&lt;strong data-fx-test=&quot;tc24-html-marker&quot;&gt;TC24 HTML&lt;/strong&gt;&apos;</code> &#x2014; line 67</li>
+<li><code>XSS_FX_VALUE</code> = <code>&apos;&lt;script data-fx-test=&quot;tc23-script-marker&quot;&gt;alert(&quot;TC23&quot;)&lt;/script&gt;&apos;</code> &#x2014; line 69</li>
+<li><code>UNSAFE_SCHEME_FX_CASES</code> = <code>[ { description: &apos;a javascript scheme&apos;, value: &apos;javascript:alert(&quot;TC25&quot;)&apos;, }, { description: &apos;a data scheme&apos;, value: &apos;data:text/html,TC25&apos;, }, ] as const</code> &#x2014; line 72</li>
+<li><code>LOCALIZED_FX_CASES</code> = <code>[ { locale: &apos;de&apos;, language: &apos;German&apos;, value: &apos;Fr&#xfc;hlingsaktion f&#xfc;r QR-Codes&apos;, }, { locale: &apos;fr&apos;, language: &apos;French&apos;, value: &apos;Campagne fran&#xe7;aise de QR codes&apos;, }, { locale: &apos;ja&apos;, language: &apos;Japanese&apos;, value: &apos;&#x65e5;&#x672c;&#x8a9e;&#x306e;QR&#x30b3;&#x30fc;&#x30c9;&#x30ad;&#x30e3;&#x30f3;&#x30da;&#x30fc;&#x30f3;&apos;, }, ] as const</code> &#x2014; line 83</li>
+<li><code>RTL_LOCALE</code> = <code>&apos;ar&apos;</code> &#x2014; line 101</li>
+<li><code>RTL_FX_VALUE</code> = <code>&apos;&#x62d;&#x645;&#x644;&#x629; &#x631;&#x645;&#x632; &#x627;&#x644;&#x627;&#x633;&#x62a;&#x62c;&#x627;&#x628;&#x629; &#x627;&#x644;&#x633;&#x631;&#x64a;&#x639;&#x629; 2026&apos;</code> &#x2014; line 102</li>
+<li><code>RESPONSIVE_FX_VALUE</code> = <code>&apos;Responsive fx value&apos;</code> &#x2014; line 103</li>
+<li><code>RESPONSIVE_FX_CASES</code> = <code>[ { testCaseId: &apos;TC35&apos;, description: &apos;mobile&apos;, viewport: { width: 390, height: 844 }, priority: &apos;@Medium&apos;, }, { testCaseId: &apos;TC36&apos;, description: &apos;tablet&apos;, viewport: { width: 768, height: 1024 }, priority: &apos;@Low&apos;, }, { testCaseId: &apos;TC37&apos;, description: &apos;320px&apos;, &#x2026; [open source for complete dataset]</code> &#x2014; line 105</li>
+<li><code>TRACKING_PARAMS</code> = <code>{ gaid: &apos;test-gaid-123&apos;, utm_source: &apos;automation&apos;, utm_medium: &apos;playwright&apos;, utm_campaign: &apos;oqg3-2434&apos;, }</code> &#x2014; line 126</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-accessibility-automations.spec.ts" href="../sources/tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-accessibility-automations.spec.ts.html#L1">tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-accessibility-automations.spec.ts:1</a>, <a data-source="tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-core-automations.spec.ts" href="../sources/tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-core-automations.spec.ts.html#L1">tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-core-automations.spec.ts:1</a>, <a data-source="tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-ignored-values-automations.spec.ts" href="../sources/tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-ignored-values-automations.spec.ts.html#L1">tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-ignored-values-automations.spec.ts:1</a>, <a data-source="tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-localization-automations.spec.ts" href="../sources/tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-localization-automations.spec.ts.html#L1">tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-localization-automations.spec.ts:1</a>, <a data-source="tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-persistence-automations.spec.ts" href="../sources/tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-persistence-automations.spec.ts.html#L1">tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-persistence-automations.spec.ts:1</a>, <a data-source="tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-responsive-automations.spec.ts" href="../sources/tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-responsive-automations.spec.ts.html#L1">tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-responsive-automations.spec.ts:1</a>, <a data-source="tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-security-automations.spec.ts" href="../sources/tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-security-automations.spec.ts.html#L1">tests/logged-out-user/funnels/dpf/fx-url-parameter/fx-url-security-automations.spec.ts:1</a></p>
+<h2 id="tests-data-dpf-pricing-test-data-ts">tests/data/dpf-pricing-test-data.ts</h2>
+<p><a data-source="tests/data/dpf-pricing-test-data.ts" href="../sources/tests/data/dpf-pricing-test-data.ts.html#L1">tests/data/dpf-pricing-test-data.ts:1</a></p>
+<ul>
+<li><code>dpfPricingData</code> = <code>[ { country: &apos;us&apos;, currency: &apos;USD&apos;, dpf_limited_14: &apos;1.45&apos;, dpf_full_14: &apos;1.95&apos;, }, { country: &apos;ca&apos;, currency: &apos;USD&apos;, dpf_limited_14: &apos;1.45&apos;, dpf_full_14: &apos;1.95&apos;, }, { country: &apos;au&apos;, currency: &apos;USD&apos;, dpf_limited_14: &apos;1.45&apos;, dpf_full_14: &apos;1.95&apos;, }, { country: &apos; &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-in-user/billing-page/dpf/iceland/iceland-stripe-form-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/dpf/iceland/iceland-stripe-form-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/dpf/iceland/iceland-stripe-form-automations.spec.ts:1</a>, <a data-source="tests/logged-out-user/prices/dpf-pricing.spec.ts" href="../sources/tests/logged-out-user/prices/dpf-pricing.spec.ts.html#L1">tests/logged-out-user/prices/dpf-pricing.spec.ts:1</a></p>
+<h2 id="tests-data-email-templates-data-ts">tests/data/email-templates.data.ts</h2>
+<p><a data-source="tests/data/email-templates.data.ts" href="../sources/tests/data/email-templates.data.ts.html#L1">tests/data/email-templates.data.ts:1</a></p>
+<ul>
+<li><code>EMAIL_TEMPLATE_COPY</code> = <code>{ sectionTitle: &apos;Email Templates&apos;, helperText: &apos;Create and customize email templates with prefilled messages.&apos;, addButton: &apos;Add Email Template&apos;, fieldLabels: { icon: &apos;Icon&apos;, title: &apos;Title&apos;, email: &quot;&lt;literal omitted; see source&gt;&quot;, subject: &apos;Subject&apos;, body: &apos;Body&apos;, }, placehold &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+<li><code>cardLabel</code> = <code>(index: number): string =&gt; &#x2032;Pre-filled email &#x24;{index + 1}&#x2032;</code> &#x2014; line 22</li>
+<li><code>VALID_EMAILS</code> = <code>[ &apos;user@example.com&apos;, &apos;john.doe@example.com&apos;, &apos;john+test@example.co.uk&apos;, &apos;&lt;email literal omitted&gt;&apos;, &apos;&lt;email literal omitted&gt;&apos;, ] as const</code> &#x2014; line 25</li>
+<li><code>INVALID_EMAILS</code> = <code>[&apos;notanemail&apos;, &apos;user@&apos;, &apos;@example.com&apos;] as const</code> &#x2014; line 33</li>
+<li><code>EXPECTED_ICON_OPTIONS</code> = <code>[ &apos;Message&apos;, &apos;Work&apos;, &apos;Multimedia&apos;, &apos;Personal Card&apos;, &apos;User&apos;, &apos;SMS Notification&apos;, &apos;Trend Up&apos;, &apos;Coin&apos;, &apos;User Square&apos;, &apos;Profile&apos;, &apos;SMS Star&apos;, &apos;SMS Tracking&apos;, &apos;SMS Search&apos;, &apos;SMS Edit&apos;, &apos;Balance&apos;, &apos;Megaphone&apos;, &apos;Computing&apos;, ] as const</code> &#x2014; line 39</li>
+<li><code>NON_DEFAULT_ICON_NAME</code> = <code>&apos;Work&apos;</code> &#x2014; line 59</li>
+<li><code>SUBJECT_SAMPLE</code> = <code>&apos;Inquiry about your services&apos;</code> &#x2014; line 61</li>
+<li><code>BODY_SAMPLE</code> = <code>&apos;This is a test email template body for validating the body field.&apos;</code> &#x2014; line 63</li>
+<li><code>RESIZE_BODY</code> = <code>&apos;This is a sample description text that can be used to verify textarea resizing functionality&apos;</code> &#x2014; line 66</li>
+<li><code>ADD_TEMPLATE</code> = <code>{ title: &apos;Customer Support&apos;, email: &quot;&lt;literal omitted; see source&gt;&quot;, subject: &apos;Support Request&apos;, body: &apos;Please contact our support team for assistance.&apos;, } as const</code> &#x2014; line 69</li>
+<li><code>PERSISTENCE_TEMPLATE</code> = <code>{ title: &apos;Persistence Test&apos;, email: &quot;&lt;literal omitted; see source&gt;&quot;, subject: &apos;Persistence Check&apos;, body: &apos;Verify data remains after page refresh.&apos;, } as const</code> &#x2014; line 76</li>
+<li><code>REQUIRED_BASIC_INFO_NAME</code> = <code>&apos;Green Life Architect&apos;</code> &#x2014; line 83</li>
+<li><code>TITLE_SAMPLE_LENGTHS</code> = <code>[255, 1_000, 5_000] as const</code> &#x2014; line 85</li>
+<li><code>BODY_MAX_LENGTH</code> = <code>4_000</code> &#x2014; line 87</li>
+<li><code>MAX_TEMPLATE_COUNT</code> = <code>10</code> &#x2014; line 89</li>
+<li><code>asciiBody</code> = <code>(length: number): string =&gt; &apos;A&apos;.repeat(length)</code> &#x2014; line 91</li>
+<li><code>asciiTitle</code> = <code>(length: number): string =&gt; &apos;T&apos;.repeat(length)</code> &#x2014; line 93</li>
+<li><code>EMAIL_TEMPLATE_VIEWPORTS</code> = <code>[ { width: 1920, height: 1080, label: &apos;1920x1080&apos; }, { width: 1366, height: 768, label: &apos;1366x768&apos; }, { width: 1024, height: 768, label: &apos;1024x768&apos; }, { width: 768, height: 1024, label: &apos;768x1024&apos; }, { width: 375, height: 667, label: &apos;375x667&apos; }, ] as const</code> &#x2014; line 95</li>
+</ul>
+<p>Direct consumers: <a data-source="pages/EmailTemplatesPage/EmailTemplatesPage.ts" href="../sources/pages/EmailTemplatesPage/EmailTemplatesPage.ts.html#L1">pages/EmailTemplatesPage/EmailTemplatesPage.ts:1</a>, <a data-source="tests/helpers/email-templates.helper.ts" href="../sources/tests/helpers/email-templates.helper.ts.html#L1">tests/helpers/email-templates.helper.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/email-qr/email-templates-core-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/email-qr/email-templates-core-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/email-qr/email-templates-core-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/email-qr/email-templates-management-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/email-qr/email-templates-management-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/email-qr/email-templates-management-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/email-qr/email-templates-persistence-preview-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/email-qr/email-templates-persistence-preview-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/email-qr/email-templates-persistence-preview-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/email-qr/email-templates-responsive-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/email-qr/email-templates-responsive-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/email-qr/email-templates-responsive-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/email-qr/email-templates-validation-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/email-qr/email-templates-validation-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/email-qr/email-templates-validation-automations.spec.ts:1</a></p>
+<h2 id="tests-data-event-acceptance-criteria-data-ts">tests/data/event-acceptance-criteria.data.ts</h2>
+<p><a data-source="tests/data/event-acceptance-criteria.data.ts" href="../sources/tests/data/event-acceptance-criteria.data.ts.html#L1">tests/data/event-acceptance-criteria.data.ts:1</a></p>
+<ul>
+<li><code>EventAc</code> &#x2014; line 14</li>
+<li><code>eventAcStories</code> = <code>{ &apos;OQG3-2365&apos;: &apos;Find and select event QR type&apos;, &apos;OQG3-2366&apos;: &apos;Choose preset or custom primary and secondary colors for Event landing page&apos;, &apos;OQG3-2367&apos;: &apos;Add event title, image, summary, and related links&apos;, &apos;OQG3-2368&apos;: &apos;Add optional long-form event details wi &#x2026; [open source for complete dataset]</code> &#x2014; line 33</li>
+<li><code>eventAcceptanceCriteria</code> = <code>[ { id: &apos;OQG3-2365-AC01&apos;, story: &apos;OQG3-2365&apos;, text: &apos;Event QR tile is visible &#x2013; The Event QR type card/tile appears in the QR type selection grid alongside existing QR types (Website, PDF, vCard, etc.)&apos;, automatable: true, }, { id: &apos;OQG3-2365-AC02&apos;, story: &apos;OQ &#x2026; [open source for complete dataset]</code> &#x2014; line 57</li>
+</ul>
+<p>Direct consumers: No direct TypeScript import found (may be read as a file or referenced indirectly).</p>
+<h2 id="tests-data-event-field-validation-data-ts">tests/data/event-field-validation.data.ts</h2>
+<p><a data-source="tests/data/event-field-validation.data.ts" href="../sources/tests/data/event-field-validation.data.ts.html#L1">tests/data/event-field-validation.data.ts:1</a></p>
+<ul>
+<li><code>EventValidationField</code> &#x2014; line 3</li>
+<li><code>EventValidationScenario</code> &#x2014; line 12</li>
+<li><code>EVENT_VALIDATION_FIELDS</code> = <code>[ &apos;title&apos;, &apos;summary&apos;, &apos;contactName&apos;, &apos;phone&apos;, &apos;email&apos;, &apos;website&apos;, &apos;folder&apos;, ]</code> &#x2014; line 128</li>
+<li><code>EVENT_FIELD_VALIDATION_SCENARIOS</code> = <code>Object.fromEntries( EVENT_VALIDATION_FIELDS.map((field) =&gt; [field, scenariosForField(field)]) ) as Record&lt;EventValidationField, EventValidationScenario[]&gt;</code> &#x2014; line 138</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/tools/event-field-validation-manifest.helper.ts" href="../sources/tests/tools/event-field-validation-manifest.helper.ts.html#L1">tests/tools/event-field-validation-manifest.helper.ts:1</a>, <a data-source="tests/tools/event-qr-field-validation-seed-automations.spec.ts" href="../sources/tests/tools/event-qr-field-validation-seed-automations.spec.ts.html#L1">tests/tools/event-qr-field-validation-seed-automations.spec.ts:1</a></p>
+<h2 id="tests-data-eventqrscenarios-data-ts">tests/data/eventQrScenarios.data.ts</h2>
+<p><a data-source="tests/data/eventQrScenarios.data.ts" href="../sources/tests/data/eventQrScenarios.data.ts.html#L1">tests/data/eventQrScenarios.data.ts:1</a></p>
+<ul>
+<li><code>EventQrScenario</code> &#x2014; line 9</li>
+<li><code>eventQrScenariosFromPdf</code> = <code>[ { id: &apos;EVQR-001&apos;, section: &apos;Step 1 - Entry&apos;, title: &apos;Verify Event card is visible in QR type selection grid&apos;, }, { id: &apos;EVQR-002&apos;, section: &apos;Step 1 - Entry&apos;, title: &apos;Verify selecting Event card navigates to Step 2&apos;, }, { id: &apos;EVQR-003&apos;, section: &apos;Step 1 - En &#x2026; [open source for complete dataset]</code> &#x2014; line 15</li>
+<li><code>eventQrGapScenarios</code> = <code>[ { id: &apos;EVQR-G01&apos;, section: &apos;Gap - Resilience&apos;, title: &apos;Browser refresh on Step 1 retains funnel context&apos;, }, { id: &apos;EVQR-G02&apos;, section: &apos;Gap - Resilience&apos;, title: &apos;Browser refresh on Step 2 restores draft Event content&apos;, }, { id: &apos;EVQR-G03&apos;, section: &apos;Gap - &#x2026; [open source for complete dataset]</code> &#x2014; line 1533</li>
+<li><code>eventQrScenarios</code> = <code>[ ...eventQrScenariosFromPdf, ...eventQrGapScenarios, ]</code> &#x2014; line 1711</li>
+</ul>
+<p>Direct consumers: No direct TypeScript import found (may be read as a file or referenced indirectly).</p>
+<h2 id="tests-data-eventsecuritypayloads-data-ts">tests/data/eventSecurityPayloads.data.ts</h2>
+<p><a data-source="tests/data/eventSecurityPayloads.data.ts" href="../sources/tests/data/eventSecurityPayloads.data.ts.html#L1">tests/data/eventSecurityPayloads.data.ts:1</a></p>
+<ul>
+<li><code>Payload</code> &#x2014; line 9</li>
+<li><code>XSS_PAYLOADS</code> = <code>[ { label: &apos;script-tag&apos;, value: &apos;&lt;script&gt;alert(1)&lt;/script&gt;&apos; }, { label: &apos;img-onerror&apos;, value: &apos;&lt;img src=x onerror=alert(1)&gt;&apos; }, { label: &apos;svg-onload&apos;, value: &apos;&lt;svg onload=alert(1)&gt;&apos; }, { label: &apos;iframe-src-js&apos;, value: &apos;&lt;iframe src=&quot;javascript:alert(1)&quot;&gt;&lt;/ifram &#x2026; [open source for complete dataset]</code> &#x2014; line 15</li>
+<li><code>UNSAFE_URL_SCHEMES</code> = <code>[ { label: &apos;javascript&apos;, value: &apos;javascript:alert(1)&apos; }, { label: &apos;data-html&apos;, value: &apos;data:text/html,&lt;script&gt;alert(1)&lt;/script&gt;&apos; }, { label: &apos;vbscript&apos;, value: &apos;vbscript:msgbox(1)&apos; }, { label: &apos;file&apos;, value: &apos;file:///etc/passwd&apos; }, ]</code> &#x2014; line 39</li>
+<li><code>SQLI_PAYLOADS</code> = <code>[ { label: &apos;or-1-1&apos;, value: &quot;&apos; OR &apos;1&apos;=&apos;1&quot; }, { label: &apos;drop-table&apos;, value: &quot;&apos;; DROP TABLE qr_codes;--&quot; }, { label: &apos;union-select&apos;, value: &quot;&apos; UNION SELECT NULL,version()--&quot; }, { label: &apos;quote-comment&apos;, value: &#x2032;admin&apos;--&#x2032; }, ]</code> &#x2014; line 47</li>
+<li><code>TEMPLATE_INJECTION</code> = <code>[ { label: &apos;handlebars&apos;, value: &apos;{{7*7}}&apos; }, { label: &apos;js-template&apos;, value: &apos;&#x24;{7*7}&apos; }, { label: &apos;erb&apos;, value: &apos;&lt;%= 7*7 %&gt;&apos; }, { label: &apos;jinja&apos;, value: &apos;{{ config.items() }}&apos; }, ]</code> &#x2014; line 55</li>
+<li><code>COMMAND_INJECTION</code> = <code>[ { label: &apos;semicolon-id&apos;, value: &apos;; id&apos; }, { label: &apos;subshell&apos;, value: &apos;&#x24;(whoami)&apos; }, { label: &apos;pipe-ls&apos;, value: &apos;| ls -la&apos; }, { label: &apos;backtick&apos;, value: &apos;&#x2032;cat /etc/passwd&#x2032;&apos; }, ]</code> &#x2014; line 63</li>
+<li><code>CRLF_INJECTION</code> = <code>[ { label: &apos;crlf-header&apos;, value: &apos;test\r\nSet-Cookie: injected=1&apos; }, { label: &apos;log-forge&apos;, value: &apos;test%0d%0afake-log-entry&apos; }, ]</code> &#x2014; line 71</li>
+<li><code>UNICODE_ATTACKS</code> = <code>[ { label: &apos;rtl-override&apos;, value: &apos;safe&#x202e;gnp.exe&apos; }, { label: &apos;zero-width&apos;, value: &apos;ad&#x200b;min&apos; }, { label: &apos;homoglyph&apos;, value: &apos;&#x430;dmin&apos; }, // Cyrillic &apos;&#x430;&apos; { label: &apos;null-byte&apos;, value: &apos;test\0.png&apos; }, { label: &apos;combining&apos;, value: &apos;a&#x300;&#x301;&#x302;&#x303;&#x304;&apos; }, ]</code> &#x2014; line 77</li>
+<li><code>LONG_STRINGS</code> = <code>{ oneK: &apos;A&apos;.repeat(1_000), tenK: &apos;A&apos;.repeat(10_000), hundredK: &apos;A&apos;.repeat(100_000), }</code> &#x2014; line 86</li>
+<li><code>MaliciousUploadKind</code> &#x2014; line 92</li>
+<li><code>maliciousUpload</code> &#x2014; line 104</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-in-user/create-qr-code/event-qr/event-qr-edge-cases.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/event-qr/event-qr-edge-cases.spec.ts.html#L1">tests/logged-in-user/create-qr-code/event-qr/event-qr-edge-cases.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/event-qr/event-qr-security-heavy.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/event-qr/event-qr-security-heavy.spec.ts.html#L1">tests/logged-in-user/create-qr-code/event-qr/event-qr-security-heavy.spec.ts:1</a></p>
+<h2 id="tests-data-fit-your-needs-preview-translations-ts">tests/data/fit-your-needs-preview-translations.ts</h2>
+<p><a data-source="tests/data/fit-your-needs-preview-translations.ts" href="../sources/tests/data/fit-your-needs-preview-translations.ts.html#L1">tests/data/fit-your-needs-preview-translations.ts:1</a></p>
+<ul>
+<li><code>PREVIEW_TRANSLATIONS</code> = <code>{ ar: { businessSubtitle: &apos;&#x627;&#x644;&#x633;&#x639;&#x627;&#x62f;&#x629; &#x627;&#x644;&#x645;&#x62e;&#x628;&#x648;&#x632;&#x629; &#x627;&#x644;&#x637;&#x627;&#x632;&#x62c;&#x629; &#x643;&#x644; &#x64a;&#x648;&#x645;&apos;, videoTitle: &apos;&#x62f;&#x631;&#x648;&#x633; &#x627;&#x644;&#x637;&#x628;&#x62e;&apos;, linksHeading: &apos;&#x627;&#x644;&#x631;&#x648;&#x627;&#x628;&#x637;&apos;, wifiHeader: &apos;&#x627;&#x646;&#x636;&#x645; &#x625;&#x644;&#x649; &#x634;&#x628;&#x643;&#x629; &#x648;&#x627;&#x64a; &#x641;&#x627;&#x64a; &quot; Blue Hotel &quot;&#x61f;&apos;, }, bg: { businessSubtitle: &apos;&#x41f;&#x440;&#x44f;&#x441;&#x43d;&#x43e; &#x438;&#x437;&#x43f;&#x435;&#x447;&#x435;&#x43d;&#x43e; &#x449;&#x430;&#x441;&#x442;&#x438;&#x435; &#x432;&#x441;&#x435;&#x43a;&#x438; &#x434;&#x435;&#x43d;&apos;, videoTitle: &apos;&#x423;&#x440;&#x43e;&#x43a; &#x437;&#x430; &#x433;&#x43e;&#x442;&#x432;&#x435;&#x43d;&#x435;&apos;, l &#x2026; [open source for complete dataset]</code> &#x2014; line 2</li>
+<li><code>PreviewLocale</code> &#x2014; line 269</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/data/fit-your-needs-preview.data.ts" href="../sources/tests/data/fit-your-needs-preview.data.ts.html#L1">tests/data/fit-your-needs-preview.data.ts:1</a></p>
+<h2 id="tests-data-fit-your-needs-preview-data-ts">tests/data/fit-your-needs-preview.data.ts</h2>
+<p><a data-source="tests/data/fit-your-needs-preview.data.ts" href="../sources/tests/data/fit-your-needs-preview.data.ts.html#L1">tests/data/fit-your-needs-preview.data.ts:1</a></p>
+<ul>
+<li><code>BUSINESS_OVERLAP_LOCALES</code> = <code>[ &apos;fr&apos;, &apos;id&apos;, &apos;ru&apos;, &apos;pt&apos;, &apos;es&apos;, ] as const satisfies readonly PreviewLocale[]</code> &#x2014; line 10</li>
+<li><code>BUSINESS_ALL_LOCALES</code> = <code>Object.keys( PREVIEW_TRANSLATIONS ) as PreviewLocale[]</code> &#x2014; line 19</li>
+<li><code>VIDEO_VISIBILITY_CASES</code> = <code>[ { locale: &apos;tk&apos; as const, width: 440 }, { locale: &apos;tk&apos; as const, width: 510 }, { locale: &apos;tk&apos; as const, width: 581 }, { locale: &apos;uk&apos; as const, width: 1280 }, ]</code> &#x2014; line 24</li>
+<li><code>LINKS_HEADING_CASES</code> = <code>[ { locale: &apos;uk&apos; as const, expected: &apos;&#x421;&#x43f;&#x438;&#x441;&#x43e;&#x43a; &#x43f;&#x43e;&#x441;&#x438;&#x43b;&#x430;&#x43d;&#x44c;&apos; }, { locale: &apos;ru&apos; as const, expected: &apos;&#x421;&#x43f;&#x438;&#x441;&#x43e;&#x43a; &#x441;&#x441;&#x44b;&#x43b;&#x43e;&#x43a;&apos; }, { locale: &apos;ar&apos; as const, expected: &apos;&#x627;&#x644;&#x631;&#x648;&#x627;&#x628;&#x637;&apos; }, ] as const</code> &#x2014; line 32</li>
+<li><code>WIFI_SINGLE_LINE_LOCALES</code> = <code>[&apos;fr&apos;, &apos;ro&apos;] as const</code> &#x2014; line 39</li>
+<li><code>PREVIEW_VIEWPORTS</code> = <code>{ mobile320: { width: 320, height: 720 }, mobile360: { width: 360, height: 800 }, tabletPortrait: { width: 768, height: 1024 }, tabletLandscape: { width: 1024, height: 768 }, desktop: { width: 1440, height: 900 }, docWidths: [320, 360, 440, 581, 768, 1024, 128 &#x2026; [open source for complete dataset]</code> &#x2014; line 42</li>
+<li><code>AFFECTED_PREVIEW_TYPES</code> = <code>[ &apos;business&apos;, &apos;video&apos;, &apos;links&apos;, &apos;wifi&apos;, &apos;facebook&apos;, ] as const</code> &#x2014; line 52</li>
+<li><code>REGRESSION_SPOT_CHECK_LOCALES</code> = <code>[ &apos;en&apos;, &apos;de&apos;, &apos;ja&apos;, &apos;zh-cn&apos;, ] as const satisfies readonly PreviewLocale[]</code> &#x2014; line 61</li>
+<li><code>RTL_LOCALE</code> = <code>&apos;ar&apos; as const</code> &#x2014; line 69</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-out-user/homepage/fit-your-needs-design-automations.spec.ts" href="../sources/tests/logged-out-user/homepage/fit-your-needs-design-automations.spec.ts.html#L1">tests/logged-out-user/homepage/fit-your-needs-design-automations.spec.ts:1</a>, <a data-source="tests/logged-out-user/homepage/fit-your-needs-localization-automations.spec.ts" href="../sources/tests/logged-out-user/homepage/fit-your-needs-localization-automations.spec.ts.html#L1">tests/logged-out-user/homepage/fit-your-needs-localization-automations.spec.ts:1</a>, <a data-source="tests/logged-out-user/homepage/fit-your-needs-responsive-automations.spec.ts" href="../sources/tests/logged-out-user/homepage/fit-your-needs-responsive-automations.spec.ts.html#L1">tests/logged-out-user/homepage/fit-your-needs-responsive-automations.spec.ts:1</a></p>
+<h2 id="tests-data-folder-file-counter-data-ts">tests/data/folder-file-counter.data.ts</h2>
+<p><a data-source="tests/data/folder-file-counter.data.ts" href="../sources/tests/data/folder-file-counter.data.ts.html#L1">tests/data/folder-file-counter.data.ts:1</a></p>
+<ul>
+<li><code>MOBILE_VIEWPORT</code> = <code>{ width: 390, height: 844 } as const</code> &#x2014; line 1</li>
+<li><code>TABLET_VIEWPORT</code> = <code>{ width: 810, height: 1080 } as const</code> &#x2014; line 3</li>
+<li><code>LARGE_FOLDER_QR_COUNT</code> = <code>101</code> &#x2014; line 5</li>
+<li><code>SLOW_DELETE_DELAY_MS</code> = <code>1_500</code> &#x2014; line 7</li>
+<li><code>QR_DELETE_POST_ACTION</code> = <code>&apos;action=make_qrcode_deleted&apos;</code> &#x2014; line 9</li>
+<li><code>ENGLISH_FILE_COUNTER_LABEL</code> = <code>&apos;File(s)&apos;</code> &#x2014; line 11</li>
+<li><code>LOCALIZATION_FOLDER_COUNTS</code> = <code>[1, 2, 5] as const</code> &#x2014; line 13</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/helpers/folder-file-counter.helper.ts" href="../sources/tests/helpers/folder-file-counter.helper.ts.html#L1">tests/helpers/folder-file-counter.helper.ts:1</a>, <a data-source="tests/logged-in-user/my-qr-codes/folder-file-counter-errors-automations.spec.ts" href="../sources/tests/logged-in-user/my-qr-codes/folder-file-counter-errors-automations.spec.ts.html#L1">tests/logged-in-user/my-qr-codes/folder-file-counter-errors-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/my-qr-codes/folder-file-counter-localization-automations.spec.ts" href="../sources/tests/logged-in-user/my-qr-codes/folder-file-counter-localization-automations.spec.ts.html#L1">tests/logged-in-user/my-qr-codes/folder-file-counter-localization-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/my-qr-codes/folder-file-counter-responsive-automations.spec.ts" href="../sources/tests/logged-in-user/my-qr-codes/folder-file-counter-responsive-automations.spec.ts.html#L1">tests/logged-in-user/my-qr-codes/folder-file-counter-responsive-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/my-qr-codes/folder-file-counter-scale-automations.spec.ts" href="../sources/tests/logged-in-user/my-qr-codes/folder-file-counter-scale-automations.spec.ts.html#L1">tests/logged-in-user/my-qr-codes/folder-file-counter-scale-automations.spec.ts:1</a></p>
+<h2 id="tests-data-helpers-dpf-navigation-ts">tests/data/helpers/dpf-navigation.ts</h2>
+<p><a data-source="tests/data/helpers/dpf-navigation.ts" href="../sources/tests/data/helpers/dpf-navigation.ts.html#L1">tests/data/helpers/dpf-navigation.ts:1</a></p>
+<ul>
+<li><code>openMainPageDpf</code> &#x2014; line 3</li>
+<li><code>openMainPageNsf</code> &#x2014; line 10</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L1">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:1</a>, <a data-source="tests/emails/emails-trigered-by-user.spec.ts" href="../sources/tests/emails/emails-trigered-by-user.spec.ts.html#L1">tests/emails/emails-trigered-by-user.spec.ts:1</a>, <a data-source="tests/emails/password-changed-automations.spec.ts" href="../sources/tests/emails/password-changed-automations.spec.ts.html#L1">tests/emails/password-changed-automations.spec.ts:1</a>, <a data-source="tests/emails/transactional-email-delivery-automations.spec.ts" href="../sources/tests/emails/transactional-email-delivery-automations.spec.ts.html#L1">tests/emails/transactional-email-delivery-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/qr-code-details/download/unique-qr-download-page/unique-qr-download-page.spec.ts" href="../sources/tests/logged-in-user/qr-code-details/download/unique-qr-download-page/unique-qr-download-page.spec.ts.html#L1">tests/logged-in-user/qr-code-details/download/unique-qr-download-page/unique-qr-download-page.spec.ts:1</a>, <a data-source="tests/logged-out-user/funnels/dpf/dpf-funnel-review-automations.spec.ts" href="../sources/tests/logged-out-user/funnels/dpf/dpf-funnel-review-automations.spec.ts.html#L1">tests/logged-out-user/funnels/dpf/dpf-funnel-review-automations.spec.ts:1</a>, <a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L1">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:1</a></p>
+<h2 id="tests-data-iceland-dpf-payment-data-ts">tests/data/iceland-dpf-payment.data.ts</h2>
+<p><a data-source="tests/data/iceland-dpf-payment.data.ts" href="../sources/tests/data/iceland-dpf-payment.data.ts.html#L1">tests/data/iceland-dpf-payment.data.ts:1</a></p>
+<ul>
+<li><code>icelandDpfPaymentData</code> = <code>{ countryCode: &apos;is&apos;, stripeCountry: &apos;IS&apos;, currency: &apos;ISK&apos;, /** Displayed currency marker on DPF P&amp;P (oqg/qci/qga) */ currencyDisplay: &apos;kr&apos;, zip: &apos;101&apos;, dpfLimited14: &apos;195&apos;, dpfFull14: &apos;275&apos;, /** Stripe charge amounts (zero-decimal whole ISK) */ stripeChargeFul &#x2026; [open source for complete dataset]</code> &#x2014; line 6</li>
+<li><code>icelandCurrencyDisplaySamples</code> = <code>[ { country: &apos;is&apos;, currency: &apos;ISK&apos;, dpf_full_14: &apos;275&apos;, decimals: 0 as const, }, { country: &apos;jp&apos;, currency: &apos;JPY&apos;, dpf_full_14: &apos;295&apos;, decimals: 0 as const, }, { country: &apos;kr&apos;, currency: &apos;KRW&apos;, dpf_full_14: &apos;2,500&apos;, decimals: 0 as const, }, { country: &apos;hu&apos;, cu &#x2026; [open source for complete dataset]</code> &#x2014; line 60</li>
+<li><code>icelandPreviouslyOffLargeAmounts</code> = <code>[ { country: &apos;co&apos;, currency: &apos;COP&apos;, dpf_full_14: &apos;7,950&apos; }, { country: &apos;kr&apos;, currency: &apos;KRW&apos;, dpf_full_14: &apos;2,500&apos; }, { country: &apos;vn&apos;, currency: &apos;VND&apos;, dpf_full_14: &apos;47,500&apos; }, { country: &apos;id&apos;, currency: &apos;IDR&apos;, dpf_full_14: &apos;29,500&apos; }, { country: &apos;cl&apos;, currenc &#x2026; [open source for complete dataset]</code> &#x2014; line 110</li>
+<li><code>icelandPreviouslyOffSmallAmounts</code> = <code>[ { country: &apos;ph&apos;, currency: &apos;PHP&apos;, dpf_full_14: &apos;105&apos; }, { country: &apos;mk&apos;, currency: &apos;MKD&apos;, dpf_full_14: &apos;109&apos; }, { country: &apos;do&apos;, currency: &apos;DOP&apos;, dpf_full_14: &apos;115&apos; }, { country: &apos;al&apos;, currency: &apos;ALL&apos;, dpf_full_14: &apos;179&apos; }, { country: &apos;cz&apos;, currency: &apos;CZK&apos;, &#x2026; [open source for complete dataset]</code> &#x2014; line 124</li>
+</ul>
+<p>Direct consumers: <a data-source="pages/PaymentsPage/PaymentPage.ts" href="../sources/pages/PaymentsPage/PaymentPage.ts.html#L1">pages/PaymentsPage/PaymentPage.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/dpf/iceland/iceland-stripe-form-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/dpf/iceland/iceland-stripe-form-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/dpf/iceland/iceland-stripe-form-automations.spec.ts:1</a></p>
+<h2 id="tests-data-long-text-containment-data-ts">tests/data/long-text-containment.data.ts</h2>
+<p><a data-source="tests/data/long-text-containment.data.ts" href="../sources/tests/data/long-text-containment.data.ts.html#L1">tests/data/long-text-containment.data.ts:1</a></p>
+<ul>
+<li><code>LongTextScenario</code> &#x2014; line 1</li>
+<li><code>LONG_TEXT</code> = <code>{ title: repeatedWords(&apos;Long preview title&apos;, 18), description: repeatedWords(&apos;Long preview description&apos;, 45), }</code> &#x2014; line 10</li>
+<li><code>LONG_TEXT_SCENARIOS</code> = <code>[ { name: &apos;long title and description&apos;, ...LONG_TEXT, }, { name: &apos;single word without spaces&apos;, title: &apos;W&apos;.repeat(160), description: &apos;D&apos;.repeat(480), }, { name: &apos;emoji and special characters&apos;, title: repeatedWords(&apos;QR &#x1f680; caf&#xe9; &#xa9; &#x2122; &#x2713;&apos;, 18), description: repeatedW &#x2026; [open source for complete dataset]</code> &#x2014; line 15</li>
+<li><code>HTML_LIKE_TEXT</code> = <code>{ title: &apos;&lt;strong&gt;Long inert title&lt;/strong&gt;&apos;.repeat(8), description: &apos;&lt;img src=x onerror=alert(1)&gt;&apos;.repeat(14), }</code> &#x2014; line 58</li>
+<li><code>MP3_WITH_COVER</code> = <code>&apos;tests/data/test_files/audio_files/mp3 with cover image.mp3&apos;</code> &#x2014; line 63</li>
+<li><code>PUBLISHED_VIEWPORTS</code> = <code>[ { width: 320, height: 720 }, { width: 360, height: 800 }, { width: 768, height: 1024 }, { width: 1440, height: 1000 }, ] as const</code> &#x2014; line 66</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/helpers/long-text-containment.helper.ts" href="../sources/tests/helpers/long-text-containment.helper.ts.html#L1">tests/helpers/long-text-containment.helper.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/event-qr/event-long-text-core-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/event-qr/event-long-text-core-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/event-qr/event-long-text-core-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/long-text-boundary-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/long-text-boundary-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/long-text-boundary-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/long-text-core-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/long-text-core-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/long-text-core-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/long-text-responsive-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/long-text-responsive-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/long-text-responsive-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/long-text-security-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/long-text-security-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/long-text-security-automations.spec.ts:1</a></p>
+<h2 id="tests-data-oqg3-2211-data-ts">tests/data/oqg3-2211.data.ts</h2>
+<p><a data-source="tests/data/oqg3-2211.data.ts" href="../sources/tests/data/oqg3-2211.data.ts.html#L1">tests/data/oqg3-2211.data.ts:1</a></p>
+<ul>
+<li><code>OQG3_2211_SUITE</code> = <code>&apos;OQG3-2211 mobile phone preview history&apos;</code> &#x2014; line 8</li>
+<li><code>QR_FUNNEL_URL</code> = <code>/\/qr(?:\?|&#x24;)/</code> &#x2014; line 10</li>
+<li><code>QR_CODES_URL</code> = <code>/\/qr-codes/</code> &#x2014; line 11</li>
+<li><code>STEP_QUERY</code> = <code>(step: 1 | 2 | 3) =&gt; new RegExp(&#x2032;[?&amp;]step=&#x24;{step}(?:&amp;|&#x24;)&#x2032;)</code> &#x2014; line 12</li>
+<li><code>Oqg32211QrTypeKey</code> &#x2014; line 15</li>
+<li><code>Oqg32211QrType</code> &#x2014; line 32</li>
+<li><code>OQG3_2211_QR_TYPES</code> = <code>[ { key: &apos;pdf&apos;, label: &apos;PDF&apos;, card: &apos;pdfQrType&apos;, marker: &apos;pdfFileName&apos;, representative: false, }, { key: &apos;links&apos;, label: &apos;List of Links&apos;, card: &apos;linksQrType&apos;, marker: &apos;linksCompanyTitleInput&apos;, representative: false, }, { key: &apos;vcard&apos;, label: &apos;vCard&apos;, card: &apos;vc &#x2026; [open source for complete dataset]</code> &#x2014; line 73</li>
+<li><code>REPRESENTATIVE_QR_TYPES</code> = <code>OQG3_2211_QR_TYPES.filter( (type) =&gt; type.representative )</code> &#x2014; line 184</li>
+<li><code>VCARD_QR_TYPE</code> = <code>OQG3_2211_QR_TYPES.find( (type) =&gt; type.key === &apos;vcard&apos; ) as Oqg32211QrType</code> &#x2014; line 188</li>
+<li><code>IMAGES_QR_TYPE</code> = <code>OQG3_2211_QR_TYPES.find( (type) =&gt; type.key === &apos;images&apos; ) as Oqg32211QrType</code> &#x2014; line 192</li>
+<li><code>CONSOLIDATED_TC_IDS</code> = <code>{ step2BackClosesPreview: [&apos;TC01&apos;, &apos;TC11&apos;], step2SecondBackToStep1: [&apos;TC02&apos;, &apos;TC18&apos;, &apos;TC50&apos;], step3BackClosesPreview: [&apos;TC03&apos;], formDataPreservedOnPreviewBack: [&apos;TC04&apos;, &apos;TC22&apos;], desktopBackIsNormalNavigation: [&apos;TC05&apos;, &apos;TC46&apos;], step3SecondBackToStep2: [&apos;TC06&apos;, &#x2026; [open source for complete dataset]</code> &#x2014; line 197</li>
+<li><code>MANUAL_DEVICE_CASES</code> = <code>[ { id: &apos;OQG3-2211-TC15&apos;, reason: &apos;iOS native swipe-back cannot be driven by Playwright; keep as a real-device check.&apos;, }, { id: &apos;OQG3-2211-TC16&apos;, reason: &apos;Android native Back gesture cannot be driven by Playwright; keep as a real-device check.&apos;, }, { id: &apos;OQG &#x2026; [open source for complete dataset]</code> &#x2014; line 211</li>
+<li><code>CONTENT_SAVE_ROUTE</code> = <code>&apos;**/api/steps/qr/content**&apos;</code> &#x2014; line 234</li>
+<li><code>UPLOAD_ROUTE</code> = <code>&apos;**/api/upload**&apos;</code> &#x2014; line 235</li>
+<li><code>PDF_FIXTURE</code> = <code>&apos;tests/data/test_files/pdf_files/sample-local-pdf.pdf&apos;</code> &#x2014; line 237</li>
+<li><code>IMAGE_FIXTURE</code> = <code>&apos;tests/data/test_files/image_files/cover.jpg&apos;</code> &#x2014; line 239</li>
+<li><code>MP3_FIXTURE</code> = <code>&apos;tests/data/test_files/audio_files/sample sound.mp3&apos;</code> &#x2014; line 240</li>
+<li><code>YOUTUBE_FIXTURE</code> = <code>&apos;https://www.youtube.com/watch?v=cTQ3Ko9ZKg8&apos;</code> &#x2014; line 241</li>
+<li><code>WHATSAPP_PHONE_FIXTURE</code> = <code>&apos;050 123 4545&apos;</code> &#x2014; line 243</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/helpers/oqg3-2211.helper.ts" href="../sources/tests/helpers/oqg3-2211.helper.ts.html#L1">tests/helpers/oqg3-2211.helper.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/desktop-preview-navigation-regression.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/desktop-preview-navigation-regression.spec.ts.html#L1">tests/logged-in-user/create-qr-code/desktop-preview-navigation-regression.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/mobile-preview-device-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/mobile-preview-device-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/mobile-preview-device-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/mobile-preview-help-tour-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/mobile-preview-help-tour-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/mobile-preview-help-tour-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/mobile-preview-navigation-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/mobile-preview-navigation-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/mobile-preview-navigation-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/mobile-preview-persistence-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/mobile-preview-persistence-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/mobile-preview-persistence-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/mobile-preview-resilience-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/mobile-preview-resilience-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/mobile-preview-resilience-automations.spec.ts:1</a></p>
+<h2 id="tests-data-payments-test-data-ts">tests/data/payments_test_data.ts</h2>
+<p><a data-source="tests/data/payments_test_data.ts" href="../sources/tests/data/payments_test_data.ts.html#L1">tests/data/payments_test_data.ts:1</a></p>
+<ul>
+<li><code>stripeVisaValidCard</code> = <code>{ cardNumber: &apos;4242424242424242&apos;, expDate: getExpiryDateOneYearAhead(), cvc: &apos;127&apos;, }</code> &#x2014; line 3</li>
+<li><code>stripe_mastercard_valid_card</code> = <code>{ cardNumber: &apos;5555555555554444&apos;, expDate: getExpiryDateOneYearAhead(), cvc: &apos;127&apos;, }</code> &#x2014; line 9</li>
+<li><code>stripe_3DS_valid_card</code> = <code>{ cardNumber: &apos;4000002760003184&apos;, expDate: getExpiryDateOneYearAhead(), cvc: &apos;127&apos;, }</code> &#x2014; line 15</li>
+<li><code>stripe_invalid_card</code> = <code>{ cardNumber: &apos;4000000000000002&apos;, expDate: getExpiryDateOneYearAhead(), cvc: &apos;127&apos;, }</code> &#x2014; line 21</li>
+<li><code>stripeDeclinedCard</code> = <code>{ cardNumber: &apos;4000000000000341&apos;, expDate: getExpiryDateOneYearAhead(), cvc: &apos;127&apos;, }</code> &#x2014; line 27</li>
+<li><code>stripeInsufficientFundsCard</code> = <code>{ cardNumber: &apos;4000000000009995&apos;, expDate: getExpiryDateOneYearAhead(), cvc: &apos;127&apos;, }</code> &#x2014; line 33</li>
+<li><code>paymentData</code> = <code>{ country: &apos;US&apos;, zip: &apos;90001&apos;, fullName: &apos;Test Name&apos;, address: &apos;Test address&apos;, state: &apos;NY&apos;, city: &apos;Test city&apos;, }</code> &#x2014; line 39</li>
+</ul>
+<p>Direct consumers: <a data-source="pages/BillingPage/BillingPage.ts" href="../sources/pages/BillingPage/BillingPage.ts.html#L1">pages/BillingPage/BillingPage.ts:1</a>, <a data-source="pages/PaymentsPage/PaymentPage.ts" href="../sources/pages/PaymentsPage/PaymentPage.ts.html#L1">pages/PaymentsPage/PaymentPage.ts:1</a>, <a data-source="tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts" href="../sources/tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts.html#L1">tests/archived-plan-pricing/helpers/archived-pp-purchase.helper.ts:1</a>, <a data-source="tests/helpers/discountLinkHelpers.ts" href="../sources/tests/helpers/discountLinkHelpers.ts.html#L1">tests/helpers/discountLinkHelpers.ts:1</a>, <a data-source="tests/helpers/stripeRetryStrategy.ts" href="../sources/tests/helpers/stripeRetryStrategy.ts.html#L1">tests/helpers/stripeRetryStrategy.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/active-subscription.spec.ts" href="../sources/tests/logged-in-user/billing-page/active-subscription.spec.ts.html#L1">tests/logged-in-user/billing-page/active-subscription.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/default/active-account/user-flow.spec.ts" href="../sources/tests/logged-in-user/billing-page/default/active-account/user-flow.spec.ts.html#L1">tests/logged-in-user/billing-page/default/active-account/user-flow.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/default/fully-cancelled-account/stripe-full-canc-account.spec.ts" href="../sources/tests/logged-in-user/billing-page/default/fully-cancelled-account/stripe-full-canc-account.spec.ts.html#L1">tests/logged-in-user/billing-page/default/fully-cancelled-account/stripe-full-canc-account.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/default/fully-cancelled-account/user-flow-full-canc-account.spec.ts" href="../sources/tests/logged-in-user/billing-page/default/fully-cancelled-account/user-flow-full-canc-account.spec.ts.html#L1">tests/logged-in-user/billing-page/default/fully-cancelled-account/user-flow-full-canc-account.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/dpf/annual-plan/user-flow-annual.spec.ts" href="../sources/tests/logged-in-user/billing-page/dpf/annual-plan/user-flow-annual.spec.ts.html#L1">tests/logged-in-user/billing-page/dpf/annual-plan/user-flow-annual.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/dpf/iceland/iceland-stripe-form-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/dpf/iceland/iceland-stripe-form-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/dpf/iceland/iceland-stripe-form-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/retry-strategy/user-flow-delinquent-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/retry-strategy/user-flow-delinquent-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/retry-strategy/user-flow-delinquent-automations.spec.ts:1</a>, <a data-source="tests/logged-out-user/funnels/dpf/dpf-funnel-review-automations.spec.ts" href="../sources/tests/logged-out-user/funnels/dpf/dpf-funnel-review-automations.spec.ts.html#L1">tests/logged-out-user/funnels/dpf/dpf-funnel-review-automations.spec.ts:1</a>, <a data-source="tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts" href="../sources/tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts.html#L1">tests/trial-day-count/helpers/completeDpfPaidFullAccess.ts:1</a></p>
+<h2 id="tests-data-pricing-integrity-official-stripe-prices-data-ts">tests/data/pricing-integrity/official-stripe-prices.data.ts</h2>
+<p><a data-source="tests/data/pricing-integrity/official-stripe-prices.data.ts" href="../sources/tests/data/pricing-integrity/official-stripe-prices.data.ts.html#L1">tests/data/pricing-integrity/official-stripe-prices.data.ts:1</a></p>
+<ul>
+<li><code>OfficialPlanPrice</code> &#x2014; line 5</li>
+<li><code>OfficialStripePriceSheet</code> &#x2014; line 13</li>
+<li><code>parseOfficialStripePriceSheet</code> &#x2014; line 143</li>
+<li><code>OFFICIAL_STRIPE_PRICE_SHEET</code> = <code>parseOfficialStripePriceSheet()</code> &#x2014; line 197</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/data/pricing.data.ts" href="../sources/tests/data/pricing.data.ts.html#L1">tests/data/pricing.data.ts:1</a></p>
+<h2 id="tests-data-pricing-data-ts">tests/data/pricing.data.ts</h2>
+<p><a data-source="tests/data/pricing.data.ts" href="../sources/tests/data/pricing.data.ts.html#L1">tests/data/pricing.data.ts:1</a></p>
+<ul>
+<li><code>PlanId</code> &#x2014; line 4</li>
+<li><code>StripePlanId</code> &#x2014; line 5</li>
+<li><code>PromoDiscount</code> &#x2014; line 6</li>
+<li><code>PlanPrice</code> &#x2014; line 8</li>
+<li><code>TrialPrice</code> &#x2014; line 16</li>
+<li><code>PLAN_PRICES</code> = <code>OFFICIAL_STRIPE_PRICE_SHEET.planPrices as PlanPrice[]</code> &#x2014; line 24</li>
+<li><code>TRIAL_PRICES</code> = <code>trialPriceData.trial_prices as TrialPrice[]</code> &#x2014; line 25</li>
+<li><code>VARIABLE_PRICE_CURRENCIES</code> = <code>OFFICIAL_STRIPE_PRICE_SHEET.variablePriceCurrencies</code> &#x2014; line 26</li>
+<li><code>PLAN_NAMES</code> = <code>{ 1: &apos;Monthly&apos;, 2: &apos;Annually&apos;, 3: &apos;Quarterly&apos;, 4: &apos;Discounted&apos;, 5: &apos;One Time&apos;, 6: &apos;14 Day Full Access&apos;, 7: &apos;14 Day Limited Access&apos;, }</code> &#x2014; line 29</li>
+<li><code>STRIPE_PLAN_INTERVAL_MONTHS</code> = <code>{ 1: 1, 2: 12, 3: 3, 4: 1, }</code> &#x2014; line 39</li>
+<li><code>STRIPE_RECURRING_PLAN_IDS</code> = <code>[1, 2, 3, 4]</code> &#x2014; line 46</li>
+<li><code>TRIAL_PLAN_IDS</code> = <code>[6, 7]</code> &#x2014; line 47</li>
+<li><code>isSupportedPricingCurrency</code> &#x2014; line 52</li>
+<li><code>hasOfficialFixedPricing</code> &#x2014; line 57</li>
+<li><code>COUPON_IDS</code> = <code>{ 1: { 70: &apos;70OFF_1_FOREVER_V1&apos;, 90: &apos;90OFF_1_FOREVER_V1&apos;, }, 2: { 70: &apos;70OFF_12_FOREVER_V1&apos;, 90: &apos;90OFF_12_FOREVER_V1&apos;, }, 3: { 70: &apos;70OFF_3_FOREVER_V1&apos;, 90: &apos;90OFF_3_FOREVER_V1&apos;, }, }</code> &#x2014; line 64</li>
+<li><code>toStripeAmount</code> &#x2014; line 85</li>
+<li><code>getPlanPrice</code> &#x2014; line 93</li>
+<li><code>expectedCouponAmount</code> &#x2014; line 106</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/helpers/pricing-ui.helper.ts" href="../sources/tests/helpers/pricing-ui.helper.ts.html#L1">tests/helpers/pricing-ui.helper.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/pricing-integrity/database-plan-prices-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/pricing-integrity/database-plan-prices-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/pricing-integrity/database-plan-prices-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/pricing-integrity/stripe-plan-prices-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/pricing-integrity/stripe-plan-prices-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/pricing-integrity/stripe-plan-prices-automations.spec.ts:1</a></p>
+<h2 id="tests-data-promo-70-pricing-annually-pricing-ts">tests/data/promo-70-pricing/annually-pricing.ts</h2>
+<p><a data-source="tests/data/promo-70-pricing/annually-pricing.ts" href="../sources/tests/data/promo-70-pricing/annually-pricing.ts.html#L1">tests/data/promo-70-pricing/annually-pricing.ts:1</a></p>
+<ul>
+<li><code>promo70AnnuallyPricingData</code> = <code>[ { country: &apos;us&apos;, currency: &apos;USD&apos;, annually_70_cancel_promo: &apos;5.99&apos;, }, { country: &apos;ca&apos;, currency: &apos;USD&apos;, annually_70_cancel_promo: &apos;5.99&apos;, }, { country: &apos;au&apos;, currency: &apos;USD&apos;, annually_70_cancel_promo: &apos;5.99&apos;, }, { country: &apos;fr&apos;, currency: &apos;EUR&apos;, annually_70 &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-out-user/prices/default-pricing.spec.ts" href="../sources/tests/logged-out-user/prices/default-pricing.spec.ts.html#L1">tests/logged-out-user/prices/default-pricing.spec.ts:1</a></p>
+<h2 id="tests-data-promo-70-pricing-monthly-pricing-ts">tests/data/promo-70-pricing/monthly-pricing.ts</h2>
+<p><a data-source="tests/data/promo-70-pricing/monthly-pricing.ts" href="../sources/tests/data/promo-70-pricing/monthly-pricing.ts.html#L1">tests/data/promo-70-pricing/monthly-pricing.ts:1</a></p>
+<ul>
+<li><code>promo70MonthlyPricingData</code> = <code>[ { country: &apos;us&apos;, currency: &apos;USD&apos;, monthly_70_cancel_promo: &apos;14.99&apos;, }, { country: &apos;ca&apos;, currency: &apos;USD&apos;, monthly_70_cancel_promo: &apos;14.99&apos;, }, { country: &apos;au&apos;, currency: &apos;USD&apos;, monthly_70_cancel_promo: &apos;14.99&apos;, }, { country: &apos;fr&apos;, currency: &apos;EUR&apos;, monthly_70_ &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-out-user/prices/default-pricing.spec.ts" href="../sources/tests/logged-out-user/prices/default-pricing.spec.ts.html#L1">tests/logged-out-user/prices/default-pricing.spec.ts:1</a></p>
+<h2 id="tests-data-promo-70-pricing-quarterly-pricing-ts">tests/data/promo-70-pricing/quarterly-pricing.ts</h2>
+<p><a data-source="tests/data/promo-70-pricing/quarterly-pricing.ts" href="../sources/tests/data/promo-70-pricing/quarterly-pricing.ts.html#L1">tests/data/promo-70-pricing/quarterly-pricing.ts:1</a></p>
+<ul>
+<li><code>promo70QuarterlyPricingData</code> = <code>[ { country: &apos;us&apos;, currency: &apos;USD&apos;, quarterly_70_cancel_promo: &apos;8.99&apos;, }, { country: &apos;ca&apos;, currency: &apos;USD&apos;, quarterly_70_cancel_promo: &apos;8.99&apos;, }, { country: &apos;au&apos;, currency: &apos;USD&apos;, quarterly_70_cancel_promo: &apos;8.99&apos;, }, { country: &apos;fr&apos;, currency: &apos;EUR&apos;, quarterl &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-out-user/prices/default-pricing.spec.ts" href="../sources/tests/logged-out-user/prices/default-pricing.spec.ts.html#L1">tests/logged-out-user/prices/default-pricing.spec.ts:1</a></p>
+<h2 id="tests-data-promo-90-pricing-annually-pricing-ts">tests/data/promo-90-pricing/annually-pricing.ts</h2>
+<p><a data-source="tests/data/promo-90-pricing/annually-pricing.ts" href="../sources/tests/data/promo-90-pricing/annually-pricing.ts.html#L1">tests/data/promo-90-pricing/annually-pricing.ts:1</a></p>
+<ul>
+<li><code>promo90AnnuallyPricingData</code> = <code>[ { country: &apos;us&apos;, currency: &apos;USD&apos;, annually_90_cancel_promo: &apos;1.99&apos;, }, { country: &apos;ca&apos;, currency: &apos;USD&apos;, annually_90_cancel_promo: &apos;1.99&apos;, }, { country: &apos;au&apos;, currency: &apos;USD&apos;, annually_90_cancel_promo: &apos;1.99&apos;, }, { country: &apos;fr&apos;, currency: &apos;EUR&apos;, annually_90 &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-out-user/prices/default-pricing.spec.ts" href="../sources/tests/logged-out-user/prices/default-pricing.spec.ts.html#L1">tests/logged-out-user/prices/default-pricing.spec.ts:1</a></p>
+<h2 id="tests-data-promo-90-pricing-monthly-pricing-ts">tests/data/promo-90-pricing/monthly-pricing.ts</h2>
+<p><a data-source="tests/data/promo-90-pricing/monthly-pricing.ts" href="../sources/tests/data/promo-90-pricing/monthly-pricing.ts.html#L1">tests/data/promo-90-pricing/monthly-pricing.ts:1</a></p>
+<ul>
+<li><code>promo90MonthlyPricingData</code> = <code>[ { country: &apos;us&apos;, currency: &apos;USD&apos;, monthly_90_cancel_promo: &apos;4.99&apos;, }, { country: &apos;ca&apos;, currency: &apos;USD&apos;, monthly_90_cancel_promo: &apos;4.99&apos;, }, { country: &apos;au&apos;, currency: &apos;USD&apos;, monthly_90_cancel_promo: &apos;4.99&apos;, }, { country: &apos;fr&apos;, currency: &apos;EUR&apos;, monthly_90_can &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-out-user/prices/default-pricing.spec.ts" href="../sources/tests/logged-out-user/prices/default-pricing.spec.ts.html#L1">tests/logged-out-user/prices/default-pricing.spec.ts:1</a></p>
+<h2 id="tests-data-promo-90-pricing-quarterly-pricing-ts">tests/data/promo-90-pricing/quarterly-pricing.ts</h2>
+<p><a data-source="tests/data/promo-90-pricing/quarterly-pricing.ts" href="../sources/tests/data/promo-90-pricing/quarterly-pricing.ts.html#L1">tests/data/promo-90-pricing/quarterly-pricing.ts:1</a></p>
+<ul>
+<li><code>promo90QuarterlyPricingData</code> = <code>[ { country: &apos;us&apos;, currency: &apos;USD&apos;, quarterly_90_cancel_promo: &apos;2.99&apos;, }, { country: &apos;ca&apos;, currency: &apos;USD&apos;, quarterly_90_cancel_promo: &apos;2.99&apos;, }, { country: &apos;au&apos;, currency: &apos;USD&apos;, quarterly_90_cancel_promo: &apos;2.99&apos;, }, { country: &apos;fr&apos;, currency: &apos;EUR&apos;, quarterl &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-out-user/prices/default-pricing.spec.ts" href="../sources/tests/logged-out-user/prices/default-pricing.spec.ts.html#L1">tests/logged-out-user/prices/default-pricing.spec.ts:1</a></p>
+<h2 id="tests-data-seoauditconfig-data-ts">tests/data/seoAuditConfig.data.ts</h2>
+<p><a data-source="tests/data/seoAuditConfig.data.ts" href="../sources/tests/data/seoAuditConfig.data.ts.html#L1">tests/data/seoAuditConfig.data.ts:1</a></p>
+<ul>
+<li><code>SeoAuditConfig</code> &#x2014; line 7</li>
+<li><code>DEFAULT_SEO_CONFIG</code> = <code>{ brandTerms: [&apos;Online QR Generator&apos;, &apos;QR Generator&apos;, &apos;OQG&apos;], validLangPrefixes: [&apos;en&apos;, &apos;es&apos;, &apos;de&apos;, &apos;fr&apos;, &apos;it&apos;, &apos;pt&apos;, &apos;nl&apos;, &apos;ru&apos;, &apos;ja&apos;], genericAnchorTexts: [ &apos;click here&apos;, &apos;learn more&apos;, &apos;read more&apos;, &apos;here&apos;, &apos;link&apos;, ], title: { min: 30, max: 60 }, metaDescript &#x2026; [open source for complete dataset]</code> &#x2014; line 26</li>
+<li><code>SEO_RULES</code> = <code>{ H1_COUNT: &apos;H1&apos;, HEADING_ORDER: &apos;H2-H6&apos;, HEADING_LENGTH: &apos;H-length&apos;, HEADING_EMPTY: &apos;H-empty&apos;, TITLE: &apos;TITLE&apos;, META_DESCRIPTION: &apos;META-DESC&apos;, LANG: &apos;LANG&apos;, VIEWPORT: &apos;VIEWPORT&apos;, CANONICAL: &apos;CANONICAL&apos;, MAIN_LANDMARK: &apos;MAIN&apos;, HEADER_FOOTER: &apos;HEADER-FOOTER&apos;, NA &#x2026; [open source for complete dataset]</code> &#x2014; line 45</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/helpers/seoAudit.ts" href="../sources/tests/helpers/seoAudit.ts.html#L1">tests/helpers/seoAudit.ts:1</a></p>
+<h2 id="tests-data-static-preview-translations-index-ts">tests/data/static-preview-translations/index.ts</h2>
+<p><a data-source="tests/data/static-preview-translations/index.ts" href="../sources/tests/data/static-preview-translations/index.ts.html#L1">tests/data/static-preview-translations/index.ts:1</a></p>
+<ul>
+<li><code>StaticPreviewLocale</code> &#x2014; line 30</li>
+<li><code>StaticPreviewQrType</code> &#x2014; line 31</li>
+<li><code>StaticPreviewTextExpectation</code> &#x2014; line 33</li>
+<li><code>STATIC_PREVIEW_LOCALES</code> = <code>Object.keys( OQG_STATIC_PREVIEW_TEXTS.default.locales ) as StaticPreviewLocale[]</code> &#x2014; line 58</li>
+<li><code>getStaticPreviewTextCounts</code> = <code>( qrType: StaticPreviewQrType, locale: StaticPreviewLocale, product: Product ): OqgPreviewTextCounts =&gt; { const texts = STATIC_PREVIEW_TEXTS_BY_PRODUCT[product] if (!texts) throw new Error( &#x2032;Static preview translations are not registered for &#x24;{product}&#x2032; ) cons &#x2026; [open source for complete dataset]</code> &#x2014; line 78</li>
+<li><code>getStaticPreviewTexts</code> = <code>( qrType: StaticPreviewQrType, locale: StaticPreviewLocale, product: Product ): readonly StaticPreviewTextExpectation[] =&gt; Object.entries(getStaticPreviewTextCounts(qrType, locale, product)).map( ([text, count]) =&gt; ({ text, count }) )</code> &#x2014; line 92</li>
+</ul>
+<p>Direct consumers: No direct TypeScript import found (may be read as a file or referenced indirectly).</p>
+<h2 id="tests-data-static-preview-translations-oqg-preview-string-sources-ts">tests/data/static-preview-translations/oqg-preview-string-sources.ts</h2>
+<p><a data-source="tests/data/static-preview-translations/oqg-preview-string-sources.ts" href="../sources/tests/data/static-preview-translations/oqg-preview-string-sources.ts.html#L1">tests/data/static-preview-translations/oqg-preview-string-sources.ts:1</a></p>
+<ul>
+<li><code>OQG_PREVIEW_STRING_SOURCES</code> = <code>{ default: { keys: { &apos;qr_step_1.phone_mockup_default_value&apos;: 1, }, shared: {}, }, website: { keys: {}, shared: { &apos;https://online-qr-generator.com&apos;: 1, }, }, pdf: { keys: { &apos;pdf.title&apos;: 1, &apos;pdf.description&apos;: 1, &apos;pdf.button&apos;: 1, }, shared: { &apos;Enterprise Inc.&apos;: 1 &#x2026; [open source for complete dataset]</code> &#x2014; line 14</li>
+</ul>
+<p>Direct consumers: No direct TypeScript import found (may be read as a file or referenced indirectly).</p>
+<h2 id="tests-data-static-preview-translations-oqg-static-preview-texts-data-ts">tests/data/static-preview-translations/oqg-static-preview-texts.data.ts</h2>
+<p><a data-source="tests/data/static-preview-translations/oqg-static-preview-texts.data.ts" href="../sources/tests/data/static-preview-translations/oqg-static-preview-texts.data.ts.html#L1">tests/data/static-preview-translations/oqg-static-preview-texts.data.ts:1</a></p>
+<ul>
+<li><code>OqgLocale</code> &#x2014; line 19</li>
+<li><code>OqgStaticPreviewQrType</code> &#x2014; line 65</li>
+<li><code>OqgPreviewTextCounts</code> &#x2014; line 85</li>
+<li><code>OqgStaticPreviewTextEntry</code> &#x2014; line 87</li>
+<li><code>OQG_STATIC_PREVIEW_TEXTS</code> = <code>{ default: { shared: {}, locales: { ar: { &apos;&#x62d;&#x62f;&#x62f; &#x646;&#x648;&#x639; &#x631;&#x645;&#x632; &#x627;&#x644;&#x627;&#x633;&#x62a;&#x62c;&#x627;&#x628;&#x629; &#x627;&#x644;&#x633;&#x631;&#x64a;&#x639;&#x629; &#x627;&#x644;&#x645;&#x648;&#x62c;&#x648;&#x62f; &#x639;&#x644;&#x649; &#x627;&#x644;&#x64a;&#x633;&#x627;&#x631;&apos;: 1, }, bg: { &apos;&#x418;&#x437;&#x431;&#x435;&#x440;&#x435;&#x442;&#x435; &#x442;&#x438;&#x43f; QR &#x43a;&#x43e;&#x434; &#x432;&#x43b;&#x44f;&#x432;&#x43e;&apos;: 1, }, bn: { &apos;&#x9ac;&#x9be;&#x9ae; &#x9a6;&#x9bf;&#x995;&#x9c7; &#x98f;&#x995;&#x99f;&#x9bf; QR &#x995;&#x9cb;&#x9a1; &#x9a8;&#x9bf;&#x9b0;&#x9cd;&#x9ac;&#x9be;&#x99a;&#x9a8; &#x995;&#x9b0;&#x9c1;&#x9a8;&apos;: 1, }, bs: { &apos;Odaberite vrstu QR koda na lijevoj strani&apos;: 1, }, cs: { &apos;Vlevo &#x2026; [open source for complete dataset]</code> &#x2014; line 106</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/data/static-preview-translations/index.ts" href="../sources/tests/data/static-preview-translations/index.ts.html#L1">tests/data/static-preview-translations/index.ts:1</a></p>
+<h2 id="tests-data-static-preview-translations-qci-preview-string-sources-ts">tests/data/static-preview-translations/qci-preview-string-sources.ts</h2>
+<p><a data-source="tests/data/static-preview-translations/qci-preview-string-sources.ts" href="../sources/tests/data/static-preview-translations/qci-preview-string-sources.ts.html#L1">tests/data/static-preview-translations/qci-preview-string-sources.ts:1</a></p>
+<ul>
+<li><code>QCI_PREVIEW_STRING_SOURCES</code> = <code>{ default: { keys: { &apos;qr_step_1.phone_mockup_default_value&apos;: 1, }, shared: {}, }, website: { keys: {}, shared: { &apos;https://qr-code.io&apos;: 1, }, }, pdf: { keys: { &apos;qrc_io.pdf.title&apos;: 1, &apos;qrc_io.pdf.description&apos;: 1, &apos;pdf.button&apos;: 1, }, shared: { &apos;North American Acc &#x2026; [open source for complete dataset]</code> &#x2014; line 8</li>
+</ul>
+<p>Direct consumers: No direct TypeScript import found (may be read as a file or referenced indirectly).</p>
+<h2 id="tests-data-static-preview-translations-qci-static-preview-texts-data-ts">tests/data/static-preview-translations/qci-static-preview-texts.data.ts</h2>
+<p><a data-source="tests/data/static-preview-translations/qci-static-preview-texts.data.ts" href="../sources/tests/data/static-preview-translations/qci-static-preview-texts.data.ts.html#L1">tests/data/static-preview-translations/qci-static-preview-texts.data.ts:1</a></p>
+<ul>
+<li><code>QciLocale</code> &#x2014; line 19</li>
+<li><code>QciStaticPreviewQrType</code> &#x2014; line 65</li>
+<li><code>QciPreviewTextCounts</code> &#x2014; line 85</li>
+<li><code>QciStaticPreviewTextEntry</code> &#x2014; line 87</li>
+<li><code>QCI_STATIC_PREVIEW_TEXTS</code> = <code>{ default: { shared: {}, locales: { ar: { &apos;&#x62d;&#x62f;&#x62f; &#x646;&#x648;&#x639; &#x631;&#x645;&#x632; &#x627;&#x644;&#x627;&#x633;&#x62a;&#x62c;&#x627;&#x628;&#x629; &#x627;&#x644;&#x633;&#x631;&#x64a;&#x639;&#x629; &#x627;&#x644;&#x645;&#x648;&#x62c;&#x648;&#x62f; &#x639;&#x644;&#x649; &#x627;&#x644;&#x64a;&#x633;&#x627;&#x631;&apos;: 1, }, bg: { &apos;&#x418;&#x437;&#x431;&#x435;&#x440;&#x435;&#x442;&#x435; &#x442;&#x438;&#x43f; QR &#x43a;&#x43e;&#x434; &#x432;&#x43b;&#x44f;&#x432;&#x43e;&apos;: 1, }, bn: { &apos;&#x9ac;&#x9be;&#x9ae; &#x9a6;&#x9bf;&#x995;&#x9c7; &#x98f;&#x995;&#x99f;&#x9bf; QR &#x995;&#x9cb;&#x9a1; &#x9a8;&#x9bf;&#x9b0;&#x9cd;&#x9ac;&#x9be;&#x99a;&#x9a8; &#x995;&#x9b0;&#x9c1;&#x9a8;&apos;: 1, }, bs: { &apos;Odaberite vrstu QR koda na lijevoj strani&apos;: 1, }, cs: { &apos;Vlevo &#x2026; [open source for complete dataset]</code> &#x2014; line 106</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/data/static-preview-translations/index.ts" href="../sources/tests/data/static-preview-translations/index.ts.html#L1">tests/data/static-preview-translations/index.ts:1</a></p>
+<h2 id="tests-data-static-preview-translations-qga-preview-string-sources-ts">tests/data/static-preview-translations/qga-preview-string-sources.ts</h2>
+<p><a data-source="tests/data/static-preview-translations/qga-preview-string-sources.ts" href="../sources/tests/data/static-preview-translations/qga-preview-string-sources.ts.html#L1">tests/data/static-preview-translations/qga-preview-string-sources.ts:1</a></p>
+<ul>
+<li><code>QGA_PREVIEW_STRING_SOURCES</code> = <code>{ default: { keys: { &apos;qr_step_1.phone_mockup_default_value&apos;: 1, }, shared: {}, }, website: { keys: {}, shared: { &apos;https://qr-generator.ai&apos;: 1, }, }, pdf: { keys: { &apos;qrgen_ai.pdf.title&apos;: 1, &apos;qrgen_ai.pdf.description&apos;: 1, &apos;qrgen_ai.pdf.pdf_btn&apos;: 1, }, shared: { &#x2026; [open source for complete dataset]</code> &#x2014; line 8</li>
+</ul>
+<p>Direct consumers: No direct TypeScript import found (may be read as a file or referenced indirectly).</p>
+<h2 id="tests-data-static-preview-translations-qga-static-preview-texts-data-ts">tests/data/static-preview-translations/qga-static-preview-texts.data.ts</h2>
+<p><a data-source="tests/data/static-preview-translations/qga-static-preview-texts.data.ts" href="../sources/tests/data/static-preview-translations/qga-static-preview-texts.data.ts.html#L1">tests/data/static-preview-translations/qga-static-preview-texts.data.ts:1</a></p>
+<ul>
+<li><code>QgaLocale</code> &#x2014; line 19</li>
+<li><code>QgaStaticPreviewQrType</code> &#x2014; line 65</li>
+<li><code>QgaPreviewTextCounts</code> &#x2014; line 85</li>
+<li><code>QgaStaticPreviewTextEntry</code> &#x2014; line 87</li>
+<li><code>QGA_STATIC_PREVIEW_TEXTS</code> = <code>{ default: { shared: {}, locales: { ar: { &apos;&#x62d;&#x62f;&#x62f; &#x646;&#x648;&#x639; &#x631;&#x645;&#x632; &#x627;&#x644;&#x627;&#x633;&#x62a;&#x62c;&#x627;&#x628;&#x629; &#x627;&#x644;&#x633;&#x631;&#x64a;&#x639;&#x629; &#x627;&#x644;&#x645;&#x648;&#x62c;&#x648;&#x62f; &#x639;&#x644;&#x649; &#x627;&#x644;&#x64a;&#x633;&#x627;&#x631;&apos;: 1, }, bg: { &apos;&#x418;&#x437;&#x431;&#x435;&#x440;&#x435;&#x442;&#x435; &#x442;&#x438;&#x43f; QR &#x43a;&#x43e;&#x434; &#x432;&#x43b;&#x44f;&#x432;&#x43e;&apos;: 1, }, bn: { &apos;&#x9ac;&#x9be;&#x9ae; &#x9a6;&#x9bf;&#x995;&#x9c7; &#x98f;&#x995;&#x99f;&#x9bf; QR &#x995;&#x9cb;&#x9a1; &#x9a8;&#x9bf;&#x9b0;&#x9cd;&#x9ac;&#x9be;&#x99a;&#x9a8; &#x995;&#x9b0;&#x9c1;&#x9a8;&apos;: 1, }, bs: { &apos;Odaberite vrstu QR koda na lijevoj strani&apos;: 1, }, cs: { &apos;Vlevo &#x2026; [open source for complete dataset]</code> &#x2014; line 106</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/data/static-preview-translations/index.ts" href="../sources/tests/data/static-preview-translations/index.ts.html#L1">tests/data/static-preview-translations/index.ts:1</a></p>
+<h2 id="tests-data-striperetrystrategy-data-ts">tests/data/stripeRetryStrategy.data.ts</h2>
+<p><a data-source="tests/data/stripeRetryStrategy.data.ts" href="../sources/tests/data/stripeRetryStrategy.data.ts.html#L1">tests/data/stripeRetryStrategy.data.ts:1</a></p>
+<ul>
+<li><code>stripeRenewalFailCard</code> = <code>{ token: &quot;&lt;literal omitted; see source&gt;&quot;, cardNumber: &apos;4000000000000341&apos;, expDate: getExpiryDateOneYearAhead(), cvc: &apos;123&apos;, last4: &apos;0341&apos;, }</code> &#x2014; line 35</li>
+<li><code>stripeRenewalFailCardAlt</code> = <code>{ token: &quot;&lt;literal omitted; see source&gt;&quot;, cardNumber: &apos;4000000000009995&apos;, expDate: getExpiryDateOneYearAhead(), cvc: &apos;123&apos;, last4: &apos;9995&apos;, }</code> &#x2014; line 44</li>
+<li><code>stripeValidCardToken</code> = <code>&apos;tok_visa&apos;</code> &#x2014; line 53</li>
+<li><code>FullPricePlanKey</code> &#x2014; line 55</li>
+<li><code>RetryPlanFixture</code> &#x2014; line 57</li>
+<li><code>USD_FULL_PRICE_PLANS</code> = <code>[ { key: &apos;monthly&apos;, label: &apos;Monthly&apos;, priceId: MONTHLY_PLAN_ID, listPrice: 49.95, currency: &apos;usd&apos;, }, { key: &apos;quarterly&apos;, label: &apos;Quarterly&apos;, priceId: QUARTERLY_PLAN_ID, listPrice: 29.95, currency: &apos;usd&apos;, }, { key: &apos;annually&apos;, label: &apos;Annually&apos;, priceId: ANNUA &#x2026; [open source for complete dataset]</code> &#x2014; line 69</li>
+<li><code>EUR_MONTHLY_PLAN</code> = <code>{ key: &apos;monthly&apos;, label: &apos;Monthly&apos;, priceId: MONTHLY_PLAN_ID, listPrice: 49.95, currency: &apos;eur&apos;, }</code> &#x2014; line 94</li>
+<li><code>JPY_MONTHLY_PLAN</code> = <code>{ key: &apos;monthly&apos;, label: &apos;Monthly&apos;, priceId: MONTHLY_PLAN_ID, listPrice: 7495, currency: &apos;jpy&apos;, zeroDecimal: true, }</code> &#x2014; line 106</li>
+<li><code>UserFunnel</code> &#x2014; line 115</li>
+<li><code>USER_FUNNELS</code> = <code>[&apos;default&apos;, &apos;dpf&apos;, &apos;nsf&apos;, &apos;cff&apos;]</code> &#x2014; line 117</li>
+<li><code>toMinorUnits</code> &#x2014; line 123</li>
+<li><code>discountedChargeCents</code> &#x2014; line 134</li>
+<li><code>getPlanMultiplier</code> &#x2014; line 141</li>
+<li><code>retryLadderAmountsCents</code> &#x2014; line 148</li>
+<li><code>USD_MONTHLY_LADDER_CENTS</code> = <code>[ 4995, 4995, 4995, 4995, 4995, 2497, 1498, 499, ]</code> &#x2014; line 171</li>
+<li><code>amountDueAfterAttempt</code> &#x2014; line 180</li>
+<li><code>RETRY_SUITE</code> = <code>&apos;OQG3-1721 Stripe custom retry strategy&apos;</code> &#x2014; line 188</li>
+<li><code>retryScenarioTitle</code> &#x2014; line 194</li>
+<li><code>RETRY_ATTEMPT_COUNT</code> = <code>8</code> &#x2014; line 201</li>
+<li><code>DUNNING_STEP_DAYS</code> = <code>4</code> &#x2014; line 204</li>
+<li><code>POST_RECOVERY_ADVANCE_DAYS</code> = <code>32</code> &#x2014; line 207</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/helpers/stripeRetryStrategy.ts" href="../sources/tests/helpers/stripeRetryStrategy.ts.html#L1">tests/helpers/stripeRetryStrategy.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/retry-strategy/admin-retry-state-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/retry-strategy/admin-retry-state-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/retry-strategy/admin-retry-state-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/retry-strategy/retry-dunning-emails-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/retry-strategy/retry-dunning-emails-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/retry-strategy/retry-dunning-emails-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/retry-strategy/stripe-retry-db-sync-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/retry-strategy/stripe-retry-db-sync-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/retry-strategy/stripe-retry-db-sync-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/retry-strategy/stripe-retry-ladder-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/retry-strategy/stripe-retry-ladder-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/retry-strategy/stripe-retry-ladder-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/retry-strategy/user-flow-delinquent-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/retry-strategy/user-flow-delinquent-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/retry-strategy/user-flow-delinquent-automations.spec.ts:1</a></p>
+<h2 id="tests-data-translation-test-data-ts">tests/data/translation_test_data.ts</h2>
+<p><a data-source="tests/data/translation_test_data.ts" href="../sources/tests/data/translation_test_data.ts.html#L1">tests/data/translation_test_data.ts:1</a></p>
+<ul>
+<li><code>LANG_CONFIG</code> = <code>{ ar: { locale_id: &apos;b29788053cac8a85f6bc3dd60e2d6b7f&apos;, browser_locale: &apos;ar-AR&apos;, }, bn: { locale_id: &apos;c5fc56bb9d98d35bff38177c1e2f8975&apos;, browser_locale: &apos;bn-BN&apos;, }, bs: { locale_id: &apos;6fa8abb6e4f392c465701c725ec1ba57&apos;, browser_locale: &apos;bs-BS&apos;, }, bg: { locale_id &#x2026; [open source for complete dataset]</code> &#x2014; line 1</li>
+<li><code>PUBLIC_PAGES</code> = <code>[ &apos;&apos;, &apos;plans-and-prices&apos;, &apos;create?step=1&amp;qr_onboarding=active_dpf&apos;, ]</code> &#x2014; line 180</li>
+<li><code>ignorable_texts</code> = <code>[ &apos;color format&apos;, &apos;hex&apos;, &apos;rgb&apos;, &apos;hsl&apos;, &apos;close&apos;, &apos;cancel&apos;, &apos;open color picker&apos;, &apos;clear&apos;, &apos;color swatch&apos;, &apos;&quot; u &quot;&apos;, &apos;&quot; luye ku-&quot;&apos;, &apos;&quot; -dan &quot;&apos;, &apos;1024x1024&apos;, &apos;xlsx&apos;, &apos;1975&apos;, &apos;1977&apos;, &apos;1997&apos;, &apos;2011&apos;, &apos;2025&apos;, &apos;2013&apos;, &apos;2003&apos;, &apos;2030&apos;, &apos;2047&apos;, &apos;2041&apos;, &apos;2017&apos;, &apos;2024&apos;, &apos;20 &#x2026; [open source for complete dataset]</code> &#x2014; line 186</li>
+<li><code>ignorable_patterns</code> = <code>[ &apos;^[&#xd7;&#x2715;&#x2716;&#x2717;&#x2718;]&#x24;&apos;, &apos;^[!@#&#x24;%^&amp;*()_+=&lt;&gt;?/\\\\|{}\\[\\]~;:\&apos;&quot;.,\\-]{1,3}&#x24;&apos;, &apos;^[&#x2022;&#xb7;&#x25cf;&#x25aa;&#xfe0f;&#x25e6;&#x2013;&#x2014;&#x2015;\\-]+&#x24;&apos;, &apos;^&lt;.*?&gt;&#x24;&apos;, &apos;^\\W+&#x24;&apos;, ]</code> &#x2014; line 252</li>
+</ul>
+<p>Direct consumers: No direct TypeScript import found (may be read as a file or referenced indirectly).</p>
+<h2 id="tests-data-trial-translations-data-ts">tests/data/trial-translations.data.ts</h2>
+<p><a data-source="tests/data/trial-translations.data.ts" href="../sources/tests/data/trial-translations.data.ts.html#L1">tests/data/trial-translations.data.ts:1</a></p>
+<ul>
+<li><code>TrialLocaleCode</code> &#x2014; line 7</li>
+<li><code>TrialLocaleCopy</code> &#x2014; line 9</li>
+<li><code>PAID_TRIAL_LOCALE_COPY</code> = <code>{ en: { locale: &apos;en&apos;, daysRemainingTemplate: &apos;&lt;span&gt;%s&lt;/span&gt; days remaining&apos;, plan14FullAccess: &apos;14 Day Full Access&apos;, }, es: { locale: &apos;es&apos;, daysRemainingTemplate: &apos;&lt;span&gt;%s&lt;/span&gt; d&#xed;as restantes&apos;, plan14FullAccess: &apos;14 d&#xed;as de acceso completo&apos;, }, de: { loca &#x2026; [open source for complete dataset]</code> &#x2014; line 18</li>
+<li><code>formatDaysRemaining</code> &#x2014; line 43</li>
+<li><code>dpfCreateEntryForLocale</code> &#x2014; line 55</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/trial-day-count/paid-trial-variants.spec.ts" href="../sources/tests/trial-day-count/paid-trial-variants.spec.ts.html#L1">tests/trial-day-count/paid-trial-variants.spec.ts:1</a></p>
+<h2 id="tests-data-uploadsecuritypayloads-data-ts">tests/data/uploadSecurityPayloads.data.ts</h2>
+<p><a data-source="tests/data/uploadSecurityPayloads.data.ts" href="../sources/tests/data/uploadSecurityPayloads.data.ts.html#L1">tests/data/uploadSecurityPayloads.data.ts:1</a></p>
+<ul>
+<li><code>UploadAttack</code> &#x2014; line 16</li>
+<li><code>EICAR_TEST_STRING</code> = <code>&apos;X5O!P%@AP[4\\PZX54(P^)7CC)7}&#x24;EICAR-STANDARD-ANTIVIRUS-TEST-FILE!&#x24;H+H*&apos;</code> &#x2014; line 41</li>
+<li><code>VALID_PNG_BUFFER</code> = <code>Buffer.from( &apos;iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==&apos;, &apos;base64&apos; )</code> &#x2014; line 45</li>
+<li><code>DISGUISED_IMAGE_ATTACKS</code> = <code>[ { label: &apos;php-as-png&apos;, name: &apos;shell.png&apos;, mimeType: &apos;image/png&apos;, buffer: Buffer.from(PHP_SHELL), }, { label: &apos;php-as-jpg&apos;, name: &apos;shell.jpg&apos;, mimeType: &apos;image/jpeg&apos;, buffer: Buffer.from(PHP_SHELL), }, { label: &apos;double-extension&apos;, name: &apos;shell.php.png&apos;, mimeT &#x2026; [open source for complete dataset]</code> &#x2014; line 55</li>
+<li><code>ALT_PHP_EXT_ATTACKS</code> = <code>[ { label: &apos;phtml&apos;, name: &apos;shell.phtml&apos;, mimeType: &apos;image/png&apos;, buffer: Buffer.from(PHP_SHELL), }, { label: &apos;php5&apos;, name: &apos;shell.php5&apos;, mimeType: &apos;image/png&apos;, buffer: Buffer.from(PHP_SHELL), }, { label: &apos;phar&apos;, name: &apos;shell.phar&apos;, mimeType: &apos;image/png&apos;, buffer &#x2026; [open source for complete dataset]</code> &#x2014; line 116</li>
+<li><code>SCRIPT_UPLOAD_ATTACKS</code> = <code>[ { label: &apos;polyglot-gif-php&apos;, name: &apos;polyglot.gif&apos;, mimeType: &apos;image/gif&apos;, buffer: Buffer.concat([ Buffer.from(&apos;GIF89a&apos;), Buffer.from(&apos;\n&lt;?php system(&#x24;_GET[&quot;c&quot;]); ?&gt;&apos;), ]), }, { label: &apos;svg-with-script&apos;, name: &apos;logo.png&apos;, mimeType: &apos;image/png&apos;, buffer: Buffer &#x2026; [open source for complete dataset]</code> &#x2014; line 141</li>
+<li><code>ZERO_BYTE_PNG</code> = <code>{ label: &apos;zero-byte-png&apos;, name: &apos;empty.png&apos;, mimeType: &apos;image/png&apos;, buffer: Buffer.alloc(0), }</code> &#x2014; line 193</li>
+<li><code>LONG_NAME_PNG</code> = <code>{ label: &apos;long-filename&apos;, name: &#x2032;&#x24;{&apos;a&apos;.repeat(250)}.png&#x2032;, mimeType: &apos;image/png&apos;, buffer: Buffer.from(PHP_SHELL), }</code> &#x2014; line 201</li>
+<li><code>EICAR_AS_PNG</code> = <code>{ label: &apos;eicar-as-png&apos;, name: &apos;eicar.png&apos;, mimeType: &apos;image/png&apos;, buffer: Buffer.from(EICAR_TEST_STRING), }</code> &#x2014; line 209</li>
+<li><code>NON_AUDIO_AS_MP3</code> = <code>{ label: &apos;text-as-mp3&apos;, name: &apos;fake.mp3&apos;, mimeType: &apos;audio/mpeg&apos;, buffer: Buffer.from(&apos;this is plain text, definitely not an audio stream&apos;), }</code> &#x2014; line 217</li>
+<li><code>CORRUPT_MP3</code> = <code>{ label: &apos;corrupt-mp3&apos;, name: &apos;corrupt.mp3&apos;, mimeType: &apos;audio/mpeg&apos;, buffer: Buffer.concat([ Buffer.from(&apos;ID3&apos;), Buffer.from([0x00, 0x01, 0x02]), ]), }</code> &#x2014; line 225</li>
+<li><code>NON_PDF_AS_PDF</code> = <code>{ label: &apos;text-as-pdf&apos;, name: &apos;fake.pdf&apos;, mimeType: &apos;application/pdf&apos;, buffer: Buffer.from(&apos;not a real pdf, just text with no valid page tree&apos;), }</code> &#x2014; line 236</li>
+<li><code>VALID_PNG_UPPERCASE</code> = <code>{ label: &apos;valid-uppercase-ext&apos;, name: &apos;PHOTO.PNG&apos;, mimeType: &apos;image/png&apos;, buffer: VALID_PNG_BUFFER, }</code> &#x2014; line 244</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/logged-in-user/create-qr-code/upload-security-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/upload-security-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/upload-security-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/vcard-avatar-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/vcard-avatar-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/vcard-avatar-automations.spec.ts:1</a></p>
+<h2 id="tests-data-vcard-webp-upload-data-ts">tests/data/vcard-webp-upload.data.ts</h2>
+<p><a data-source="tests/data/vcard-webp-upload.data.ts" href="../sources/tests/data/vcard-webp-upload.data.ts.html#L1">tests/data/vcard-webp-upload.data.ts:1</a></p>
+<ul>
+<li><code>OQG3_2210_SUITE</code> = <code>&apos;OQG3-2210 vCard QR WEBP image upload&apos;</code> &#x2014; line 5</li>
+<li><code>VALID_WEBP</code> = <code>&apos;tests/data/test_files/image_files/product_img.webp&apos;</code> &#x2014; line 7</li>
+<li><code>VALID_WEBP_ALT</code> = <code>&apos;tests/data/test_files/image_files/sample-blue.webp&apos;</code> &#x2014; line 8</li>
+<li><code>CORRUPT_WEBP</code> = <code>&apos;tests/data/test_files/image_files/corrupt-webp.webp&apos;</code> &#x2014; line 11</li>
+<li><code>SUPPORTED_NON_WEBP</code> = <code>[ { label: &apos;JPG&apos;, path: &apos;tests/data/test_files/image_files/photo_face_square.jpg&apos;, }, { label: &apos;JPEG&apos;, path: &apos;tests/data/test_files/image_files/photo_face_landscape.jpg&apos;, }, { label: &apos;PNG&apos;, path: &apos;tests/data/test_files/image_files/vscode_logo.png&apos;, }, ] as con &#x2026; [open source for complete dataset]</code> &#x2014; line 14</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/helpers/vcard-webp-upload.helper.ts" href="../sources/tests/helpers/vcard-webp-upload.helper.ts.html#L1">tests/helpers/vcard-webp-upload.helper.ts:1</a>, <a data-source="tests/logged-in-user/create-qr-code/vcard-webp-upload-automations.spec.ts" href="../sources/tests/logged-in-user/create-qr-code/vcard-webp-upload-automations.spec.ts.html#L1">tests/logged-in-user/create-qr-code/vcard-webp-upload-automations.spec.ts:1</a></p>
+<h2 id="utils-defineenv-ts">utils/defineEnv.ts</h2>
+<p><a data-source="utils/defineEnv.ts" href="../sources/utils/defineEnv.ts.html#L1">utils/defineEnv.ts:1</a></p>
+<ul>
+<li><code>ProductEnvironment</code> &#x2014; line 9</li>
+<li><code>defineEnv</code> &#x2014; line 18</li>
+</ul>
+<p>Direct consumers: <a data-source="env.ts" href="../sources/env.ts.html#L1">env.ts:1</a>, <a data-source="fixtures/baseFixture.ts" href="../sources/fixtures/baseFixture.ts.html#L1">fixtures/baseFixture.ts:1</a></p>
+<h2 id="utils-domainenv-ts">utils/domainEnv.ts</h2>
+<p><a data-source="utils/domainEnv.ts" href="../sources/utils/domainEnv.ts.html#L1">utils/domainEnv.ts:1</a></p>
+<ul>
+<li><code>Domain</code> &#x2014; line 1</li>
+<li><code>getDomain</code> &#x2014; line 7</li>
+<li><code>isOqg</code> = <code>(): boolean =&gt; getDomain() === &apos;oqg&apos;</code> &#x2014; line 19</li>
+<li><code>isQci</code> = <code>(): boolean =&gt; getDomain() === &apos;qci&apos;</code> &#x2014; line 20</li>
+<li><code>isQga</code> = <code>(): boolean =&gt; getDomain() === &apos;qga&apos;</code> &#x2014; line 21</li>
+</ul>
+<p>Direct consumers: <a data-source="pages/PaymentsPage/PaymentPageLocators.ts" href="../sources/pages/PaymentsPage/PaymentPageLocators.ts.html#L1">pages/PaymentsPage/PaymentPageLocators.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/dpf/iceland/iceland-stripe-form-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/dpf/iceland/iceland-stripe-form-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/dpf/iceland/iceland-stripe-form-automations.spec.ts:1</a></p>
+<h2 id="utils-getenv-ts">utils/getEnv.ts</h2>
+<p><a data-source="utils/getEnv.ts" href="../sources/utils/getEnv.ts.html#L1">utils/getEnv.ts:1</a></p>
+<ul>
+<li><code>getEnv</code> &#x2014; line 1</li>
+</ul>
+<p>Direct consumers: No direct TypeScript import found (may be read as a file or referenced indirectly).</p>
+<h2 id="utils-productenv-ts">utils/productEnv.ts</h2>
+<p><a data-source="utils/productEnv.ts" href="../sources/utils/productEnv.ts.html#L1">utils/productEnv.ts:1</a></p>
+<ul>
+<li><code>getProductBaseUrl</code> &#x2014; line 28</li>
+<li><code>getProductOrigin</code> &#x2014; line 44</li>
+<li><code>getAdminUrl</code> &#x2014; line 49</li>
+<li><code>getAdminUsersUrl</code> &#x2014; line 54</li>
+<li><code>getDpfCreateUrl</code> &#x2014; line 62</li>
+<li><code>getDpfPricingUrl</code> &#x2014; line 67</li>
+<li><code>getEmailLinkOrigin</code> &#x2014; line 72</li>
+<li><code>getAdminLink</code> = <code>getAdminUrl</code> &#x2014; line 77</li>
+</ul>
+<p>Direct consumers: No direct TypeScript import found (may be read as a file or referenced indirectly).</p>
+<h2 id="utils-test-data-generators-ts">utils/test_data_generators.ts</h2>
+<p><a data-source="utils/test_data_generators.ts" href="../sources/utils/test_data_generators.ts.html#L1">utils/test_data_generators.ts:1</a></p>
+<ul>
+<li><code>getExpiryDateOneYearAhead</code> &#x2014; line 1</li>
+<li><code>getExpiryDateInPast</code> &#x2014; line 9</li>
+<li><code>presentDay</code> &#x2014; line 18</li>
+<li><code>presentMonth</code> &#x2014; line 22</li>
+<li><code>pastDay</code> &#x2014; line 26</li>
+<li><code>pastMonth</code> &#x2014; line 32</li>
+<li><code>tomorrowDay</code> &#x2014; line 38</li>
+<li><code>nextMonth</code> &#x2014; line 44</li>
+<li><code>getExpiryDateAfterMonth</code> &#x2014; line 50</li>
+<li><code>getExpiryDateAfterQuarter</code> &#x2014; line 62</li>
+<li><code>getExpiryDateAfterYear</code> &#x2014; line 74</li>
+<li><code>getExpiryDateYesterday</code> &#x2014; line 86</li>
+<li><code>normalizeText</code> = <code>(text: string | null): string =&gt; text ?.replace(/([.!?])([A-Za-z&#x410;-&#x42f;&#x430;-&#x44f;&#x407;&#x457;&#x406;&#x456;&#x404;&#x454;])/g, &apos;&#x24;1 &#x24;2&apos;) .replace(/\s+/g, &apos; &apos;) .trim() ?? &apos;&apos;</code> &#x2014; line 98</li>
+</ul>
+<p>Direct consumers: <a data-source="tests/data/payments_test_data.ts" href="../sources/tests/data/payments_test_data.ts.html#L1">tests/data/payments_test_data.ts:1</a>, <a data-source="tests/data/stripeRetryStrategy.data.ts" href="../sources/tests/data/stripeRetryStrategy.data.ts.html#L1">tests/data/stripeRetryStrategy.data.ts:1</a>, <a data-source="tests/emails/transactional-email-delivery-automations.spec.ts" href="../sources/tests/emails/transactional-email-delivery-automations.spec.ts.html#L1">tests/emails/transactional-email-delivery-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/active-subscription.spec.ts" href="../sources/tests/logged-in-user/billing-page/active-subscription.spec.ts.html#L1">tests/logged-in-user/billing-page/active-subscription.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/default/fully-cancelled-account/stripe-full-canc-account.spec.ts" href="../sources/tests/logged-in-user/billing-page/default/fully-cancelled-account/stripe-full-canc-account.spec.ts.html#L1">tests/logged-in-user/billing-page/default/fully-cancelled-account/stripe-full-canc-account.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/default/fully-cancelled-account/user-flow-full-canc-account.spec.ts" href="../sources/tests/logged-in-user/billing-page/default/fully-cancelled-account/user-flow-full-canc-account.spec.ts.html#L1">tests/logged-in-user/billing-page/default/fully-cancelled-account/user-flow-full-canc-account.spec.ts:1</a>, <a data-source="tests/logged-in-user/billing-page/retry-strategy/user-flow-delinquent-automations.spec.ts" href="../sources/tests/logged-in-user/billing-page/retry-strategy/user-flow-delinquent-automations.spec.ts.html#L1">tests/logged-in-user/billing-page/retry-strategy/user-flow-delinquent-automations.spec.ts:1</a>, <a data-source="tests/logged-in-user/dashboard/dashboard.spec.ts" href="../sources/tests/logged-in-user/dashboard/dashboard.spec.ts.html#L1">tests/logged-in-user/dashboard/dashboard.spec.ts:1</a>, <a data-source="tests/logged-in-user/qr-code-details/business-qr-edit.spec.ts" href="../sources/tests/logged-in-user/qr-code-details/business-qr-edit.spec.ts.html#L1">tests/logged-in-user/qr-code-details/business-qr-edit.spec.ts:1</a></p>
+<ul>
+<li>File-backed dataset: <a data-source="tests/data/pricing-integrity/official stripe prices.csv" href="../sources/tests/data/pricing-integrity/official%20stripe%20prices.csv.html#L1">tests/data/pricing-integrity/official stripe prices.csv:1</a></li>
+<li>File-backed dataset: <a data-source="tests/data/pricing-integrity/stripe_prices_trial.json" href="../sources/tests/data/pricing-integrity/stripe_prices_trial.json.html#L1">tests/data/pricing-integrity/stripe_prices_trial.json:1</a></li>
+<li>File-backed dataset: <a data-source="tests/data/qr-field-validation-master-dataset.json" href="../sources/tests/data/qr-field-validation-master-dataset.json.html#L1">tests/data/qr-field-validation-master-dataset.json:1</a></li>
+<li>File-backed dataset: <a data-source="tests/tools/validationPool.json" href="../sources/tests/tools/validationPool.json.html#L1">tests/tools/validationPool.json:1</a></li>
+</ul></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

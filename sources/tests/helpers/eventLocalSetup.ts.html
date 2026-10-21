@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>tests/helpers/eventLocalSetup.ts · QA reference</title>
+<link rel="stylesheet" href="../../../assets/styles.css">
+<script defer src="../../../assets/search-index.js"></script><script defer src="../../../assets/app.js"></script>
+</head><body data-root-prefix="../../../">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="../../../index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="../../../index.html">Start here</a>
+<a href="../../../00-qa-quick-start.html">Your first check</a>
+<a href="../../../02-accounts-and-credentials.html">Accounts and login</a>
+<a href="../../../03-qr-creation.html">QR types and creation</a>
+<a href="../../../04-data-and-inputs.html">What to enter and upload</a>
+<a href="../../../05-other-flows.html">Other product flows</a>
+<a href="../../../07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="../../../glossary.html">Words used in this guide</a><details class="reference-nav" open><summary>Technical reference (optional)</summary><a href="../../../01-architecture-and-running.html">Automation setup and execution</a>
+<a href="../../../06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="../../../09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="../../../reference/index.html">Reference overview</a>
+<a href="../../../reference/spec-index.html">Complete spec map</a>
+<a href="../../../reference/code-index.html">Shared helpers and locators</a>
+<a href="../../../reference/field-inputs.html">Field inputs and defaults</a>
+<a href="../../../reference/data-index.html">Data sources and consumers</a>
+<a href="../../../reference/environment-index.html">Environment variables</a>
+<a href="../../../reference/assets.html">Upload asset inventory</a>
+<a href="../../../reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Optional technical detail · bundled source snapshot · reviewed 19 October 2026</div>
+<p class="reader-note">This section explains how the automated tests work. For practical steps and input choices, start with <a href="../../../00-qa-quick-start.html">Your first check</a>. Unfamiliar terms are explained in the <a href="../../../glossary.html">glossary</a>.</p>
+
+<article id="doc-content" tabindex="-1"><h1>tests/helpers/eventLocalSetup.ts</h1><p class="source-note">Bundled source snapshot. Credential-like literals are omitted. Line numbers correspond to the audited repository file; this page is for reading and is not executable test code.</p><pre class="source-code"><code><span class="source-line" id="L1"><a class="line-number" href="#L1" aria-label="Line 1">1</a> /* eslint-disable no-restricted-syntax -- legacy hardcoded waits (test debt); see CLAUDE.md &quot;Waiting &amp; timing&quot; */</span>
+<span class="source-line" id="L2"><a class="line-number" href="#L2" aria-label="Line 2">2</a> import type { Page } from &#39;@playwright/test&#39;</span>
+<span class="source-line" id="L3"><a class="line-number" href="#L3" aria-label="Line 3">3</a> import type { PageManager } from &#39;../../base/PageManager&#39;</span>
+<span class="source-line" id="L4"><a class="line-number" href="#L4" aria-label="Line 4">4</a> import { ScannedPage } from &#39;../../pages/ScannedPage/ScannedPage&#39;</span>
+<span class="source-line" id="L5"><a class="line-number" href="#L5" aria-label="Line 5">5</a> </span>
+<span class="source-line" id="L6"><a class="line-number" href="#L6" aria-label="Line 6">6</a> /**</span>
+<span class="source-line" id="L7"><a class="line-number" href="#L7" aria-label="Line 7">7</a>  * Local Event stack note:</span>
+<span class="source-line" id="L8"><a class="line-number" href="#L8" aria-label="Line 8">8</a>  * - Event is available on guest /create?step=1</span>
+<span class="source-line" id="L9"><a class="line-number" href="#L9" aria-label="Line 9">9</a>  * - /register redirects home on this local setup</span>
+<span class="source-line" id="L10"><a class="line-number" href="#L10" aria-label="Line 10">10</a>  * - Step 2 help popup + temp-user creation temporarily disable Next</span>
+<span class="source-line" id="L11"><a class="line-number" href="#L11" aria-label="Line 11">11</a>  * - Step 3 requires POST /api/steps/qr/content (and preview on :3000)</span>
+<span class="source-line" id="L12"><a class="line-number" href="#L12" aria-label="Line 12">12</a>  */</span>
+<span class="source-line" id="L13"><a class="line-number" href="#L13" aria-label="Line 13">13</a> export async function dismissStep2HelpPopup(page: Page): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L14"><a class="line-number" href="#L14" aria-label="Line 14">14</a>     const helpPopup = page.getByTestId(&#39;help-popup-step-2&#39;)</span>
+<span class="source-line" id="L15"><a class="line-number" href="#L15" aria-label="Line 15">15</a>     for (let i = 0; i &lt; 8; i++) {</span>
+<span class="source-line" id="L16"><a class="line-number" href="#L16" aria-label="Line 16">16</a>         const isOpen = await helpPopup.isVisible().catch(() =&gt; false)</span>
+<span class="source-line" id="L17"><a class="line-number" href="#L17" aria-label="Line 17">17</a>         if (!isOpen) return</span>
+<span class="source-line" id="L18"><a class="line-number" href="#L18" aria-label="Line 18">18</a> </span>
+<span class="source-line" id="L19"><a class="line-number" href="#L19" aria-label="Line 19">19</a>         const candidates = [</span>
+<span class="source-line" id="L20"><a class="line-number" href="#L20" aria-label="Line 20">20</a>             page.getByTestId(&#39;help-popup-step-2-close-icon-button&#39;),</span>
+<span class="source-line" id="L21"><a class="line-number" href="#L21" aria-label="Line 21">21</a>             page.getByTestId(&#39;help-popup-step-2-close-button&#39;),</span>
+<span class="source-line" id="L22"><a class="line-number" href="#L22" aria-label="Line 22">22</a>             page.getByTestId(&#39;help-popup-step-2-continue-button&#39;),</span>
+<span class="source-line" id="L23"><a class="line-number" href="#L23" aria-label="Line 23">23</a>             page.getByTestId(&#39;help-popup-step-2-close&#39;),</span>
+<span class="source-line" id="L24"><a class="line-number" href="#L24" aria-label="Line 24">24</a>             page.getByTestId(&#39;help-popup-step-2-continue&#39;),</span>
+<span class="source-line" id="L25"><a class="line-number" href="#L25" aria-label="Line 25">25</a>         ]</span>
+<span class="source-line" id="L26"><a class="line-number" href="#L26" aria-label="Line 26">26</a> </span>
+<span class="source-line" id="L27"><a class="line-number" href="#L27" aria-label="Line 27">27</a>         let clicked = false</span>
+<span class="source-line" id="L28"><a class="line-number" href="#L28" aria-label="Line 28">28</a>         for (const candidate of candidates) {</span>
+<span class="source-line" id="L29"><a class="line-number" href="#L29" aria-label="Line 29">29</a>             if (await candidate.isVisible().catch(() =&gt; false)) {</span>
+<span class="source-line" id="L30"><a class="line-number" href="#L30" aria-label="Line 30">30</a>                 await candidate.click({ force: true }).catch(() =&gt; {})</span>
+<span class="source-line" id="L31"><a class="line-number" href="#L31" aria-label="Line 31">31</a>                 clicked = true</span>
+<span class="source-line" id="L32"><a class="line-number" href="#L32" aria-label="Line 32">32</a>                 break</span>
+<span class="source-line" id="L33"><a class="line-number" href="#L33" aria-label="Line 33">33</a>             }</span>
+<span class="source-line" id="L34"><a class="line-number" href="#L34" aria-label="Line 34">34</a>         }</span>
+<span class="source-line" id="L35"><a class="line-number" href="#L35" aria-label="Line 35">35</a>         if (!clicked) {</span>
+<span class="source-line" id="L36"><a class="line-number" href="#L36" aria-label="Line 36">36</a>             await page.keyboard.press(&#39;Escape&#39;)</span>
+<span class="source-line" id="L37"><a class="line-number" href="#L37" aria-label="Line 37">37</a>         }</span>
+<span class="source-line" id="L38"><a class="line-number" href="#L38" aria-label="Line 38">38</a>         await page.waitForTimeout(300)</span>
+<span class="source-line" id="L39"><a class="line-number" href="#L39" aria-label="Line 39">39</a>     }</span>
+<span class="source-line" id="L40"><a class="line-number" href="#L40" aria-label="Line 40">40</a> </span>
+<span class="source-line" id="L41"><a class="line-number" href="#L41" aria-label="Line 41">41</a>     await helpPopup.waitFor({ state: &#39;hidden&#39;, timeout: 5_000 }).catch(() =&gt; {})</span>
+<span class="source-line" id="L42"><a class="line-number" href="#L42" aria-label="Line 42">42</a> }</span>
+<span class="source-line" id="L43"><a class="line-number" href="#L43" aria-label="Line 43">43</a> </span>
+<span class="source-line" id="L44"><a class="line-number" href="#L44" aria-label="Line 44">44</a> export async function waitForStep2NextEnabled(page: Page): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L45"><a class="line-number" href="#L45" aria-label="Line 45">45</a>     const nextButton = page.getByTestId(&#39;footer-step2-next-button&#39;)</span>
+<span class="source-line" id="L46"><a class="line-number" href="#L46" aria-label="Line 46">46</a>     await nextButton.waitFor({ state: &#39;visible&#39;, timeout: 30000 })</span>
+<span class="source-line" id="L47"><a class="line-number" href="#L47" aria-label="Line 47">47</a>     await page.waitForFunction(</span>
+<span class="source-line" id="L48"><a class="line-number" href="#L48" aria-label="Line 48">48</a>         () =&gt; {</span>
+<span class="source-line" id="L49"><a class="line-number" href="#L49" aria-label="Line 49">49</a>             const btn = document.querySelector(</span>
+<span class="source-line" id="L50"><a class="line-number" href="#L50" aria-label="Line 50">50</a>                 &#39;[data-qa-id=&quot;footer-step2-next-button&quot;]&#39;</span>
+<span class="source-line" id="L51"><a class="line-number" href="#L51" aria-label="Line 51">51</a>             ) as HTMLButtonElement | null</span>
+<span class="source-line" id="L52"><a class="line-number" href="#L52" aria-label="Line 52">52</a>             return Boolean(btn &amp;&amp; !btn.disabled)</span>
+<span class="source-line" id="L53"><a class="line-number" href="#L53" aria-label="Line 53">53</a>         },</span>
+<span class="source-line" id="L54"><a class="line-number" href="#L54" aria-label="Line 54">54</a>         { timeout: 60000 }</span>
+<span class="source-line" id="L55"><a class="line-number" href="#L55" aria-label="Line 55">55</a>     )</span>
+<span class="source-line" id="L56"><a class="line-number" href="#L56" aria-label="Line 56">56</a> }</span>
+<span class="source-line" id="L57"><a class="line-number" href="#L57" aria-label="Line 57">57</a> </span>
+<span class="source-line" id="L58"><a class="line-number" href="#L58" aria-label="Line 58">58</a> /**</span>
+<span class="source-line" id="L59"><a class="line-number" href="#L59" aria-label="Line 59">59</a>  * Clicks the Event card on Step 1 and waits for Step 2.</span>
+<span class="source-line" id="L60"><a class="line-number" href="#L60" aria-label="Line 60">60</a>  *</span>
+<span class="source-line" id="L61"><a class="line-number" href="#L61" aria-label="Line 61">61</a>  * A freshly-registered user&#39;s first click can select the card without</span>
+<span class="source-line" id="L62"><a class="line-number" href="#L62" aria-label="Line 62">62</a>  * navigating (onboarding state), so the click is retried once.</span>
+<span class="source-line" id="L63"><a class="line-number" href="#L63" aria-label="Line 63">63</a>  */</span>
+<span class="source-line" id="L64"><a class="line-number" href="#L64" aria-label="Line 64">64</a> export async function selectEventCard(</span>
+<span class="source-line" id="L65"><a class="line-number" href="#L65" aria-label="Line 65">65</a>     page: Page,</span>
+<span class="source-line" id="L66"><a class="line-number" href="#L66" aria-label="Line 66">66</a>     pageManager: PageManager</span>
+<span class="source-line" id="L67"><a class="line-number" href="#L67" aria-label="Line 67">67</a> ): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L68"><a class="line-number" href="#L68" aria-label="Line 68">68</a>     const eventCard = pageManager.step1Page.locator.eventQrType</span>
+<span class="source-line" id="L69"><a class="line-number" href="#L69" aria-label="Line 69">69</a>     await eventCard.waitFor({ state: &#39;visible&#39;, timeout: 30_000 })</span>
+<span class="source-line" id="L70"><a class="line-number" href="#L70" aria-label="Line 70">70</a>     await eventCard.click()</span>
+<span class="source-line" id="L71"><a class="line-number" href="#L71" aria-label="Line 71">71</a>     const reachedStep2 = await page</span>
+<span class="source-line" id="L72"><a class="line-number" href="#L72" aria-label="Line 72">72</a>         .waitForURL(/step=2/, { timeout: 15_000 })</span>
+<span class="source-line" id="L73"><a class="line-number" href="#L73" aria-label="Line 73">73</a>         .then(() =&gt; true)</span>
+<span class="source-line" id="L74"><a class="line-number" href="#L74" aria-label="Line 74">74</a>         .catch(() =&gt; false)</span>
+<span class="source-line" id="L75"><a class="line-number" href="#L75" aria-label="Line 75">75</a>     if (!reachedStep2) {</span>
+<span class="source-line" id="L76"><a class="line-number" href="#L76" aria-label="Line 76">76</a>         await eventCard.click()</span>
+<span class="source-line" id="L77"><a class="line-number" href="#L77" aria-label="Line 77">77</a>         await page.waitForURL(/step=2/, { timeout: 30_000 })</span>
+<span class="source-line" id="L78"><a class="line-number" href="#L78" aria-label="Line 78">78</a>     }</span>
+<span class="source-line" id="L79"><a class="line-number" href="#L79" aria-label="Line 79">79</a> }</span>
+<span class="source-line" id="L80"><a class="line-number" href="#L80" aria-label="Line 80">80</a> </span>
+<span class="source-line" id="L81"><a class="line-number" href="#L81" aria-label="Line 81">81</a> export async function openEventCreateStep1(</span>
+<span class="source-line" id="L82"><a class="line-number" href="#L82" aria-label="Line 82">82</a>     page: Page,</span>
+<span class="source-line" id="L83"><a class="line-number" href="#L83" aria-label="Line 83">83</a>     pageManager: PageManager,</span>
+<span class="source-line" id="L84"><a class="line-number" href="#L84" aria-label="Line 84">84</a>     options: { locale?: string } = {}</span>
+<span class="source-line" id="L85"><a class="line-number" href="#L85" aria-label="Line 85">85</a> ): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L86"><a class="line-number" href="#L86" aria-label="Line 86">86</a>     const locale = options.locale</span>
+<span class="source-line" id="L87"><a class="line-number" href="#L87" aria-label="Line 87">87</a>     const path = locale ? `/${locale}/create?step=1` : &#39;/create?step=1&#39;</span>
+<span class="source-line" id="L88"><a class="line-number" href="#L88" aria-label="Line 88">88</a>     await page.goto(path)</span>
+<span class="source-line" id="L89"><a class="line-number" href="#L89" aria-label="Line 89">89</a>     await pageManager.step1Page.locator.eventQrType.waitFor({</span>
+<span class="source-line" id="L90"><a class="line-number" href="#L90" aria-label="Line 90">90</a>         state: &#39;visible&#39;,</span>
+<span class="source-line" id="L91"><a class="line-number" href="#L91" aria-label="Line 91">91</a>         timeout: 30000,</span>
+<span class="source-line" id="L92"><a class="line-number" href="#L92" aria-label="Line 92">92</a>     })</span>
+<span class="source-line" id="L93"><a class="line-number" href="#L93" aria-label="Line 93">93</a> }</span>
+<span class="source-line" id="L94"><a class="line-number" href="#L94" aria-label="Line 94">94</a> </span>
+<span class="source-line" id="L95"><a class="line-number" href="#L95" aria-label="Line 95">95</a> export async function openEventStep2(</span>
+<span class="source-line" id="L96"><a class="line-number" href="#L96" aria-label="Line 96">96</a>     page: Page,</span>
+<span class="source-line" id="L97"><a class="line-number" href="#L97" aria-label="Line 97">97</a>     pageManager: PageManager</span>
+<span class="source-line" id="L98"><a class="line-number" href="#L98" aria-label="Line 98">98</a> ): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L99"><a class="line-number" href="#L99" aria-label="Line 99">99</a>     await openEventCreateStep1(page, pageManager)</span>
+<span class="source-line" id="L100"><a class="line-number" href="#L100" aria-label="Line 100">100</a>     await pageManager.step1Page.selectEventQrType()</span>
+<span class="source-line" id="L101"><a class="line-number" href="#L101" aria-label="Line 101">101</a>     await dismissStep2HelpPopup(page)</span>
+<span class="source-line" id="L102"><a class="line-number" href="#L102" aria-label="Line 102">102</a>     await waitForStep2NextEnabled(page)</span>
+<span class="source-line" id="L103"><a class="line-number" href="#L103" aria-label="Line 103">103</a> }</span>
+<span class="source-line" id="L104"><a class="line-number" href="#L104" aria-label="Line 104">104</a> </span>
+<span class="source-line" id="L105"><a class="line-number" href="#L105" aria-label="Line 105">105</a> /**</span>
+<span class="source-line" id="L106"><a class="line-number" href="#L106" aria-label="Line 106">106</a>  * Logs in with the local persistent account (LOCAL_USER_LOGIN / _PASSWORD).</span>
+<span class="source-line" id="L107"><a class="line-number" href="#L107" aria-label="Line 107">107</a>  *</span>
+<span class="source-line" id="L108"><a class="line-number" href="#L108" aria-label="Line 108">108</a>  * Unlike the guest `/create` funnel, a logged-in session persists the QR to the</span>
+<span class="source-line" id="L109"><a class="line-number" href="#L109" aria-label="Line 109">109</a>  * dashboard, which is what the edit / scan-page / dashboard suites need.</span>
+<span class="source-line" id="L110"><a class="line-number" href="#L110" aria-label="Line 110">110</a>  * `authorizeUser()` cannot be used on the local stack (`/register` is disabled),</span>
+<span class="source-line" id="L111"><a class="line-number" href="#L111" aria-label="Line 111">111</a>  * so these suites log in instead.</span>
+<span class="source-line" id="L112"><a class="line-number" href="#L112" aria-label="Line 112">112</a>  */</span>
+<span class="source-line" id="L113"><a class="line-number" href="#L113" aria-label="Line 113">113</a> export async function loginLocalUser(</span>
+<span class="source-line" id="L114"><a class="line-number" href="#L114" aria-label="Line 114">114</a>     page: Page,</span>
+<span class="source-line" id="L115"><a class="line-number" href="#L115" aria-label="Line 115">115</a>     pageManager: PageManager</span>
+<span class="source-line" id="L116"><a class="line-number" href="#L116" aria-label="Line 116">116</a> ): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L117"><a class="line-number" href="#L117" aria-label="Line 117">117</a>     const login = (process.env.LOCAL_USER_LOGIN || &#39;&#39;).trim()</span>
+<span class="source-line" id="L118"><a class="line-number" href="#L118" aria-label="Line 118">118</a>     const password = (process.env.LOCAL_USER_PASSWORD || &#39;&#39;).trim()</span>
+<span class="source-line" id="L119"><a class="line-number" href="#L119" aria-label="Line 119">119</a>     if (!login || !password) {</span>
+<span class="source-line" id="L120"><a class="line-number" href="#L120" aria-label="Line 120">120</a>         throw new Error(</span>
+<span class="source-line" id="L121"><a class="line-number" href="#L121" aria-label="Line 121">121</a>             &#39;LOCAL_USER_LOGIN / LOCAL_USER_PASSWORD must be set in .env to run the logged-in Event suites.&#39;</span>
+<span class="source-line" id="L122"><a class="line-number" href="#L122" aria-label="Line 122">122</a>         )</span>
+<span class="source-line" id="L123"><a class="line-number" href="#L123" aria-label="Line 123">123</a>     }</span>
+<span class="source-line" id="L124"><a class="line-number" href="#L124" aria-label="Line 124">124</a>     await page.goto(&#39;/login&#39;)</span>
+<span class="source-line" id="L125"><a class="line-number" href="#L125" aria-label="Line 125">125</a>     await pageManager.loginPage.logIn(login, password)</span>
+<span class="source-line" id="L126"><a class="line-number" href="#L126" aria-label="Line 126">126</a>     await page.waitForURL(/qr-codes/, { timeout: 30000 })</span>
+<span class="source-line" id="L127"><a class="line-number" href="#L127" aria-label="Line 127">127</a> }</span>
+<span class="source-line" id="L128"><a class="line-number" href="#L128" aria-label="Line 128">128</a> </span>
+<span class="source-line" id="L129"><a class="line-number" href="#L129" aria-label="Line 129">129</a> /**</span>
+<span class="source-line" id="L130"><a class="line-number" href="#L130" aria-label="Line 130">130</a>  * Opens the create-QR wizard for a logged-in user via the dashboard sidebar</span>
+<span class="source-line" id="L131"><a class="line-number" href="#L131" aria-label="Line 131">131</a>  * link and waits for Step 1 (the Event card) to be interactive.</span>
+<span class="source-line" id="L132"><a class="line-number" href="#L132" aria-label="Line 132">132</a>  */</span>
+<span class="source-line" id="L133"><a class="line-number" href="#L133" aria-label="Line 133">133</a> export async function openCreateWizardLoggedIn(</span>
+<span class="source-line" id="L134"><a class="line-number" href="#L134" aria-label="Line 134">134</a>     page: Page,</span>
+<span class="source-line" id="L135"><a class="line-number" href="#L135" aria-label="Line 135">135</a>     pageManager: PageManager</span>
+<span class="source-line" id="L136"><a class="line-number" href="#L136" aria-label="Line 136">136</a> ): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L137"><a class="line-number" href="#L137" aria-label="Line 137">137</a>     await page.getByTestId(&#39;sidebar-create-qr-link&#39;).click()</span>
+<span class="source-line" id="L138"><a class="line-number" href="#L138" aria-label="Line 138">138</a>     await pageManager.step1Page.locator.eventQrType.waitFor({</span>
+<span class="source-line" id="L139"><a class="line-number" href="#L139" aria-label="Line 139">139</a>         state: &#39;visible&#39;,</span>
+<span class="source-line" id="L140"><a class="line-number" href="#L140" aria-label="Line 140">140</a>         timeout: 30000,</span>
+<span class="source-line" id="L141"><a class="line-number" href="#L141" aria-label="Line 141">141</a>     })</span>
+<span class="source-line" id="L142"><a class="line-number" href="#L142" aria-label="Line 142">142</a> }</span>
+<span class="source-line" id="L143"><a class="line-number" href="#L143" aria-label="Line 143">143</a> </span>
+<span class="source-line" id="L144"><a class="line-number" href="#L144" aria-label="Line 144">144</a> /**</span>
+<span class="source-line" id="L145"><a class="line-number" href="#L145" aria-label="Line 145">145</a>  * Result of publishing an Event QR through the logged-in route.</span>
+<span class="source-line" id="L146"><a class="line-number" href="#L146" aria-label="Line 146">146</a>  *</span>
+<span class="source-line" id="L147"><a class="line-number" href="#L147" aria-label="Line 147">147</a>  * Leaves the page on My QR Codes with the new QR saved.</span>
+<span class="source-line" id="L148"><a class="line-number" href="#L148" aria-label="Line 148">148</a>  */</span>
+<span class="source-line" id="L149"><a class="line-number" href="#L149" aria-label="Line 149">149</a> export type PublishedEventQr = {</span>
+<span class="source-line" id="L150"><a class="line-number" href="#L150" aria-label="Line 150">150</a>     /** Event title typed into Step 2 — rendered on the scan page. */</span>
+<span class="source-line" id="L151"><a class="line-number" href="#L151" aria-label="Line 151">151</a>     title: string</span>
+<span class="source-line" id="L152"><a class="line-number" href="#L152" aria-label="Line 152">152</a>     /** QR name — what the My QR Codes dashboard card shows. */</span>
+<span class="source-line" id="L153"><a class="line-number" href="#L153" aria-label="Line 153">153</a>     qrName: string</span>
+<span class="source-line" id="L154"><a class="line-number" href="#L154" aria-label="Line 154">154</a>     /** Credentials of the user that owns it, for `deleteUser` cleanup. */</span>
+<span class="source-line" id="L155"><a class="line-number" href="#L155" aria-label="Line 155">155</a>     user: { email: string; password: string }</span>
+<span class="source-line" id="L156"><a class="line-number" href="#L156" aria-label="Line 156">156</a> }</span>
+<span class="source-line" id="L157"><a class="line-number" href="#L157" aria-label="Line 157">157</a> </span>
+<span class="source-line" id="L158"><a class="line-number" href="#L158" aria-label="Line 158">158</a> /**</span>
+<span class="source-line" id="L159"><a class="line-number" href="#L159" aria-label="Line 159">159</a>  * Registers a fresh user, then creates and publishes an Event QR through the</span>
+<span class="source-line" id="L160"><a class="line-number" href="#L160" aria-label="Line 160">160</a>  * logged-in route.</span>
+<span class="source-line" id="L161"><a class="line-number" href="#L161" aria-label="Line 161">161</a>  *</span>
+<span class="source-line" id="L162"><a class="line-number" href="#L162" aria-label="Line 162">162</a>  * Uses `authorizeUser()` rather than the `LOCAL_USER_*` account: that account</span>
+<span class="source-line" id="L163"><a class="line-number" href="#L163" aria-label="Line 163">163</a>  * belongs to the local Event stack and its login never advances past the email</span>
+<span class="source-line" id="L164"><a class="line-number" href="#L164" aria-label="Line 164">164</a>  * step on devii. Registration works there, and the logged-in Event flow saves</span>
+<span class="source-line" id="L165"><a class="line-number" href="#L165" aria-label="Line 165">165</a>  * correctly (the DEV-EVENT-STEP3-422 rejection is guest-funnel only).</span>
+<span class="source-line" id="L166"><a class="line-number" href="#L166" aria-label="Line 166">166</a>  *</span>
+<span class="source-line" id="L167"><a class="line-number" href="#L167" aria-label="Line 167">167</a>  * Returns the event title *and* the QR name — they are different fields, and</span>
+<span class="source-line" id="L168"><a class="line-number" href="#L168" aria-label="Line 168">168</a>  * the dashboard card is keyed on the QR name.</span>
+<span class="source-line" id="L169"><a class="line-number" href="#L169" aria-label="Line 169">169</a>  */</span>
+<span class="source-line" id="L170"><a class="line-number" href="#L170" aria-label="Line 170">170</a> export async function loginCreateAndPublishEventQr(</span>
+<span class="source-line" id="L171"><a class="line-number" href="#L171" aria-label="Line 171">171</a>     page: Page,</span>
+<span class="source-line" id="L172"><a class="line-number" href="#L172" aria-label="Line 172">172</a>     pageManager: PageManager,</span>
+<span class="source-line" id="L173"><a class="line-number" href="#L173" aria-label="Line 173">173</a>     options: {</span>
+<span class="source-line" id="L174"><a class="line-number" href="#L174" aria-label="Line 174">174</a>         setQrName?: boolean</span>
+<span class="source-line" id="L175"><a class="line-number" href="#L175" aria-label="Line 175">175</a>         user?: { email: string; password: string }</span>
+<span class="source-line" id="L176"><a class="line-number" href="#L176" aria-label="Line 176">176</a>     } = {}</span>
+<span class="source-line" id="L177"><a class="line-number" href="#L177" aria-label="Line 177">177</a> ): Promise&lt;PublishedEventQr&gt; {</span>
+<span class="source-line" id="L178"><a class="line-number" href="#L178" aria-label="Line 178">178</a>     // Reuse an existing session when the caller passes one (publishing a</span>
+<span class="source-line" id="L179"><a class="line-number" href="#L179" aria-label="Line 179">179</a>     // second QR for the same user), otherwise register a fresh user.</span>
+<span class="source-line" id="L180"><a class="line-number" href="#L180" aria-label="Line 180">180</a>     const user =</span>
+<span class="source-line" id="L181"><a class="line-number" href="#L181" aria-label="Line 181">181</a>         options.user ?? (await pageManager.registerPage.authorizeUser())</span>
+<span class="source-line" id="L182"><a class="line-number" href="#L182" aria-label="Line 182">182</a>     // Mirror the entry sequence proven green by event-qr-step3.spec.ts.</span>
+<span class="source-line" id="L183"><a class="line-number" href="#L183" aria-label="Line 183">183</a>     await page.goto(&#39;/qr-codes&#39;)</span>
+<span class="source-line" id="L184"><a class="line-number" href="#L184" aria-label="Line 184">184</a>     await pageManager.menuPage.goToCreateQrCode()</span>
+<span class="source-line" id="L185"><a class="line-number" href="#L185" aria-label="Line 185">185</a>     await pageManager.step1Page.locator.websiteQrType.waitFor({</span>
+<span class="source-line" id="L186"><a class="line-number" href="#L186" aria-label="Line 186">186</a>         state: &#39;visible&#39;,</span>
+<span class="source-line" id="L187"><a class="line-number" href="#L187" aria-label="Line 187">187</a>         timeout: 30_000,</span>
+<span class="source-line" id="L188"><a class="line-number" href="#L188" aria-label="Line 188">188</a>     })</span>
+<span class="source-line" id="L189"><a class="line-number" href="#L189" aria-label="Line 189">189</a>     await selectEventCard(page, pageManager)</span>
+<span class="source-line" id="L190"><a class="line-number" href="#L190" aria-label="Line 190">190</a>     // The help popup only appears the first time a user reaches Step 2, so the</span>
+<span class="source-line" id="L191"><a class="line-number" href="#L191" aria-label="Line 191">191</a>     // strict close (which waits for it) is tried first and falls back to the</span>
+<span class="source-line" id="L192"><a class="line-number" href="#L192" aria-label="Line 192">192</a>     // tolerant sweep when publishing a second QR on the same account.</span>
+<span class="source-line" id="L193"><a class="line-number" href="#L193" aria-label="Line 193">193</a>     await pageManager.step2Page</span>
+<span class="source-line" id="L194"><a class="line-number" href="#L194" aria-label="Line 194">194</a>         .ensureHelpClosedBeforeUpload()</span>
+<span class="source-line" id="L195"><a class="line-number" href="#L195" aria-label="Line 195">195</a>         .catch(() =&gt; dismissStep2HelpPopup(page))</span>
+<span class="source-line" id="L196"><a class="line-number" href="#L196" aria-label="Line 196">196</a>     await waitForStep2NextEnabled(page)</span>
+<span class="source-line" id="L197"><a class="line-number" href="#L197" aria-label="Line 197">197</a> </span>
+<span class="source-line" id="L198"><a class="line-number" href="#L198" aria-label="Line 198">198</a>     // Title + start AND end date, All day on — the same combination the</span>
+<span class="source-line" id="L199"><a class="line-number" href="#L199" aria-label="Line 199">199</a>     // Step 3 suite uses. Omitting the end date leaves Next unable to advance.</span>
+<span class="source-line" id="L200"><a class="line-number" href="#L200" aria-label="Line 200">200</a>     const stamp = Date.now()</span>
+<span class="source-line" id="L201"><a class="line-number" href="#L201" aria-label="Line 201">201</a>     const title = `E2E Event ${stamp}`</span>
+<span class="source-line" id="L202"><a class="line-number" href="#L202" aria-label="Line 202">202</a>     const qrName = `E2E Event QR ${stamp}`</span>
+<span class="source-line" id="L203"><a class="line-number" href="#L203" aria-label="Line 203">203</a>     await pageManager.step2Page.fillEventRequiredFields(title)</span>
+<span class="source-line" id="L204"><a class="line-number" href="#L204" aria-label="Line 204">204</a> </span>
+<span class="source-line" id="L205"><a class="line-number" href="#L205" aria-label="Line 205">205</a>     // Name the QR explicitly so dashboard lookups can key on it. Pass</span>
+<span class="source-line" id="L206"><a class="line-number" href="#L206" aria-label="Line 206">206</a>     // `setQrName: false` to leave it blank and exercise the auto-generated name.</span>
+<span class="source-line" id="L207"><a class="line-number" href="#L207" aria-label="Line 207">207</a>     if (options.setQrName !== false) {</span>
+<span class="source-line" id="L208"><a class="line-number" href="#L208" aria-label="Line 208">208</a>         await pageManager.step2Page.locator.qrCodeNameTab.click()</span>
+<span class="source-line" id="L209"><a class="line-number" href="#L209" aria-label="Line 209">209</a>         await pageManager.step2Page.locator.qrCodeNameInput.fill(qrName)</span>
+<span class="source-line" id="L210"><a class="line-number" href="#L210" aria-label="Line 210">210</a>     }</span>
+<span class="source-line" id="L211"><a class="line-number" href="#L211" aria-label="Line 211">211</a> </span>
+<span class="source-line" id="L212"><a class="line-number" href="#L212" aria-label="Line 212">212</a>     await pageManager.qrCreationPage.clickStep2NextButton()</span>
+<span class="source-line" id="L213"><a class="line-number" href="#L213" aria-label="Line 213">213</a>     await page.waitForURL(&#39;**step=3**&#39;, { timeout: 60_000 })</span>
+<span class="source-line" id="L214"><a class="line-number" href="#L214" aria-label="Line 214">214</a>     await pageManager.qrCreationPage.clickStep3CreateButton()</span>
+<span class="source-line" id="L215"><a class="line-number" href="#L215" aria-label="Line 215">215</a>     await pageManager.qrCreationPage.closeDownloadModalIfPresent()</span>
+<span class="source-line" id="L216"><a class="line-number" href="#L216" aria-label="Line 216">216</a>     return { title, qrName: options.setQrName === false ? &#39;&#39; : qrName, user }</span>
+<span class="source-line" id="L217"><a class="line-number" href="#L217" aria-label="Line 217">217</a> }</span>
+<span class="source-line" id="L218"><a class="line-number" href="#L218" aria-label="Line 218">218</a> </span>
+<span class="source-line" id="L219"><a class="line-number" href="#L219" aria-label="Line 219">219</a> /**</span>
+<span class="source-line" id="L220"><a class="line-number" href="#L220" aria-label="Line 220">220</a>  * As {@link loginCreateAndPublishEventQr}, then re-opens the saved QR in edit</span>
+<span class="source-line" id="L221"><a class="line-number" href="#L221" aria-label="Line 221">221</a>  * mode. Leaves the page on the Step 2 editor of the saved QR.</span>
+<span class="source-line" id="L222"><a class="line-number" href="#L222" aria-label="Line 222">222</a>  */</span>
+<span class="source-line" id="L223"><a class="line-number" href="#L223" aria-label="Line 223">223</a> export async function loginCreateAndEditEventQr(</span>
+<span class="source-line" id="L224"><a class="line-number" href="#L224" aria-label="Line 224">224</a>     page: Page,</span>
+<span class="source-line" id="L225"><a class="line-number" href="#L225" aria-label="Line 225">225</a>     pageManager: PageManager</span>
+<span class="source-line" id="L226"><a class="line-number" href="#L226" aria-label="Line 226">226</a> ): Promise&lt;PublishedEventQr&gt; {</span>
+<span class="source-line" id="L227"><a class="line-number" href="#L227" aria-label="Line 227">227</a>     const published = await loginCreateAndPublishEventQr(page, pageManager)</span>
+<span class="source-line" id="L228"><a class="line-number" href="#L228" aria-label="Line 228">228</a>     await pageManager.myQrCodesPage.locator.qrKebabButton.click()</span>
+<span class="source-line" id="L229"><a class="line-number" href="#L229" aria-label="Line 229">229</a>     await pageManager.myQrCodesPage.locator.editQrContentButton.click()</span>
+<span class="source-line" id="L230"><a class="line-number" href="#L230" aria-label="Line 230">230</a>     await page.waitForURL(/\/edit\/.*step=2/, { timeout: 30_000 })</span>
+<span class="source-line" id="L231"><a class="line-number" href="#L231" aria-label="Line 231">231</a>     await restoreEventDatesInEdit(pageManager)</span>
+<span class="source-line" id="L232"><a class="line-number" href="#L232" aria-label="Line 232">232</a>     return published</span>
+<span class="source-line" id="L233"><a class="line-number" href="#L233" aria-label="Line 233">233</a> }</span>
+<span class="source-line" id="L234"><a class="line-number" href="#L234" aria-label="Line 234">234</a> </span>
+<span class="source-line" id="L235"><a class="line-number" href="#L235" aria-label="Line 235">235</a> /**</span>
+<span class="source-line" id="L236"><a class="line-number" href="#L236" aria-label="Line 236">236</a>  * Re-enters the Event date/time that edit mode drops.</span>
+<span class="source-line" id="L237"><a class="line-number" href="#L237" aria-label="Line 237">237</a>  *</span>
+<span class="source-line" id="L238"><a class="line-number" href="#L238" aria-label="Line 238">238</a>  * OQG3-2533: opening a saved Event QR in edit mode restores the title</span>
+<span class="source-line" id="L239"><a class="line-number" href="#L239" aria-label="Line 239">239</a>  * but leaves start date, start time and end time empty. Save is then blocked</span>
+<span class="source-line" id="L240"><a class="line-number" href="#L240" aria-label="Line 240">240</a>  * *silently* — no validation message is shown and no request is sent. Re-typing</span>
+<span class="source-line" id="L241"><a class="line-number" href="#L241" aria-label="Line 241">241</a>  * the date makes the save fire (`PUT /api/steps/qr/{uid}/content`).</span>
+<span class="source-line" id="L242"><a class="line-number" href="#L242" aria-label="Line 242">242</a>  *</span>
+<span class="source-line" id="L243"><a class="line-number" href="#L243" aria-label="Line 243">243</a>  * This is a workaround so edit-mode assertions about *other* fields can run.</span>
+<span class="source-line" id="L244"><a class="line-number" href="#L244" aria-label="Line 244">244</a>  * The defect itself is asserted by its own `test.fail()` case — do not treat</span>
+<span class="source-line" id="L245"><a class="line-number" href="#L245" aria-label="Line 245">245</a>  * this helper as evidence the bug is fixed.</span>
+<span class="source-line" id="L246"><a class="line-number" href="#L246" aria-label="Line 246">246</a>  */</span>
+<span class="source-line" id="L247"><a class="line-number" href="#L247" aria-label="Line 247">247</a> export async function restoreEventDatesInEdit(</span>
+<span class="source-line" id="L248"><a class="line-number" href="#L248" aria-label="Line 248">248</a>     pageManager: PageManager</span>
+<span class="source-line" id="L249"><a class="line-number" href="#L249" aria-label="Line 249">249</a> ): Promise&lt;void&gt; {</span>
+<span class="source-line" id="L250"><a class="line-number" href="#L250" aria-label="Line 250">250</a>     await pageManager.step2Page.setEventStartDate()</span>
+<span class="source-line" id="L251"><a class="line-number" href="#L251" aria-label="Line 251">251</a>     await pageManager.step2Page.setEventEndDate()</span>
+<span class="source-line" id="L252"><a class="line-number" href="#L252" aria-label="Line 252">252</a>     await pageManager.step2Page.toggleEventAllDay()</span>
+<span class="source-line" id="L253"><a class="line-number" href="#L253" aria-label="Line 253">253</a> }</span>
+<span class="source-line" id="L254"><a class="line-number" href="#L254" aria-label="Line 254">254</a> </span>
+<span class="source-line" id="L255"><a class="line-number" href="#L255" aria-label="Line 255">255</a> /**</span>
+<span class="source-line" id="L256"><a class="line-number" href="#L256" aria-label="Line 256">256</a>  * Opens a published QR&#39;s public scan page and returns the ScannedPage plus the</span>
+<span class="source-line" id="L257"><a class="line-number" href="#L257" aria-label="Line 257">257</a>  * URL used.</span>
+<span class="source-line" id="L258"><a class="line-number" href="#L258" aria-label="Line 258">258</a>  *</span>
+<span class="source-line" id="L259"><a class="line-number" href="#L259" aria-label="Line 259">259</a>  * The dashboard card&#39;s href is `{scan-origin}/p/{uid}`. The uid form is built</span>
+<span class="source-line" id="L260"><a class="line-number" href="#L260" aria-label="Line 260">260</a>  * here as well because that is what the transactional-email suite uses for other</span>
+<span class="source-line" id="L261"><a class="line-number" href="#L261" aria-label="Line 261">261</a>  * QR types; the server redirects it to the `/p/` form.</span>
+<span class="source-line" id="L262"><a class="line-number" href="#L262" aria-label="Line 262">262</a>  *</span>
+<span class="source-line" id="L263"><a class="line-number" href="#L263" aria-label="Line 263">263</a>  * The password gate is only submitted when it is actually present:</span>
+<span class="source-line" id="L264"><a class="line-number" href="#L264" aria-label="Line 264">264</a>  * `ScannedPage.authorize()` fills `input#password` unconditionally and would</span>
+<span class="source-line" id="L265"><a class="line-number" href="#L265" aria-label="Line 265">265</a>  * hang on an unprotected QR.</span>
+<span class="source-line" id="L266"><a class="line-number" href="#L266" aria-label="Line 266">266</a>  */</span>
+<span class="source-line" id="L267"><a class="line-number" href="#L267" aria-label="Line 267">267</a> export async function openEventScanPage(</span>
+<span class="source-line" id="L268"><a class="line-number" href="#L268" aria-label="Line 268">268</a>     page: Page,</span>
+<span class="source-line" id="L269"><a class="line-number" href="#L269" aria-label="Line 269">269</a>     pageManager: PageManager,</span>
+<span class="source-line" id="L270"><a class="line-number" href="#L270" aria-label="Line 270">270</a>     options: { password?: string } = {}</span>
+<span class="source-line" id="L271"><a class="line-number" href="#L271" aria-label="Line 271">271</a> ): Promise&lt;{ scanned: ScannedPage; url: string }&gt; {</span>
+<span class="source-line" id="L272"><a class="line-number" href="#L272" aria-label="Line 272">272</a>     const card = pageManager.myQrCodesPage.locator</span>
+<span class="source-line" id="L273"><a class="line-number" href="#L273" aria-label="Line 273">273</a>     const href = await card.qrCodeLink</span>
+<span class="source-line" id="L274"><a class="line-number" href="#L274" aria-label="Line 274">274</a>         .locator(&#39;xpath=ancestor::a[1]&#39;)</span>
+<span class="source-line" id="L275"><a class="line-number" href="#L275" aria-label="Line 275">275</a>         .getAttribute(&#39;href&#39;)</span>
+<span class="source-line" id="L276"><a class="line-number" href="#L276" aria-label="Line 276">276</a>         .catch(() =&gt; null)</span>
+<span class="source-line" id="L277"><a class="line-number" href="#L277" aria-label="Line 277">277</a>     const uid = await card.qrCodeUidInput.inputValue()</span>
+<span class="source-line" id="L278"><a class="line-number" href="#L278" aria-label="Line 278">278</a>     const origin = href</span>
+<span class="source-line" id="L279"><a class="line-number" href="#L279" aria-label="Line 279">279</a>         ? new URL(href, page.url()).origin</span>
+<span class="source-line" id="L280"><a class="line-number" href="#L280" aria-label="Line 280">280</a>         : new URL(page.url()).origin</span>
+<span class="source-line" id="L281"><a class="line-number" href="#L281" aria-label="Line 281">281</a>     const url = `${origin.replace(/\/+$/, &#39;&#39;)}/${uid}`</span>
+<span class="source-line" id="L282"><a class="line-number" href="#L282" aria-label="Line 282">282</a> </span>
+<span class="source-line" id="L283"><a class="line-number" href="#L283" aria-label="Line 283">283</a>     const scanPage = await page.context().newPage()</span>
+<span class="source-line" id="L284"><a class="line-number" href="#L284" aria-label="Line 284">284</a>     await scanPage.goto(url, { waitUntil: &#39;domcontentloaded&#39; })</span>
+<span class="source-line" id="L285"><a class="line-number" href="#L285" aria-label="Line 285">285</a>     const scanned = new ScannedPage(scanPage)</span>
+<span class="source-line" id="L286"><a class="line-number" href="#L286" aria-label="Line 286">286</a> </span>
+<span class="source-line" id="L287"><a class="line-number" href="#L287" aria-label="Line 287">287</a>     // 3s probe: only authorize when the gate is actually up.</span>
+<span class="source-line" id="L288"><a class="line-number" href="#L288" aria-label="Line 288">288</a>     const gated = await scanned.locator.passwordInput</span>
+<span class="source-line" id="L289"><a class="line-number" href="#L289" aria-label="Line 289">289</a>         .waitFor({ state: &#39;visible&#39;, timeout: 3_000 })</span>
+<span class="source-line" id="L290"><a class="line-number" href="#L290" aria-label="Line 290">290</a>         .then(() =&gt; true)</span>
+<span class="source-line" id="L291"><a class="line-number" href="#L291" aria-label="Line 291">291</a>         .catch(() =&gt; false)</span>
+<span class="source-line" id="L292"><a class="line-number" href="#L292" aria-label="Line 292">292</a>     if (gated) {</span>
+<span class="source-line" id="L293"><a class="line-number" href="#L293" aria-label="Line 293">293</a>         await scanned.authorize(options.password ?? &#39;Admin123&#39;)</span>
+<span class="source-line" id="L294"><a class="line-number" href="#L294" aria-label="Line 294">294</a>     }</span>
+<span class="source-line" id="L295"><a class="line-number" href="#L295" aria-label="Line 295">295</a>     return { scanned, url }</span>
+<span class="source-line" id="L296"><a class="line-number" href="#L296" aria-label="Line 296">296</a> }</span>
+<span class="source-line" id="L297"><a class="line-number" href="#L297" aria-label="Line 297">297</a> </span></code></pre></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>

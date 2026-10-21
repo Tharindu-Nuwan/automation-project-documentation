@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="qa-kt-document" content="05-other-flows.html">
+<title>Other flows: preparation, actions and expected results · QA reference</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script defer src="assets/search-index.js"></script><script defer src="assets/app.js"></script>
+</head><body data-root-prefix="">
+<a class="skip-link" href="#doc-content">Skip to content</a>
+<header><a href="index.html">QA reference</a><span>Accounts, inputs and product checks · works offline</span><button id="print" type="button">Print this page</button></header>
+<div class="layout"><aside><label for="search"><strong>Find a flow or input</strong></label><input id="search" type="search" placeholder="Login, PDF, Event dates…" autocomplete="off"><p id="status" role="status"></p><nav aria-label="Guide pages"><h2>Everyday QA reference</h2><a href="index.html">Start here</a>
+<a href="00-qa-quick-start.html">Your first check</a>
+<a href="02-accounts-and-credentials.html">Accounts and login</a>
+<a href="03-qr-creation.html">QR types and creation</a>
+<a href="04-data-and-inputs.html">What to enter and upload</a>
+<a href="05-other-flows.html" class="active" aria-current="page">Other product flows</a>
+<a href="07-qa-workflow-and-troubleshooting.html">Check results and report problems</a>
+<a href="glossary.html">Words used in this guide</a><details class="reference-nav"><summary>Technical reference (optional)</summary><a href="01-architecture-and-running.html">Automation setup and execution</a>
+<a href="06-apis-database-cleanup.html">APIs, database and cleanup</a>
+<a href="09-evidence-and-caveats.html">Evidence and known limitations</a>
+<a href="reference/index.html">Reference overview</a>
+<a href="reference/spec-index.html">Complete spec map</a>
+<a href="reference/code-index.html">Shared helpers and locators</a>
+<a href="reference/field-inputs.html">Field inputs and defaults</a>
+<a href="reference/data-index.html">Data sources and consumers</a>
+<a href="reference/environment-index.html">Environment variables</a>
+<a href="reference/assets.html">Upload asset inventory</a>
+<a href="reference/ci-index.html">CI workflow reference</a></details></nav></aside>
+<main id="main"><div id="reading"><div class="meta">Practical QA guide · reviewed 19 October 2026</div>
+
+<details class="toc"><summary>Jump to a section (12)</summary><a href="#prepare-for-the-flow-you-are-checking">Prepare for the flow you are checking</a>
+<a href="#guest-funnels-dpf-nsf-cff-and-fx">Guest funnels: DPF, NSF, CFF and fx</a>
+<a href="#homepage-and-static-previews">Homepage and static previews</a>
+<a href="#dashboard-my-qr-codes-and-folders">Dashboard, My QR Codes and folders</a>
+<a href="#edit-and-persistence">Edit and persistence</a>
+<a href="#downloads">Downloads</a>
+<a href="#my-account">My Account</a>
+<a href="#plans-billing-discounts-trial-days-and-archived-pricing">Plans, billing, discounts, trial days and archived pricing</a>
+<a href="#transactional-email">Transactional email</a>
+<a href="#analytics">Analytics</a>
+<a href="#cross-cutting-quality-checks">Cross-cutting quality checks</a>
+<a href="#persistent-validation-tools">Prepared examples and optional setup tools</a></details>
+<article id="doc-content" tabindex="-1"><h1 id="5-the-rest-of-the-suite-entry-data-assertions-cleanup">Other flows: preparation, actions and expected results</h1>
+<p><a href="index.html">Start</a> &#xb7; <a href="04-data-and-inputs.html">Previous</a> &#xb7; <a href="07-qa-workflow-and-troubleshooting.html">Next: results and problems</a></p>
+<p>Use this page to find the starting conditions and expected result for another product flow. The <a href="reference/spec-index.html">optional complete test map</a> provides the detailed automated steps when you or a test maintainer need them.</p>
+
+<h2 id="prepare-for-the-flow-you-are-checking">Prepare for the flow you are checking</h2>
+<p>A <em>flow</em> is a sequence of actions, such as sign in, create a QR, edit it, or download it. Start from the same account condition and page as the test case. In this guide, an <em>assertion</em> is the result the automation checks; for a manual check, compare that expected result with what you see.</p>
+<div class="table-wrap"><table>
+<tr><th>Flow</th><th>Arrange before starting</th><th>What to check</th></tr>
+<tr><td>Guest registration or purchase</td><td>The case&apos;s starting link and a fresh test identity</td><td>The sequence of content, email, plan and payment pages required by that case</td></tr>
+<tr><td>Folders and My QR Codes</td><td>An account and the specified QR/folder records, or a clean account when required</td><td>The named record, its folder, displayed count and saved result after the requested action</td></tr>
+<tr><td>Edit a QR</td><td>A saved QR of the correct type; record its internal name and original values</td><td>The changed value, the save result, and reopening or scanning if required</td></tr>
+<tr><td>Download</td><td>The specified QR, account plan, file format and size</td><td>The real downloaded file and whichever filename, dimensions or content the case requires</td></tr>
+<tr><td>Profile and password</td><td>The assigned test account and the new values for the case</td><td>The saved profile or the login result using the changed password when specified</td></tr>
+<tr><td>Billing and offers</td><td>The correct test plan/currency, test payment details and any prepared offer link or subscription state</td><td>The displayed amount and the case&apos;s payment/subscription result</td></tr>
+<tr><td>Account emails</td><td>Access to the configured test mail viewer and the exact recipient</td><td>The message caused by this action, its content, links and timing</td></tr>
+<tr><td>Analytics</td><td>The designated account containing the expected scan history</td><td>The selected dates, filters, values and export behavior</td></tr>
+</table></div>
+<p>When a case needs an expired account, old QR records, simulated payment dates, or a deliberately failing server response, ask the automation maintainer to prepare that condition. Those conditions may be created by code rather than by normal form entry.</p>
+<p><strong>The sections below retain exact test labels and optional implementation details.</strong> You do not need to run API or database commands to use the preparation table.</p>
+<h2 id="guest-funnels-dpf-nsf-cff-and-fx">Guest funnels: DPF, NSF, CFF and fx</h2>
+<div class="table-wrap"><table>
+<tr><th>Flow</th><th>Entry and data</th><th>Main sequence / expected endpoint</th></tr>
+<tr><td>DPF</td><td>Guest create route with <code>qr_onboarding=active_dpf</code>; generated identity; older specs can use <code>DPF_BASE_URL</code></td><td>Type/content &#x2192; Step 3 &#x2192; email gate &#x2192; plan &#x2192; checkout/payment; assertions vary by case</td></tr>
+<tr><td>NSF</td><td><code>/create?step=1&amp;qr_onboarding=active_nsf</code>; <code>createUserData()</code></td><td>Website recipe &#x2192; Next/Create &#x2192; email submission &#x2192; signup-success image</td></tr>
+<tr><td>CFF tests</td><td>Despite folder name, current <code>cff/create.spec.ts</code> starts <code>active_dpf</code></td><td>Create &#x2192; email &#x2192; pricing; logo/back/checkout-logo paths assert signup-success UI</td></tr>
+<tr><td>fx URL parameter</td><td><code>DpfCreatePage</code>, <code>DpfGeneratePage</code>, <code>dpf-fx-url-parameter.helper.ts</code> and <code>.data.ts</code></td><td>Parameter preservation, ignored/malformed/security values, localization, responsive and accessibility checks</td></tr>
+</table></div>
+<p>DPF means Download Page Flow in repository terminology. NSF/CFF are retained as repository labels; do not invent their expanded meanings from the filenames. <code>submitDpfEmailRegistration()</code> tries the UI click, then a page-global <code>submitForm()</code> or native form submission fallback if plans did not appear. That is a workaround; a successful fallback is not proof the normal button handler works.</p>
+<p>Product-specific DPF pages support OQG and QCI in their factories. The 2438 review suite and older DPF create tests have different setup and coverage. <a href="reference/specs/logged-out-user-funnels.html">Funnel spec details</a>.</p>
+<h2 id="homepage-and-static-previews">Homepage and static previews</h2>
+<p>Homepage tests exercise navigation and QR type entry. Fit Your Needs has design, responsive and localization suites backed by <code>fit-your-needs-preview.data.ts</code> and translations; its factory is OQG-only. Static preview suites inspect homepage/Step 1/network preload behavior and product/locale-specific expected strings. Preloaded sample content is <strong>not user-created QR content</strong>. Its expected text comes from the static-preview datasets, not Step 2 defaults.</p>
+<p>References: <a href="reference/specs/logged-out-user-homepage.html">homepage specs</a>, <a href="reference/specs/static-previews.html">static preview specs</a>, <a data-source="pages/MainPage/MainPage.ts" href="sources/pages/MainPage/MainPage.ts.html">MainPage</a>, <a data-source="pages/FitYourNeedsPage/FitYourNeedsPage.ts" href="sources/pages/FitYourNeedsPage/FitYourNeedsPage.ts.html">FitYourNeedsPage</a>.</p>
+<h2 id="dashboard-my-qr-codes-and-folders">Dashboard, My QR Codes and folders</h2>
+<p>Most ordinary dashboard cases register a fresh user, navigate to <code>/qr-codes</code>, perform navigation/account-state checks, then delete the user. Some change subscription expiry using <code>UserApi.updateSubscriptionDate()</code> to create an expired state without waiting days.</p>
+<p>Folder tests cover create, rename, delete, duplicate, pause/activate, moving QRs, bulk actions, counts, empty/failure paths, cross-session behavior and responsive/cross-browser cases. Data is in <code>folder-file-counter.data.ts</code> and <code>oqg3-2211.data.ts</code>; shared flows are in <code>folder-file-counter.helper.ts</code>, <code>create-from-folder.helper.ts</code>, and <code>oqg3-2211.helper.ts</code>.</p>
+<p><code>finishLoggedInCreate()</code> combines Next/Create and waits for creation completion. Helpers create Website QRs at root or in a selected folder. Use returned QR/folder names to make assertions; <code>.first()</code> tests operate on the first visible record and need isolated data. A mocked delete failure is a controlled network failure, not proof the backend naturally returns that error. The reference exposes <code>page.route()</code> calls for these cases.</p>
+<p>References: <a href="reference/specs/logged-in-user-dashboard.html">dashboard</a>, <a href="reference/specs/logged-in-user-my-qr-codes.html">My QR Codes</a>, <a data-source="pages/MyQrCodesPage/MyQrCodesPage.ts" href="sources/pages/MyQrCodesPage/MyQrCodesPage.ts.html">MyQrCodesPage</a>.</p>
+<h2 id="edit-and-persistence">Edit and persistence</h2>
+<p>The QR-details folder has per-type edit suites (Website, PDF, Links, vCard, Business, Images, Video, Apps, Coupon, MP3, Digital Menu, Facebook, Social Media and Event paths), plus download tests. Typical setup is fresh user &#x2192; create/save QR &#x2192; open edit &#x2192; alter content &#x2192; save &#x2192; assert result. Actual cases may stop earlier or inspect only preview; use their assertions to state coverage precisely.</p>
+<p>Do not reuse a setter blindly: creation helpers can append. QR name is the dashboard identifier; content headings are separate fields. Event&apos;s helper restores dates on reopening as a workaround, so use the dedicated persistence defect case when checking that issue. <a href="reference/specs/logged-in-user-qr-code-details.html">QR detail specs</a>.</p>
+<h2 id="downloads">Downloads</h2>
+<p>Download tests select formats/sizes from dedicated data/constants, trigger a browser download, save/read artifacts where the test does so, and assert the relevant filename, extension, size, dimensions or behavior. A modal being visible is weaker evidence than a real file download. A non-empty <code>.xlsx</code> is weaker evidence than validating every exported analytics row.</p>
+<p>Unique download page tests have a distinct route and setup. Some download matrices create QR types through shared recipes first, including protected scan content. Check account plan state: a free, trial, paid or cancelled user can see different download gates/banners. Exact paths and assertions: <a href="reference/specs/logged-in-user-qr-code-details.html">QR-details reference</a>, <a data-source="tests/data/download_test_data.ts" href="sources/tests/data/download_test_data.ts.html">download data</a>.</p>
+<h2 id="my-account">My Account</h2>
+<p>General information covers profile values, email, phone, language, password and account actions; Billing Information covers personal/company form behavior and associated fields. Most inputs are generated in the spec or passed to <code>AccountPage</code> setters. Profile name, QR contact name, payment billing name and admin user name are distinct fields.</p>
+<p>Email-change flows can require cleanup against a new email. Account deletion can make a subsequent teardown request redundant. Password cases should preserve the new value when testing login afterwards. <a href="reference/specs/logged-in-user-my-account.html">Account specs</a>, <a data-source="pages/AccountPage/AccountPage.ts" href="sources/pages/AccountPage/AccountPage.ts.html">AccountPage</a>.</p>
+<h2 id="plans-billing-discounts-trial-days-and-archived-pricing">Plans, billing, discounts, trial days and archived pricing</h2>
+<div class="table-wrap"><table>
+<tr><th>Area</th><th>Setup and data</th><th>Main evidence</th></tr>
+<tr><td>Logged-out default / DPF prices</td><td>Route and locale/currency cases; expected pricing tables</td><td>Displayed plan amounts/copy and navigation</td></tr>
+<tr><td>Default subscription states</td><td>Fresh user, select plan, payment or expiry manipulation</td><td>Active/cancelled/fully cancelled UI and Stripe state</td></tr>
+<tr><td>DPF and Iceland checkout</td><td>Guest funnel, DPF pricing, country/currency/billing inputs</td><td>Checkout form behavior, charges, stored billing/currency state where asserted</td></tr>
+<tr><td>70% / 90% offers</td><td>Promo-specific data and admin/generated links</td><td>Displayed amount, coupon/subscription/schedule assertions</td></tr>
+<tr><td>Discount-link core</td><td>Admin generates user-bound links; referral key from URL/DB</td><td>Binding/abuse/discount behavior; separate logged-out and logged-in contracts</td></tr>
+<tr><td>Retry strategy</td><td>Stripe test clocks, failing payment method, retry dataset/helpers</td><td>Renewal failure, retry ladder amounts, status, recovery, dunning messages and DB sync</td></tr>
+<tr><td>Pricing integrity</td><td>Official price sources + Stripe API + plan/trial DB tables</td><td>Comparison of independent sources, reports and mismatch detail</td></tr>
+<tr><td>Trial day count</td><td>DPF paid setup, translations and viewport/state variants</td><td>Paid/unpaid banners and day-count presentation; payment negatives</td></tr>
+<tr><td>Archived pricing</td><td>Create QR/account, database orphan/backdate, scan/acquisition and purchase helpers</td><td>Archived offer behavior, user/payment/Stripe state</td></tr>
+</table></div>
+<p>Payments default to the Visa test fixture, future expiry and fixed test billing details. <code>PaymentPage</code> may need to finish billing info before the Stripe iframe becomes visible, select the Card tab, and handle already-completed payment navigation. A &#x201c;payment field not found&#x201d; can originate one step earlier on the billing/plan page. 3DS/declined/insufficient-funds paths use different test card fixtures, not arbitrary invalid numbers.</p>
+<p><code>StripeAPI</code> can create/cancel subscriptions and advance/delete test clocks. Some checkout helpers reject or skip when the Stripe key is not test mode; not every method provides a universal mode guard. Use the configured test integration. Deleting an application user is not proof every external Stripe object was removed: inspect the spec&apos;s Stripe cleanup.</p>
+<p><a href="reference/specs/logged-in-user-billing-page.html">Billing specs</a>, <a href="reference/specs/logged-out-user-prices.html">price specs</a>, <a href="reference/specs/trial-day-count.html">trial specs</a>, <a href="reference/specs/archived-plan-pricing.html">archived pricing</a>, <a href="reference/code/tests.html">billing helper details</a>.</p>
+<p><strong>In plain language:</strong> transactional emails are messages sent because of an account action, such as registration, verification or a password change. They are different from choosing the Email QR type in the creation form.</p>
+<h2 id="transactional-email">Transactional email</h2>
+<p>The four email spec files cover default emails, user-triggered events, password-changed behavior and delivery-related scenarios. They create the relevant user/subscription/QR state, record a timestamp, trigger the action, poll the mail catcher for recipient/subject, then inspect HTML/text/raw message and links/content as specified. Some conditions are negative: no email should arrive within the observation window.</p>
+<p>Mailpit is the current client. <code>Mailtrap.ts</code> is only a compatibility re-export, and generated <code>@mailtrap.com</code> addresses do not require a real cloud mailbox. The application must be configured to deliver outbound test mail to the same catcher. <code>EmailBodyPage</code> is factory-backed for OQG/QCI; QR Email templates use a different page/helper system.</p>
+<p>Sources: <a href="reference/specs/emails.html">email specs</a>, <a data-source="api/Mailpit.ts" href="sources/api/Mailpit.ts.html">Mailpit</a>, <a data-source="tests/data/constants/email_test_data.ts" href="sources/tests/data/constants/email_test_data.ts.html">email constants</a>.</p>
+<h2 id="analytics">Analytics</h2>
+<p>The analytics spec uses credentials declared inside the file and expected city/country sets. It relies on a populated account rather than seeding all history through the common register fixture. It tests date ranges, filters and export behavior; date boundaries use the run&apos;s current date. To reproduce manually, obtain authorized access to the designated analytics fixture account/data; an empty newly created account cannot satisfy these expectations. <a href="reference/specs/logged-in-user-qr-code-analytics.html">Analytics reference</a>.</p>
+<h2 id="cross-cutting-quality-checks">Cross-cutting quality checks</h2>
+<div class="table-wrap"><table>
+<tr><th>Suite</th><th>Data / dependencies</th><th>Interpretation</th></tr>
+<tr><td>Long-text containment</td><td>Long-text scenarios, repeated text, viewports, shared helper</td><td>Layout/overflow/persistence/security concerns split into files</td></tr>
+<tr><td>Mobile preview</td><td>Device/viewport and state navigation</td><td>Hidden preview vs visible overlay changes assertion behavior</td></tr>
+<tr><td>Upload security / vCard avatar / WebP</td><td>Asset fixtures and generated payloads</td><td>Per-type upload limits/preview/persistence behavior; don&apos;t generalize one type&apos;s rules</td></tr>
+<tr><td>Event security</td><td>Event payloads and scenario data</td><td>Heavy cases have separate specs; expected failures/skip reasons matter</td></tr>
+<tr><td>Three-step requirements</td><td>Type/Step 3 matrices, QR creation setup</td><td>Shared wizard/design requirements</td></tr>
+<tr><td>SEO</td><td><code>seoAuditConfig.data.ts</code>, SEO helper, route matrices</td><td>HTTP/meta/canonical/structured-data checks selected by source</td></tr>
+<tr><td>Landing screenshots</td><td><code>screens.config.ts</code>, VisualLandingPage, readiness helper</td><td>Pixel comparison with stored baselines, not functional backend coverage</td></tr>
+<tr><td>Percy / width sweep</td><td>Percy configuration, visual capture/layout helpers</td><td>External snapshots or viewport captures; distinct from screenshot-baseline tests</td></tr>
+</table></div>
+<p>References: <a href="reference/specs/logged-in-user-create-qr-code.html">creation specs</a>, <a href="reference/specs/requirements-3-steps.html">requirements</a>, <a href="reference/specs/seo.html">SEO</a>, <a href="reference/specs/visual.html">visual</a>.</p>
+<p><strong>For manual inspection of prepared examples:</strong> request the account, test website and generated results list from the maintainer who prepared them. Find the QR using the recorded name or folder, then compare the expected and observed results. The controls below are for the person generating those records.</p>
+<h2 id="persistent-validation-tools">Prepared examples and optional setup tools</h2>
+<p><code>tests/tools</code> contains generators, not ordinary pass/fail acceptance coverage. Generic Event/folder generators share a stored account through a lock and retain records for manual exploration. Event field-validation seeding has additional account-choice, run-ID and seed controls, and writes a manifest through its helper. Read <a href="reference/specs/tools.html">tools reference</a> before running. Use a specific tool path with the intended legacy project and controls; never include the folder in a broad onboarding smoke run.</p>
+<p>The Event field seeder requires <code>EVENT_VALIDATION_SEED=true</code> and a nonempty <code>EVENT_VALIDATION_RUN_ID</code> (1&#x2013;80 letters, digits, dots, underscores or hyphens). <code>EVENT_VALIDATION_ACCOUNT</code> selects <code>local</code> (default, <code>LOCAL_USER_*</code>), <code>default</code> (<code>DEFAULT_USER_*</code>), or <code>dedicated</code> (register once and retain <code>.auth/event-validation-owner.json</code>). It does not silently substitute a disposable user for a missing existing account. Its source guard accepts private/local hosts or the explicitly named <code>oqg.devii.test-qr.com</code> host; this is a code restriction, not a statement that that deployment is currently available.</p>
+<p>Optional comma-separated <code>EVENT_VALIDATION_FIELDS</code> and <code>EVENT_VALIDATION_CASE_IDS</code> limit the selected scenarios. JSON/CSV manifests go to <code>test-results/event-field-validation/&lt;run-id&gt;/&lt;field&gt;.*</code>, with resumable checkpoints under <code>.auth/event-field-validation/&lt;run-id&gt;/</code>. Records include raw/display-safe input, expected and observed result, validation message, retained QR name/UID/folder, and outcomes such as accepted, rejected, sanitized, expectation mismatch, unsafe execution or operational error. This is the most direct handoff artifact when QAs need persistent examples to inspect manually. See <a data-source="tests/tools/event-field-validation-manifest.helper.ts" href="sources/tests/tools/event-field-validation-manifest.helper.ts.html">manifest helper</a>.</p></article></div><section id="search-results" aria-label="Search results" hidden></section></main></div>
+<noscript><p class="noscript">All document links work without JavaScript. Enable JavaScript to search across the guide.</p></noscript>
+</body></html>
